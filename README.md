@@ -3,7 +3,7 @@ Rust-Graphics
 
 A meta library for computer graphics, written in Rust, that works with multiple backends
 
-Notice: This project is still on the drafting table!
+*Notice: This project is still on the drafting table!*
 
 ## Motivation
 
