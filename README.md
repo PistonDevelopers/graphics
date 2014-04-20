@@ -1,7 +1,7 @@
 Rust-Graphics
 =============
 
-A meta library for computer graphics, written in Rust, that works with multiple backends
+A library for 2D graphics, written in Rust, that works with multiple backends
 
 *Notice: This project is still on the drafting table!*
 
