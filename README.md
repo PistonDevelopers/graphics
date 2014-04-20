@@ -66,7 +66,7 @@ List of potential backends:
 ## Non-Goals
 
 * Backward compability (expect lot of breaking)
-* Platform or backend specific code
+* Platform or back-end specific code
 * 3D
 * Physics
 * Node tree
