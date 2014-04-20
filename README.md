@@ -13,10 +13,10 @@ Inspired by the functional features in Rust standard library,
 it would be nice to be able to write something like this:
 
 ```Rust
-let c = Context::new();  // Using OpenGL.
+let c = Context::opengl().unwrap();  // Using OpenGL.
 let d = c.trans(10.0, 10.0);
-d.rect(0.0, 0.0, 200.0, 100.0).margin(5).draw();
-d.ellipse(0.0, 0.0, 200.0, 100.0).border(3).draw();
+d.rect(0.0, 0.0, 200.0, 100.0).margin(5).fill();
+d.ellipse(0.0, 0.0, 200.0, 100.0).border(3).stroke();
 let d = c.trans(20.0, 20.0);
 ...
 ```
@@ -25,6 +25,7 @@ Design:
 
 * Not have to 'undo' changes to the context
 * Building context from general to special
+* Helpful context specific methods
 
 ### Why the current situation is not acceptable
 
