@@ -41,6 +41,7 @@ List of potential backends:
 
 * OpenGL
 * OpenGL-ES
+* SDL
 * DirectX
 * JSON
 * JavaScript HTML canvas
