@@ -91,6 +91,20 @@ impl<'a> Context<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+
+    /// Returns a scaled context.
+    #[inline(always)]
+    pub fn scale(&'a self, sx: f64, sy: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let scale: [f64, ..6] = [sx, 0.0, 0.0,
+                                         0.0, sy, 0.0];
+                multiply(&scale, self.transform.get())
+            }),
+            color: Borrowed(self.color.get()),
+        }
+    }
 }
 
 #[test]
@@ -110,3 +124,10 @@ fn test_context() {
     assert!((c.transform.get()[1] - 1.0).abs() < 0.00001);
 }
 
+#[test]
+fn test_scale() {
+    let c = Context::new();
+    let c = c.scale(2.0, 3.0);
+    assert!((c.transform.get()[0] - 2.0).abs() < 0.00001);
+    assert!((c.transform.get()[4] - 3.0).abs() < 0.00001);
+}
