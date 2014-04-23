@@ -73,7 +73,6 @@ pub fn multiply(m: &[f64, ..6], b: &[f64, ..6]) -> [f64, ..6] {
 pub struct Context<'a> {
     base: Field<'a, Matrix2d>,
     transform: Field<'a, Matrix2d>,
-    color: Field<'a, Color>,
 }
 
 impl<'a> Transform2d<'a> for Context<'a> { 
@@ -86,7 +85,6 @@ impl<'a> Transform2d<'a> for Context<'a> {
                                          0.0, 1.0, y];
                  multiply(&trans, self.transform.get())
             }),
-            color: Borrowed(self.color.get()),
         }
     }
 
@@ -107,7 +105,6 @@ impl<'a> Transform2d<'a> for Context<'a> {
                                       -s, c, 0.0];
                 multiply(&rot, self.transform.get())
             }),
-            color: Borrowed(self.color.get()),
         }
     }
 
@@ -120,7 +117,6 @@ impl<'a> Transform2d<'a> for Context<'a> {
                                          0.0, sy, 0.0];
                 multiply(&scale, self.transform.get())
             }),
-            color: Borrowed(self.color.get()),
         }
     }
     
@@ -133,7 +129,6 @@ impl<'a> Transform2d<'a> for Context<'a> {
                                          sy, 1.0, 0.0];
             multiply(&shear, self.transform.get())
             }),
-            color: Borrowed(self.color.get()),
         }
     }
 }
@@ -146,7 +141,6 @@ impl<'a> Context<'a> {
                           0.0, 1.0, 0.0]),
             transform: Value([1.0, 0.0, 0.0,
                           0.0, 1.0, 0.0]),
-            color: Value([0.0, 0.0, 0.0, 1.0]),
         }
     }
 
