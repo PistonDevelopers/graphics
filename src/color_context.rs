@@ -5,9 +5,12 @@ use {Transform2d, Matrix2d, Color};
 
 /// A context with color information.
 pub struct ColorContext<'a> {
-    base: Field<'a, Matrix2d>,
-    transform: Field<'a, Matrix2d>,
-    color: Field<'a, Color>,
+    /// Base/original transformation.
+    pub base: Field<'a, Matrix2d>,
+    /// Current transformation.
+    pub transform: Field<'a, Matrix2d>,
+    /// Current color.
+    pub color: Field<'a, Color>,
 }
 
 impl<'a> Transform2d<'a> for ColorContext<'a> {

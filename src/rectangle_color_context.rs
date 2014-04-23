@@ -5,10 +5,14 @@ use {Transform2d, Matrix2d, Rectangle, Color};
 
 /// A rectangle color context.
 pub struct RectangleColorContext<'a> {
-    base: Field<'a, Matrix2d>,
-    transform: Field<'a, Matrix2d>,
-    rect: Field<'a, Rectangle>,
-    color: Field<'a, Color>,
+    /// Base/original transformation.
+    pub base: Field<'a, Matrix2d>,
+    /// Current transformation.
+    pub transform: Field<'a, Matrix2d>,
+    /// Current rectangle.
+    pub rect: Field<'a, Rectangle>,
+    /// Current color.
+    pub color: Field<'a, Color>,
 }
 
 impl<'a> Transform2d<'a> for RectangleColorContext<'a> {

@@ -2,11 +2,14 @@
 use {Field, Borrowed, Value};
 use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d};
+use rectangle_context::RectangleContext;
 
 /// Drawing 2d context.
 pub struct Context<'a> {
-    base: Field<'a, Matrix2d>,
-    transform: Field<'a, Matrix2d>,
+    /// Base/original transformation.
+    pub base: Field<'a, Matrix2d>,
+    /// Current transformation.
+    pub transform: Field<'a, Matrix2d>,
 }
 
 impl<'a> Transform2d<'a> for Context<'a> { 
@@ -66,6 +69,14 @@ impl<'a> Context<'a> {
         }
     }
 
+    /// Creates a rectangle context.
+    pub fn rect(&'a self, x: f64, y: f64, w: f64, h: f64) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value([x, y, w, h]),
+        }
+    }
 }
 
 #[test]

@@ -5,9 +5,12 @@ use {Transform2d, Matrix2d, Rectangle};
 
 /// A rectangle context.
 pub struct RectangleContext<'a> {
-    base: Field<'a, Matrix2d>,
-    transform: Field<'a, Matrix2d>,
-    rect: Field<'a, Rectangle>,
+    /// Base/original transformation.
+    pub base: Field<'a, Matrix2d>,
+    /// Current transformation.
+    pub transform: Field<'a, Matrix2d>,
+    /// Current rectangle.
+    pub rect: Field<'a, Rectangle>,
 }
 
 impl<'a> Transform2d<'a> for RectangleContext<'a> {
