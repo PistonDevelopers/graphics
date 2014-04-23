@@ -31,8 +31,14 @@ pub trait BackEnd {
 pub trait Transform2d<'a> {
     /// Translate x and y.
     fn trans(&'a self, x: f64, y: f64) -> Self;
-    /// Rotate degrees.
-    fn rot_deg(&'a self, angle: f64) -> Self;
+   
+    /// Rotates degrees.
+    #[inline(always)]
+    fn rot_deg(&'a self, angle: f64) -> Self {
+        let pi: f64 = Float::pi();
+        self.rot_rad(angle * pi / 180.0)
+    }
+    
     /// Rotate radians.
     fn rot_rad(&'a self, angle: f64) -> Self;
     /// Scale.
@@ -118,12 +124,6 @@ impl<'a> Transform2d<'a> for Context<'a> {
     }
 
     #[inline(always)]
-    fn rot_deg(&'a self, angle: f64) -> Context<'a> {
-        let pi: f64 = Float::pi();
-        self.rot_rad(angle * pi / 180.0)
-    }
-
-    #[inline(always)]
     fn rot_rad(&'a self, angle: f64) -> Context<'a> {
         Context {
             base: Borrowed(self.base.get()),
@@ -200,6 +200,56 @@ pub struct ColorContext<'a> {
     base: Field<'a, Matrix2d>,
     transform: Field<'a, Matrix2d>,
     color: Field<'a, Color>,
+}
+
+impl<'a> Transform2d<'a> for ColorContext<'a> {
+    #[inline(always)]
+    fn trans(&'a self, x: f64, y: f64) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let trans = translate(x, y);
+                Value(multiply(&trans, self.transform.get()))
+            },
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn rot_rad(&'a self, angle: f64) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let rot = rotate_radians(angle);
+                Value(multiply(&rot, self.transform.get()))
+            },
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn scale(&'a self, sx: f64, sy: f64) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let scale = scale(sx, sy);
+                Value(multiply(&scale, self.transform.get()))
+            },
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn shear(&'a self, sx: f64, sy: f64) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let shear = shear(sx, sy);
+                Value(multiply(&shear, self.transform.get()))
+            },
+            color: Borrowed(self.color.get()),
+        }
+    }
 }
 
 /// A rectangle context.
