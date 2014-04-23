@@ -12,6 +12,7 @@ pub type Color = [f64, ..4];
 /// This trait uses default methods to simplify implementation.
 pub trait BackEnd {
     /// Returns true if 2d triangle list with color assigned per vertex is supported.
+    #[inline(always)]
     fn supports_tri_list_xy_rgba(&self) -> bool { false }
 
     /// Renders list of 2d triangles with color assigned per vertex.
