@@ -7,6 +7,7 @@ use std::num::Float;
 
 pub type Matrix2d = [f64, ..6];
 pub type Color = [f64, ..4];
+pub type Rectangle = [f64, ..4];
 
 /// Implemented by all graphics back-ends.
 /// This trait uses default methods to simplify implementation.
@@ -163,3 +164,26 @@ fn test_scale() {
     assert!((c.transform.get()[0] - 2.0).abs() < 0.00001);
     assert!((c.transform.get()[4] - 3.0).abs() < 0.00001);
 }
+
+/// A context with color information.
+pub struct ColorContext<'a> {
+    base: Field<'a, Matrix2d>,
+    transform: Field<'a, Matrix2d>,
+    color: Field<'a, Color>,
+}
+
+/// A rectangle context.
+pub struct RectangleContext<'a> {
+    base: Field<'a, Matrix2d>,
+    transform: Field<'a, Matrix2d>,
+    rect: Field<'a, Rectangle>,
+}
+
+/// A rectangle color context.
+pub struct RectangleColorContext<'a> {
+    base: Field<'a, Matrix2d>,
+    transform: Field<'a, Matrix2d>,
+    rect: Field<'a, Rectangle>,
+    color: Field<'a, Color>,
+}
+
