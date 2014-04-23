@@ -28,9 +28,17 @@ pub trait BackEnd {
 }
 
 /// Implemented by contexts that can transform.
-pub trait Transform<'a> {
+pub trait Transform2d<'a> {
     /// Translate x and y.
     fn trans(&'a self, x: f64, y: f64) -> Self;
+    /// Rotate degrees.
+    fn rot_deg(&'a self, angle: f64) -> Self;
+    /// Rotate radians.
+    fn rot_rad(&'a self, angle: f64) -> Self;
+    /// Scale.
+    fn scale(&'a self, sx: f64, sy: f64) -> Self;
+    /// Shear.
+    fn shear(&'a self, sx: f64, sy: f64) -> Self;
 }
 
 /// A structure that might contain a value or a borrowed value.
@@ -68,8 +76,7 @@ pub struct Context<'a> {
     color: Field<'a, Color>,
 }
 
-impl<'a> Transform<'a> for Context<'a> { 
-    /// Returns a translated context.
+impl<'a> Transform2d<'a> for Context<'a> { 
     #[inline(always)]
     fn trans(&'a self, x: f64, y: f64) -> Context<'a> {
         Context {
@@ -78,6 +85,53 @@ impl<'a> Transform<'a> for Context<'a> {
                 let trans: [f64, ..6] = [1.0, 0.0, x,
                                          0.0, 1.0, y];
                  multiply(&trans, self.transform.get())
+            }),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn rot_deg(&'a self, angle: f64) -> Context<'a> {
+        let pi: f64 = Float::pi();
+        self.rot_rad(angle * pi / 180.0)
+    }
+
+    #[inline(always)]
+    fn rot_rad(&'a self, angle: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let c = angle.cos();
+                let s = angle.sin();
+                let rot: [f64, ..6] = [c, s, 0.0,
+                                      -s, c, 0.0];
+                multiply(&rot, self.transform.get())
+            }),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn scale(&'a self, sx: f64, sy: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let scale: [f64, ..6] = [sx, 0.0, 0.0,
+                                         0.0, sy, 0.0];
+                multiply(&scale, self.transform.get())
+            }),
+            color: Borrowed(self.color.get()),
+        }
+    }
+    
+    #[inline(always)]
+    fn shear(&'a self, sx: f64, sy: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let shear: [f64, ..6] = [1.0, sx, 0.0,
+                                         sy, 1.0, 0.0];
+            multiply(&shear, self.transform.get())
             }),
             color: Borrowed(self.color.get()),
         }
@@ -96,56 +150,6 @@ impl<'a> Context<'a> {
         }
     }
 
-    /// Rotates with degrees.
-    #[inline(always)]
-    pub fn rot_deg(&'a self, angle: f64) -> Context<'a> {
-        let pi: f64 = Float::pi();
-        self.rot(angle * pi / 180.0)
-    }
-
-    /// Returns a rotated context.
-    #[inline(always)]
-    pub fn rot(&'a self, angle: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let c = angle.cos();
-                let s = angle.sin();
-                let rot: [f64, ..6] = [c, s, 0.0,
-                                      -s, c, 0.0];
-                multiply(&rot, self.transform.get())
-            }),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    /// Returns a scaled context.
-    #[inline(always)]
-    pub fn scale(&'a self, sx: f64, sy: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let scale: [f64, ..6] = [sx, 0.0, 0.0,
-                                         0.0, sy, 0.0];
-                multiply(&scale, self.transform.get())
-            }),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    /// Returns a sheared context.
-    #[inline(always)]
-    pub fn shear(&'a self, sx: f64, sy: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let shear: [f64, ..6] = [1.0, sx, 0.0,
-                                         sy, 1.0, 0.0];
-            multiply(&shear, self.transform.get())
-            }),
-            color: Borrowed(self.color.get()),
-        }
-    }
 }
 
 #[test]
