@@ -64,9 +64,16 @@ impl<'a, T> Field<'a, T> {
 
 /// Multiplies two matrices.
 #[inline(always)]
-pub fn multiply(m: &[f64, ..6], b: &[f64, ..6]) -> [f64, ..6] {
+pub fn multiply(m: &[f64, ..6], b: &[f64, ..6]) -> Matrix2d {
     [m[0]*b[0]+m[1]*b[3]+m[2]*0.0,  m[0]*b[1]+m[1]*b[4]+m[2]*0.0,  m[0]*b[2]+m[1]*b[5]+m[2]*1.0,
      m[3]*b[0]+m[4]*b[3]+m[5]*0.0,  m[3]*b[1]+m[4]*b[4]+m[5]*0.0,  m[3]*b[2]+m[4]*b[5]+m[5]*1.0]
+}
+
+/// Creates a translation matrix.
+#[inline(always)]
+pub fn translate(x: f64, y: f64) -> Matrix2d {
+    [1.0, 0.0, x,
+     0.0, 1.0, y]
 }
 
 /// Drawing 2d context.
@@ -81,8 +88,7 @@ impl<'a> Transform2d<'a> for Context<'a> {
         Context {
             base: Borrowed(self.base.get()),
             transform: Value({
-                let trans: [f64, ..6] = [1.0, 0.0, x,
-                                         0.0, 1.0, y];
+                let trans = translate(x, y);
                  multiply(&trans, self.transform.get())
             }),
         }
