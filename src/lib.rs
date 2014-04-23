@@ -6,6 +6,7 @@
 pub use context::Context;
 pub use backend::BackEnd;
 pub use transform2d::Transform2d;
+pub use rectangle_context::RectangleContext;
 pub use rectangle_color_context::RectangleColorContext;
 
 use vecmath::{rotate_radians, multiply, translate, scale, shear};
@@ -13,6 +14,7 @@ use vecmath::{rotate_radians, multiply, translate, scale, shear};
 mod context;
 mod backend;
 mod transform2d;
+mod rectangle_context;
 mod rectangle_color_context;
 pub mod vecmath;
 
@@ -94,63 +96,6 @@ impl<'a> Transform2d<'a> for ColorContext<'a> {
                 Value(multiply(&shear, self.transform.get()))
             },
             color: Borrowed(self.color.get()),
-        }
-    }
-}
-
-/// A rectangle context.
-pub struct RectangleContext<'a> {
-    base: Field<'a, Matrix2d>,
-    transform: Field<'a, Matrix2d>,
-    rect: Field<'a, Rectangle>,
-}
-
-impl<'a> Transform2d<'a> for RectangleContext<'a> {
-    #[inline(always)]
-    fn trans(&'a self, x: f64, y: f64) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(&trans, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad(&'a self, angle: f64) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(&rot, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale(&'a self, sx: f64, sy: f64) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(&scale, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn shear(&'a self, sx: f64, sy: f64) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(&shear, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
         }
     }
 }
