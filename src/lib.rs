@@ -8,6 +8,16 @@ use std::num::Float;
 pub type Matrix2d = [f64, ..6];
 pub type Color = [f64, ..4];
 
+/// Implemented by all graphics back-ends.
+/// This trait uses default methods to simplify implementation.
+pub trait BackEnd {
+    /// Returns true if 2d triangle list with color assigned per vertex is supported.
+    fn supports_tri_list_xy_rgba(&self) -> bool { false }
+
+    /// Renders list of 2d triangles with color assigned per vertex.
+    fn tri_list_xy_rgba(&mut self, _vertices: &[f64], _colors: &[f64]) {}
+}
+
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
 /// that is partially based on an existing structure.
