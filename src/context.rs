@@ -1,6 +1,6 @@
 
 use {Field, Borrowed, Value};
-use {rotate_radians, multiply, translate, scale, shear};
+use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d};
 
 /// Drawing 2d context.
