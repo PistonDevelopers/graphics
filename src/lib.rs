@@ -76,6 +76,29 @@ pub fn translate(x: f64, y: f64) -> Matrix2d {
      0.0, 1.0, y]
 }
 
+/// Creates a rotation matrix.
+#[inline(always)]
+pub fn rotate_radians(angle: f64) -> Matrix2d {
+    let c = angle.cos();
+    let s = angle.sin();
+    [c, s, 0.0,
+    -s, c, 0.0]
+}
+
+/// Create a scale matrix.
+#[inline(always)]
+pub fn scale(sx: f64, sy: f64) -> Matrix2d {
+    [sx, 0.0, 0.0,
+     0.0, sy, 0.0]
+}
+
+/// Create a shear matrix.
+#[inline(always)]
+pub fn shear(sx: f64, sy: f64) -> Matrix2d {
+    [1.0, sx, 0.0,
+     sy, 1.0, 0.0]
+}
+
 /// Drawing 2d context.
 pub struct Context<'a> {
     base: Field<'a, Matrix2d>,
@@ -105,10 +128,7 @@ impl<'a> Transform2d<'a> for Context<'a> {
         Context {
             base: Borrowed(self.base.get()),
             transform: Value({
-                let c = angle.cos();
-                let s = angle.sin();
-                let rot: [f64, ..6] = [c, s, 0.0,
-                                      -s, c, 0.0];
+                let rot = rotate_radians(angle);
                 multiply(&rot, self.transform.get())
             }),
         }
@@ -119,8 +139,7 @@ impl<'a> Transform2d<'a> for Context<'a> {
         Context {
             base: Borrowed(self.base.get()),
             transform: Value({
-                let scale: [f64, ..6] = [sx, 0.0, 0.0,
-                                         0.0, sy, 0.0];
+                let scale = scale(sx, sy);
                 multiply(&scale, self.transform.get())
             }),
         }
@@ -131,9 +150,8 @@ impl<'a> Transform2d<'a> for Context<'a> {
         Context {
             base: Borrowed(self.base.get()),
             transform: Value({
-                let shear: [f64, ..6] = [1.0, sx, 0.0,
-                                         sy, 1.0, 0.0];
-            multiply(&shear, self.transform.get())
+                let shear = shear(sx, sy);
+                multiply(&shear, self.transform.get())
             }),
         }
     }
