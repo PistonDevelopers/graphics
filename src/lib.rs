@@ -27,6 +27,12 @@ pub trait BackEnd {
     fn tri_list_xy_rgba_f32(&mut self, _vertices: &[f32], _colors: &[f32]) {}
 }
 
+/// Implemented by contexts that can transform.
+pub trait Transform<'a> {
+    /// Translate x and y.
+    fn trans(&'a self, x: f64, y: f64) -> Self;
+}
+
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
 /// that is partially based on an existing structure.
@@ -62,6 +68,22 @@ pub struct Context<'a> {
     color: Field<'a, Color>,
 }
 
+impl<'a> Transform<'a> for Context<'a> { 
+    /// Returns a translated context.
+    #[inline(always)]
+    fn trans(&'a self, x: f64, y: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let trans: [f64, ..6] = [1.0, 0.0, x,
+                                         0.0, 1.0, y];
+                 multiply(&trans, self.transform.get())
+            }),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
 impl<'a> Context<'a> {
     /// Creates a new drawing context.
     pub fn new() -> Context {
@@ -71,20 +93,6 @@ impl<'a> Context<'a> {
             transform: Value([1.0, 0.0, 0.0,
                           0.0, 1.0, 0.0]),
             color: Value([0.0, 0.0, 0.0, 1.0]),
-        }
-    }
-
-    /// Returns a translated context.
-    #[inline(always)]
-    pub fn trans(&'a self, x: f64, y: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let trans: [f64, ..6] = [1.0, 0.0, x,
-                                         0.0, 1.0, y];
-                 multiply(&trans, self.transform.get())
-            }),
-            color: Borrowed(self.color.get()),
         }
     }
 
