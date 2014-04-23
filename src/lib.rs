@@ -4,51 +4,18 @@
 //! Attempt of creating a cheap drawing context.
 
 use std::num::Float;
+
 pub use context::Context;
+pub use backend::BackEnd;
+pub use transform2d::Transform2d;
 
 mod context;
+mod backend;
+mod transform2d;
 
 pub type Matrix2d = [f64, ..6];
 pub type Color = [f64, ..4];
 pub type Rectangle = [f64, ..4];
-
-/// Implemented by all graphics back-ends.
-/// This trait uses default methods to simplify implementation.
-pub trait BackEnd {
-    /// Returns true if feature is supported.
-    #[inline(always)]
-    fn supports_tri_list_xy_rgba_f64(&self) -> bool { false }
-
-    /// Renders list of 2d triangles with color assigned per vertex.
-    fn tri_list_xy_rgba_f64(&mut self, _vertices: &[f64], _colors: &[f64]) {}
-
-    /// Returns true if feature is supported.
-    #[inline(always)]
-    fn supports_tri_list_xy_rgba_f32(&self) -> bool { false }
-
-    /// Renders list of 2d triangles with color assigned per vertex.
-    fn tri_list_xy_rgba_f32(&mut self, _vertices: &[f32], _colors: &[f32]) {}
-}
-
-/// Implemented by contexts that can transform.
-pub trait Transform2d<'a> {
-    /// Translate x and y.
-    fn trans(&'a self, x: f64, y: f64) -> Self;
-   
-    /// Rotates degrees.
-    #[inline(always)]
-    fn rot_deg(&'a self, angle: f64) -> Self {
-        let pi: f64 = Float::pi();
-        self.rot_rad(angle * pi / 180.0)
-    }
-    
-    /// Rotate radians.
-    fn rot_rad(&'a self, angle: f64) -> Self;
-    /// Scale.
-    fn scale(&'a self, sx: f64, sy: f64) -> Self;
-    /// Shear.
-    fn shear(&'a self, sx: f64, sy: f64) -> Self;
-}
 
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
