@@ -105,6 +105,20 @@ impl<'a> Context<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+
+    /// Returns a sheared context.
+    #[inline(always)]
+    pub fn shear(&'a self, sx: f64, sy: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let shear: [f64, ..6] = [1.0, sx, 0.0,
+                                         sy, 1.0, 0.0];
+            multiply(&shear, self.transform.get())
+            }),
+            color: Borrowed(self.color.get()),
+        }
+    }
 }
 
 #[test]
