@@ -103,3 +103,10 @@ fn test_scale() {
     assert!((c.transform.get()[0] - 2.0).abs() < 0.00001);
     assert!((c.transform.get()[4] - 3.0).abs() < 0.00001);
 }
+
+#[test]
+fn test_rect() {
+    let c = Context::new();
+    let d = c.rect(0.0, 0.0, 100.0, 50.0);
+    assert_eq!(d.rect.get()[2], 100.0);
+}
