@@ -4,6 +4,7 @@ use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Color};
 use {RectangleColorContext};
 use {AddRectangle};
+use {BackEnd, Clear};
 
 /// A context with color information.
 pub struct ColorContext<'a> {
@@ -85,5 +86,14 @@ fn test_rect() {
     let color = c.rgba(1.0, 0.0, 0.0, 1.0);
     let rect_color = color.rect(0.0, 0.0, 100.0, 100.0);
     assert_eq!(rect_color.rect.get()[2], 100.0);
+}
+
+impl<'a> Clear for ColorContext<'a> {
+    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+        if back_end.supports_clear_rgba() {
+            let color = self.color.get();
+            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
+        }        
+    }
 }
 

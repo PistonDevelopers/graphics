@@ -28,7 +28,7 @@ pub mod vecmath;
 pub mod triangulation;
 
 pub type Matrix2d = [f64, ..6];
-pub type Color = [f64, ..4];
+pub type Color = [f32, ..4];
 pub type Rectangle = [f64, ..4];
 
 /// A structure that might contain a value or a borrowed value.

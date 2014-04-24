@@ -116,7 +116,7 @@ fn test_rect() {
 
 impl<'a> AddColor<'a, ColorContext<'a>> for Context<'a> {
     #[inline(always)]
-    fn rgba(&'a self, r: f64, g: f64, b: f64, a: f64) -> ColorContext<'a> {
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> ColorContext<'a> {
         ColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),

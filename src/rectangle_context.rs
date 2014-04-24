@@ -68,7 +68,7 @@ impl<'a> Transform2d<'a> for RectangleContext<'a> {
 impl<'a> AddColor<'a, RectangleColorContext<'a>> for RectangleContext<'a> {
     /// Creates a RectangleColorContext.
     #[inline(always)]
-    fn rgba(&'a self, r: f64, g: f64, b: f64, a: f64) -> RectangleColorContext<'a> {
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> RectangleColorContext<'a> {
         RectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
