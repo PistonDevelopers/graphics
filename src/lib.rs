@@ -3,9 +3,10 @@
 
 //! Attempt of creating a cheap drawing context.
 
-pub use context::Context;
+pub use Context = context::Context;
 pub use BackEnd = back_end::BackEnd;
 pub use Transform2d = transform2d::Transform2d;
+pub use AddColor = add_color::AddColor;
 pub use ColorContext = color_context::ColorContext;
 pub use RectangleContext = rectangle_context::RectangleContext;
 pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
@@ -13,6 +14,7 @@ pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
 mod context;
 mod back_end;
 mod transform2d;
+mod add_color;
 mod color_context;
 mod rectangle_context;
 mod rectangle_color_context;

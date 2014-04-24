@@ -79,7 +79,7 @@ impl<'a> ColorContext<'a> {
 
 #[test]
 fn test_rect() {
-    use {Context};
+    use {Context, AddColor};
 
     let c = Context::new();
     let color = c.rgba(1.0, 0.0, 0.0, 1.0);
