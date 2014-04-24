@@ -71,6 +71,7 @@ mod rectangle_color_context;
 mod round_rectangle_context;
 pub mod vecmath;
 pub mod triangulation;
+pub mod interpolation;
 
 pub type Color = [f32, ..4];
 pub type Line = [f64, ..4];
