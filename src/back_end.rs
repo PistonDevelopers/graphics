@@ -4,6 +4,13 @@
 pub trait BackEnd {
     /// Returns true if feature is supported.
     #[inline(always)]
+    fn supports_clear_rgba(&self) -> bool { false }
+
+    /// Clears background with a color.
+    fn clear_rgba(&mut self, _r: f64, _g: f64, _b: f64, _a: f64) {}
+
+    /// Returns true if feature is supported.
+    #[inline(always)]
     fn supports_tri_list_xy_rgba_f64(&self) -> bool { false }
 
     /// Renders list of 2d triangles with color assigned per vertex.
