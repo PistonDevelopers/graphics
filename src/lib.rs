@@ -11,6 +11,7 @@ pub use AddRectangle = add_rectangle::AddRectangle;
 pub use Fill = fill::Fill;
 pub use Clear = clear::Clear;
 pub use ColorContext = color_context::ColorContext;
+pub use EllipseContext = ellipse_context::EllipseContext;
 pub use RectangleContext = rectangle_context::RectangleContext;
 pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
 
@@ -22,6 +23,7 @@ mod add_rectangle;
 mod fill;
 mod clear;
 mod color_context;
+mod ellipse_context;
 mod rectangle_context;
 mod rectangle_color_context;
 pub mod vecmath;
