@@ -23,6 +23,7 @@ mod color_context;
 mod rectangle_context;
 mod rectangle_color_context;
 pub mod vecmath;
+pub mod triangulation;
 
 pub type Matrix2d = [f64, ..6];
 pub type Color = [f64, ..4];
