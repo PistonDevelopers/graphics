@@ -4,11 +4,11 @@
 //! Attempt of creating a cheap drawing context.
 
 pub use context::Context;
-pub use back_end::BackEnd;
-pub use transform2d::Transform2d;
-pub use color_context::ColorContext;
-pub use rectangle_context::RectangleContext;
-pub use rectangle_color_context::RectangleColorContext;
+pub use BackEnd = back_end::BackEnd;
+pub use Transform2d = transform2d::Transform2d;
+pub use ColorContext = color_context::ColorContext;
+pub use RectangleContext = rectangle_context::RectangleContext;
+pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
 
 mod context;
 mod back_end;
