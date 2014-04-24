@@ -1,6 +1,14 @@
 
 /// Implemented by all graphics back-ends.
 /// This trait uses default methods to simplify implementation.
+///
+/// ## Alpha blending
+/// The default behavior for alpha blending is assumed to be turned off.
+/// A back-end might choose to turn it on by default and ignore enable/disable.
+/// The default behavior for not supporting alpha blending is ignoring enable/disable.
+/// Alpha blending is assumed to be expensive and turned off when not needed.
+/// For cases when alpha blending is explicitly not wanted there will be own methods,
+/// in case the back-end needs to restore to its own default afterwards.
 pub trait BackEnd {
     /// Returns true if feature is supported.
     #[inline(always)]
@@ -9,11 +17,11 @@ pub trait BackEnd {
     /// Clears background with a color.
     fn clear_rgba(&mut self, _r: f32, _g: f32, _b: f32, _a: f32) {}
 
-    /// Turns on/off alpha blending.
-    /// The default state is assumed to be 'off'.
-    /// The default behavior is to ignore it if not supported.
-    /// Alpha blending is assumed to be expensive and turned off when not needed.
-    fn alpha_blend(&mut self, _on: bool) {}
+    /// Turns on alpha blending.
+    fn enable_alpha_blend(&mut self) {}
+
+    /// Turns off alpha blending.
+    fn disable_alpha_blend(&mut self) {}
 
     /// Returns true if feature is supported.
     #[inline(always)]

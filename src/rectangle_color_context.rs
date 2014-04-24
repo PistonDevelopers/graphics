@@ -82,12 +82,12 @@ impl<'a> Fill<'a> for RectangleColorContext<'a> {
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.alpha_blend(true); }
+            if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.tri_list_xy_rgba_f32(
                 rect_tri_list_xy_f32(rect),
                 rect_tri_list_rgba_f32(color)
             );
-            if needs_alpha { back_end.alpha_blend(false); }
+            if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
         }
