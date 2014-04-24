@@ -82,10 +82,9 @@ impl<'a> Fill<'a> for RectangleColorContext<'a> {
                 rect_tri_list_xy_f32(rect),
                 rect_tri_list_rgba_f32(color)
             );
-            return;
+        } else {
+            unimplemented!();
         }
-
-        unimplemented!();
     }
 }
 
