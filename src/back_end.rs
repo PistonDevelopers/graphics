@@ -7,7 +7,7 @@ pub trait BackEnd {
     fn supports_clear_rgba(&self) -> bool { false }
 
     /// Clears background with a color.
-    fn clear_rgba(&mut self, _r: f64, _g: f64, _b: f64, _a: f64) {}
+    fn clear_rgba(&mut self, _r: f32, _g: f32, _b: f32, _a: f32) {}
 
     /// Returns true if feature is supported.
     #[inline(always)]
