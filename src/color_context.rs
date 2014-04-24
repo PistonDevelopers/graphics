@@ -2,6 +2,7 @@
 use {Field, Borrowed, Value};
 use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Color};
+use {RectangleColorContext};
 
 /// A context with color information.
 pub struct ColorContext<'a> {
@@ -61,5 +62,28 @@ impl<'a> Transform2d<'a> for ColorContext<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+}
+
+impl<'a> ColorContext<'a> {
+    /// Creates a RectangleColorContext.
+    #[inline(always)]
+    pub fn rect(&'a self, x: f64, y: f64, w: f64, h: f64) -> RectangleColorContext<'a> {
+        RectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            rect: Value([x, y, w, h]),
+        }
+    }
+}
+
+#[test]
+fn test_rect() {
+    use {Context};
+
+    let c = Context::new();
+    let color = c.rgba(1.0, 0.0, 0.0, 1.0);
+    let rect_color = color.rect(0.0, 0.0, 100.0, 100.0);
+    assert_eq!(rect_color.rect.get()[2], 100.0);
 }
 
