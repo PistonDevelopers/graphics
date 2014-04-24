@@ -12,6 +12,7 @@ pub use Fill = fill::Fill;
 pub use Clear = clear::Clear;
 pub use ColorContext = color_context::ColorContext;
 pub use EllipseContext = ellipse_context::EllipseContext;
+pub use LineContext = line_context::LineContext;
 pub use RectangleContext = rectangle_context::RectangleContext;
 pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
 
@@ -24,13 +25,15 @@ mod fill;
 mod clear;
 mod color_context;
 mod ellipse_context;
+mod line_context;
 mod rectangle_context;
 mod rectangle_color_context;
 pub mod vecmath;
 pub mod triangulation;
 
-pub type Matrix2d = [f64, ..6];
 pub type Color = [f32, ..4];
+pub type Line = [f64, ..4];
+pub type Matrix2d = [f64, ..6];
 pub type Rectangle = [f64, ..4];
 
 /// A structure that might contain a value or a borrowed value.
