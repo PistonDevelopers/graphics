@@ -80,7 +80,7 @@ impl<'a> AddColor<'a, RectangleColorContext<'a>> for RectangleContext<'a> {
 
 #[test]
 fn test_rgba() {
-    use {Context};
+    use {Context, AddRectangle};
 
     let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 100.0);

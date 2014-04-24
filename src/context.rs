@@ -3,7 +3,7 @@ use {Field, Borrowed, Value};
 use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d};
 use {ColorContext, RectangleContext};
-use {AddColor};
+use {AddColor, AddRectangle};
 
 /// Drawing 2d context.
 pub struct Context<'a> {
@@ -69,16 +69,6 @@ impl<'a> Context<'a> {
                           0.0, 1.0, 0.0]),
         }
     }
-
-    /// Creates a rectangle context.
-    #[inline(always)]
-    pub fn rect(&'a self, x: f64, y: f64, w: f64, h: f64) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Value([x, y, w, h]),
-        }
-    }
 }
 
 #[test]
@@ -104,6 +94,17 @@ fn test_scale() {
     let c = c.scale(2.0, 3.0);
     assert!((c.transform.get()[0] - 2.0).abs() < 0.00001);
     assert!((c.transform.get()[4] - 3.0).abs() < 0.00001);
+}
+
+impl<'a> AddRectangle<'a, RectangleContext<'a>> for Context<'a> {
+    #[inline(always)]
+    fn rect(&'a self, x: f64, y: f64, w: f64, h: f64) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value([x, y, w, h]),
+        }
+    }
 }
 
 #[test]
