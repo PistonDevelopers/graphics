@@ -15,6 +15,7 @@ pub use EllipseContext = ellipse_context::EllipseContext;
 pub use LineContext = line_context::LineContext;
 pub use RectangleContext = rectangle_context::RectangleContext;
 pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
+pub use RoundRectangleContext = round_rectangle_context::RoundRectangleContext;
 
 mod context;
 mod back_end;
@@ -28,6 +29,7 @@ mod ellipse_context;
 mod line_context;
 mod rectangle_context;
 mod rectangle_color_context;
+mod round_rectangle_context;
 pub mod vecmath;
 pub mod triangulation;
 
@@ -35,6 +37,7 @@ pub type Color = [f32, ..4];
 pub type Line = [f64, ..4];
 pub type Matrix2d = [f64, ..6];
 pub type Rectangle = [f64, ..4];
+pub type RoundRectangle = [f64, ..5];
 
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
