@@ -26,7 +26,7 @@ SHELL := /bin/bash
 
 # The default make command.
 # Change this to 'make lib' if you are building a library.
-DEFAULT = make help
+DEFAULT = make lib
 
 EXAMPLE_FILES = examples/*.rs
 SOURCE_FILES = $(shell test -e src/ && find src -type f)
