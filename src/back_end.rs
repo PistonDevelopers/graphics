@@ -13,7 +13,7 @@ pub trait BackEnd {
     /// The default state is assumed to be 'off'.
     /// The default behavior is to ignore it if not supported.
     /// Alpha blending is assumed to be expensive and turned off when not needed.
-    fn alpha_blend(_on: bool) {}
+    fn alpha_blend(&mut self, _on: bool) {}
 
     /// Returns true if feature is supported.
     #[inline(always)]
