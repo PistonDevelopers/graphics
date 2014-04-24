@@ -9,6 +9,12 @@ pub trait BackEnd {
     /// Clears background with a color.
     fn clear_rgba(&mut self, _r: f32, _g: f32, _b: f32, _a: f32) {}
 
+    /// Turns on/off alpha blending.
+    /// The default state is assumed to be 'off'.
+    /// The default behavior is to ignore it if not supported.
+    /// Alpha blending is assumed to be expensive and turned off when not needed.
+    fn alpha_blend(_on: bool) {}
+
     /// Returns true if feature is supported.
     #[inline(always)]
     fn supports_tri_list_xy_rgba_f64(&self) -> bool { false }
