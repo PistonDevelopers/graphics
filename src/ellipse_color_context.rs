@@ -1,0 +1,71 @@
+
+use {Field, Borrowed, Value};
+use vecmath::{rotate_radians, multiply, translate, scale, shear};
+use {Transform2d, Matrix2d, Rectangle, Color};
+
+/// An ellipse color context.
+pub struct EllipseColorContext<'a> {
+    /// Base/original transformation.
+    pub base: Field<'a, Matrix2d>,
+    /// Current transformation.
+    pub transform: Field<'a, Matrix2d>,
+    /// Current rectangle.
+    pub rect: Field<'a, Rectangle>,
+    /// Current color.
+    pub color: Field<'a, Color>,
+}
+
+impl<'a> Transform2d<'a> for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn trans(&'a self, x: f64, y: f64) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let trans = translate(x, y);
+                Value(multiply(&trans, self.transform.get()))
+            },
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn rot_rad(&'a self, angle: f64) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let rot = rotate_radians(angle);
+                Value(multiply(&rot, self.transform.get()))
+            },
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn scale(&'a self, sx: f64, sy: f64) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let scale = scale(sx, sy);
+                Value(multiply(&scale, self.transform.get()))
+            },
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn shear(&'a self, sx: f64, sy: f64) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let shear = shear(sx, sy);
+                Value(multiply(&shear, self.transform.get()))
+            },
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
