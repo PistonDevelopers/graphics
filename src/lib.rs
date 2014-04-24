@@ -1,7 +1,42 @@
 #![crate_id = "graphics"]
 #![deny(missing_doc)]
 
-//! Attempt of creating a cheap drawing context.
+//! A library for 2D graphics that works with multiple back-ends.
+//!
+//! To implement your own back-end, use the BackEnd trait.
+//!
+//! ## Usage
+//!
+//! To draw to the back-end, you need a context.
+//! The context contains the information necessary to perform the drawing.
+//! Unlike other graphics libraries, this library is not bound to the back-end.
+//! You do not have to specify which back-end to use before doing the actual drawing.
+//!
+//! For example, assuming we have a back-end called `back_end`:
+//!
+//! ```
+//! Context::new().rect(x, y, w, h).rgba(r, g, b, a).fill(&mut back_end);
+//! ```
+//!
+//! ## Important!
+//!
+//! Because the context is built using borrowed pointers,
+//! it is not possible to do two or more steps at a time and assign it to a variable:
+//!
+//! ```
+//! // ERROR: Borrowed value does not live long enough
+//! let rect = Context::new().rect(x, y, w, h); 
+//! ```
+//!
+//! This is because the lifetime of the first step only lives inside the expression.
+//! To solve this problem, break the statement into two parts, one for each step:
+//! 
+//! ```
+//! let c = Context::new();
+//! let rect = c.rect(x, y, w, h);
+//! ```
+//!
+//! This is only the case when you are assigning the context to a variable.
 
 pub use Context = context::Context;
 pub use BackEnd = back_end::BackEnd;
