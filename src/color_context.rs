@@ -2,8 +2,8 @@
 use {Field, Borrowed, Value};
 use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Color};
-use {RectangleColorContext};
-use {AddRectangle};
+use {EllipseColorContext, RectangleColorContext};
+use {AddEllipse, AddRectangle};
 use {BackEnd, Clear};
 
 /// A context with color information.
@@ -86,6 +86,18 @@ fn test_rect() {
     let color = c.rgba(1.0, 0.0, 0.0, 1.0);
     let rect_color = color.rect(0.0, 0.0, 100.0, 100.0);
     assert_eq!(rect_color.rect.get()[2], 100.0);
+}
+
+impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
+    #[inline(always)]
+    fn ellipse(&'a self, x: f64, y: f64, w: f64, h: f64) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            rect: Value([x, y, w, h]),
+        }
+    }
 }
 
 impl<'a> Clear for ColorContext<'a> {
