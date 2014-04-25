@@ -1,6 +1,8 @@
 use {Matrix2d, Field, Value, Borrowed};
 use vecmath::{multiply, translate, rotate_radians, scale, shear};
 use {Transform2d};
+use {PolygonColorContext};
+use {AddColor};
 
 /// A polygon context.
 pub struct PolygonContext<'a> {
@@ -61,3 +63,16 @@ impl<'a> Transform2d<'a> for PolygonContext<'a> {
         }
     }
 }
+
+impl<'a> AddColor<'a, PolygonColorContext<'a>> for PolygonContext<'a> {
+    #[inline(always)]
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> PolygonColorContext<'a> {
+        PolygonColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Value([r, g, b, a]),
+            polygon: Borrowed(self.polygon.get()),
+        }
+    }
+}
+
