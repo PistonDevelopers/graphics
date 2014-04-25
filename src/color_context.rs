@@ -2,8 +2,8 @@
 use {Field, Borrowed, Value};
 use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Color};
-use {EllipseColorContext, RectangleColorContext};
-use {AddEllipse, AddRectangle};
+use {EllipseColorContext, PolygonColorContext, RectangleColorContext};
+use {AddEllipse, AddPolygon, AddRectangle};
 use {BackEnd, Clear};
 
 /// A context with color information.
@@ -96,6 +96,18 @@ impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             rect: Value([x, y, w, h]),
+        }
+    }
+}
+
+impl<'a> AddPolygon<'a, PolygonColorContext<'a>> for ColorContext<'a> {
+    #[inline(always)]
+    fn polygon(&'a self, polygon: &'a [f64]) -> PolygonColorContext<'a> {
+        PolygonColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            polygon: Value(polygon),
         }
     }
 }
