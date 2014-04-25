@@ -1,6 +1,6 @@
 use {Field, Value, Borrowed, Matrix2d, Color};
 use vecmath::{multiply, translate, rotate_radians, scale, shear};
-use {Transform2d, Fill, BackEnd};
+use {Transform2d, Fill, BackEnd, Clear};
 use triangulation::{with_polygon_tri_list_xy_rgba_f32};
 
 /// A polygon color context.
@@ -89,6 +89,17 @@ impl<'a> Fill<'a> for PolygonColorContext<'a> {
                 }
             );
             if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<'a> Clear for PolygonColorContext<'a> {
+    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+        if back_end.supports_clear_rgba() {
+            let color = self.color.get();
+            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();
         }
