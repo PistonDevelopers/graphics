@@ -79,6 +79,7 @@ pub type InfiniteLine = [f64, ..4];
 pub type Matrix2d = [f64, ..6];
 pub type Rectangle = [f64, ..4];
 pub type RoundRectangle = [f64, ..5];
+pub type Vec2d = [f64, ..2];
 
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure

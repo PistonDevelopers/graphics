@@ -1,7 +1,7 @@
 
 //! Various methods for computing with vectors.
 
-use {Matrix2d};
+use {Matrix2d, InfiniteLine, Vec2d};
 
 /// Multiplies two matrices.
 #[inline(always)]
@@ -39,3 +39,21 @@ pub fn shear(sx: f64, sy: f64) -> Matrix2d {
     [1.0, sx, 0.0,
      sy, 1.0, 0.0]
 }
+
+/// Compute the shortest vector from a point to an infinite line.
+/// An infinite line stores a point on the line and a normal vector.
+#[inline(always)]
+pub fn separation(line: InfiniteLine, x: f64, y: f64) -> Vec2d {
+    // Get the normal vector.
+    let (nx, ny) = (line[2], line[3]);
+    // Get displacement vector from point.
+    let (dx, dy) = (line[0] - x, line[1] - y);
+    // Compute the component of position in direction of normal vector.
+    let dot = nx * x + ny * y;
+    // The normal vector multiplied with the dot gives us coordinates
+    // parallel to the line.
+    // When we subtract this from the displacement we get a vector normal to the line.
+    // This is the shortest vector from the point to the infinite line.
+    [dx - dot * nx, dy - dot * ny]
+}
+
