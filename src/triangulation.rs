@@ -19,22 +19,42 @@ pub fn with_polygon_tri_list_xy_rgba_f32(
     polygon: &[f64],
     color: [f32, ..4],
     f: |vertices: &[f32], colors: &[f32]|) {
+    
+    if polygon.len() < 2 { return; }
     let mut vertices: [f32, ..740] = [0.0, ..740];
     let mut colors: [f32, ..1480] = [0.0, ..1480];
     // Draw first triangle for testing.
-    vertices[0] = tx(m, polygon[0], polygon[1]);
-    vertices[1] = ty(m, polygon[0], polygon[1]);
-    vertices[2] = tx(m, polygon[2], polygon[3]);
-    vertices[3] = ty(m, polygon[2], polygon[3]);
-    vertices[4] = tx(m, polygon[4], polygon[5]);
-    vertices[5] = ty(m, polygon[4], polygon[5]);
-    for i in range(0u, 3) {
-        for (j, &c) in color.iter().enumerate() {
-            colors[i * 4 + j] = c;
+    let triangles = (polygon.len() - 4) / 2;
+    // Get the first point which will be used a lot.
+    let fx = polygon[0];
+    let fy = polygon[1];
+    let (fx, fy) = (tx(m, fx, fy), ty(m, fx, fy));
+    for i in range(0u, triangles) {
+        // Set the first point in triangle to use the beginning.
+        let ind_out = i * 2 * 3;
+        vertices[ind_out + 0] = fx;
+        vertices[ind_out + 1] = fy;
+        for k in range(1u, 3) { 
+            // Copy vertex.
+            let ind_in = i * 2 + k * 2;
+            let ind_out = i * 2 * 3 + k * 2;
+            let (x, y) = (polygon[ind_in + 0], polygon[ind_in + 1]);
+            vertices[ind_out + 0] = tx(m, x, y);
+            vertices[ind_out + 1] = ty(m, x, y);
+        }
+
+        for k in range(0u, 3) {
+            // Copy color.
+            let ind_out = i * 4 * 3 + k * 4;
+            colors[ind_out + 0] = color[0];
+            colors[ind_out + 1] = color[1];
+            colors[ind_out + 2] = color[2];
+            colors[ind_out + 3] = color[3];
         }
     }
 
-    f(vertices.slice(0, 6), colors.slice(0, 12)); 
+    f(vertices.slice(0, triangles * 2 * 3), 
+        colors.slice(0, triangles * 4 * 3)); 
 }
 
 /// Creates triangle list vertices from rectangle.
