@@ -14,7 +14,7 @@ fn ty(m: &Matrix2d, x: f64, y: f64) -> f32 {
 
 /// Streams an ellipse specified by a resolution.
 #[inline(always)]
-pub fn ellipse_tri_list_xy_rgba_f32(
+pub fn with_ellipse_tri_list_xy_rgba_f32(
     resolution: uint,
     m: &Matrix2d,
     rect: &Rectangle,
