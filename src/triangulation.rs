@@ -12,6 +12,29 @@ fn ty(m: &Matrix2d, x: f64, y: f64) -> f32 {
     (m[3] * x + m[4] * y + m[5]) as f32
 }
 
+/// Streams an ellipse specified by a resolution.
+#[inline(always)]
+pub fn ellipse_tri_list_xy_rgba_f32(
+    resolution: uint,
+    m: &Matrix2d,
+    rect: &Rectangle,
+    color: [f32, ..4],
+    f: |vertices: &[f32], colors: &[f32]|) {
+    
+    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (cw, ch) = (0.5 * w, 0.5 * h);
+    let (cx, cy) = (x + cw, y + ch);
+    let n = resolution;
+    let mut i = 0u;
+    stream_polygon_tri_list_xy_rgba_f32(m, || {
+        if i >= n { return None; }        
+
+        let angle = i as f64 / n as f64;
+        i += 1;
+        Some([cx + angle.cos() * cw, cy + angle.sin() * ch])
+    }, color, f);
+}
+
 /// Streams a polygon into tri list with color per vertex.
 /// Uses buffers that fit inside L1 cache.
 pub fn stream_polygon_tri_list_xy_rgba_f32(
