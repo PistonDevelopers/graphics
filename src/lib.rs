@@ -38,6 +38,8 @@
 //!
 //! This is only the case when you are assigning the context to a variable.
 
+extern crate std;
+
 pub use Context = context::Context;
 pub use BackEnd = back_end::BackEnd;
 pub use Transform2d = transform2d::Transform2d;

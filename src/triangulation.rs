@@ -1,5 +1,6 @@
 //! Methods for converting shapes into triangles.
 
+use std;
 use {Matrix2d, Rectangle};
 
 #[inline(always)]
@@ -29,7 +30,7 @@ pub fn with_ellipse_tri_list_xy_rgba_f32(
     stream_polygon_tri_list_xy_rgba_f32(m, || {
         if i >= n { return None; }        
 
-        let angle = i as f64 / n as f64;
+        let angle = i as f64 / n as f64 * std::f64::consts::PI_2;
         i += 1;
         Some([cx + angle.cos() * cw, cy + angle.sin() * ch])
     }, color, f);
@@ -49,6 +50,10 @@ pub fn stream_polygon_tri_list_xy_rgba_f32(
     // Get the first point which will be used a lot.
     let fp = match polygon() { None => return, Some(val) => val };
     let (fx, fy) = (tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1]));
+    let gp = match polygon() { None => return, Some(val) => val };
+    let (gx, gy) = (tx(m, gp[0], gp[1]), ty(m, gp[0], gp[1]));
+    let mut gx = gx;
+    let mut gy = gy;
     let mut i = 0;
     'read_vertices: loop {
         // Set the first point in triangle to use the beginning.
@@ -56,33 +61,51 @@ pub fn stream_polygon_tri_list_xy_rgba_f32(
         vertices[ind_out + 0] = fx;
         vertices[ind_out + 1] = fy;
         let ind_out = i * 4 * 3;
-        vertices[ind_out + 0] = color[0];
-        vertices[ind_out + 1] = color[1];
-        vertices[ind_out + 2] = color[2];
-        vertices[ind_out + 3] = color[3];
+        colors[ind_out + 0] = color[0];
+        colors[ind_out + 1] = color[1];
+        colors[ind_out + 2] = color[2];
+        colors[ind_out + 3] = color[3];
 
-        for k in range(1u, 3) { 
-            // Copy vertex.
-            let ind_out = i * 2 * 3 + k * 2;
-            let p = 
-                match polygon() {
-                    None => break 'read_vertices,
-                    Some(val) => val,
-                };
-            vertices[ind_out + 0] = tx(m, p[0], p[1]);
-            vertices[ind_out + 1] = ty(m, p[0], p[1]);
-            let ind_out = i * 4 * 3 + k * 3;
-            colors[ind_out + 0] = color[0];
-            colors[ind_out + 1] = color[1];
-            colors[ind_out + 2] = color[2];
-            colors[ind_out + 3] = color[3];
-        }
+        // Copy vertex.
+        let ind_out = i * 2 * 3 + 2;
+        let p = 
+            match polygon() {
+                None => break 'read_vertices,
+                Some(val) => val,
+            };
+        let x = tx(m, p[0], p[1]);
+        let y = ty(m, p[0], p[1]);
+            
+        vertices[ind_out + 0] = gx;
+        vertices[ind_out + 1] = gy;
+        vertices[ind_out + 2] = x;
+        vertices[ind_out + 3] = y;
+        gx = x;
+        gy = y;
+        let ind_out = i * 4 * 3 + 4;
+        colors[ind_out + 0] = color[0];
+        colors[ind_out + 1] = color[1];
+        colors[ind_out + 2] = color[2];
+        colors[ind_out + 3] = color[3];
+        colors[ind_out + 4] = color[0];
+        colors[ind_out + 5] = color[1];
+        colors[ind_out + 6] = color[2];
+        colors[ind_out + 7] = color[3];
 
         i += 1;
+        // Buffer is full.
+        if i * 2 * 3 + 2 == vertices.len() {
+            // Send chunk and start over.
+            f(vertices.slice(0, i * 2 * 3),
+                colors.slice(0, i * 4 * 3));
+            i = 0;
+        }
     }
 
-    f(vertices.slice(0, i * 2 * 3), 
-        colors.slice(0, i * 4 * 3)); 
+    if i > 0 {
+        f(vertices.slice(0, i * 2 * 3), 
+            colors.slice(0, i * 4 * 3)); 
+    }
 }
 
 /// Splits polygon into convex segments with one color per vertex.
