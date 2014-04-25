@@ -1,7 +1,7 @@
 
 //! Various methods for computing with vectors.
 
-use {Matrix2d, InfiniteLine, Vec2d};
+use {Matrix2d, Ray, Vec2d};
 
 /// Multiplies two matrices.
 #[inline(always)]
@@ -40,20 +40,19 @@ pub fn shear(sx: f64, sy: f64) -> Matrix2d {
      sy, 1.0, 0.0]
 }
 
-/// Compute the shortest vector from a point to an infinite line.
-/// An infinite line stores a point on the line and a normal vector.
+/// Compute the shortest vector from point to ray.
+/// A ray stores starting point and directional vector.
 #[inline(always)]
-pub fn separation(line: InfiniteLine, x: f64, y: f64) -> Vec2d {
-    // Get the normal vector.
-    let (nx, ny) = (line[2], line[3]);
+pub fn separation(ray: Ray, x: f64, y: f64) -> Vec2d {
+    // Get the directional vector.
+    let (dir_x, dir_y) = (ray[2], ray[3]);
     // Get displacement vector from point.
-    let (dx, dy) = (line[0] - x, line[1] - y);
-    // Compute the component of position in direction of normal vector.
-    let dot = nx * x + ny * y;
-    // The normal vector multiplied with the dot gives us coordinates
-    // parallel to the line.
-    // When we subtract this from the displacement we get a vector normal to the line.
-    // This is the shortest vector from the point to the infinite line.
-    [dx - dot * nx, dy - dot * ny]
+    let (dx, dy) = (ray[0] - x, ray[1] - y);
+    // Compute the component of position in ray direction.
+    let dot = dir_x * x + dir_y * y;
+    // The directional vector multiplied with the dot gives us a parallel vector.
+    // When we subtract this from the displacement we get a vector normal to the ray.
+    // This is the shortest vector from the point to the ray.
+    [dx - dot * dir_x, dy - dot * dir_y]
 }
 

@@ -75,7 +75,7 @@ pub mod interpolation;
 
 pub type Color = [f32, ..4];
 pub type Line = [f64, ..4];
-pub type InfiniteLine = [f64, ..4];
+pub type Ray = [f64, ..4];
 pub type Matrix2d = [f64, ..6];
 pub type Rectangle = [f64, ..4];
 pub type RoundRectangle = [f64, ..5];
