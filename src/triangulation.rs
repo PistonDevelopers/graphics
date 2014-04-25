@@ -12,6 +12,56 @@ fn ty(m: &Matrix2d, x: f64, y: f64) -> f32 {
     (m[3] * x + m[4] * y + m[5]) as f32
 }
 
+/// Streams a polygon into tri list with color per vertex.
+/// Uses buffers that fit inside L1 cache.
+pub fn stream_polygon_tri_list_xy_rgba_f32(
+    m: &Matrix2d,
+    polygon: || -> Option<[f64, ..2]>,
+    color: [f32, ..4],
+    f: |vertices: &[f32], colors: &[f32]|) {
+    
+    let mut vertices: [f32, ..740] = [0.0, ..740];
+    let mut colors: [f32, ..1480] = [0.0, ..1480];
+    // Draw first triangle for testing.
+    // Get the first point which will be used a lot.
+    let fp = match polygon() { None => return, Some(val) => val };
+    let (fx, fy) = (tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1]));
+    let mut i = 0;
+    'read_vertices: loop {
+        // Set the first point in triangle to use the beginning.
+        let ind_out = i * 2 * 3;
+        vertices[ind_out + 0] = fx;
+        vertices[ind_out + 1] = fy;
+        let ind_out = i * 4 * 3;
+        vertices[ind_out + 0] = color[0];
+        vertices[ind_out + 1] = color[1];
+        vertices[ind_out + 2] = color[2];
+        vertices[ind_out + 3] = color[3];
+
+        for k in range(1u, 3) { 
+            // Copy vertex.
+            let ind_out = i * 2 * 3 + k * 2;
+            let p = 
+                match polygon() {
+                    None => break 'read_vertices,
+                    Some(val) => val,
+                };
+            vertices[ind_out + 0] = tx(m, p[0], p[1]);
+            vertices[ind_out + 1] = ty(m, p[0], p[1]);
+            let ind_out = i * 4 * 3 + k * 3;
+            colors[ind_out + 0] = color[0];
+            colors[ind_out + 1] = color[1];
+            colors[ind_out + 2] = color[2];
+            colors[ind_out + 3] = color[3];
+        }
+
+        i += 1;
+    }
+
+    f(vertices.slice(0, i * 2 * 3), 
+        colors.slice(0, i * 4 * 3)); 
+}
+
 /// Splits polygon into convex segments with one color per vertex.
 /// Create a buffer that fits into L1 cache with 1KB overhead.
 pub fn with_polygon_tri_list_xy_rgba_f32(
