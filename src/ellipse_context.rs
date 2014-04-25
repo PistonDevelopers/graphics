@@ -2,6 +2,8 @@ use {Field, Matrix2d, Rectangle};
 use {Transform2d};
 use {Borrowed, Value};
 use vecmath::{translate, multiply, rotate_radians, scale, shear};
+use {AddColor};
+use {EllipseColorContext};
 
 /// An ellipse context.
 pub struct EllipseContext<'a> {
@@ -59,6 +61,18 @@ impl<'a> Transform2d<'a> for EllipseContext<'a> {
                 Value(multiply(&shear, self.transform.get()))
             },
             rect: Borrowed(self.rect.get()),
+        }
+    }
+}
+
+impl<'a> AddColor<'a, EllipseColorContext<'a>> for EllipseContext<'a> {
+    #[inline(always)]
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            color: Value([r, g, b, a]),
         }
     }
 }
