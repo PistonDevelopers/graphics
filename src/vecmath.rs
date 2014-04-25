@@ -56,3 +56,28 @@ pub fn separation(ray: Ray, x: f64, y: f64) -> Vec2d {
     [dx - dot * dir_x, dy - dot * dir_y]
 }
 
+/// Returns the least separation out of four.
+/// Each seperation can be computed using `separation` function.
+/// The separation returned can be used to solve collision of rectangles.
+#[inline(always)]
+pub fn least_separation_4(sep1: Vec2d, sep2: Vec2d, sep3: Vec2d, sep4: Vec2d) -> Vec2d {
+    let dot1 = sep1[0] * sep1[0] + sep1[1] * sep1[1];
+    let dot2 = sep2[0] * sep2[0] + sep2[1] * sep2[1];
+    let dot3 = sep3[0] * sep3[0] + sep3[1] * sep3[1];
+    let dot4 = sep4[0] * sep4[0] + sep4[1] * sep4[1];
+    // Search for the smallest dot product.
+    if dot1 < dot2 {
+        if dot3 < dot4 {
+            if dot1 < dot3 { sep1 } else { sep3 }
+        } else {
+            if dot1 < dot4 { sep1 } else { sep4 }
+        }
+    } else {
+        if dot3 < dot4 {
+            if dot2 < dot3 { sep2 } else { sep3 }
+        } else {
+            if dot2 < dot4 { sep2 } else { sep4 }
+        }
+    }
+}
+
