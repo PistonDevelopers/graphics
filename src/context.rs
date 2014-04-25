@@ -2,8 +2,8 @@
 use {Field, Borrowed, Value};
 use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d};
-use {ColorContext, EllipseContext, RectangleContext};
-use {AddColor, AddEllipse, AddRectangle};
+use {ColorContext, EllipseContext, PolygonContext, RectangleContext};
+use {AddColor, AddEllipse, AddPolygon, AddRectangle};
 
 /// Drawing 2d context.
 pub struct Context<'a> {
@@ -148,5 +148,16 @@ fn test_ellipse() {
     let c = Context::new();
     let d: EllipseContext = c.ellipse(0.0, 0.0, 100.0, 100.0);
     assert_eq!(d.rect.get()[2], 100.0);
+}
+
+impl<'a> AddPolygon<'a, PolygonContext<'a>> for Context<'a> {
+    #[inline(always)]
+    fn polygon(&'a self, polygon: &'a [f64]) -> PolygonContext<'a> {
+        PolygonContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            polygon: Value(polygon),
+        }
+    }
 }
 
