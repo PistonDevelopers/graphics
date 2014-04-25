@@ -12,6 +12,31 @@ fn ty(m: &Matrix2d, x: f64, y: f64) -> f32 {
     (m[3] * x + m[4] * y + m[5]) as f32
 }
 
+/// Splits polygon into convex segments with one color per vertex.
+/// Create a buffer that fits into L1 cache with 1KB overhead.
+pub fn with_polygon_tri_list_xy_rgba_f32(
+    m: &Matrix2d,
+    polygon: &[f64],
+    color: [f32, ..4],
+    f: |vertices: &[f32], colors: &[f32]|) {
+    let mut vertices: [f32, ..740] = [0.0, ..740];
+    let mut colors: [f32, ..1480] = [0.0, ..1480];
+    // Draw first triangle for testing.
+    vertices[0] = tx(m, polygon[0], polygon[1]);
+    vertices[1] = ty(m, polygon[0], polygon[1]);
+    vertices[2] = tx(m, polygon[2], polygon[3]);
+    vertices[3] = ty(m, polygon[2], polygon[3]);
+    vertices[4] = tx(m, polygon[4], polygon[5]);
+    vertices[5] = ty(m, polygon[4], polygon[5]);
+    for i in range(0u, 3) {
+        for (j, &c) in color.iter().enumerate() {
+            colors[i * 4 + j] = c;
+        }
+    }
+
+    f(vertices.slice(0, 6), colors.slice(0, 12)); 
+}
+
 /// Creates triangle list vertices from rectangle.
 pub fn rect_tri_list_xy_f32(m: &Matrix2d, rect: &Rectangle) -> [f32, ..12] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
