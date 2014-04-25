@@ -5,11 +5,11 @@ use {Transform2d};
 /// A polygon context.
 pub struct PolygonContext<'a> {
     /// Base/origin transform.
-    base: Field<'a, Matrix2d>,
+    pub base: Field<'a, Matrix2d>,
     /// Current transform.
-    transform: Field<'a, Matrix2d>,
+    pub transform: Field<'a, Matrix2d>,
     /// Current polygon.
-    polygon: Field<'a, &'a [f64]>
+    pub polygon: Field<'a, &'a [f64]>
 }
 
 impl<'a> Transform2d<'a> for PolygonContext<'a> {

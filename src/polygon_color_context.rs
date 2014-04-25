@@ -5,13 +5,13 @@ use {Transform2d};
 /// A polygon color context.
 pub struct PolygonColorContext<'a> {
     /// Base/origin transform.
-    base: Field<'a, Matrix2d>,
+    pub base: Field<'a, Matrix2d>,
     /// Current transform.
-    transform: Field<'a, Matrix2d>,
+    pub transform: Field<'a, Matrix2d>,
     /// Current color.
-    color: Field<'a, Color>,
+    pub color: Field<'a, Color>,
     /// Current polygon.
-    polygon: Field<'a, &'a [f64]>,
+    pub polygon: Field<'a, &'a [f64]>,
 }
 
 impl<'a> Transform2d<'a> for PolygonColorContext<'a> {
