@@ -75,7 +75,6 @@ impl<'a> Fill<'a> for RectangleColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_rgba_f32() {
             let rect = self.rect.get();
-            let rect: [f32, ..4] = [rect[0] as f32, rect[1] as f32, rect[2] as f32, rect[3] as f32];
             let color = self.color.get();
             let color: [f32, ..4] = [color[0], color[1], color[2], color[3]];
             // Complete transparency does not need to be rendered.
@@ -84,7 +83,7 @@ impl<'a> Fill<'a> for RectangleColorContext<'a> {
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.tri_list_xy_rgba_f32(
-                rect_tri_list_xy_f32(rect),
+                rect_tri_list_xy_f32(self.transform.get(), rect),
                 rect_tri_list_rgba_f32(color)
             );
             if needs_alpha { back_end.disable_alpha_blend(); }

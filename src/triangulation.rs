@@ -1,12 +1,23 @@
 //! Methods for converting shapes into triangles.
 
+use {Matrix2d, Rectangle};
+
+#[inline(always)]
+fn tx(m: &Matrix2d, x: f64, y: f64) -> f32 {
+    (m[0] * x + m[1] * y + m[2]) as f32
+}
+
+#[inline(always)]
+fn ty(m: &Matrix2d, x: f64, y: f64) -> f32 {
+    (m[3] * x + m[4] * y + m[5]) as f32
+}
+
 /// Creates triangle list vertices from rectangle.
-pub fn rect_tri_list_xy_f32(rect: [f32, ..4]) -> [f32, ..12] {
+pub fn rect_tri_list_xy_f32(m: &Matrix2d, rect: &Rectangle) -> [f32, ..12] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
-    let x2 = x + w;
-    let y2 = y + h;
-    [x, y, x2, y, x, y2,
-     x2, y, x2, y2, x, y2]
+    let (x2, y2) = (x + w, y + h);
+    [tx(m,x,y), ty(m,x,y), tx(m,x2,y), ty(m,x2,y), tx(m,x,y2), ty(m,x,y2),
+     tx(m,x2,y), ty(m,x2,y), tx(m,x2,y2), ty(m,x2,y2), tx(m,x,y2), ty(m,x,y2)]
 }
 
 /// Creates triangle list colors from rectangle.
