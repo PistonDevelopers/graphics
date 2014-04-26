@@ -1,7 +1,7 @@
 
 //! Various methods for computing with vectors.
 
-use {Matrix2d, Ray, Vec2d};
+use {Matrix2d, Ray, Vec2d, Rectangle};
 
 /// Multiplies two matrices.
 #[inline(always)]
@@ -80,4 +80,11 @@ pub fn least_separation_4(sep1: Vec2d, sep2: Vec2d, sep3: Vec2d, sep4: Vec2d) ->
         }
     }
 }
+
+/// Shrinks a rectangle by a factor on all sides.
+#[inline(always)]
+pub fn margin(rect: Rectangle, m: f64) -> Rectangle {
+    [rect[0] + m, rect[1] + m, rect[2] - 2.0 * m, rect[3] - 2.0 * m]
+}
+
 
