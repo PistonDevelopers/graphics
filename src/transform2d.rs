@@ -15,6 +15,13 @@ pub trait Transform2d<'a> {
     fn rot_rad(&'a self, angle: f64) -> Self;
     /// Scale.
     fn scale(&'a self, sx: f64, sy: f64) -> Self;
+
+    /// Scales in both directions.
+    #[inline(always)]
+    fn zoom(&'a self, s: f64) -> Self {
+        self.scale(s, s)
+    }
+
     /// Shear.
     fn shear(&'a self, sx: f64, sy: f64) -> Self;
 }
