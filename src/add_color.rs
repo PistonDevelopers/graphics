@@ -9,5 +9,11 @@ pub trait AddColor<'a, T> {
     fn rgb(&'a self, r: f32, g: f32, b: f32) -> T {
         self.rgba(r, g, b, 1.0)
     }
+
+    /// Add color [r, g, b, a].
+    #[inline(always)]
+    fn color(&'a self, color: [f32, ..4]) -> T {
+        self.rgba(color[0], color[1], color[2], color[3])
+    }
 }
 
