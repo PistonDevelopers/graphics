@@ -14,6 +14,13 @@ pub trait Transform2d<'a> {
         self.rot_rad(angle * pi / 180.0)
     }
     
+    /// Rotates degrees.
+    #[inline(always)]
+    fn rot_deg_local(&'a self, angle: f64) -> Self {
+        let pi: f64 = Float::pi();
+        self.rot_rad_local(angle * pi / 180.0)
+    }
+    
     /// Rotate radians.
     fn rot_rad(&'a self, angle: f64) -> Self;
 
