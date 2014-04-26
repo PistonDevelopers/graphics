@@ -3,6 +3,8 @@ use vecmath::{margin_round_rectangle,
 relative_round_rectangle, translate, rotate_radians, scale, shear, multiply};
 use {Transform2d};
 use {RelativeRectangle};
+use {RoundRectangleColorContext};
+use {AddColor};
 
 /// A round rectangle context.
 pub struct RoundRectangleContext<'a> {
@@ -128,6 +130,19 @@ impl<'a> RelativeRectangle<'a> for RoundRectangleContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             round_rect: Value(relative_round_rectangle(self.round_rect.get(), x, y)),
+        }
+    }
+}
+
+impl<'a> AddColor<'a, RoundRectangleColorContext<'a>> for RoundRectangleContext<'a> {
+    /// Creates a RectangleColorContext.
+    #[inline(always)]
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> RoundRectangleColorContext<'a> {
+        RoundRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Value([r, g, b, a]),
+            round_rect: Borrowed(self.round_rect.get()),
         }
     }
 }
