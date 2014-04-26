@@ -1,7 +1,7 @@
 //! Methods for converting shapes into triangles.
 
 use std;
-use {Matrix2d, Rectangle};
+use {Matrix2d, Rectangle, RoundRectangle};
 
 #[inline(always)]
 fn tx(m: &Matrix2d, x: f64, y: f64) -> f32 {
@@ -35,6 +35,54 @@ pub fn with_ellipse_tri_list_xy_rgba_f32(
         Some([cx + angle.cos() * cw, cy + angle.sin() * ch])
     }, color, f);
 }
+
+/// Streams a round rectangle.
+#[inline(always)]
+pub fn with_round_rectangle_tri_list_xy_rgba_f32(
+    resolution_corner: uint,
+    m: &Matrix2d,
+    round_rect: &RoundRectangle,
+    color: [f32, ..4],
+    f: |vertices: &[f32], colors: &[f32]|) {
+    
+    let (x, y, w, h, radius) = (
+        round_rect[0], 
+        round_rect[1], 
+        round_rect[2], 
+        round_rect[3], 
+        round_rect[4]
+    );
+    let n = resolution_corner * 4 + 4;
+    let mut i = 0u;
+    stream_polygon_tri_list_xy_rgba_f32(m, || {
+        if i < n { return None; }
+
+        let j = i;
+        i += 1;
+        match j {
+            j if j >= resolution_corner * 3 => { 
+                let angle = j as f64 / (n - 3) as f64 * std::f64::consts::PI_2;
+                let (cx, cy) = (x + w - radius, y + radius);
+                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+            },
+            j if j >= resolution_corner * 2 => {  
+                let angle = j as f64 / (n - 2) as f64 * std::f64::consts::PI_2;
+                let (cx, cy) = (x + radius, y + radius);
+                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+            },
+            j if j >= resolution_corner * 1 => { 
+                let angle = j as f64 / (n - 1) as f64 * std::f64::consts::PI_2;
+                let (cx, cy) = (x + radius, y + h - radius);
+                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+            },
+            j => {
+                let angle = j as f64 / (n - 0) as f64 * std::f64::consts::PI_2;
+                let (cx, cy) = (x + w - radius, y + h - radius);
+                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+            },
+        }
+    }, color, f);
+} 
 
 /// Streams a polygon into tri list with color per vertex.
 /// Uses buffers that fit inside L1 cache.
