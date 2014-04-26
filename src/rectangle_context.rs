@@ -1,9 +1,10 @@
 
 use {Field, Borrowed, Value};
-use vecmath::{rotate_radians, multiply, translate, scale, shear};
+use vecmath::{margin, rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Rectangle};
 use {RectangleColorContext};
 use {AddColor};
+use {RelativeRectangle};
 
 /// A rectangle context.
 pub struct RectangleContext<'a> {
@@ -134,5 +135,16 @@ fn test_rgba() {
     let d = c.rect(0.0, 0.0, 100.0, 100.0);
     let e = d.rgba(1.0, 0.0, 0.0, 1.0);
     assert_eq!(e.color.get()[0], 1.0);
+}
+
+impl<'a> RelativeRectangle<'a> for RectangleContext<'a> {
+    #[inline(always)]
+    fn margin(&'a self, m: f64) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value(margin(self.rect.get(), m)),
+        }
+    }
 }
 
