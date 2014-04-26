@@ -1,9 +1,10 @@
 
 use {Field, Borrowed, Value};
-use vecmath::{rotate_radians, multiply, translate, scale, shear};
+use vecmath::{margin, rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Rectangle, Color};
 use {Fill, Clear, BackEnd};
 use triangulation::{rect_tri_list_xy_f32, rect_tri_list_rgba_f32};
+use {RelativeRectangle};
 
 /// A rectangle color context.
 pub struct RectangleColorContext<'a> {
@@ -155,3 +156,16 @@ impl<'a> Clear for RectangleColorContext<'a> {
         }
     }
 }
+
+impl<'a> RelativeRectangle<'a> for RectangleColorContext<'a> {
+    #[inline(always)]
+    fn margin(&'a self, m: f64) -> RectangleColorContext<'a> {
+        RectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            rect: Value(margin(self.rect.get(), m)),
+        }
+    }
+}
+
