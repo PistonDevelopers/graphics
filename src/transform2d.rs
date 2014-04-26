@@ -23,6 +23,9 @@ pub trait Transform2d<'a> {
     /// Scale.
     fn scale(&'a self, sx: f64, sy: f64) -> Self;
 
+    /// Scales in local coordinates.
+    fn scale_local(&'a self, sx: f64, sy: f64) -> Self;
+
     /// Scales in both directions.
     #[inline(always)]
     fn zoom(&'a self, s: f64) -> Self {

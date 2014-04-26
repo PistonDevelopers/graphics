@@ -83,6 +83,19 @@ impl<'a> Transform2d<'a> for EllipseColorContext<'a> {
     }
 
     #[inline(always)]
+    fn scale_local(&'a self, sx: f64, sy: f64) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let scale = scale(sx, sy);
+                Value(multiply(self.transform.get(), &scale))
+            },
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
     fn shear(&'a self, sx: f64, sy: f64) -> EllipseColorContext<'a> {
         EllipseColorContext {
             base: Borrowed(self.base.get()),

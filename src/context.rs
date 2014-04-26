@@ -70,6 +70,17 @@ impl<'a> Transform2d<'a> for Context<'a> {
     }
     
     #[inline(always)]
+    fn scale_local(&'a self, sx: f64, sy: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let scale = scale(sx, sy);
+                multiply(self.transform.get(), &scale)
+            }),
+        }
+    }
+    
+    #[inline(always)]
     fn shear(&'a self, sx: f64, sy: f64) -> Context<'a> {
         Context {
             base: Borrowed(self.base.get()),

@@ -74,6 +74,18 @@ impl<'a> Transform2d<'a> for LineContext<'a> {
         }
     }
 
+    #[inline(always)]
+    fn scale_local(&'a self, sx: f64, sy: f64) -> LineContext<'a> {
+        LineContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let scale = scale(sx, sy);
+                Value(multiply(self.transform.get(), &scale))
+            },
+            line: Borrowed(self.line.get()),
+        }
+    }
+
     #[inline(alwyas)]
     fn shear(&'a self, sx: f64, sy: f64) -> LineContext<'a> {
         LineContext {

@@ -77,6 +77,18 @@ impl<'a> Transform2d<'a> for RectangleContext<'a> {
     }
 
     #[inline(always)]
+    fn scale_local(&'a self, sx: f64, sy: f64) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let scale = scale(sx, sy);
+                Value(multiply(self.transform.get(), &scale))
+            },
+            rect: Borrowed(self.rect.get()),
+        }
+    }
+
+    #[inline(always)]
     fn shear(&'a self, sx: f64, sy: f64) -> RectangleContext<'a> {
         RectangleContext {
             base: Borrowed(self.base.get()),
