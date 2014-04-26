@@ -39,6 +39,12 @@ pub trait Transform2d<'a> {
         self.scale(s, s)
     }
 
+    /// Scales in both directions.
+    #[inline(always)]
+    fn zoom_local(&'a self, s: f64) -> Self {
+        self.scale_local(s, s)
+    }
+    
     /// Flips vertically.
     #[inline(always)]
     fn flip_v(&'a self) -> Self {
