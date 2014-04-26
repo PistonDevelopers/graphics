@@ -14,7 +14,7 @@ pub trait Transform2d<'a> {
         self.rot_rad(angle * pi / 180.0)
     }
     
-    /// Rotates degrees.
+    /// Rotates degrees in local coordinates.
     #[inline(always)]
     fn rot_deg_local(&'a self, angle: f64) -> Self {
         let pi: f64 = Float::pi();
@@ -39,7 +39,7 @@ pub trait Transform2d<'a> {
         self.scale(s, s)
     }
 
-    /// Scales in both directions.
+    /// Scales in both directions in local coordinates.
     #[inline(always)]
     fn zoom_local(&'a self, s: f64) -> Self {
         self.scale_local(s, s)
