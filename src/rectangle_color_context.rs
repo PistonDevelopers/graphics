@@ -6,6 +6,8 @@ use {Transform2d, Matrix2d, Rectangle, Color};
 use {Fill, Clear, BackEnd};
 use triangulation::{rect_tri_list_xy_f32, rect_tri_list_rgba_f32};
 use {RelativeRectangle};
+use {RoundRectangleColorContext};
+use {AddRound};
 
 /// A rectangle color context.
 pub struct RectangleColorContext<'a> {
@@ -176,6 +178,21 @@ impl<'a> RelativeRectangle<'a> for RectangleColorContext<'a> {
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             rect: Value(relative_rectangle(self.rect.get(), x, y)),
+        }
+    }
+}
+
+impl<'a> AddRound<'a, RoundRectangleColorContext<'a>> for RectangleColorContext<'a> {
+    #[inline(always)]
+    fn round(&'a self, radius: f64) -> RoundRectangleColorContext<'a> {
+        RoundRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            round_rect: {
+                let rect = self.rect.get();
+                Value([rect[0], rect[1], rect[2], rect[3], radius])
+            },
         }
     }
 }
