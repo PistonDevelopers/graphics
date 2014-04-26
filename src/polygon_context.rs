@@ -98,6 +98,18 @@ impl<'a> Transform2d<'a> for PolygonContext<'a> {
             polygon: Borrowed(self.polygon.get()),
         }
     }
+    
+    #[inline(always)]
+    fn shear_local(&'a self, sx: f64, sy: f64) -> PolygonContext<'a> {
+        PolygonContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let shear = shear(sx, sy);
+                Value(multiply(self.transform.get(), &shear))
+            },
+            polygon: Borrowed(self.polygon.get()),
+        }
+    }
 }
 
 impl<'a> AddColor<'a, PolygonColorContext<'a>> for PolygonContext<'a> {

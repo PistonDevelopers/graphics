@@ -100,6 +100,18 @@ impl<'a> Transform2d<'a> for ColorContext<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+    
+    #[inline(always)]
+    fn shear_local(&'a self, sx: f64, sy: f64) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let shear = shear(sx, sy);
+                Value(multiply(self.transform.get(), &shear))
+            },
+            color: Borrowed(self.color.get()),
+        }
+    }
 }
 
 impl<'a> AddRectangle<'a, RectangleColorContext<'a>> for ColorContext<'a> {

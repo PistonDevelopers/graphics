@@ -90,6 +90,17 @@ impl<'a> Transform2d<'a> for Context<'a> {
             }),
         }
     }
+    
+    #[inline(always)]
+    fn shear_local(&'a self, sx: f64, sy: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let shear = shear(sx, sy);
+                multiply(self.transform.get(), &shear)
+            }),
+        }
+    }
 }
 
 impl<'a> Context<'a> {

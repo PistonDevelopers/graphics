@@ -46,4 +46,7 @@ pub trait Transform2d<'a> {
 
     /// Shear.
     fn shear(&'a self, sx: f64, sy: f64) -> Self;
+    
+    /// Shears in local coordinates.
+    fn shear_local(&'a self, sx: f64, sy: f64) -> Self;
 }

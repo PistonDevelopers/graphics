@@ -96,4 +96,16 @@ impl<'a> Transform2d<'a> for RoundRectangleContext<'a> {
             round_rect: Borrowed(self.round_rect.get()),
         }
     }
+    
+    #[inline(always)]
+    fn shear_local(&'a self, sx: f64, sy: f64) -> RoundRectangleContext<'a> {
+        RoundRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let shear = shear(sx, sy);
+                Value(multiply(self.transform.get(), &shear))
+            },
+            round_rect: Borrowed(self.round_rect.get()),
+        }
+    }
 }
