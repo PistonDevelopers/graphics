@@ -4,8 +4,9 @@ use vecmath::{relative_rectangle, margin_rectangle,
 rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Rectangle};
 use {RectangleColorContext};
-use {AddColor};
+use {AddColor, AddRound};
 use {RelativeRectangle};
+use {RoundRectangleContext};
 
 /// A rectangle context.
 pub struct RectangleContext<'a> {
@@ -154,6 +155,20 @@ impl<'a> RelativeRectangle<'a> for RectangleContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(relative_rectangle(self.rect.get(), x, y)),
+        }
+    }
+}
+
+impl<'a> AddRound<'a, RoundRectangleContext<'a>> for RectangleContext<'a> {
+    #[inline(always)]
+    fn round(&'a self, radius: f64) -> RoundRectangleContext<'a> {
+        RoundRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            round_rect: {
+                let rect = self.rect.get();
+                Value([rect[0], rect[1], rect[2], rect[3], radius])
+            },
         }
     }
 }
