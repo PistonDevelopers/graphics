@@ -55,7 +55,7 @@ pub fn with_round_rectangle_tri_list_xy_rgba_f32(
     let n = resolution_corner * 4 + 4;
     let mut i = 0u;
     stream_polygon_tri_list_xy_rgba_f32(m, || {
-        if i < n { return None; }
+        if i >= n { return None; }
 
         let j = i;
         i += 1;
