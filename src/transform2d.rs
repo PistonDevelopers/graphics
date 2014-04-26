@@ -22,6 +22,18 @@ pub trait Transform2d<'a> {
         self.scale(s, s)
     }
 
+    /// Flips vertically.
+    #[inline(always)]
+    fn flip_v(&'a self) -> Self {
+        self.scale(1.0, -1.0)
+    }
+
+    /// Flips horizontally.
+    #[inline(always)]
+    fn flip_h(&'a self) -> Self {
+        self.scale(-1.0, 0.0)
+    }
+
     /// Shear.
     fn shear(&'a self, sx: f64, sy: f64) -> Self;
 }
