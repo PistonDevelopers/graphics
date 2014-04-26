@@ -30,6 +30,19 @@ impl<'a> Transform2d<'a> for PolygonColorContext<'a> {
     }
 
     #[inline(always)]
+    fn trans_local(&'a self, x: f64, y: f64) -> PolygonColorContext<'a> {
+        PolygonColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let trans = translate(x, y);
+                Value(multiply(self.transform.get(), &trans))
+            },
+            polygon: Borrowed(self.polygon.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+    
+    #[inline(always)]
     fn rot_rad(&'a self, angle: f64) -> PolygonColorContext<'a> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),

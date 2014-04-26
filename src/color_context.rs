@@ -30,6 +30,18 @@ impl<'a> Transform2d<'a> for ColorContext<'a> {
     }
 
     #[inline(always)]
+    fn trans_local(&'a self, x: f64, y: f64) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let trans = translate(x, y);
+                Value(multiply(self.transform.get(), &trans))
+            },
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
     fn rot_rad(&'a self, angle: f64) -> ColorContext<'a> {
         ColorContext {
             base: Borrowed(self.base.get()),

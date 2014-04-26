@@ -28,6 +28,18 @@ impl<'a> Transform2d<'a> for PolygonContext<'a> {
     }
 
     #[inline(always)]
+    fn trans_local(&'a self, x: f64, y: f64) -> PolygonContext<'a> {
+        PolygonContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let trans = translate(x, y);
+                Value(multiply(self.transform.get(), &trans))
+            },
+            polygon: Borrowed(self.polygon.get()),
+        }
+    }
+
+    #[inline(always)]
     fn rot_rad(&'a self, angle: f64) -> PolygonContext<'a> {
         PolygonContext {
             base: Borrowed(self.base.get()),

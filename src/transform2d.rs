@@ -3,7 +3,10 @@
 pub trait Transform2d<'a> {
     /// Translate x and y.
     fn trans(&'a self, x: f64, y: f64) -> Self;
-   
+  
+    /// Translate x an y in local coordinates.
+    fn trans_local(&'a self, x: f64, y: f64) -> Self;
+ 
     /// Rotates degrees.
     #[inline(always)]
     fn rot_deg(&'a self, angle: f64) -> Self {

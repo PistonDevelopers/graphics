@@ -27,6 +27,18 @@ impl<'a> Transform2d<'a> for LineContext<'a> {
     }
 
     #[inline(always)]
+    fn trans_local(&'a self, x: f64, y: f64) -> LineContext<'a> {
+        LineContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let trans = translate(x, y);
+                Value(multiply(self.transform.get(), &trans))
+            },
+            line: Borrowed(self.line.get()),
+        }
+    }
+
+    #[inline(always)]
     fn rot_rad(&'a self, angle: f64) -> LineContext<'a> {
         LineContext {
             base: Borrowed(self.base.get()),

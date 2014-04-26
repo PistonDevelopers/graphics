@@ -29,6 +29,18 @@ impl<'a> Transform2d<'a> for EllipseContext<'a> {
     }
 
     #[inline(always)]
+    fn trans_local(&'a self, x: f64, y: f64) -> EllipseContext<'a> {
+        EllipseContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let trans = translate(x, y);
+                Value(multiply(self.transform.get(), &trans))
+            },
+            rect: Borrowed(self.rect.get()),
+        }
+    }
+
+    #[inline(always)]
     fn rot_rad(&'a self, angle: f64) -> EllipseContext<'a> {
         EllipseContext {
             base: Borrowed(self.base.get()),

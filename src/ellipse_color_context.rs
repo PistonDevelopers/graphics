@@ -31,6 +31,19 @@ impl<'a> Transform2d<'a> for EllipseColorContext<'a> {
     }
 
     #[inline(always)]
+    fn trans_local(&'a self, x: f64, y: f64) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let trans = translate(x, y);
+                Value(multiply(self.transform.get(), &trans))
+            },
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+    
+    #[inline(always)]
     fn rot_rad(&'a self, angle: f64) -> EllipseColorContext<'a> {
         EllipseColorContext {
             base: Borrowed(self.base.get()),
