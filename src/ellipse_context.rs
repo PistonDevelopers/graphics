@@ -1,7 +1,8 @@
 use {Field, Matrix2d, Rectangle};
 use {Transform2d};
 use {Borrowed, Value};
-use vecmath::{relative_rectangle, margin, translate, multiply, rotate_radians, scale, shear};
+use vecmath::{relative_rectangle, margin_rectangle, 
+translate, multiply, rotate_radians, scale, shear};
 use {AddColor};
 use {EllipseColorContext};
 use {RelativeRectangle};
@@ -132,7 +133,7 @@ impl<'a> RelativeRectangle<'a> for EllipseContext<'a> {
         EllipseContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(margin(self.rect.get(), m)),
+            rect: Value(margin_rectangle(self.rect.get(), m)),
         }
     }
 

@@ -1,6 +1,7 @@
 
 use {Field, Borrowed, Value};
-use vecmath::{relative_rectangle, margin, rotate_radians, multiply, translate, scale, shear};
+use vecmath::{relative_rectangle, margin_rectangle, 
+rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Rectangle};
 use {RectangleColorContext};
 use {AddColor};
@@ -143,7 +144,7 @@ impl<'a> RelativeRectangle<'a> for RectangleContext<'a> {
         RectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(margin(self.rect.get(), m)),
+            rect: Value(margin_rectangle(self.rect.get(), m)),
         }
     }
 
