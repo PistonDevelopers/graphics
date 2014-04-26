@@ -87,4 +87,9 @@ pub fn margin(rect: &Rectangle, m: f64) -> Rectangle {
     [rect[0] + m, rect[1] + m, rect[2] - 2.0 * m, rect[3] - 2.0 * m]
 }
 
+/// Computes a relative rectangle using the rectangle as a tile.
+#[inline(always)]
+pub fn relative_rectangle(rect: &Rectangle, x: f64, y: f64) -> Rectangle {
+    [rect[0] + x * rect[2], rect[1] + y * rect[3], rect[2], rect[3]]
+}
 
