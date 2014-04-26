@@ -1,6 +1,8 @@
 use {Field, Borrowed, Value, Matrix2d, RoundRectangle};
-use vecmath::{translate, rotate_radians, scale, shear, multiply};
+use vecmath::{margin_round_rectangle, 
+relative_round_rectangle, translate, rotate_radians, scale, shear, multiply};
 use {Transform2d};
+use {RelativeRectangle};
 
 /// A round rectangle context.
 pub struct RoundRectangleContext<'a> {
@@ -109,3 +111,24 @@ impl<'a> Transform2d<'a> for RoundRectangleContext<'a> {
         }
     }
 }
+
+impl<'a> RelativeRectangle<'a> for RoundRectangleContext<'a> {
+    #[inline(always)]
+    fn margin(&'a self, m: f64) -> RoundRectangleContext<'a> {
+        RoundRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            round_rect: Value(margin_round_rectangle(self.round_rect.get(), m)),
+        }
+    }
+
+    #[inline(always)]
+    fn rel(&'a self, x: f64, y: f64) -> RoundRectangleContext<'a> {
+        RoundRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            round_rect: Value(relative_round_rectangle(self.round_rect.get(), x, y)),
+        }
+    }
+}
+

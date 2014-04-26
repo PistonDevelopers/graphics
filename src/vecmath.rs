@@ -1,7 +1,7 @@
 
 //! Various methods for computing with vectors.
 
-use {Matrix2d, Ray, Vec2d, Rectangle};
+use {Matrix2d, Ray, Vec2d, Rectangle, RoundRectangle};
 
 /// Multiplies two matrices.
 #[inline(always)]
@@ -87,9 +87,21 @@ pub fn margin(rect: &Rectangle, m: f64) -> Rectangle {
     [rect[0] + m, rect[1] + m, rect[2] - 2.0 * m, rect[3] - 2.0 * m]
 }
 
+/// Shrinks a rectangle by a factor on all sides.
+#[inline(always)]
+pub fn margin_round_rectangle(rect: &RoundRectangle, m: f64) -> RoundRectangle {
+    [rect[0] + m, rect[1] + m, rect[2] - 2.0 * m, rect[3] - 2.0 * m, rect[4]]
+}
+
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
 pub fn relative_rectangle(rect: &Rectangle, x: f64, y: f64) -> Rectangle {
     [rect[0] + x * rect[2], rect[1] + y * rect[3], rect[2], rect[3]]
+}
+
+/// Computes a relative round rectangle using the round rectangle as a tile.
+#[inline(always)]
+pub fn relative_round_rectangle(rect: &RoundRectangle, x: f64, y: f64) -> RoundRectangle {
+    [rect[0] + x * rect[2], rect[1] + y * rect[3], rect[2], rect[3], rect[4]]
 }
 
