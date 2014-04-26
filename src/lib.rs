@@ -59,6 +59,7 @@ pub use PolygonColorContext = polygon_color_context::PolygonColorContext;
 pub use RectangleContext = rectangle_context::RectangleContext;
 pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
 pub use RoundRectangleContext = round_rectangle_context::RoundRectangleContext;
+pub use RoundRectangleColorContext = round_rectangle_color_context::RoundRectangleColorContext;
 
 mod context;
 mod back_end;
@@ -79,6 +80,7 @@ mod polygon_color_context;
 mod rectangle_context;
 mod rectangle_color_context;
 mod round_rectangle_context;
+mod round_rectangle_color_context;
 pub mod vecmath;
 pub mod triangulation;
 pub mod interpolation;
