@@ -51,6 +51,12 @@ pub trait Transform2d<'a> {
         self.scale(1.0, -1.0)
     }
 
+    /// Flips vertically in local coordinates.
+    #[inline(always)]
+    fn flip_v_local(&'a self) -> Self {
+        self.scale_local(1.0, -1.0)
+    }
+    
     /// Flips horizontally.
     #[inline(always)]
     fn flip_h(&'a self) -> Self {
