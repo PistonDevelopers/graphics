@@ -1,6 +1,6 @@
 
 use {Field, Borrowed, Value};
-use vecmath::{margin, rotate_radians, multiply, translate, scale, shear};
+use vecmath::{relative_rectangle, margin, rotate_radians, multiply, translate, scale, shear};
 use {Clear, Fill, BackEnd, Transform2d, Matrix2d, Rectangle, Color};
 use triangulation::{with_ellipse_tri_list_xy_rgba_f32};
 use {RelativeRectangle};
@@ -169,6 +169,16 @@ impl<'a> RelativeRectangle<'a> for EllipseColorContext<'a> {
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             rect: Value(margin(self.rect.get(), m)),
+        }
+    }
+
+    #[inline(always)]
+    fn rel(&'a self, x: f64, y: f64) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            rect: Value(relative_rectangle(self.rect.get(), x, y)),
         }
     }
 }
