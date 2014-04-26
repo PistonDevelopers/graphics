@@ -63,6 +63,12 @@ pub trait Transform2d<'a> {
         self.scale(-1.0, 0.0)
     }
 
+    /// Flips horizontally in local coordinates.
+    #[inline(always)]
+    fn flip_h_local(&'a self) -> Self {
+        self.scale_local(-1.0, 0.0)
+    }
+
     /// Shear.
     fn shear(&'a self, sx: f64, sy: f64) -> Self;
     
