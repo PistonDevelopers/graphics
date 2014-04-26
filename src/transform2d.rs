@@ -16,6 +16,10 @@ pub trait Transform2d<'a> {
     
     /// Rotate radians.
     fn rot_rad(&'a self, angle: f64) -> Self;
+
+    /// Rotate radians in local coordinates.
+    fn rot_rad_local(&'a self, angle: f64) -> Self;
+
     /// Scale.
     fn scale(&'a self, sx: f64, sy: f64) -> Self;
 

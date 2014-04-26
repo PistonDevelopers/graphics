@@ -51,6 +51,18 @@ impl<'a> Transform2d<'a> for LineContext<'a> {
     }
 
     #[inline(always)]
+    fn rot_rad_local(&'a self, angle: f64) -> LineContext<'a> {
+        LineContext {
+            base: Borrowed(self.base.get()),
+            transform: {
+                let rot = rotate_radians(angle);
+                Value(multiply(self.transform.get(), &rot))
+            },
+            line: Borrowed(self.line.get()),
+        }
+    }
+
+    #[inline(always)]
     fn scale(&'a self, sx: f64, sy: f64) -> LineContext<'a> {
         LineContext {
             base: Borrowed(self.base.get()),

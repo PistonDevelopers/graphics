@@ -48,6 +48,17 @@ impl<'a> Transform2d<'a> for Context<'a> {
     }
 
     #[inline(always)]
+    fn rot_rad_local(&'a self, angle: f64) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value({
+                let rot = rotate_radians(angle);
+                multiply(self.transform.get(), &rot)
+            }),
+        }
+    }
+
+    #[inline(always)]
     fn scale(&'a self, sx: f64, sy: f64) -> Context<'a> {
         Context {
             base: Borrowed(self.base.get()),
