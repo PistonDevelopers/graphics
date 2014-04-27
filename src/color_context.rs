@@ -2,8 +2,9 @@
 use {Field, Borrowed, Value};
 use vecmath::{rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, Color};
-use {EllipseColorContext, PolygonColorContext, RectangleColorContext};
-use {AddEllipse, AddPolygon, AddRectangle};
+use {EllipseColorContext, PolygonColorContext, RectangleColorContext,
+TweenColorContext};
+use {AddEllipse, AddPolygon, AddRectangle, AddTween};
 use {BackEnd, Clear};
 
 /// A context with color information.
@@ -156,6 +157,18 @@ impl<'a> AddPolygon<'a, PolygonColorContext<'a>> for ColorContext<'a> {
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             polygon: Value(polygon),
+        }
+    }
+}
+
+impl<'a> AddTween<'a, TweenColorContext<'a>> for ColorContext<'a> {
+    #[inline(always)]
+    fn lerp(&'a self, tween_factor: f64) -> TweenColorContext<'a> {
+        TweenColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            tween_factor: Value(tween_factor),
         }
     }
 }
