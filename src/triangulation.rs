@@ -2,6 +2,7 @@
 
 use std;
 use {Matrix2d, Rectangle, RoundRectangle};
+use interpolation::{lerp};
 
 #[inline(always)]
 fn tx(m: &Matrix2d, x: f64, y: f64) -> f32 {
@@ -11,6 +12,43 @@ fn tx(m: &Matrix2d, x: f64, y: f64) -> f32 {
 #[inline(always)]
 fn ty(m: &Matrix2d, x: f64, y: f64) -> f32 {
     (m[3] * x + m[4] * y + m[5]) as f32
+}
+
+/// Streams tweened polygons using linear interpolation.
+#[inline(always)]
+pub fn with_lerp_polygons_tri_list_xy_rgba_f32(
+    m: &Matrix2d,
+    polygons: &[&[f64]],
+    tween_factor: f64,
+    color: [f32, ..4],
+    f: |vertices: &[f32], colors: &[f32]|) {
+
+    let poly_len = polygons.len() as f64;
+    // Map to interval between 0 and 1.
+    let tw = tween_factor % 1.0;
+    // Map negative values to positive.
+    let tw = if tw < 0.0 { tw + 1.0 } else { tw };
+    // Map to frame.
+    let tw = tw * poly_len;
+    // Get the current frame.
+    let frame = tw as uint;
+    // Get the next frame.
+    let next_frame = (frame + 1) % polygons.len();
+    let p0 = polygons[frame];
+    let p1 = polygons[next_frame];
+    // Get factor between frames.
+    let tw = tw - frame as f64;
+    let n = polygons[0].len();
+    let mut i = 0u;
+    stream_polygon_tri_list_xy_rgba_f32(m, || {
+        if i >= n { return None; }
+
+        let j = i;
+        i += 2;
+        let (x0, y0) = (p0[j], p0[j+1]);
+        let (x1, y1) = (p1[j], p1[j+1]);
+        Some([lerp(&x0, &x1, &tw), lerp(&y0, &y1, &tw)])
+    }, color, f);
 }
 
 /// Streams an ellipse specified by a resolution.
