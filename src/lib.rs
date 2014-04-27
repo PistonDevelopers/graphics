@@ -62,6 +62,7 @@ pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
 pub use RoundRectangleContext = round_rectangle_context::RoundRectangleContext;
 pub use RoundRectangleColorContext = round_rectangle_color_context::RoundRectangleColorContext;
 pub use TweenContext = tween_context::TweenContext;
+pub use TweenColorContext = tween_color_context::TweenColorContext;
 
 mod context;
 mod back_end;
@@ -85,6 +86,7 @@ mod rectangle_color_context;
 mod round_rectangle_context;
 mod round_rectangle_color_context;
 mod tween_context;
+mod tween_color_context;
 pub mod vecmath;
 pub mod triangulation;
 pub mod interpolation;
