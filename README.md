@@ -5,7 +5,7 @@ A library for 2D graphics, written in Rust, that works with multiple back-ends
 
 *Notice: This is a very early stage of the project!*
 
-*Last news: Round rectangles! Yeah!*
+*Last news: Linear interpolated tweening for polygons!*
 
 Example back-end for OpenGL (game engine): [Piston](https://github.com/bvssvni/piston)  
 
