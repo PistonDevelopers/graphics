@@ -84,13 +84,21 @@ pub fn least_separation_4(sep1: Vec2d, sep2: Vec2d, sep3: Vec2d, sep4: Vec2d) ->
 /// Shrinks a rectangle by a factor on all sides.
 #[inline(always)]
 pub fn margin_rectangle(rect: &Rectangle, m: f64) -> Rectangle {
-    [rect[0] + m, rect[1] + m, rect[2] - 2.0 * m, rect[3] - 2.0 * m]
+    let w = rect[2] - 2.0 * m;
+    let h = rect[3] - 2.0 * m;
+    let (x, w) = if w < 0.0 { (rect[0] + 0.5 * rect[2], 0.0) } else { (rect[0] + m, w) };
+    let (y, h) = if h < 0.0 { (rect[1] + 0.5 * rect[3], 0.0) } else { (rect[1] + m, h) };
+    [x, y, w, h]
 }
 
 /// Shrinks a rectangle by a factor on all sides.
 #[inline(always)]
 pub fn margin_round_rectangle(rect: &RoundRectangle, m: f64) -> RoundRectangle {
-    [rect[0] + m, rect[1] + m, rect[2] - 2.0 * m, rect[3] - 2.0 * m, rect[4]]
+    let w = rect[2] - 2.0 * m;
+    let h = rect[3] - 2.0 * m;
+    let (x, w) = if w < 0.0 { (rect[0] + 0.5 * rect[2], 0.0) } else { (rect[0] + m, w) };
+    let (y, h) = if h < 0.0 { (rect[1] + 0.5 * rect[3], 0.0) } else { (rect[1] + m, h) };
+    [x, y, w, h, rect[4]]
 }
 
 /// Computes a relative rectangle using the rectangle as a tile.
