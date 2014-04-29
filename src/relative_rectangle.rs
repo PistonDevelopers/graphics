@@ -24,5 +24,11 @@ pub trait RelativeRectangle<'a> {
     fn left(&'a self) -> Self {
         self.rel(-1.0, 0.0)
     }
+
+    /// Moves to the right rectangle using the current rectangle as tile.
+    #[inline(always)]
+    fn right(&'a self) -> Self {
+        self.rel(1.0, 0.0)
+    }
 }
 
