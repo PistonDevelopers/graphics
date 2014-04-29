@@ -13,7 +13,7 @@ pub trait RelativeRectangle<'a> {
     /// Moves to a relative rectangle using the current rectangle as tile.
     fn rel(&'a self, x: f64, y: f64) -> Self;
 
-    /// Moves to the above rectangle using the current rectangle as tile.
+    /// Moves to the rectangle above using the current rectangle as tile.
     #[inline(always)]
     fn up(&'a self) -> Self {
         self.rel(0.0, 1.0)
@@ -29,6 +29,12 @@ pub trait RelativeRectangle<'a> {
     #[inline(always)]
     fn right(&'a self) -> Self {
         self.rel(1.0, 0.0)
+    }
+
+    /// Moves to the rectangle below using the current rectangle as tile.
+    #[inline(always)]
+    fn down(&'a self) -> Self {
+        self.rel(0.0, -1.0)
     }
 }
 
