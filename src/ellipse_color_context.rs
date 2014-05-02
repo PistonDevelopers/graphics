@@ -128,7 +128,7 @@ impl<'a> Transform2d<'a> for EllipseColorContext<'a> {
 
 impl<'a> Fill<'a> for EllipseColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_rgba_f32() {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let color = self.color.get();
             let color: [f32, ..4] = [color[0], color[1], color[2], color[3]];
@@ -143,7 +143,7 @@ impl<'a> Fill<'a> for EllipseColorContext<'a> {
                 rect,
                 color,
                 |vertices, colors| {
-                    back_end.tri_list_xy_rgba_f32(vertices, colors)
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }
             );
             if needs_alpha { back_end.disable_alpha_blend(); }
