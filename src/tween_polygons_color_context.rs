@@ -1,6 +1,8 @@
 use {Field, Color, Matrix2d};
 use {Fill, BackEnd};
-use triangulation::{with_lerp_polygons_tri_list_xy_rgba_f32};
+use triangulation::{
+    with_lerp_polygons_tri_list_xy_f32_rgba_f32
+};
 
 /// An animation inbetweening context with color.
 pub struct TweenPolygonsColorContext<'a> {
@@ -27,7 +29,7 @@ impl<'a> Fill<'a> for TweenPolygonsColorContext<'a> {
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
-            with_lerp_polygons_tri_list_xy_rgba_f32(
+            with_lerp_polygons_tri_list_xy_f32_rgba_f32(
                 self.transform.get(),
                 *polygons,
                 *self.tween_factor.get(),                

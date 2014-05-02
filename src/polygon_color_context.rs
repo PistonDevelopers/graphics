@@ -1,7 +1,9 @@
 use {Field, Value, Borrowed, Matrix2d, Color};
 use vecmath::{multiply, translate, rotate_radians, scale, shear};
 use {Transform2d, Fill, BackEnd, Clear};
-use triangulation::{with_polygon_tri_list_xy_rgba_f32};
+use triangulation::{
+    with_polygon_tri_list_xy_f32_rgba_f32
+};
 
 /// A polygon color context.
 pub struct PolygonColorContext<'a> {
@@ -132,7 +134,7 @@ impl<'a> Fill<'a> for PolygonColorContext<'a> {
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
-            with_polygon_tri_list_xy_rgba_f32(
+            with_polygon_tri_list_xy_f32_rgba_f32(
                 self.transform.get(),
                 *polygon,
                 color,

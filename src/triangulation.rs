@@ -16,7 +16,7 @@ fn ty(m: &Matrix2d, x: f64, y: f64) -> f32 {
 
 /// Streams tweened polygons using linear interpolation.
 #[inline(always)]
-pub fn with_lerp_polygons_tri_list_xy_rgba_f32(
+pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     polygons: &[&[f64]],
     tween_factor: f64,
@@ -40,7 +40,7 @@ pub fn with_lerp_polygons_tri_list_xy_rgba_f32(
     let tw = tw - frame as f64;
     let n = polygons[0].len();
     let mut i = 0u;
-    stream_polygon_tri_list_xy_rgba_f32(m, || {
+    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
         if i >= n { return None; }
 
         let j = i;
@@ -53,7 +53,7 @@ pub fn with_lerp_polygons_tri_list_xy_rgba_f32(
 
 /// Streams an ellipse specified by a resolution.
 #[inline(always)]
-pub fn with_ellipse_tri_list_xy_rgba_f32(
+pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
     resolution: uint,
     m: &Matrix2d,
     rect: &Rectangle,
@@ -65,7 +65,7 @@ pub fn with_ellipse_tri_list_xy_rgba_f32(
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
     let mut i = 0u;
-    stream_polygon_tri_list_xy_rgba_f32(m, || {
+    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
         if i >= n { return None; }        
 
         let angle = i as f64 / n as f64 * std::f64::consts::PI_2;
@@ -76,7 +76,7 @@ pub fn with_ellipse_tri_list_xy_rgba_f32(
 
 /// Streams a round rectangle.
 #[inline(always)]
-pub fn with_round_rectangle_tri_list_xy_rgba_f32(
+pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
     resolution_corner: uint,
     m: &Matrix2d,
     round_rect: &RoundRectangle,
@@ -92,7 +92,7 @@ pub fn with_round_rectangle_tri_list_xy_rgba_f32(
     );
     let n = resolution_corner * 4 + 4;
     let mut i = 0u;
-    stream_polygon_tri_list_xy_rgba_f32(m, || {
+    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
         if i >= n { return None; }
 
         let j = i;
@@ -124,7 +124,7 @@ pub fn with_round_rectangle_tri_list_xy_rgba_f32(
 
 /// Streams a polygon into tri list with color per vertex.
 /// Uses buffers that fit inside L1 cache.
-pub fn stream_polygon_tri_list_xy_rgba_f32(
+pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     polygon: || -> Option<[f64, ..2]>,
     color: [f32, ..4],
@@ -196,7 +196,7 @@ pub fn stream_polygon_tri_list_xy_rgba_f32(
 
 /// Splits polygon into convex segments with one color per vertex.
 /// Create a buffer that fits into L1 cache with 1KB overhead.
-pub fn with_polygon_tri_list_xy_rgba_f32(
+pub fn with_polygon_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     polygon: &[f64],
     color: [f32, ..4],
@@ -204,7 +204,7 @@ pub fn with_polygon_tri_list_xy_rgba_f32(
 
     let n = polygon.len();
     let mut i = 0;
-    stream_polygon_tri_list_xy_rgba_f32(
+    stream_polygon_tri_list_xy_f32_rgba_f32(
         m, || {
             if i >= n { return None; }
 

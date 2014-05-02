@@ -5,7 +5,9 @@ rotate_radians, multiply, translate, scale, shear};
 use {Transform2d, Matrix2d, RoundRectangle, Color};
 use {Fill, Clear, BackEnd};
 use {RelativeRectangle};
-use triangulation::{with_round_rectangle_tri_list_xy_rgba_f32};
+use triangulation::{
+    with_round_rectangle_tri_list_xy_f32_rgba_f32
+};
 
 /// A rectangle color context.
 pub struct RoundRectangleColorContext<'a> {
@@ -169,7 +171,7 @@ impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
-            with_round_rectangle_tri_list_xy_rgba_f32(
+            with_round_rectangle_tri_list_xy_f32_rgba_f32(
                 32,
                 self.transform.get(),
                 round_rect,

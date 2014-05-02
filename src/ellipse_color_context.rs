@@ -3,7 +3,9 @@ use {Field, Borrowed, Value};
 use vecmath::{relative_rectangle, margin_rectangle, 
 rotate_radians, multiply, translate, scale, shear};
 use {Clear, Fill, BackEnd, Transform2d, Matrix2d, Rectangle, Color};
-use triangulation::{with_ellipse_tri_list_xy_rgba_f32};
+use triangulation::{
+    with_ellipse_tri_list_xy_f32_rgba_f32
+};
 use {RelativeRectangle};
 
 /// An ellipse color context.
@@ -135,7 +137,7 @@ impl<'a> Fill<'a> for EllipseColorContext<'a> {
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
-            with_ellipse_tri_list_xy_rgba_f32(
+            with_ellipse_tri_list_xy_f32_rgba_f32(
                 128,
                 self.transform.get(),
                 rect,
