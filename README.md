@@ -8,7 +8,7 @@ A library for 2D graphics, written in Rust, that works with multiple back-ends
 *Last news: Linear interpolated tweening for polygons!*
 
 Example back-end for OpenGL (game engine): [Piston](https://github.com/bvssvni/piston)  
-Experimental algorithms are developed in separate repository: [Rust-Graphics-Lab](https://github.com/bvssvni/rust-graphics-lab)  
+Experimental algorithms are developed in a separate repository: [Rust-Graphics-Lab](https://github.com/bvssvni/rust-graphics-lab)  
 
 ## Motivation
 
