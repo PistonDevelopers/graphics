@@ -113,3 +113,40 @@ pub fn relative_round_rectangle(rect: &RoundRectangle, x: f64, y: f64) -> RoundR
     [rect[0] + x * rect[2], rect[1] + y * rect[3], rect[2], rect[3], rect[4]]
 }
 
+/// Computes modular offset safely for indices.
+#[inline(always)]
+pub fn modular_offset_index(n: uint, i: uint, off: int) -> uint {
+    (i + (off % n as int + n as int) as uint) % n
+}
+
+#[test]
+fn test_modular_offset_index() {
+    assert_eq!(modular_offset_index(3, 0, -1), 2);
+    assert_eq!(modular_offset_index(3, 1, -1), 0);
+    assert_eq!(modular_offset_index(3, 2, -1), 1);
+    assert_eq!(modular_offset_index(3, 3, -1), 2);
+
+    assert_eq!(modular_offset_index(3, 0, 1), 1);
+    assert_eq!(modular_offset_index(3, 1, 1), 2);
+    assert_eq!(modular_offset_index(3, 2, 1), 0);
+    assert_eq!(modular_offset_index(3, 3, 1), 1);
+}
+
+/// Computes modular offset safely for numbers.
+#[inline(always)]
+pub fn modular_offset<T: Add<T, T> + Rem<T, T>>(n: &T, i: &T, off: &T) -> T {
+    (*i + (*off % *n + *n)) % *n 
+}
+
+#[test]
+fn test_modular_offset() {
+    assert_eq!(modular_offset(&3.0_f64, &0.0_f64, &-1.0_f64), 2.0_f64);
+    assert_eq!(modular_offset(&3.0_f64, &1.0_f64, &-1.0_f64), 0.0_f64);
+    assert_eq!(modular_offset(&3.0_f64, &2.0_f64, &-1.0_f64), 1.0_f64);
+    assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &-1.0_f64), 2.0_f64);
+
+    assert_eq!(modular_offset(&3.0_f64, &0.0_f64, &1.0_f64), 1.0_f64);
+    assert_eq!(modular_offset(&3.0_f64, &1.0_f64, &1.0_f64), 2.0_f64);
+    assert_eq!(modular_offset(&3.0_f64, &2.0_f64, &1.0_f64), 0.0_f64);
+    assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &1.0_f64), 1.0_f64);
+}
