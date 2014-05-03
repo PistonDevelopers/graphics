@@ -96,6 +96,7 @@ mod tween_polygons_color_context;
 pub mod vecmath;
 pub mod triangulation;
 pub mod interpolation;
+pub mod modular_index;
 
 pub type Color = [f32, ..4];
 pub type Line = [f64, ..4];
