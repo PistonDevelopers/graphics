@@ -119,6 +119,18 @@ pub fn modular_offset_index(n: uint, i: uint, off: int) -> uint {
     (i + (off % n as int + n as int) as uint) % n
 }
 
+/// Computes previous modular index safely.
+#[inline(always)]
+pub fn modular_previous(n: uint, i: uint) -> uint {
+    modular_offset_index(n, i, -1)
+}
+
+/// Computes next modular index safely.
+#[inline(always)]
+pub fn modular_next(n: uint, i: uint) -> uint {
+    modular_offset_index(n, i, 1)
+}
+
 #[test]
 fn test_modular_offset_index() {
     assert_eq!(modular_offset_index(3, 0, -1), 2);
