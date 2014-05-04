@@ -1,7 +1,15 @@
 
 //! Various methods for computing with vectors.
 
-use {Matrix2d, Ray, Vec2d, Rectangle, RoundRectangle};
+use {
+    Line,
+    Matrix2d, 
+    Ray, 
+    Rectangle, 
+    RoundRectangle, 
+    Vec2d, 
+    Triangle
+};
 use modular_index::{previous};
 
 /// Multiplies two matrices.
@@ -175,3 +183,47 @@ pub fn centroid(polygon: &[f64]) -> Vec2d {
     res
 }
 
+/// Returns a number that tells which side it is relative to a line.
+///
+/// Computes the cross product of the vector that gives the line  
+/// with the vector between point and starting point of line.  
+/// One side of the line has opposite sign of the other.  
+#[inline(always)]
+pub fn line_side(line: &Line, x: f64, y: f64) -> f64 {
+    let (ax, ay) = (line[0], line[1]);
+    let (bx, by) = (line[2], line[3]);
+    (bx - ax) * (y - ay) - (by - ay) * (x - ax)
+}
+
+/// Returns true if point is inside triangle.
+///
+/// This is done by computing a `side` number for each edge.  
+/// If the number is inside if it is on the same side for all edges.  
+/// Might break for very small triangles.  
+pub fn inside_triangle(triangle: &Triangle, x: f64, y: f64) -> bool {
+    let (ax, ay) = (triangle[0], triangle[1]);
+    let (bx, by) = (triangle[2], triangle[3]);
+    let (cx, cy) = (triangle[4], triangle[5]);
+
+    let ab_side = line_side(&([ax, ay, bx, by]), x, y);
+    let bc_side = line_side(&([bx, by, cx, cy]), x, y);
+    let ca_side = line_side(&([cx, cy, ax, ay]), x, y);
+
+    let ab_positive = ab_side.is_positive();
+    let bc_positive = bc_side.is_positive();
+    let ca_positive = ca_side.is_positive();
+
+    ab_positive == bc_positive
+    && bc_positive == ca_positive
+}
+
+#[test]
+fn test_triangle() {
+    // Triangle counter clock-wise.
+    let tri_1 = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0];
+    // Triangle clock-wise.
+    let tri_2 = [0.0, 0.0, 1.0, 1.0, 1.0, 0.0];
+    let (x, y) = (0.5, 0.25);
+    assert_eq!(inside_triangle(&tri_1, x, y), true);
+    assert_eq!(inside_triangle(&tri_2, x, y), true);
+}
