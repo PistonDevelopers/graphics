@@ -133,18 +133,45 @@ fn test_modular_offset() {
     assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &1.0_f64), 1.0_f64);
 }
 
-/// Computes the area of a simple polygon.  
-/// A simple polygon is one that does not intersect itself.
-pub fn area(polygon: &[f64]) -> f64 {
+/// Computes the area and centroid of a simple polygon.  
+///
+/// A simple polygon is one that does not intersect itself.  
+/// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons  
+pub fn area_centroid(polygon: &[f64]) -> (f64, Vec2d) {
     let n = polygon.len() / 2;
     let mut sum = 0.0_f64;
+    let (mut cx, mut cy) = (0.0_f64, 0.0_f64);
     for i in range(0, n) {
         let (qx, qy) = (polygon[i * 2], polygon[i * 2 + 1]);
         let p_i = previous(n, i);
         let (px, py) = (polygon[p_i * 2], polygon[p_i * 2 + 1]);
-        sum += px * qy - qx * py;
+        let cross = px * qy - qx * py;
+        cx += (px + qx) * cross;
+        cy += (py + qy) * cross;
+        sum += cross;
     }
 
-    0.5 * sum
+    let area = 0.5 * sum;
+    // 'cx / (6.0 * area)' = 'cx / (3.0 * sum)'
+    let centroid = [cx / (3.0 * sum), cy / (3.0 * sum)];
+    (area, centroid)
+}
+
+/// Computes area of a simple polygon.
+///
+/// A simple polygon is one that does not intersect itself.
+#[inline(always)]
+pub fn area(polygon: &[f64]) -> f64 {
+    let (res, _) = area_centroid(polygon);
+    res
+}
+
+/// Computes centroid of a simple polygon.
+///
+/// A simple polygon is one that does not intersect itself.
+#[inline(always)]
+pub fn centroid(polygon: &[f64]) -> Vec2d {
+    let (_, res) = area_centroid(polygon);
+    res
 }
 
