@@ -2,6 +2,7 @@
 //! Various methods for computing with vectors.
 
 use {Matrix2d, Ray, Vec2d, Rectangle, RoundRectangle};
+use modular_index::{previous};
 
 /// Multiplies two matrices.
 #[inline(always)]
@@ -131,3 +132,19 @@ fn test_modular_offset() {
     assert_eq!(modular_offset(&3.0_f64, &2.0_f64, &1.0_f64), 0.0_f64);
     assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &1.0_f64), 1.0_f64);
 }
+
+/// Computes the area of a simple polygon.  
+/// A simple polygon is one that does not intersect itself.
+pub fn area(polygon: &[f64]) -> f64 {
+    let n = polygon.len() / 2;
+    let mut sum = 0.0_f64;
+    for i in range(0, n) {
+        let (qx, qy) = (polygon[i * 2], polygon[i * 2 + 1]);
+        let p_i = previous(n, i);
+        let (px, py) = (polygon[p_i * 2], polygon[p_i * 2 + 1]);
+        sum += px * qy - qx * py;
+    }
+
+    0.5 * sum
+}
+
