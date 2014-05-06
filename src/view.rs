@@ -14,5 +14,8 @@ pub trait View<'a> {
     /// with the x axis pointing to the right  
     /// and the y axis pointing up.
     fn reset(&'a self) -> Self;
+
+    /// Stores the current transform as new view.
+    fn store_view(&'a self) -> Self;
 }
 

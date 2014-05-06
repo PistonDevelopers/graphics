@@ -191,5 +191,14 @@ impl<'a> View<'a> for RectangleContext<'a> {
             rect: Borrowed(self.rect.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+        }
+    }
 }
 

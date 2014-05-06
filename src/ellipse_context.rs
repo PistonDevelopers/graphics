@@ -165,6 +165,15 @@ impl<'a> View<'a> for EllipseContext<'a> {
             rect: Borrowed(self.rect.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> EllipseContext<'a> {
+        EllipseContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+        }
+    }
 }
 
 

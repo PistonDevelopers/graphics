@@ -130,6 +130,15 @@ impl<'a> View<'a> for LineContext<'a> {
             line: Borrowed(self.line.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> LineContext<'a> {
+        LineContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+        }
+    }
 }
 
 

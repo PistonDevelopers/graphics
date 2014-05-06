@@ -222,5 +222,13 @@ impl<'a> View<'a> for Context<'a> {
             transform: Value(identity()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> Context<'a> {
+        Context {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+        }
+    }
 }
 

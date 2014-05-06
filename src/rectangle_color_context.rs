@@ -217,4 +217,14 @@ impl<'a> View<'a> for RectangleColorContext<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> RectangleColorContext<'a> {
+        RectangleColorContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
 }

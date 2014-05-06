@@ -180,5 +180,15 @@ impl<'a> View<'a> for PolygonColorContext<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> PolygonColorContext<'a> {
+        PolygonColorContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            polygon: Borrowed(self.polygon.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
 }
 

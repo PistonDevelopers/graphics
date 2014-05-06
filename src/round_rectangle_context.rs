@@ -167,5 +167,14 @@ impl<'a> View<'a> for RoundRectangleContext<'a> {
             round_rect: Borrowed(self.round_rect.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> RoundRectangleContext<'a> {
+        RoundRectangleContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            round_rect: Borrowed(self.round_rect.get()),
+        }
+    }
 }
 

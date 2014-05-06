@@ -142,5 +142,14 @@ impl<'a> View<'a> for PolygonContext<'a> {
             polygon: Borrowed(self.polygon.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> PolygonContext<'a> {
+        PolygonContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            polygon: Borrowed(self.polygon.get()),
+        }
+    }
 }
 

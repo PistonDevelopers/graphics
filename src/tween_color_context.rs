@@ -48,5 +48,15 @@ impl<'a> View<'a> for TweenColorContext<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> TweenColorContext<'a> {
+        TweenColorContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
 }
 

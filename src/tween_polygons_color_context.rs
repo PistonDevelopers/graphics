@@ -68,5 +68,16 @@ impl<'a> View<'a> for TweenPolygonsColorContext<'a> {
             tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> TweenPolygonsColorContext<'a> {
+        TweenPolygonsColorContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            polygons: Borrowed(self.polygons.get()),
+            color: Borrowed(self.color.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
 }
 

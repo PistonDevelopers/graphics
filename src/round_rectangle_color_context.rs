@@ -207,5 +207,15 @@ impl<'a> View<'a> for RoundRectangleColorContext<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> RoundRectangleColorContext<'a> {
+        RoundRectangleColorContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            round_rect: Borrowed(self.round_rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
 }
 

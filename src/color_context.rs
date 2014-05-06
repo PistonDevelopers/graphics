@@ -200,5 +200,14 @@ impl<'a> View<'a> for ColorContext<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
 }
 

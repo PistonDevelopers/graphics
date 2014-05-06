@@ -30,5 +30,14 @@ impl<'a> View<'a> for TweenContext<'a> {
             tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
+    
+    #[inline(always)]
+    fn store_view(&'a self) -> TweenContext<'a> {
+        TweenContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
 }
 

@@ -206,4 +206,14 @@ impl<'a> View<'a> for EllipseColorContext<'a> {
             color: Borrowed(self.color.get()),
         }
     }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
 }
