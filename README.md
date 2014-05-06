@@ -33,7 +33,7 @@ let d = c.trans(20.0, 20.0);
 
 ### Performance
 
-The `Context` is immutable and designed to "grow" into other contexts. Internally it uses a borrowed/value field mechanism with lots of inlining to take advantage of compiler optimizations. Usually the data sits on the stack and requires no heap allocations. When a context is "grown" into another through method calls, it copies borrowed pointers for all the unchanged data and allocates new data on the stack. If optimized properly, this only allocate new data on the stack without needing calls to "restore" the context like in other graphics API.
+The `Context` is immutable and designed to "grow" into other contexts. Internally it uses a borrowed/value field mechanism with lots of inlining to take advantage of compiler optimizations. Usually the data sits on the stack and requires no heap allocations. When a context is "grown" into another through method calls, it copies borrowed pointers for all the unchanged data and allocates new data on the stack. If optimized properly, this only allocates new data on the stack without needing calls to "restore" the context like in other graphics API.
 
 This library is pure Rust, so it will not contain code for a specific back-end. However, it makes assumptions favoring GPU shader rendering. Rust-Graphics looks for supported methods in the order of expected best performance and memory usage.  
 
