@@ -119,6 +119,9 @@ pub type Ray = [f64, ..4];
 pub type Matrix2d = [f64, ..6];
 
 /// [x, y, w, h]
+pub type PixelRectangle = [u32, ..4];
+
+/// [x, y, w, h]
 pub type Rectangle = [f64, ..4];
 
 /// [x, y, w, h, radius]
