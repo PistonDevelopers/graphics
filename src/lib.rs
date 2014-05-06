@@ -98,13 +98,36 @@ pub mod triangulation;
 pub mod interpolation;
 pub mod modular_index;
 
+/// [red, green, blue, alpha]
 pub type Color = [f32, ..4];
+
+/// [x1, y1, x2, y2]
 pub type Line = [f64, ..4];
+
+/// [x, y, dir_x, dir_y]
 pub type Ray = [f64, ..4];
+
+/// [m00, m01, m02, m10, m11, m12]  
+///
+/// The first 3 numbers transforms `x`,  
+/// the last 3 numbers transforms `y`:
+///
+/// ```
+/// tx = m00 * x + m01 * y + m02;
+/// ty = m10 * x + m11 * y + m12;
+/// ```
 pub type Matrix2d = [f64, ..6];
+
+/// [x, y, w, h]
 pub type Rectangle = [f64, ..4];
+
+/// [x, y, w, h, radius]
 pub type RoundRectangle = [f64, ..5];
+
+/// [x1, y1, x2, y2, x3, y3]
 pub type Triangle = [f64, ..6];
+
+/// [x, y]
 pub type Vec2d = [f64, ..2];
 
 /// A structure that might contain a value or a borrowed value.
