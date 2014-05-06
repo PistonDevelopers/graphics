@@ -49,6 +49,13 @@ pub fn shear(sx: f64, sy: f64) -> Matrix2d {
      sy, 1.0, 0.0]
 }
 
+/// Create an identity matrix.
+#[inline(always)]
+pub fn identity() -> Matrix2d {
+    [1.0, 0.0, 0.0,
+     0.0, 1.0, 0.0]
+}
+
 /// Compute the shortest vector from point to ray.
 /// A ray stores starting point and directional vector.
 #[inline(always)]

@@ -1,12 +1,12 @@
 
 use {Field, Borrowed, Value};
 use vecmath::{relative_rectangle, margin_rectangle, 
-rotate_radians, multiply, translate, scale, shear};
+rotate_radians, multiply, translate, scale, shear, identity};
 use {Clear, Fill, BackEnd, Transform2d, Matrix2d, Rectangle, Color};
 use triangulation::{
     with_ellipse_tri_list_xy_f32_rgba_f32
 };
-use {RelativeRectangle};
+use {RelativeRectangle, View};
 
 /// An ellipse color context.
 pub struct EllipseColorContext<'a> {
@@ -186,3 +186,24 @@ impl<'a> RelativeRectangle<'a> for EllipseColorContext<'a> {
     }
 }
 
+impl<'a> View<'a> for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}

@@ -1,6 +1,6 @@
 use {Field, Value, Borrowed, Matrix2d, Color};
-use vecmath::{multiply, translate, rotate_radians, scale, shear};
-use {Transform2d, Fill, BackEnd, Clear};
+use vecmath::{multiply, translate, rotate_radians, scale, shear, identity};
+use {Transform2d, Fill, BackEnd, Clear, View};
 use triangulation::{
     with_polygon_tri_list_xy_f32_rgba_f32
 };
@@ -159,3 +159,26 @@ impl<'a> Clear for PolygonColorContext<'a> {
         }
     }
 }
+
+impl<'a> View<'a> for PolygonColorContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> PolygonColorContext<'a> {
+        PolygonColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            polygon: Borrowed(self.polygon.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> PolygonColorContext<'a> {
+        PolygonColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            polygon: Borrowed(self.polygon.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+

@@ -1,7 +1,8 @@
 
 use {Field, Value, Borrowed, Matrix2d, Line};
 use {Transform2d};
-use vecmath::{translate, rotate_radians, scale, shear, multiply};
+use vecmath::{translate, rotate_radians, scale, shear, multiply, identity};
+use {View};
 
 /// A line context.
 pub struct LineContext<'a> {
@@ -110,3 +111,25 @@ impl<'a> Transform2d<'a> for LineContext<'a> {
         }
     } 
 }
+
+impl<'a> View<'a> for LineContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> LineContext<'a> {
+        LineContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            line: Borrowed(self.line.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> LineContext<'a> {
+        LineContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            line: Borrowed(self.line.get()),
+        }
+    }
+}
+
+

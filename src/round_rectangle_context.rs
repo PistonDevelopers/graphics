@@ -1,10 +1,12 @@
 use {Field, Borrowed, Value, Matrix2d, RoundRectangle};
 use vecmath::{margin_round_rectangle, 
-relative_round_rectangle, translate, rotate_radians, scale, shear, multiply};
+relative_round_rectangle, translate, 
+rotate_radians, scale, shear, multiply,
+identity};
 use {Transform2d};
 use {RelativeRectangle};
 use {RoundRectangleColorContext};
-use {AddColor};
+use {AddColor, View};
 
 /// A round rectangle context.
 pub struct RoundRectangleContext<'a> {
@@ -142,6 +144,26 @@ impl<'a> AddColor<'a, RoundRectangleColorContext<'a>> for RoundRectangleContext<
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value([r, g, b, a]),
+            round_rect: Borrowed(self.round_rect.get()),
+        }
+    }
+}
+
+impl<'a> View<'a> for RoundRectangleContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> RoundRectangleContext<'a> {
+        RoundRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            round_rect: Borrowed(self.round_rect.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> RoundRectangleContext<'a> {
+        RoundRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
             round_rect: Borrowed(self.round_rect.get()),
         }
     }

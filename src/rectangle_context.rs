@@ -1,10 +1,10 @@
 
 use {Field, Borrowed, Value};
 use vecmath::{relative_rectangle, margin_rectangle, 
-rotate_radians, multiply, translate, scale, shear};
+rotate_radians, multiply, translate, scale, shear, identity};
 use {Transform2d, Matrix2d, Rectangle};
 use {RectangleColorContext};
-use {AddColor, AddRound};
+use {AddColor, AddRound, View};
 use {RelativeRectangle};
 use {RoundRectangleContext};
 
@@ -169,6 +169,26 @@ impl<'a> AddRound<'a, RoundRectangleContext<'a>> for RectangleContext<'a> {
                 let rect = self.rect.get();
                 Value([rect[0], rect[1], rect[2], rect[3], radius])
             },
+        }
+    }
+}
+
+impl<'a> View<'a> for RectangleContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            rect: Borrowed(self.rect.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            rect: Borrowed(self.rect.get()),
         }
     }
 }

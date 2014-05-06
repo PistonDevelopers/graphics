@@ -1,9 +1,10 @@
 
 use {Field, Borrowed, Value};
-use vecmath::{rotate_radians, multiply, translate, scale, shear};
+use vecmath::{rotate_radians, multiply, translate, scale, shear, identity};
 use {Transform2d, Matrix2d};
 use {ColorContext, EllipseContext, PolygonContext, RectangleContext};
 use {AddColor, AddEllipse, AddPolygon, AddRectangle};
+use {View};
 
 /// Drawing 2d context.
 pub struct Context<'a> {
@@ -201,6 +202,24 @@ impl<'a> AddPolygon<'a, PolygonContext<'a>> for Context<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             polygon: Value(polygon),
+        }
+    }
+}
+
+impl<'a> View<'a> for Context<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> Context<'a> {
+        Context {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
         }
     }
 }

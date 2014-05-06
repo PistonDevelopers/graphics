@@ -1,6 +1,7 @@
 use {Field, Borrowed, Value, Color, Matrix2d};
-use {AddPolygons};
+use {AddPolygons, View};
 use {TweenPolygonsColorContext};
+use vecmath::{identity};
 
 /// An animation inbetweening context with color.
 pub struct TweenColorContext<'a> {
@@ -23,6 +24,28 @@ impl<'a> AddPolygons<'a, TweenPolygonsColorContext<'a>> for TweenColorContext<'a
             color: Borrowed(self.color.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Value(polygons),
+        }
+    }
+}
+
+impl<'a> View<'a> for TweenColorContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> TweenColorContext<'a> {
+        TweenColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> TweenColorContext<'a> {
+        TweenColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+            color: Borrowed(self.color.get()),
         }
     }
 }

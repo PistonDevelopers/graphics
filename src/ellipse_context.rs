@@ -2,10 +2,10 @@ use {Field, Matrix2d, Rectangle};
 use {Transform2d};
 use {Borrowed, Value};
 use vecmath::{relative_rectangle, margin_rectangle, 
-translate, multiply, rotate_radians, scale, shear};
+translate, multiply, rotate_radians, scale, shear, identity};
 use {AddColor};
 use {EllipseColorContext};
-use {RelativeRectangle};
+use {RelativeRectangle, View};
 
 /// An ellipse context.
 pub struct EllipseContext<'a> {
@@ -146,4 +146,25 @@ impl<'a> RelativeRectangle<'a> for EllipseContext<'a> {
         }
     }
 }
+
+impl<'a> View<'a> for EllipseContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> EllipseContext<'a> {
+        EllipseContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            rect: Borrowed(self.rect.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> EllipseContext<'a> {
+        EllipseContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            rect: Borrowed(self.rect.get()),
+        }
+    }
+}
+
 

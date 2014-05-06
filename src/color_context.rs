@@ -1,11 +1,11 @@
 
 use {Field, Borrowed, Value};
-use vecmath::{rotate_radians, multiply, translate, scale, shear};
+use vecmath::{rotate_radians, multiply, translate, scale, shear, identity};
 use {Transform2d, Matrix2d, Color};
 use {EllipseColorContext, PolygonColorContext, RectangleColorContext,
 TweenColorContext};
 use {AddEllipse, AddPolygon, AddRectangle, AddTween};
-use {BackEnd, Clear};
+use {BackEnd, Clear, View};
 
 /// A context with color information.
 pub struct ColorContext<'a> {
@@ -179,6 +179,26 @@ impl<'a> Clear for ColorContext<'a> {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }        
+    }
+}
+
+impl<'a> View<'a> for ColorContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            color: Borrowed(self.color.get()),
+        }
     }
 }
 

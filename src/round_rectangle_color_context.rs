@@ -1,10 +1,10 @@
 
 use {Field, Borrowed, Value};
 use vecmath::{relative_round_rectangle, margin_round_rectangle, 
-rotate_radians, multiply, translate, scale, shear};
+rotate_radians, multiply, translate, scale, shear, identity};
 use {Transform2d, Matrix2d, RoundRectangle, Color};
 use {Fill, Clear, BackEnd};
-use {RelativeRectangle};
+use {RelativeRectangle, View};
 use triangulation::{
     with_round_rectangle_tri_list_xy_f32_rgba_f32
 };
@@ -183,6 +183,28 @@ impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
+        }
+    }
+}
+
+impl<'a> View<'a> for RoundRectangleColorContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> RoundRectangleColorContext<'a> {
+        RoundRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            round_rect: Borrowed(self.round_rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> RoundRectangleColorContext<'a> {
+        RoundRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            round_rect: Borrowed(self.round_rect.get()),
+            color: Borrowed(self.color.get()),
         }
     }
 }

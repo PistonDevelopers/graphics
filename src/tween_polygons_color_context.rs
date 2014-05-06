@@ -1,5 +1,6 @@
-use {Field, Color, Matrix2d};
-use {Fill, BackEnd};
+use {Borrowed, Value, Field, Color, Matrix2d};
+use vecmath::{identity};
+use {Fill, BackEnd, View};
 use triangulation::{
     with_lerp_polygons_tri_list_xy_f32_rgba_f32
 };
@@ -44,3 +45,28 @@ impl<'a> Fill<'a> for TweenPolygonsColorContext<'a> {
         }
     }
 }
+
+impl<'a> View<'a> for TweenPolygonsColorContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> TweenPolygonsColorContext<'a> {
+        TweenPolygonsColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            polygons: Borrowed(self.polygons.get()),
+            color: Borrowed(self.color.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> TweenPolygonsColorContext<'a> {
+        TweenPolygonsColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            polygons: Borrowed(self.polygons.get()),
+            color: Borrowed(self.color.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
+}
+
