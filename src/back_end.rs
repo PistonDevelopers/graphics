@@ -23,6 +23,25 @@ pub trait BackEnd {
     /// Turns off alpha blending.
     fn disable_alpha_blend(&mut self) {}
 
+    /// Returns true if texture feature is supported.
+    #[inline(always)]
+    fn supports_single_texture(&self) -> bool { false }
+
+    /// Sets the current single-texture.
+    fn enable_single_texture(&mut self, _texture_id: uint) {}
+
+    /// Disables single-texture.
+    fn disable_single_texture(&mut self) {}
+
+    /// Should return true if texture has alpha channel.
+    ///
+    /// This will enable alpha blending.  
+    /// Alpha blending might be enabled if color per vertex has alpha.  
+    /// Ignore if alpha blending is not supported.  
+    /// Ignore if alpha channel is not used.  
+    #[inline(always)]
+    fn has_texture_alpha(&self, _texture_id: uint) -> bool { false }
+
     /// Returns true if feature is supported.
     #[inline(always)]
     fn supports_tri_list_xy_f64_rgba_f32(&self) -> bool { false }
@@ -43,6 +62,21 @@ pub trait BackEnd {
         &mut self, 
         _vertices: &[f32], 
         _colors: &[f32]
+    ) {}
+
+    /// Returns true if feature is supported.
+    #[inline(always)]
+    fn supports_tri_list_xy_f32_rgba_f32_uv_f32(&self) -> bool { false }
+
+    /// Renders list of 2d triangles.
+    ///
+    /// A color and a texture coordinate is assigned per vertex.  
+    /// The texture coordinates refers to the current single-texture.  
+    fn tri_list_xy_f32_rgba_f32_uv_f32(
+        &mut self,
+        _vertices: &[f32],
+        _colors: &[f32],
+        _texture_coords: &[f32]
     ) {}
 }
 
