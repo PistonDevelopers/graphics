@@ -1,7 +1,12 @@
 //! Methods for converting shapes into triangles.
 
 use std;
-use {Matrix2d, Rectangle, RoundRectangle};
+use {
+    Image,
+    Matrix2d, 
+    Rectangle, 
+    RoundRectangle
+};
 use interpolation::{lerp};
 
 #[inline(always)]
@@ -237,5 +242,15 @@ pub fn rect_tri_list_rgba_f32(color: [f32, ..4]) -> [f32, ..48] {
      r, g, b, a, // 9
      r, g, b, a, // 10
      r, g, b, a]
+}
+
+/// Creates triangle list texture coords from image.
+pub fn rect_tri_list_uv_f32(image: &Image) -> [f32, ..12] {
+    let x1 = image.source_rect[0] as f32 / image.texture_width as f32;
+    let y1 = image.source_rect[1] as f32 / image.texture_height as f32;
+    let x2 = (image.source_rect[0] + image.source_rect[2]) as f32 / image.texture_width as f32;
+    let y2 = (image.source_rect[1] + image.source_rect[3]) as f32 / image.texture_height as f32;
+    [x1, y1, x2, y1, x1, y2,
+     x2, y1, x2, y2, x1, y2]
 }
 
