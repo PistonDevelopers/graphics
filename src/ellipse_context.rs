@@ -1,11 +1,25 @@
-use {Field, Matrix2d, Rectangle};
-use {Transform2d};
-use {Borrowed, Value};
-use vecmath::{relative_rectangle, margin_rectangle, 
-translate, multiply, rotate_radians, scale, shear, identity};
-use {AddColor};
-use {EllipseColorContext};
-use {RelativeRectangle, View};
+use {
+    AddColor,
+    Borrowed, 
+    EllipseColorContext,
+    Field, 
+    Matrix2d, 
+    Rectangle,
+    RelativeRectangle, 
+    Value,
+    View,
+    Transform2d,
+};
+use vecmath::{
+    identity,
+    margin_rectangle, 
+    multiply, 
+    relative_rectangle, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 
 /// An ellipse context.
 pub struct EllipseContext<'a> {
