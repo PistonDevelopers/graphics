@@ -1,13 +1,16 @@
 
 use {
     AddColor, 
-    AddEllipse, 
+    AddEllipse,
+    AddImage, 
     AddPolygon, 
     AddRectangle,
     Borrowed, 
     ColorContext, 
     EllipseContext, 
-    Field, 
+    Field,
+    Image, 
+    ImageRectangleContext,
     Matrix2d,
     PolygonContext, 
     RectangleContext,
@@ -246,6 +249,18 @@ impl<'a> View<'a> for Context<'a> {
         Context {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),
+        }
+    }
+}
+
+impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
+    #[inline(always)]
+    fn image(&'a self, image: Image) -> ImageRectangleContext<'a> {
+        ImageRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value([0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]),
+            image: Value(image),
         }
     }
 }
