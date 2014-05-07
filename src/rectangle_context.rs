@@ -2,11 +2,11 @@
 use {Field, Borrowed, Value};
 use vecmath::{relative_rectangle, margin_rectangle, 
 rotate_radians, multiply, translate, scale, shear, identity};
-use {Transform2d, Matrix2d, Rectangle};
+use {Transform2d, Matrix2d, Rectangle, Image};
 use {RectangleColorContext};
-use {AddColor, AddRound, View};
+use {AddColor, AddRound, View, AddImage};
 use {RelativeRectangle};
-use {RoundRectangleContext};
+use {RoundRectangleContext, ImageRectangleContext};
 
 /// A rectangle context.
 pub struct RectangleContext<'a> {
@@ -198,6 +198,17 @@ impl<'a> View<'a> for RectangleContext<'a> {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
+        }
+    }
+}
+
+impl<'a> AddImage<'a, ImageRectangleContext<'a>> for RectangleContext<'a> {
+    fn image(&'a self, image: Image) -> ImageRectangleContext<'a> {
+        ImageRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            image: Value(image),
         }
     }
 }
