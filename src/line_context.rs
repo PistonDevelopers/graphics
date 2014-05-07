@@ -1,8 +1,21 @@
 
-use {Field, Value, Borrowed, Matrix2d, Line};
-use {Transform2d};
-use vecmath::{translate, rotate_radians, scale, shear, multiply, identity};
-use {View};
+use {
+    Field, 
+    Borrowed, 
+    Line,
+    Matrix2d, 
+    Transform2d,
+    Value, 
+    View,
+};
+use vecmath::{
+    identity,
+    multiply, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 
 /// A line context.
 pub struct LineContext<'a> {
