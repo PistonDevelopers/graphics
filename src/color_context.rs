@@ -1,11 +1,31 @@
 
-use {Field, Borrowed, Value};
-use vecmath::{rotate_radians, multiply, translate, scale, shear, identity};
-use {Transform2d, Matrix2d, Color};
-use {EllipseColorContext, PolygonColorContext, RectangleColorContext,
-TweenColorContext};
-use {AddEllipse, AddPolygon, AddRectangle, AddTween};
-use {BackEnd, Clear, View};
+use {
+    AddEllipse, 
+    AddPolygon, 
+    AddRectangle, 
+    AddTween,
+    BackEnd, 
+    Borrowed, 
+    Clear, 
+    Color,
+    EllipseColorContext, 
+    Field, 
+    Matrix2d, 
+    PolygonColorContext, 
+    RectangleColorContext,
+    Transform2d, 
+    TweenColorContext,
+    View,
+    Value,
+};
+use vecmath::{
+    identity,
+    multiply, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 
 /// A context with color information.
 pub struct ColorContext<'a> {
