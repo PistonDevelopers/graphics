@@ -1,6 +1,23 @@
-use {Field, Value, Borrowed, Matrix2d, Color};
-use vecmath::{multiply, translate, rotate_radians, scale, shear, identity};
-use {Transform2d, Fill, BackEnd, Clear, View};
+use {
+    BackEnd, 
+    Borrowed, 
+    Clear, 
+    Color,
+    Field, 
+    Fill, 
+    Matrix2d, 
+    Value, 
+    View,
+    Transform2d, 
+};
+use vecmath::{
+    identity,
+    multiply, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 use triangulation::{
     with_polygon_tri_list_xy_f32_rgba_f32
 };
