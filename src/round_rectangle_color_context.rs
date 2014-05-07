@@ -1,10 +1,28 @@
 
-use {Field, Borrowed, Value};
-use vecmath::{relative_round_rectangle, margin_round_rectangle, 
-rotate_radians, multiply, translate, scale, shear, identity};
-use {Transform2d, Matrix2d, RoundRectangle, Color};
-use {Fill, Clear, BackEnd};
-use {RelativeRectangle, View};
+use {
+    BackEnd,
+    Borrowed, 
+    Clear, 
+    Color,
+    Field, 
+    Fill, 
+    Matrix2d, 
+    RelativeRectangle, 
+    RoundRectangle, 
+    Transform2d, 
+    Value,
+    View,
+};
+use vecmath::{
+    identity,
+    margin_round_rectangle, 
+    multiply, 
+    relative_round_rectangle, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 use triangulation::{
     with_round_rectangle_tri_list_xy_f32_rgba_f32
 };
