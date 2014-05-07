@@ -1,12 +1,25 @@
-use {Field, Borrowed, Value, Matrix2d, RoundRectangle};
-use vecmath::{margin_round_rectangle, 
-relative_round_rectangle, translate, 
-rotate_radians, scale, shear, multiply,
-identity};
-use {Transform2d};
-use {RelativeRectangle};
-use {RoundRectangleColorContext};
-use {AddColor, View};
+use {
+    AddColor, 
+    Borrowed, 
+    Field, 
+    Matrix2d, 
+    RelativeRectangle,
+    RoundRectangle,
+    RoundRectangleColorContext,
+    Transform2d,
+    Value, 
+    View,
+};
+use vecmath::{
+    identity,
+    margin_round_rectangle, 
+    multiply,
+    relative_round_rectangle, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 
 /// A round rectangle context.
 pub struct RoundRectangleContext<'a> {
