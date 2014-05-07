@@ -1,8 +1,21 @@
-use {Matrix2d, Field, Value, Borrowed};
-use vecmath::{multiply, translate, rotate_radians, scale, shear, identity};
-use {Transform2d};
-use {PolygonColorContext};
-use {AddColor, View};
+use {
+    AddColor, 
+    Borrowed,
+    Field, 
+    Matrix2d, 
+    PolygonColorContext,
+    Transform2d,
+    Value, 
+    View
+};
+use vecmath::{
+    identity,
+    multiply, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 
 /// A polygon context.
 pub struct PolygonContext<'a> {
