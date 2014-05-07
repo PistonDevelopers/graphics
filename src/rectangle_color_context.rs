@@ -1,13 +1,34 @@
 
-use {Field, Borrowed, Value};
-use vecmath::{relative_rectangle, margin_rectangle, 
-rotate_radians, multiply, translate, scale, shear, identity};
-use {Transform2d, Matrix2d, Rectangle, Color};
-use {Fill, Clear, BackEnd};
-use triangulation::{rect_tri_list_xy_f32, rect_tri_list_rgba_f32};
-use {RelativeRectangle};
-use {RoundRectangleColorContext};
-use {AddRound, View};
+use {
+    AddRound, 
+    BackEnd,
+    Borrowed, 
+    Clear, 
+    Color,
+    Field, 
+    Fill, 
+    Matrix2d, 
+    Rectangle, 
+    RelativeRectangle,
+    RoundRectangleColorContext,
+    Transform2d, 
+    Value,
+    View
+};
+use vecmath::{
+    identity,
+    margin_rectangle, 
+    multiply, 
+    relative_rectangle, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
+use triangulation::{
+    rect_tri_list_xy_f32, 
+    rect_tri_list_rgba_f32,
+};
 
 /// A rectangle color context.
 pub struct RectangleColorContext<'a> {
