@@ -1,10 +1,28 @@
 
-use {Field, Borrowed, Value};
-use vecmath::{rotate_radians, multiply, translate, scale, shear, identity};
-use {Transform2d, Matrix2d};
-use {ColorContext, EllipseContext, PolygonContext, RectangleContext};
-use {AddColor, AddEllipse, AddPolygon, AddRectangle};
-use {View};
+use {
+    AddColor, 
+    AddEllipse, 
+    AddPolygon, 
+    AddRectangle,
+    Borrowed, 
+    ColorContext, 
+    EllipseContext, 
+    Field, 
+    Matrix2d,
+    PolygonContext, 
+    RectangleContext,
+    Transform2d, 
+    Value,
+    View,
+};
+use vecmath::{
+    identity,
+    multiply, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 
 /// Drawing 2d context.
 pub struct Context<'a> {
