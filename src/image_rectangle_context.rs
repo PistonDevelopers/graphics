@@ -7,10 +7,12 @@ use {
     Matrix2d,
     Rectangle,
     RelativeRectangle,
-    Value,
     Transform2d,
+    Value,
+    View,
 };
 use vecmath::{
+    identity,
     margin_rectangle,
     multiply,
     relative_rectangle,
@@ -190,3 +192,36 @@ impl<'a> RelativeRectangle<'a> for ImageRectangleContext<'a> {
         }
     }
 }
+
+impl<'a> View<'a> for ImageRectangleContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> ImageRectangleContext<'a> {
+        ImageRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            rect: Borrowed(self.rect.get()),
+            image: Borrowed(self.image.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> ImageRectangleContext<'a> {
+        ImageRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            rect: Borrowed(self.rect.get()),
+            image: Borrowed(self.image.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> ImageRectangleContext<'a> {
+        ImageRectangleContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            image: Borrowed(self.image.get()),
+        }
+    }
+}
+
