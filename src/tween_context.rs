@@ -1,6 +1,13 @@
-use {Borrowed, Value, Field, Matrix2d};
-use vecmath::{identity};
-use {View};
+use {
+    Borrowed, 
+    Field, 
+    Matrix2d,
+    Value, 
+    View,
+};
+use vecmath::{
+    identity
+};
 
 /// An animation inbetweening context.
 pub struct TweenContext<'a> {
