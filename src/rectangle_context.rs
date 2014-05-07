@@ -1,12 +1,31 @@
 
-use {Field, Borrowed, Value};
-use vecmath::{relative_rectangle, margin_rectangle, 
-rotate_radians, multiply, translate, scale, shear, identity};
-use {Transform2d, Matrix2d, Rectangle, Image};
-use {RectangleColorContext};
-use {AddColor, AddRound, View, AddImage};
-use {RelativeRectangle};
-use {RoundRectangleContext, ImageRectangleContext};
+use {
+    AddColor, 
+    AddImage,
+    AddRound, 
+    Borrowed, 
+    Field, 
+    Image,
+    ImageRectangleContext,
+    Matrix2d, 
+    Rectangle, 
+    RectangleColorContext,
+    RelativeRectangle,
+    RoundRectangleContext, 
+    Transform2d, 
+    Value,
+    View, 
+};
+use vecmath::{
+    identity,
+    margin_rectangle, 
+    multiply, 
+    relative_rectangle, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 
 /// A rectangle context.
 pub struct RectangleContext<'a> {
