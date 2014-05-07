@@ -35,7 +35,7 @@ pub struct ImageRectangleContext<'a> {
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle.
     pub rect: Field<'a, Rectangle>,
-    /// Current color.
+    /// Current image.
     pub image: Field<'a, Image>,
 }
 
