@@ -145,7 +145,8 @@ impl<'a> Transform2d<'a> for ImageRectangleContext<'a> {
 
 impl<'a> Draw<'a> for ImageRectangleContext<'a> {
     fn draw<B: BackEnd>(&'a self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
+        if back_end.supports_single_texture()
+        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
             let rect = self.rect.get();
             let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
             let texture_id = self.image.get().texture_id;
@@ -154,11 +155,13 @@ impl<'a> Draw<'a> for ImageRectangleContext<'a> {
             // Turn on alpha blending if not completely opaque or if the texture has alpha channel.
             let needs_alpha = color[3] != 1.0 || back_end.has_texture_alpha(texture_id);
             if needs_alpha { back_end.enable_alpha_blend(); }
+            back_end.enable_single_texture(texture_id);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
                 rect_tri_list_xy_f32(self.transform.get(), rect),
                 rect_tri_list_rgba_f32(color),
                 rect_tri_list_uv_f32(self.image.get())
             );
+            back_end.disable_single_texture();
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
