@@ -1,7 +1,16 @@
-use {Field, Borrowed, Value, Color, Matrix2d};
-use {AddPolygons, View};
-use {TweenPolygonsColorContext};
-use vecmath::{identity};
+use {
+    AddPolygons, 
+    Borrowed, 
+    Color, 
+    Field, 
+    Matrix2d,
+    TweenPolygonsColorContext,
+    Value, 
+    View,
+};
+use vecmath::{
+    identity
+};
 
 /// An animation inbetweening context with color.
 pub struct TweenColorContext<'a> {
