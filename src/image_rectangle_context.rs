@@ -1,9 +1,11 @@
 use {
+    AddColor,
     BackEnd,
     Borrowed,
     Draw,
     Field,
     Image,
+    ImageRectangleColorContext,
     Matrix2d,
     Rectangle,
     RelativeRectangle,
@@ -221,6 +223,19 @@ impl<'a> View<'a> for ImageRectangleContext<'a> {
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
+        }
+    }
+}
+
+impl<'a> AddColor<'a, ImageRectangleColorContext<'a>> for ImageRectangleContext<'a> {
+    #[inline(always)]
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> ImageRectangleColorContext<'a> {
+        ImageRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            image: Borrowed(self.image.get()),
+            color: Value([r, g, b, a]),
         }
     }
 }
