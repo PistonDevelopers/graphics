@@ -15,5 +15,13 @@ pub trait AddColor<'a, T> {
     fn color(&'a self, color: [f32, ..4]) -> T {
         self.rgba(color[0], color[1], color[2], color[3])
     }
+
+    /// Adds a gray color.
+    ///
+    /// `0.0` is black and `1.0` is white.
+    #[inline(always)]
+    fn grey(&'a self, f: f32) -> T {
+        self.rgba(f, f, f, 1.0)
+    }
 }
 
