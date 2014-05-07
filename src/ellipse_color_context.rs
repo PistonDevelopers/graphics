@@ -1,12 +1,31 @@
 
-use {Field, Borrowed, Value};
-use vecmath::{relative_rectangle, margin_rectangle, 
-rotate_radians, multiply, translate, scale, shear, identity};
-use {Clear, Fill, BackEnd, Transform2d, Matrix2d, Rectangle, Color};
+use {
+    BackEnd, 
+    Clear, 
+    Color,
+    Borrowed, 
+    Field, 
+    Fill, 
+    Matrix2d, 
+    Rectangle, 
+    RelativeRectangle, 
+    Transform2d, 
+    Value,
+    View,
+};
+use vecmath::{
+    identity,
+    margin_rectangle, 
+    multiply, 
+    relative_rectangle, 
+    rotate_radians, 
+    scale, 
+    shear, 
+    translate, 
+};
 use triangulation::{
     with_ellipse_tri_list_xy_f32_rgba_f32
 };
-use {RelativeRectangle, View};
 
 /// An ellipse color context.
 pub struct EllipseColorContext<'a> {
