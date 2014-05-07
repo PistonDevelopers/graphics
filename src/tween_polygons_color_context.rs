@@ -1,6 +1,16 @@
-use {Borrowed, Value, Field, Color, Matrix2d};
-use vecmath::{identity};
-use {Fill, BackEnd, View};
+use {
+    BackEnd, 
+    Borrowed, 
+    Color, 
+    Field, 
+    Fill, 
+    Matrix2d,
+    Value, 
+    View,
+};
+use vecmath::{
+    identity
+};
 use triangulation::{
     with_lerp_polygons_tri_list_xy_f32_rgba_f32
 };
