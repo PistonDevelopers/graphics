@@ -23,5 +23,13 @@ pub trait AddColor<'a, T> {
     fn grey(&'a self, f: f32) -> T {
         self.rgba(f, f, f, 1.0)
     }
+
+    /// Adds a white semi-transparent color.
+    ///
+    /// `0.0` is fully transparent and `1.0` is fully opaque.
+    #[inline(always)]
+    fn alpha(&'a self, f: f32) -> T {
+        self.rgba(1.0, 1.0, 1.0, f)
+    }
 }
 
