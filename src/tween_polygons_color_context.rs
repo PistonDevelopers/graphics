@@ -1,9 +1,11 @@
 use {
     BackEnd, 
     Borrowed, 
+    CanColor,
     Color, 
     Field, 
-    Fill, 
+    Fill,
+    HasColor,
     Matrix2d,
     Value, 
     View,
@@ -27,6 +29,26 @@ pub struct TweenPolygonsColorContext<'a> {
     pub tween_factor: Field<'a, f64>,
     /// The animated polygons.
     pub polygons: Field<'a, &'a [&'a [f64]]>,
+}
+
+impl<'a> HasColor<'a, Color> for TweenPolygonsColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, TweenPolygonsColorContext<'a>, Color> for TweenPolygonsColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> TweenPolygonsColorContext<'a> {
+        TweenPolygonsColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Value(value),
+            tween_factor: Borrowed(self.tween_factor.get()),
+            polygons: Borrowed(self.polygons.get()),
+        }
+    }
 }
 
 impl<'a> Fill<'a> for TweenPolygonsColorContext<'a> {
