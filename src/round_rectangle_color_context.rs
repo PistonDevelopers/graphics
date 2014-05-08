@@ -2,26 +2,22 @@
 use {
     BackEnd,
     Borrowed, 
+    CanTransform,
     Clear, 
     Color,
     Field, 
     Fill, 
+    HasTransform,
     Matrix2d, 
     RelativeRectangle, 
     RoundRectangle, 
-    Transform2d, 
     Value,
     View,
 };
 use vecmath::{
     identity,
     margin_round_rectangle, 
-    multiply, 
     relative_round_rectangle, 
-    rotate_radians, 
-    scale, 
-    shear, 
-    translate, 
 };
 use triangulation::{
     with_round_rectangle_tri_list_xy_f32_rgba_f32
@@ -39,106 +35,19 @@ pub struct RoundRectangleColorContext<'a> {
     pub color: Field<'a, Color>,
 }
 
-impl<'a> Transform2d<'a> for RoundRectangleColorContext<'a> {
+impl<'a> HasTransform<'a, Matrix2d> for RoundRectangleColorContext<'a> {
     #[inline(always)]
-    fn trans(&'a self, x: f64, y: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(&trans, self.transform.get()))
-            },
-            round_rect: Borrowed(self.round_rect.get()),
-            color: Borrowed(self.color.get()),
-        }
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
     }
-    
-    #[inline(always)]
-    fn trans_local(&'a self, x: f64, y: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(self.transform.get(), &trans))
-            },
-            round_rect: Borrowed(self.round_rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
+}
 
+impl<'a> CanTransform<'a, RoundRectangleColorContext<'a>, Matrix2d> for RoundRectangleColorContext<'a> {
     #[inline(always)]
-    fn rot_rad(&'a self, angle: f64) -> RoundRectangleColorContext<'a> {
+    fn transform(&'a self, value: Matrix2d) -> RoundRectangleColorContext<'a> {
         RoundRectangleColorContext {
             base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(&rot, self.transform.get()))
-            },
-            round_rect: Borrowed(self.round_rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad_local(&'a self, angle: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(self.transform.get(), &rot))
-            },
-            round_rect: Borrowed(self.round_rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale(&'a self, sx: f64, sy: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(&scale, self.transform.get()))
-            },
-            round_rect: Borrowed(self.round_rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale_local(&'a self, sx: f64, sy: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(self.transform.get(), &scale))
-            },
-            round_rect: Borrowed(self.round_rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn shear(&'a self, sx: f64, sy: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(&shear, self.transform.get()))
-            },
-            round_rect: Borrowed(self.round_rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-    
-    #[inline(always)]
-    fn shear_local(&'a self, sx: f64, sy: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(self.transform.get(), &shear))
-            },
+            transform: Value(value),
             round_rect: Borrowed(self.round_rect.get()),
             color: Borrowed(self.color.get()),
         }

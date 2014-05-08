@@ -1,24 +1,20 @@
 use {
     AddColor,
     Borrowed, 
+    CanTransform,
     EllipseColorContext,
     Field, 
+    HasTransform,
     Matrix2d, 
     Rectangle,
     RelativeRectangle, 
     Value,
     View,
-    Transform2d,
 };
 use vecmath::{
     identity,
     margin_rectangle, 
-    multiply, 
     relative_rectangle, 
-    rotate_radians, 
-    scale, 
-    shear, 
-    translate, 
 };
 
 /// An ellipse context.
@@ -31,99 +27,19 @@ pub struct EllipseContext<'a> {
     pub rect: Field<'a, Rectangle>,
 }
 
-impl<'a> Transform2d<'a> for EllipseContext<'a> {
+impl<'a> HasTransform<'a, Matrix2d> for EllipseContext<'a> {
     #[inline(always)]
-    fn trans(&'a self, x: f64, y: f64) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(&trans, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
     }
+}
 
+impl<'a> CanTransform<'a, EllipseContext<'a>, Matrix2d> for EllipseContext<'a> {
     #[inline(always)]
-    fn trans_local(&'a self, x: f64, y: f64) -> EllipseContext<'a> {
+    fn transform(&'a self, value: Matrix2d) -> EllipseContext<'a> {
         EllipseContext {
             base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(self.transform.get(), &trans))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad(&'a self, angle: f64) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(&rot, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad_local(&'a self, angle: f64) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(self.transform.get(), &rot))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale(&'a self, sx: f64, sy: f64) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(&scale, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale_local(&'a self, sx: f64, sy: f64) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(self.transform.get(), &scale))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn shear(&'a self, sx: f64, sy: f64) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(&shear, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-    
-    #[inline(always)]
-    fn shear_local(&'a self, sx: f64, sy: f64) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(self.transform.get(), &shear))
-            },
+            transform: Value(value),
             rect: Borrowed(self.rect.get()),
         }
     }

@@ -6,25 +6,21 @@ use {
     AddPolygon, 
     AddRectangle,
     Borrowed, 
+    CanTransform,
     ColorContext, 
     EllipseContext, 
     Field,
+    HasTransform,
     Image, 
     ImageRectangleContext,
     Matrix2d,
     PolygonContext, 
     RectangleContext,
-    Transform2d, 
     Value,
     View,
 };
 use vecmath::{
     identity,
-    multiply, 
-    rotate_radians, 
-    scale, 
-    shear, 
-    translate, 
 };
 
 /// Drawing 2d context.
@@ -35,92 +31,19 @@ pub struct Context<'a> {
     pub transform: Field<'a, Matrix2d>,
 }
 
-impl<'a> Transform2d<'a> for Context<'a> { 
+impl<'a> HasTransform<'a, Matrix2d> for Context<'a> {
     #[inline(always)]
-    fn trans(&'a self, x: f64, y: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let trans = translate(x, y);
-                 multiply(&trans, self.transform.get())
-            }),
-        }
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
     }
+}
 
+impl<'a> CanTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
     #[inline(always)]
-    fn trans_local(&'a self, x: f64, y: f64) -> Context<'a> {
+    fn transform(&'a self, value: Matrix2d) -> Context<'a> {
         Context {
             base: Borrowed(self.base.get()),
-            transform: Value({
-                let trans = translate(x, y);
-                 multiply(self.transform.get(), &trans)
-            }),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad(&'a self, angle: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let rot = rotate_radians(angle);
-                multiply(&rot, self.transform.get())
-            }),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad_local(&'a self, angle: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let rot = rotate_radians(angle);
-                multiply(self.transform.get(), &rot)
-            }),
-        }
-    }
-
-    #[inline(always)]
-    fn scale(&'a self, sx: f64, sy: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let scale = scale(sx, sy);
-                multiply(&scale, self.transform.get())
-            }),
-        }
-    }
-    
-    #[inline(always)]
-    fn scale_local(&'a self, sx: f64, sy: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let scale = scale(sx, sy);
-                multiply(self.transform.get(), &scale)
-            }),
-        }
-    }
-    
-    #[inline(always)]
-    fn shear(&'a self, sx: f64, sy: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let shear = shear(sx, sy);
-                multiply(&shear, self.transform.get())
-            }),
-        }
-    }
-    
-    #[inline(always)]
-    fn shear_local(&'a self, sx: f64, sy: f64) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value({
-                let shear = shear(sx, sy);
-                multiply(self.transform.get(), &shear)
-            }),
+            transform: Value(value),
         }
     }
 }

@@ -1,3 +1,15 @@
+use {
+    CanTransform,
+    HasTransform,
+    Matrix2d,
+};
+use vecmath::{
+    multiply,
+    rotate_radians,
+    scale,
+    shear,
+    translate,
+};
 
 /// Implemented by contexts that can transform.
 pub trait Transform2d<'a> {
@@ -75,3 +87,57 @@ pub trait Transform2d<'a> {
     /// Shears in local coordinates.
     fn shear_local(&'a self, sx: f64, sy: f64) -> Self;
 }
+
+impl<
+    'a, 
+    T: HasTransform<'a, Matrix2d> + CanTransform<'a, T, Matrix2d>
+> Transform2d<'a> for T { 
+    #[inline(always)]
+    fn trans(&'a self, x: f64, y: f64) -> T {
+        let trans = translate(x, y);
+        self.transform(multiply(&trans, self.get_transform()))
+    }
+
+    #[inline(always)]
+    fn trans_local(&'a self, x: f64, y: f64) -> T {
+        let trans = translate(x, y);
+        self.transform(multiply(self.get_transform(), &trans))
+    }
+
+    #[inline(always)]
+    fn rot_rad(&'a self, angle: f64) -> T {
+        let rot = rotate_radians(angle);
+        self.transform(multiply(&rot, self.get_transform()))
+    }
+
+    #[inline(always)]
+    fn rot_rad_local(&'a self, angle: f64) -> T {
+        let rot = rotate_radians(angle);
+        self.transform(multiply(self.get_transform(), &rot))
+    }
+
+    #[inline(always)]
+    fn scale(&'a self, sx: f64, sy: f64) -> T {
+        let scale = scale(sx, sy);
+        self.transform(multiply(&scale, self.get_transform()))
+    }
+    
+    #[inline(always)]
+    fn scale_local(&'a self, sx: f64, sy: f64) -> T {
+        let scale = scale(sx, sy);
+        self.transform(multiply(self.get_transform(), &scale))
+    }
+    
+    #[inline(always)]
+    fn shear(&'a self, sx: f64, sy: f64) -> T {
+        let shear = shear(sx, sy);
+        self.transform(multiply(&shear, self.get_transform()))
+    }
+    
+    #[inline(always)]
+    fn shear_local(&'a self, sx: f64, sy: f64) -> T {
+        let shear = shear(sx, sy);
+        self.transform(multiply(self.get_transform(), &shear))
+    }
+}
+

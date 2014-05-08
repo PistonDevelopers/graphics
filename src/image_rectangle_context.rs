@@ -2,26 +2,22 @@ use {
     AddColor,
     BackEnd,
     Borrowed,
+    CanTransform,
     Draw,
     Field,
+    HasTransform,
     Image,
     ImageRectangleColorContext,
     Matrix2d,
     Rectangle,
     RelativeRectangle,
-    Transform2d,
     Value,
     View,
 };
 use vecmath::{
     identity,
     margin_rectangle,
-    multiply,
     relative_rectangle,
-    rotate_radians,
-    scale,
-    shear,
-    translate,
 };
 use triangulation::{
     rect_tri_list_xy_f32,
@@ -41,106 +37,19 @@ pub struct ImageRectangleContext<'a> {
     pub image: Field<'a, Image>,
 }
 
-impl<'a> Transform2d<'a> for ImageRectangleContext<'a> {
+impl<'a> HasTransform<'a, Matrix2d> for ImageRectangleContext<'a> {
     #[inline(always)]
-    fn trans(&'a self, x: f64, y: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(&trans, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-        }
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
     }
-    
-    #[inline(always)]
-    fn trans_local(&'a self, x: f64, y: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(self.transform.get(), &trans))
-            },
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-        }
-    }
+}
 
+impl<'a> CanTransform<'a, ImageRectangleContext<'a>, Matrix2d> for ImageRectangleContext<'a> {
     #[inline(always)]
-    fn rot_rad(&'a self, angle: f64) -> ImageRectangleContext<'a> {
+    fn transform(&'a self, value: Matrix2d) -> ImageRectangleContext<'a> {
         ImageRectangleContext {
             base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(&rot, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad_local(&'a self, angle: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(self.transform.get(), &rot))
-            },
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale(&'a self, sx: f64, sy: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(&scale, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale_local(&'a self, sx: f64, sy: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(self.transform.get(), &scale))
-            },
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn shear(&'a self, sx: f64, sy: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(&shear, self.transform.get()))
-            },
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-        }
-    }
-    
-    #[inline(always)]
-    fn shear_local(&'a self, sx: f64, sy: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(self.transform.get(), &shear))
-            },
+            transform: Value(value),
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
         }

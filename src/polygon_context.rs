@@ -1,20 +1,16 @@
 use {
     AddColor, 
     Borrowed,
+    CanTransform,
     Field, 
+    HasTransform,
     Matrix2d, 
     PolygonColorContext,
-    Transform2d,
     Value, 
     View
 };
 use vecmath::{
     identity,
-    multiply, 
-    rotate_radians, 
-    scale, 
-    shear, 
-    translate, 
 };
 
 /// A polygon context.
@@ -27,99 +23,19 @@ pub struct PolygonContext<'a> {
     pub polygon: Field<'a, &'a [f64]>
 }
 
-impl<'a> Transform2d<'a> for PolygonContext<'a> {
+impl<'a> HasTransform<'a, Matrix2d> for PolygonContext<'a> {
     #[inline(always)]
-    fn trans(&'a self, x: f64, y: f64) -> PolygonContext<'a> {
-        PolygonContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(&trans, self.transform.get()))
-            },
-            polygon: Borrowed(self.polygon.get()),
-        }
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
     }
+}
 
+impl<'a> CanTransform<'a, PolygonContext<'a>, Matrix2d> for PolygonContext<'a> {
     #[inline(always)]
-    fn trans_local(&'a self, x: f64, y: f64) -> PolygonContext<'a> {
+    fn transform(&'a self, value: Matrix2d) -> PolygonContext<'a> {
         PolygonContext {
             base: Borrowed(self.base.get()),
-            transform: {
-                let trans = translate(x, y);
-                Value(multiply(self.transform.get(), &trans))
-            },
-            polygon: Borrowed(self.polygon.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad(&'a self, angle: f64) -> PolygonContext<'a> {
-        PolygonContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(&rot, self.transform.get()))
-            },
-            polygon: Borrowed(self.polygon.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn rot_rad_local(&'a self, angle: f64) -> PolygonContext<'a> {
-        PolygonContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let rot = rotate_radians(angle);
-                Value(multiply(self.transform.get(), &rot))
-            },
-            polygon: Borrowed(self.polygon.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale(&'a self, sx: f64, sy: f64) -> PolygonContext<'a> {
-        PolygonContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(&scale, self.transform.get()))
-            },
-            polygon: Borrowed(self.polygon.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn scale_local(&'a self, sx: f64, sy: f64) -> PolygonContext<'a> {
-        PolygonContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let scale = scale(sx, sy);
-                Value(multiply(self.transform.get(), &scale))
-            },
-            polygon: Borrowed(self.polygon.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn shear(&'a self, sx: f64, sy: f64) -> PolygonContext<'a> {
-        PolygonContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(&shear, self.transform.get()))
-            },
-            polygon: Borrowed(self.polygon.get()),
-        }
-    }
-    
-    #[inline(always)]
-    fn shear_local(&'a self, sx: f64, sy: f64) -> PolygonContext<'a> {
-        PolygonContext {
-            base: Borrowed(self.base.get()),
-            transform: {
-                let shear = shear(sx, sy);
-                Value(multiply(self.transform.get(), &shear))
-            },
+            transform: Value(value),
             polygon: Borrowed(self.polygon.get()),
         }
     }
