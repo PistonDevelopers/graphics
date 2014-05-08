@@ -42,7 +42,7 @@ extern crate std;
 
 pub use Context = context::Context;
 pub use BackEnd = back_end::BackEnd;
-pub use Transform2d = transform2d::Transform2d;
+pub use RelativeTransform2d = relative_transform2d::RelativeTransform2d;
 pub use AddColor = add_color::AddColor;
 pub use AddEllipse = add_ellipse::AddEllipse;
 pub use AddImage = add_image::AddImage;
@@ -81,7 +81,7 @@ pub use View = view::View;
 
 mod context;
 mod back_end;
-mod transform2d;
+mod relative_transform2d;
 mod add_color;
 mod add_ellipse;
 mod add_image;

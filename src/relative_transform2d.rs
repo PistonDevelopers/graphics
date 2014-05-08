@@ -12,7 +12,7 @@ use vecmath::{
 };
 
 /// Implemented by contexts that can transform.
-pub trait Transform2d<'a> {
+pub trait RelativeTransform2d<'a> {
     /// Translate x and y.
     fn trans(&'a self, x: f64, y: f64) -> Self;
   
@@ -91,7 +91,7 @@ pub trait Transform2d<'a> {
 impl<
     'a, 
     T: HasTransform<'a, Matrix2d> + CanTransform<'a, T, Matrix2d>
-> Transform2d<'a> for T { 
+> RelativeTransform2d<'a> for T { 
     #[inline(always)]
     fn trans(&'a self, x: f64, y: f64) -> T {
         let trans = translate(x, y);
