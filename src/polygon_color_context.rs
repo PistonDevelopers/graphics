@@ -1,11 +1,13 @@
 use {
     BackEnd, 
     Borrowed, 
+    CanColor,
     CanTransform,
     Clear, 
     Color,
     Field, 
     Fill, 
+    HasColor,
     HasTransform,
     Matrix2d, 
     Value, 
@@ -45,6 +47,25 @@ impl<'a> CanTransform<'a, PolygonColorContext<'a>, Matrix2d> for PolygonColorCon
             transform: Value(value),
             polygon: Borrowed(self.polygon.get()),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasColor<'a, Color> for PolygonColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, PolygonColorContext<'a>, Color> for PolygonColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> PolygonColorContext<'a> {
+        PolygonColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Value(value),
+            polygon: Borrowed(self.polygon.get()),
         }
     }
 }
