@@ -148,9 +148,6 @@ pub type PixelRectangle = [u32, ..4];
 /// [x, y, w, h]
 pub type Rectangle = [f64, ..4];
 
-/// [x, y, w, h, radius]
-pub type RoundRectangle = [f64, ..5];
-
 /// [x1, y1, x2, y2, x3, y3]
 pub type Triangle = [f64, ..6];
 

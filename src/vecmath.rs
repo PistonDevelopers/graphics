@@ -6,7 +6,6 @@ use {
     Matrix2d, 
     Ray, 
     Rectangle, 
-    RoundRectangle, 
     Vec2d, 
     Triangle
 };
@@ -107,26 +106,10 @@ pub fn margin_rectangle(rect: &Rectangle, m: f64) -> Rectangle {
     [x, y, w, h]
 }
 
-/// Shrinks a rectangle by a factor on all sides.
-#[inline(always)]
-pub fn margin_round_rectangle(rect: &RoundRectangle, m: f64) -> RoundRectangle {
-    let w = rect[2] - 2.0 * m;
-    let h = rect[3] - 2.0 * m;
-    let (x, w) = if w < 0.0 { (rect[0] + 0.5 * rect[2], 0.0) } else { (rect[0] + m, w) };
-    let (y, h) = if h < 0.0 { (rect[1] + 0.5 * rect[3], 0.0) } else { (rect[1] + m, h) };
-    [x, y, w, h, rect[4]]
-}
-
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
 pub fn relative_rectangle(rect: &Rectangle, x: f64, y: f64) -> Rectangle {
     [rect[0] + x * rect[2], rect[1] + y * rect[3], rect[2], rect[3]]
-}
-
-/// Computes a relative round rectangle using the round rectangle as a tile.
-#[inline(always)]
-pub fn relative_round_rectangle(rect: &RoundRectangle, x: f64, y: f64) -> RoundRectangle {
-    [rect[0] + x * rect[2], rect[1] + y * rect[3], rect[2], rect[3], rect[4]]
 }
 
 /// Computes modular offset safely for numbers.
