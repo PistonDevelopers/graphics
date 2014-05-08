@@ -13,7 +13,9 @@ use vecmath::{
 };
 use internal::{
     CanColor,
+    CanTransform,
     HasColor,
+    HasTransform,
 };
 
 /// An animation inbetweening context with color.
@@ -42,6 +44,25 @@ impl<'a> CanColor<'a, TweenColorContext<'a>, Color> for TweenColorContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
+}
+
+impl<'a> HasTransform<'a, Matrix2d> for TweenColorContext<'a> {
+    #[inline(always)]
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
+    }
+}
+
+impl<'a> CanTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorContext<'a> {
+    #[inline(always)]
+    fn transform(&'a self, value: Matrix2d) -> TweenColorContext<'a> {
+        TweenColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(value),
+            color: Borrowed(self.color.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
