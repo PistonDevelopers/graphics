@@ -2,11 +2,13 @@
 use {
     BackEnd,
     Borrowed, 
+    CanColor,
     CanTransform,
     Clear, 
     Color,
     Field, 
     Fill, 
+    HasColor,
     HasTransform,
     Matrix2d, 
     RelativeRectangle, 
@@ -50,6 +52,25 @@ impl<'a> CanTransform<'a, RoundRectangleColorContext<'a>, Matrix2d> for RoundRec
             transform: Value(value),
             round_rect: Borrowed(self.round_rect.get()),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasColor<'a, Color> for RoundRectangleColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, RoundRectangleColorContext<'a>, Color> for RoundRectangleColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> RoundRectangleColorContext<'a> {
+        RoundRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Value(value),
+            round_rect: Borrowed(self.round_rect.get()),
         }
     }
 }
