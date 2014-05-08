@@ -1,12 +1,14 @@
 
 use {
     BackEnd, 
+    CanColor,
     CanTransform,
     Clear, 
     Color,
     Borrowed, 
     Field, 
     Fill, 
+    HasColor,
     HasTransform,
     Matrix2d, 
     Rectangle, 
@@ -50,6 +52,25 @@ impl<'a> CanTransform<'a, EllipseColorContext<'a>, Matrix2d> for EllipseColorCon
             transform: Value(value),
             rect: Borrowed(self.rect.get()),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasColor<'a, Color> for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, EllipseColorContext<'a>, Color> for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Value(value),
+            rect: Borrowed(self.rect.get()),
         }
     }
 }
