@@ -6,11 +6,13 @@ use {
     AddTween,
     BackEnd, 
     Borrowed, 
+    CanColor,
     CanTransform,
     Clear, 
     Color,
     EllipseColorContext, 
     Field, 
+    HasColor,
     HasTransform,
     Matrix2d, 
     PolygonColorContext, 
@@ -47,6 +49,24 @@ impl<'a> CanTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Value(value),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasColor<'a, Color> for ColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, ColorContext<'a>, Color> for ColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> ColorContext<'a> {
+        ColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Value(value),
         }
     }
 }
