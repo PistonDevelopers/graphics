@@ -1,10 +1,12 @@
 use {
     BackEnd,
     Borrowed,
+    CanColor,
     CanTransform,
     Color,
     Draw,
     Field,
+    HasColor,
     HasTransform,
     Image,
     Matrix2d,
@@ -54,6 +56,26 @@ impl<'a> CanTransform<'a, ImageRectangleColorContext<'a>, Matrix2d> for ImageRec
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasColor<'a, Color> for ImageRectangleColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, ImageRectangleColorContext<'a>, Color> for ImageRectangleColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> ImageRectangleColorContext<'a> {
+        ImageRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Value(value),
+            rect: Borrowed(self.rect.get()),
+            image: Borrowed(self.image.get()),
         }
     }
 }
