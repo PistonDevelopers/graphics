@@ -4,11 +4,7 @@ use {
     AddImage,
     AddRound, 
     Borrowed, 
-    CanRectangle,
-    CanTransform,
     Field, 
-    HasRectangle,
-    HasTransform,
     Image,
     ImageRectangleContext,
     Matrix2d, 
@@ -20,6 +16,12 @@ use {
 };
 use vecmath::{
     identity,
+};
+use internal::{
+    CanRectangle,
+    CanTransform,
+    HasRectangle,
+    HasTransform,
 };
 
 /// A rectangle context.

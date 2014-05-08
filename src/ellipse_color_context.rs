@@ -1,17 +1,11 @@
 
 use {
     BackEnd, 
-    CanColor,
-    CanRectangle,
-    CanTransform,
     Clear, 
     Color,
     Borrowed, 
     Field, 
     Fill, 
-    HasColor,
-    HasRectangle,
-    HasTransform,
     Matrix2d, 
     Rectangle, 
     Value,
@@ -22,6 +16,14 @@ use vecmath::{
 };
 use triangulation::{
     with_ellipse_tri_list_xy_f32_rgba_f32
+};
+use internal::{
+    CanColor,
+    CanRectangle,
+    CanTransform,
+    HasColor,
+    HasRectangle,
+    HasTransform,
 };
 
 /// An ellipse color context.

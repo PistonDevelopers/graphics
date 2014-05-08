@@ -1,11 +1,13 @@
 use {
-    CanRectangle,
-    HasRectangle,
     Rectangle,
 };
 use vecmath::{
     margin_rectangle,
     relative_rectangle,
+};
+use internal::{
+    CanRectangle,
+    HasRectangle,
 };
 
 /// Should be implemented by contexts that have rectangle information.

@@ -1,10 +1,8 @@
 use {
     AddPolygons, 
     Borrowed, 
-    CanColor,
     Color, 
     Field, 
-    HasColor,
     Matrix2d,
     TweenPolygonsColorContext,
     Value, 
@@ -12,6 +10,10 @@ use {
 };
 use vecmath::{
     identity
+};
+use internal::{
+    CanColor,
+    HasColor,
 };
 
 /// An animation inbetweening context with color.

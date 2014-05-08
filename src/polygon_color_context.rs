@@ -1,14 +1,10 @@
 use {
     BackEnd, 
     Borrowed, 
-    CanColor,
-    CanTransform,
     Clear, 
     Color,
     Field, 
     Fill, 
-    HasColor,
-    HasTransform,
     Matrix2d, 
     Value, 
     View,
@@ -18,6 +14,12 @@ use vecmath::{
 };
 use triangulation::{
     with_polygon_tri_list_xy_f32_rgba_f32
+};
+use internal::{
+    CanColor,
+    CanTransform,
+    HasColor,
+    HasTransform,
 };
 
 /// A polygon color context.

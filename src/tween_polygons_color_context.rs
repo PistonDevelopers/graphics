@@ -1,11 +1,9 @@
 use {
     BackEnd, 
     Borrowed, 
-    CanColor,
     Color, 
     Field, 
     Fill,
-    HasColor,
     Matrix2d,
     Value, 
     View,
@@ -15,6 +13,10 @@ use vecmath::{
 };
 use triangulation::{
     with_lerp_polygons_tri_list_xy_f32_rgba_f32
+};
+use internal::{
+    CanColor,
+    HasColor,
 };
 
 /// An animation inbetweening context with color.

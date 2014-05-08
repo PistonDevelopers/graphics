@@ -1,9 +1,7 @@
 
 use {
-    CanTransform,
     Field, 
     Borrowed, 
-    HasTransform,
     Line,
     Matrix2d, 
     Value, 
@@ -11,6 +9,10 @@ use {
 };
 use vecmath::{
     identity,
+};
+use internal::{
+    CanTransform,
+    HasTransform,
 };
 
 /// A line context.

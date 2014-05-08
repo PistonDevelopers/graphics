@@ -6,14 +6,10 @@ use {
     AddTween,
     BackEnd, 
     Borrowed, 
-    CanColor,
-    CanTransform,
     Clear, 
     Color,
     EllipseColorContext, 
     Field, 
-    HasColor,
-    HasTransform,
     Matrix2d, 
     PolygonColorContext, 
     RectangleColorContext,
@@ -23,6 +19,12 @@ use {
 };
 use vecmath::{
     identity,
+};
+use internal::{
+    CanColor,
+    CanTransform,
+    HasColor,
+    HasTransform,
 };
 
 /// A context with color information.

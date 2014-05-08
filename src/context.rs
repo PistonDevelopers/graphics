@@ -6,11 +6,9 @@ use {
     AddPolygon, 
     AddRectangle,
     Borrowed, 
-    CanTransform,
     ColorContext, 
     EllipseContext, 
     Field,
-    HasTransform,
     Image, 
     ImageRectangleContext,
     Matrix2d,
@@ -21,6 +19,10 @@ use {
 };
 use vecmath::{
     identity,
+};
+use internal::{
+    CanTransform,
+    HasTransform,
 };
 
 /// Drawing 2d context.

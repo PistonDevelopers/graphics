@@ -2,15 +2,9 @@ use {
     AddColor,
     BackEnd,
     Borrowed,
-    CanColor,
-    CanRectangle,
-    CanTransform,
     Color,
     Draw,
     Field,
-    HasColor,
-    HasRectangle,
-    HasTransform,
     Image,
     ImageRectangleColorContext,
     Matrix2d,
@@ -25,6 +19,14 @@ use triangulation::{
     rect_tri_list_xy_f32,
     rect_tri_list_rgba_f32,
     rect_tri_list_uv_f32,
+};
+use internal::{
+    CanColor,
+    CanRectangle,
+    CanTransform,
+    HasColor,
+    HasRectangle,
+    HasTransform,
 };
 
 /// An image rectangle context.

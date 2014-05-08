@@ -1,6 +1,8 @@
 use {
-    CanColor,
     Color,
+};
+use internal::{
+    CanColor,
     HasColor,
 };
 

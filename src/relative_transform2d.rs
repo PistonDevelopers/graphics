@@ -1,6 +1,4 @@
 use {
-    CanTransform,
-    HasTransform,
     Matrix2d,
 };
 use vecmath::{
@@ -9,6 +7,10 @@ use vecmath::{
     scale,
     shear,
     translate,
+};
+use internal::{
+    CanTransform,
+    HasTransform,
 };
 
 /// Implemented by contexts that can transform.

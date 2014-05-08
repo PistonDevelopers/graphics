@@ -1,9 +1,7 @@
 use {
     AddColor, 
     Borrowed,
-    CanTransform,
     Field, 
-    HasTransform,
     Matrix2d, 
     PolygonColorContext,
     Value, 
@@ -11,6 +9,10 @@ use {
 };
 use vecmath::{
     identity,
+};
+use internal::{
+    CanTransform,
+    HasTransform,
 };
 
 /// A polygon context.

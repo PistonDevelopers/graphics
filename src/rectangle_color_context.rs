@@ -3,16 +3,10 @@ use {
     AddRound, 
     BackEnd,
     Borrowed, 
-    CanColor,
-    CanRectangle,
-    CanTransform,
     Clear, 
     Color,
     Field, 
     Fill, 
-    HasColor,
-    HasRectangle,
-    HasTransform,
     Matrix2d, 
     Rectangle, 
     RoundRectangleColorContext,
@@ -25,6 +19,14 @@ use vecmath::{
 use triangulation::{
     rect_tri_list_xy_f32, 
     rect_tri_list_rgba_f32,
+};
+use internal::{
+    CanColor,
+    CanRectangle,
+    CanTransform,
+    HasColor,
+    HasRectangle,
+    HasTransform,
 };
 
 /// A rectangle color context.

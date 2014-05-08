@@ -1,12 +1,8 @@
 use {
     AddColor,
     Borrowed, 
-    CanRectangle,
-    CanTransform,
     EllipseColorContext,
     Field, 
-    HasRectangle,
-    HasTransform,
     Matrix2d, 
     Rectangle,
     Value,
@@ -14,6 +10,12 @@ use {
 };
 use vecmath::{
     identity,
+};
+use internal::{
+    CanRectangle,
+    CanTransform,
+    HasRectangle,
+    HasTransform,
 };
 
 /// An ellipse context.

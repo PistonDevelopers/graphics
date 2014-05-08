@@ -1,11 +1,7 @@
 use {
     AddColor, 
     Borrowed, 
-    CanRectangle,
-    CanTransform,
     Field, 
-    HasRectangle,
-    HasTransform,
     Matrix2d, 
     Rectangle,
     RoundRectangleColorContext,
@@ -14,6 +10,12 @@ use {
 };
 use vecmath::{
     identity,
+};
+use internal::{
+    CanRectangle,
+    CanTransform,
+    HasRectangle,
+    HasTransform,
 };
 
 /// A round rectangle context.
