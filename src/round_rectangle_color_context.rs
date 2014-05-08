@@ -3,23 +3,22 @@ use {
     BackEnd,
     Borrowed, 
     CanColor,
+    CanRectangle,
     CanTransform,
     Clear, 
     Color,
     Field, 
     Fill, 
     HasColor,
+    HasRectangle,
     HasTransform,
     Matrix2d, 
-    RelativeRectangle, 
-    RoundRectangle, 
+    Rectangle, 
     Value,
     View,
 };
 use vecmath::{
     identity,
-    margin_round_rectangle, 
-    relative_round_rectangle, 
 };
 use triangulation::{
     with_round_rectangle_tri_list_xy_f32_rgba_f32
@@ -32,7 +31,9 @@ pub struct RoundRectangleColorContext<'a> {
     /// Current transformation.
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle.
-    pub round_rect: Field<'a, RoundRectangle>,
+    pub rect: Field<'a, Rectangle>,
+    /// Current roundness radius.
+    pub round_radius: Field<'a, f64>,
     /// Current color.
     pub color: Field<'a, Color>,
 }
@@ -50,7 +51,8 @@ impl<'a> CanTransform<'a, RoundRectangleColorContext<'a>, Matrix2d> for RoundRec
         RoundRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
             color: Borrowed(self.color.get()),
         }
     }
@@ -70,7 +72,28 @@ impl<'a> CanColor<'a, RoundRectangleColorContext<'a>, Color> for RoundRectangleC
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
+        }
+    }
+}
+
+impl<'a> HasRectangle<'a, Rectangle> for RoundRectangleColorContext<'a> {
+    #[inline(always)]
+    fn get_rectangle(&'a self) -> &'a Rectangle {
+        self.rect.get()
+    }
+}
+
+impl<'a> CanRectangle<'a, RoundRectangleColorContext<'a>, Rectangle> for RoundRectangleColorContext<'a> {
+    #[inline(always)]
+    fn rectangle(&'a self, rect: Rectangle) -> RoundRectangleColorContext<'a> {
+        RoundRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value(rect),
+            round_radius: Borrowed(self.round_radius.get()),
+            color: Borrowed(self.color.get()),
         }
     }
 }
@@ -86,32 +109,11 @@ impl<'a> Clear for RoundRectangleColorContext<'a> {
     }
 }
 
-impl<'a> RelativeRectangle<'a> for RoundRectangleColorContext<'a> {
-    #[inline(always)]
-    fn margin(&'a self, m: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            round_rect: Value(margin_round_rectangle(self.round_rect.get(), m)),
-        }
-    }
-
-    #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            round_rect: Value(relative_round_rectangle(self.round_rect.get(), x, y)),
-        }
-    }
-}
-
 impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let round_rect = self.round_rect.get();
+            let rect = self.rect.get();
+            let round_radius = self.round_radius.get();
             let color = self.color.get();
             let color: [f32, ..4] = [color[0], color[1], color[2], color[3]];
             // Complete transparency does not need to be rendered.
@@ -122,7 +124,8 @@ impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
             with_round_rectangle_tri_list_xy_f32_rgba_f32(
                 32,
                 self.transform.get(),
-                round_rect,
+                rect,
+                round_radius,
                 color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
@@ -141,7 +144,8 @@ impl<'a> View<'a> for RoundRectangleColorContext<'a> {
         RoundRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.base.get()),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
             color: Borrowed(self.color.get()),
         }
     }
@@ -151,7 +155,8 @@ impl<'a> View<'a> for RoundRectangleColorContext<'a> {
         RoundRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(identity()),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
             color: Borrowed(self.color.get()),
         }
     }
@@ -161,7 +166,8 @@ impl<'a> View<'a> for RoundRectangleColorContext<'a> {
         RoundRectangleColorContext {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
             color: Borrowed(self.color.get()),
         }
     }

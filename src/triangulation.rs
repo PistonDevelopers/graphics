@@ -5,7 +5,6 @@ use {
     Image,
     Matrix2d, 
     Rectangle, 
-    RoundRectangle
 };
 use interpolation::{lerp};
 
@@ -84,17 +83,13 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
 pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
     resolution_corner: uint,
     m: &Matrix2d,
-    round_rect: &RoundRectangle,
+    rect: &Rectangle,
+    round_radius: &f64,
     color: [f32, ..4],
     f: |vertices: &[f32], colors: &[f32]|) {
     
-    let (x, y, w, h, radius) = (
-        round_rect[0], 
-        round_rect[1], 
-        round_rect[2], 
-        round_rect[3], 
-        round_rect[4]
-    );
+    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let radius = *round_radius;
     let n = resolution_corner * 4 + 4;
     let mut i = 0u;
     stream_polygon_tri_list_xy_f32_rgba_f32(m, || {

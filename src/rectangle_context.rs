@@ -4,23 +4,22 @@ use {
     AddImage,
     AddRound, 
     Borrowed, 
+    CanRectangle,
     CanTransform,
     Field, 
+    HasRectangle,
     HasTransform,
     Image,
     ImageRectangleContext,
     Matrix2d, 
     Rectangle, 
     RectangleColorContext,
-    RelativeRectangle,
     RoundRectangleContext, 
     Value,
     View, 
 };
 use vecmath::{
     identity,
-    margin_rectangle, 
-    relative_rectangle, 
 };
 
 /// A rectangle context.
@@ -51,6 +50,24 @@ impl<'a> CanTransform<'a, RectangleContext<'a>, Matrix2d> for RectangleContext<'
     }
 }
 
+impl<'a> HasRectangle<'a, Rectangle> for RectangleContext<'a> {
+    #[inline(always)]
+    fn get_rectangle(&'a self) -> &'a Rectangle {
+        self.rect.get()
+    }
+}
+
+impl<'a> CanRectangle<'a, RectangleContext<'a>, Rectangle> for RectangleContext<'a> {
+    #[inline(always)]
+    fn rectangle(&'a self, rect: Rectangle) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value(rect),
+        }
+    }
+}
+
 impl<'a> AddColor<'a, RectangleColorContext<'a>> for RectangleContext<'a> {
     /// Creates a RectangleColorContext.
     #[inline(always)]
@@ -74,36 +91,14 @@ fn test_rgba() {
     assert_eq!(e.color.get()[0], 1.0);
 }
 
-impl<'a> RelativeRectangle<'a> for RectangleContext<'a> {
-    #[inline(always)]
-    fn margin(&'a self, m: f64) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Value(margin_rectangle(self.rect.get(), m)),
-        }
-    }
-
-    #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Value(relative_rectangle(self.rect.get(), x, y)),
-        }
-    }
-}
-
 impl<'a> AddRound<'a, RoundRectangleContext<'a>> for RectangleContext<'a> {
     #[inline(always)]
     fn round(&'a self, radius: f64) -> RoundRectangleContext<'a> {
         RoundRectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            round_rect: {
-                let rect = self.rect.get();
-                Value([rect[0], rect[1], rect[2], rect[3], radius])
-            },
+            rect: Borrowed(self.rect.get()),
+            round_radius: Value(radius),
         }
     }
 }

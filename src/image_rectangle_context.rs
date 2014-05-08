@@ -3,24 +3,23 @@ use {
     BackEnd,
     Borrowed,
     CanColor,
+    CanRectangle,
     CanTransform,
     Color,
     Draw,
     Field,
     HasColor,
+    HasRectangle,
     HasTransform,
     Image,
     ImageRectangleColorContext,
     Matrix2d,
     Rectangle,
-    RelativeRectangle,
     Value,
     View,
 };
 use vecmath::{
     identity,
-    margin_rectangle,
-    relative_rectangle,
 };
 use triangulation::{
     rect_tri_list_xy_f32,
@@ -81,6 +80,25 @@ impl<'a> CanColor<'a, ImageRectangleColorContext<'a>, Color> for ImageRectangleC
     }
 }
 
+impl<'a> HasRectangle<'a, Rectangle> for ImageRectangleContext<'a> {
+    #[inline(always)]
+    fn get_rectangle(&'a self) -> &'a Rectangle {
+        self.rect.get()
+    }
+}
+
+impl<'a> CanRectangle<'a, ImageRectangleContext<'a>, Rectangle> for ImageRectangleContext<'a> {
+    #[inline(always)]
+    fn rectangle(&'a self, rect: Rectangle) -> ImageRectangleContext<'a> {
+        ImageRectangleContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value(rect),
+            image: Borrowed(self.image.get()),
+        }
+    }
+}
+
 impl<'a> Draw<'a> for ImageRectangleContext<'a> {
     fn draw<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_single_texture()
@@ -103,28 +121,6 @@ impl<'a> Draw<'a> for ImageRectangleContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a> RelativeRectangle<'a> for ImageRectangleContext<'a> {
-    #[inline(always)]
-    fn margin(&'a self, m: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            image: Borrowed(self.image.get()),
-            rect: Value(margin_rectangle(self.rect.get(), m)),
-        }
-    }
-
-    #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> ImageRectangleContext<'a> {
-        ImageRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            image: Borrowed(self.image.get()),
-            rect: Value(relative_rectangle(self.rect.get(), x, y)),
         }
     }
 }

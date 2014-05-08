@@ -2,23 +2,22 @@ use {
     BackEnd,
     Borrowed,
     CanColor,
+    CanRectangle,
     CanTransform,
     Color,
     Draw,
     Field,
     HasColor,
+    HasRectangle,
     HasTransform,
     Image,
     Matrix2d,
     Rectangle,
-    RelativeRectangle,
     Value,
     View,
 };
 use vecmath::{
     identity,
-    margin_rectangle,
-    relative_rectangle,
 };
 use triangulation::{
     rect_tri_list_xy_f32,
@@ -80,6 +79,26 @@ impl<'a> CanColor<'a, ImageRectangleColorContext<'a>, Color> for ImageRectangleC
     }
 }
 
+impl<'a> HasRectangle<'a, Rectangle> for ImageRectangleColorContext<'a> {
+    #[inline(always)]
+    fn get_rectangle(&'a self) -> &'a Rectangle {
+        self.rect.get()
+    }
+}
+
+impl<'a> CanRectangle<'a, ImageRectangleColorContext<'a>, Rectangle> for ImageRectangleColorContext<'a> {
+    #[inline(always)]
+    fn rectangle(&'a self, rect: Rectangle) -> ImageRectangleColorContext<'a> {
+        ImageRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value(rect),
+            image: Borrowed(self.image.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
 impl<'a> Draw<'a> for ImageRectangleColorContext<'a> {
     fn draw<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_single_texture()
@@ -103,30 +122,6 @@ impl<'a> Draw<'a> for ImageRectangleColorContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a> RelativeRectangle<'a> for ImageRectangleColorContext<'a> {
-    #[inline(always)]
-    fn margin(&'a self, m: f64) -> ImageRectangleColorContext<'a> {
-        ImageRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            image: Borrowed(self.image.get()),
-            rect: Value(margin_rectangle(self.rect.get(), m)),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> ImageRectangleColorContext<'a> {
-        ImageRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            image: Borrowed(self.image.get()),
-            rect: Value(relative_rectangle(self.rect.get(), x, y)),
-            color: Borrowed(self.color.get()),
         }
     }
 }

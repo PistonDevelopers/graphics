@@ -1,20 +1,19 @@
 use {
     AddColor,
     Borrowed, 
+    CanRectangle,
     CanTransform,
     EllipseColorContext,
     Field, 
+    HasRectangle,
     HasTransform,
     Matrix2d, 
     Rectangle,
-    RelativeRectangle, 
     Value,
     View,
 };
 use vecmath::{
     identity,
-    margin_rectangle, 
-    relative_rectangle, 
 };
 
 /// An ellipse context.
@@ -57,22 +56,20 @@ impl<'a> AddColor<'a, EllipseColorContext<'a>> for EllipseContext<'a> {
     }
 }
 
-impl<'a> RelativeRectangle<'a> for EllipseContext<'a> {
+impl<'a> HasRectangle<'a, Rectangle> for EllipseContext<'a> {
     #[inline(always)]
-    fn margin(&'a self, m: f64) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Value(margin_rectangle(self.rect.get(), m)),
-        }
+    fn get_rectangle(&'a self) -> &'a Rectangle {
+        self.rect.get()
     }
+}
 
+impl<'a> CanRectangle<'a, EllipseContext<'a>, Rectangle> for EllipseContext<'a> {
     #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> EllipseContext<'a> {
+    fn rectangle(&'a self, rect: Rectangle) -> EllipseContext<'a> {
         EllipseContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(relative_rectangle(self.rect.get(), x, y)),
+            rect: Value(rect),
         }
     }
 }

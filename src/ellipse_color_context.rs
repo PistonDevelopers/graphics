@@ -2,6 +2,7 @@
 use {
     BackEnd, 
     CanColor,
+    CanRectangle,
     CanTransform,
     Clear, 
     Color,
@@ -9,17 +10,15 @@ use {
     Field, 
     Fill, 
     HasColor,
+    HasRectangle,
     HasTransform,
     Matrix2d, 
     Rectangle, 
-    RelativeRectangle, 
     Value,
     View,
 };
 use vecmath::{
     identity,
-    margin_rectangle, 
-    relative_rectangle, 
 };
 use triangulation::{
     with_ellipse_tri_list_xy_f32_rgba_f32
@@ -75,6 +74,25 @@ impl<'a> CanColor<'a, EllipseColorContext<'a>, Color> for EllipseColorContext<'a
     }
 }
 
+impl<'a> HasRectangle<'a, Rectangle> for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn get_rectangle(&'a self) -> &'a Rectangle {
+        self.rect.get()
+    }
+}
+
+impl<'a> CanRectangle<'a, EllipseColorContext<'a>, Rectangle> for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn rectangle(&'a self, rect: Rectangle) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value(rect),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
 impl<'a> Fill<'a> for EllipseColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
@@ -109,28 +127,6 @@ impl<'a> Clear for EllipseColorContext<'a> {
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a> RelativeRectangle<'a> for EllipseColorContext<'a> {
-    #[inline(always)]
-    fn margin(&'a self, m: f64) -> EllipseColorContext<'a> {
-        EllipseColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            rect: Value(margin_rectangle(self.rect.get(), m)),
-        }
-    }
-
-    #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> EllipseColorContext<'a> {
-        EllipseColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            rect: Value(relative_rectangle(self.rect.get(), x, y)),
         }
     }
 }

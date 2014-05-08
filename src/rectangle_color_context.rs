@@ -4,24 +4,23 @@ use {
     BackEnd,
     Borrowed, 
     CanColor,
+    CanRectangle,
     CanTransform,
     Clear, 
     Color,
     Field, 
     Fill, 
     HasColor,
+    HasRectangle,
     HasTransform,
     Matrix2d, 
     Rectangle, 
-    RelativeRectangle,
     RoundRectangleColorContext,
     Value,
     View
 };
 use vecmath::{
     identity,
-    margin_rectangle, 
-    relative_rectangle, 
 };
 use triangulation::{
     rect_tri_list_xy_f32, 
@@ -78,6 +77,25 @@ impl<'a> CanColor<'a, RectangleColorContext<'a>, Color> for RectangleColorContex
     }
 }
 
+impl<'a> HasRectangle<'a, Rectangle> for RectangleColorContext<'a> {
+    #[inline(always)]
+    fn get_rectangle(&'a self) -> &'a Rectangle {
+        self.rect.get()
+    }
+}
+
+impl<'a> CanRectangle<'a, RectangleColorContext<'a>, Rectangle> for RectangleColorContext<'a> {
+    #[inline(always)]
+    fn rectangle(&'a self, rect: Rectangle) -> RectangleColorContext<'a> {
+        RectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value(rect),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
 impl<'a> Fill<'a> for RectangleColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
@@ -111,28 +129,6 @@ impl<'a> Clear for RectangleColorContext<'a> {
     }
 }
 
-impl<'a> RelativeRectangle<'a> for RectangleColorContext<'a> {
-    #[inline(always)]
-    fn margin(&'a self, m: f64) -> RectangleColorContext<'a> {
-        RectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            rect: Value(margin_rectangle(self.rect.get(), m)),
-        }
-    }
-
-    #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> RectangleColorContext<'a> {
-        RectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            rect: Value(relative_rectangle(self.rect.get(), x, y)),
-        }
-    }
-}
-
 impl<'a> AddRound<'a, RoundRectangleColorContext<'a>> for RectangleColorContext<'a> {
     #[inline(always)]
     fn round(&'a self, radius: f64) -> RoundRectangleColorContext<'a> {
@@ -140,10 +136,8 @@ impl<'a> AddRound<'a, RoundRectangleColorContext<'a>> for RectangleColorContext<
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
-            round_rect: {
-                let rect = self.rect.get();
-                Value([rect[0], rect[1], rect[2], rect[3], radius])
-            },
+            rect: Borrowed(self.rect.get()),
+            round_radius: Value(radius),
         }
     }
 }

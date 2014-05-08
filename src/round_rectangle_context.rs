@@ -1,20 +1,19 @@
 use {
     AddColor, 
     Borrowed, 
+    CanRectangle,
     CanTransform,
     Field, 
+    HasRectangle,
     HasTransform,
     Matrix2d, 
-    RelativeRectangle,
-    RoundRectangle,
+    Rectangle,
     RoundRectangleColorContext,
     Value, 
     View,
 };
 use vecmath::{
     identity,
-    margin_round_rectangle, 
-    relative_round_rectangle, 
 };
 
 /// A round rectangle context.
@@ -23,8 +22,10 @@ pub struct RoundRectangleContext<'a> {
     pub base: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
-    /// Current round rectangle.
-    pub round_rect: Field<'a, RoundRectangle>,
+    /// Current rectangle.
+    pub rect: Field<'a, Rectangle>,
+    /// Current roundnes radius.
+    pub round_radius: Field<'a, f64>,
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for RoundRectangleContext<'a> {
@@ -40,27 +41,27 @@ impl<'a> CanTransform<'a, RoundRectangleContext<'a>, Matrix2d> for RoundRectangl
         RoundRectangleContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
         }
     }
 }
 
-impl<'a> RelativeRectangle<'a> for RoundRectangleContext<'a> {
+impl<'a> HasRectangle<'a, Rectangle> for RoundRectangleContext<'a> {
     #[inline(always)]
-    fn margin(&'a self, m: f64) -> RoundRectangleContext<'a> {
-        RoundRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            round_rect: Value(margin_round_rectangle(self.round_rect.get(), m)),
-        }
+    fn get_rectangle(&'a self) -> &'a Rectangle {
+        self.rect.get()
     }
+}
 
+impl<'a> CanRectangle<'a, RoundRectangleContext<'a>, Rectangle> for RoundRectangleContext<'a> {
     #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> RoundRectangleContext<'a> {
+    fn rectangle(&'a self, rect: Rectangle) -> RoundRectangleContext<'a> {
         RoundRectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            round_rect: Value(relative_round_rectangle(self.round_rect.get(), x, y)),
+            rect: Value(rect),
+            round_radius: Borrowed(self.round_radius.get()),
         }
     }
 }
@@ -73,7 +74,8 @@ impl<'a> AddColor<'a, RoundRectangleColorContext<'a>> for RoundRectangleContext<
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value([r, g, b, a]),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
         }
     }
 }
@@ -84,7 +86,8 @@ impl<'a> View<'a> for RoundRectangleContext<'a> {
         RoundRectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.base.get()),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
         }
     }
 
@@ -93,7 +96,8 @@ impl<'a> View<'a> for RoundRectangleContext<'a> {
         RoundRectangleContext {
             base: Borrowed(self.base.get()),
             transform: Value(identity()),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
         }
     }
 
@@ -102,7 +106,8 @@ impl<'a> View<'a> for RoundRectangleContext<'a> {
         RoundRectangleContext {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),
-            round_rect: Borrowed(self.round_rect.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
         }
     }
 }
