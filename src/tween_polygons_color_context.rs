@@ -16,7 +16,9 @@ use triangulation::{
 };
 use internal::{
     CanColor,
+    CanTransform,
     HasColor,
+    HasTransform,
 };
 
 /// An animation inbetweening context with color.
@@ -47,6 +49,26 @@ impl<'a> CanColor<'a, TweenPolygonsColorContext<'a>, Color> for TweenPolygonsCol
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
+            tween_factor: Borrowed(self.tween_factor.get()),
+            polygons: Borrowed(self.polygons.get()),
+        }
+    }
+}
+
+impl<'a> HasTransform<'a, Matrix2d> for TweenPolygonsColorContext<'a> {
+    #[inline(alwyas)]
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
+    }
+}
+
+impl<'a> CanTransform<'a, TweenPolygonsColorContext<'a>, Matrix2d> for TweenPolygonsColorContext<'a> {
+    #[inline(always)]
+    fn transform(&'a self, value: Matrix2d) -> TweenPolygonsColorContext<'a> {
+        TweenPolygonsColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(value),
+            color: Borrowed(self.color.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Borrowed(self.polygons.get()),
         }
