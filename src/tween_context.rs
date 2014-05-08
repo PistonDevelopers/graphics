@@ -1,7 +1,9 @@
 use {
+    AddColor,
     Borrowed, 
     Field, 
     Matrix2d,
+    TweenColorContext,
     Value, 
     View,
 };
@@ -44,6 +46,18 @@ impl<'a> View<'a> for TweenContext<'a> {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
+}
+
+impl<'a> AddColor<'a, TweenColorContext<'a>> for TweenContext<'a> {
+    #[inline(always)]
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> TweenColorContext<'a> {
+        TweenColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+            color: Value([r, g, b, a]),
         }
     }
 }
