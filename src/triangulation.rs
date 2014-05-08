@@ -132,7 +132,6 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     
     let mut vertices: [f32, ..740] = [0.0, ..740];
     let mut colors: [f32, ..1480] = [0.0, ..1480];
-    // Draw first triangle for testing.
     // Get the first point which will be used a lot.
     let fp = match polygon() { None => return, Some(val) => val };
     let (fx, fy) = (tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1]));
@@ -142,7 +141,6 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     let mut gy = gy;
     let mut i = 0;
     'read_vertices: loop {
-        // Set the first point in triangle to use the beginning.
         let ind_out = i * 2 * 3;
         vertices[ind_out + 0] = fx;
         vertices[ind_out + 1] = fy;
