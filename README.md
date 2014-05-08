@@ -56,14 +56,14 @@ To write your own back-end `BackEnd` trait. The `BackEnd` trait implements defau
 * To have a feature complete library for 2D graphics in general
 * Easy to use
 * Vector graphics
-* Images
+* Images (back-end supported)
 * Clipping
 * Minimal dependencies
 * Reasonable defaults with resolution detection whenever possible
-* Image formats in pure Rust
 
 ## Non-Goals
 
+* Image formats
 * Text layout
 * Backward compability (expect lot of breaking)
 * Platform or back-end specific code
