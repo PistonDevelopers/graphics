@@ -6,6 +6,10 @@ use {
     Matrix2d,
     TweenPolygonsColorContext,
     Value,
+    View,
+};
+use vecmath::{
+    identity,
 };
 use internal::{
     CanTransform,
@@ -57,3 +61,34 @@ impl<'a> CanTransform<'a, TweenPolygonsContext<'a>, Matrix2d> for TweenPolygonsC
     }
 }
 
+impl<'a> View<'a> for TweenPolygonsContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> TweenPolygonsContext<'a> {
+        TweenPolygonsContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            polygons: Borrowed(self.polygons.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> TweenPolygonsContext<'a> {
+        TweenPolygonsContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            polygons: Borrowed(self.polygons.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> TweenPolygonsContext<'a> {
+        TweenPolygonsContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            polygons: Borrowed(self.polygons.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
+}
