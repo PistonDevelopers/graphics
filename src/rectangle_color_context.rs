@@ -1,5 +1,6 @@
 
 use {
+    AddImage,
     AddRound, 
     BackEnd,
     Borrowed, 
@@ -7,6 +8,8 @@ use {
     Color,
     Field, 
     Fill, 
+    Image,
+    ImageRectangleColorContext,
     Matrix2d, 
     Rectangle, 
     RoundRectangleColorContext,
@@ -175,3 +178,16 @@ impl<'a> View<'a> for RectangleColorContext<'a> {
         }
     }
 }
+
+impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for RectangleColorContext<'a> {
+    fn image(&'a self, image: Image) -> ImageRectangleColorContext<'a> {
+        ImageRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            image: Value(image),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
