@@ -12,6 +12,10 @@ use {
 use vecmath::{
     identity
 };
+use internal::{
+    CanTransform,
+    HasTransform,
+};
 
 /// An animation inbetweening context.
 pub struct TweenContext<'a> {
@@ -72,6 +76,24 @@ impl<'a> AddPolygons<'a, TweenPolygonsContext<'a>> for TweenContext<'a> {
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Value(polygons),
+        }
+    }
+}
+
+impl<'a> HasTransform<'a, Matrix2d> for TweenContext<'a> {
+    #[inline(always)]
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
+    }
+}
+
+impl<'a> CanTransform<'a, TweenContext<'a>, Matrix2d> for TweenContext<'a> {
+    #[inline(always)]
+    fn transform(&'a self, value: Matrix2d) -> TweenContext<'a> {
+        TweenContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(value),
+            tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
 }
