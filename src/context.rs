@@ -5,6 +5,7 @@ use {
     AddImage, 
     AddPolygon, 
     AddRectangle,
+    AddTween,
     Borrowed, 
     ColorContext, 
     EllipseContext, 
@@ -14,6 +15,7 @@ use {
     Matrix2d,
     PolygonContext, 
     RectangleContext,
+    TweenContext,
     Value,
     View,
 };
@@ -186,6 +188,17 @@ impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
             transform: Borrowed(self.transform.get()),
             rect: Value([0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]),
             image: Value(image),
+        }
+    }
+}
+
+impl<'a> AddTween<'a, TweenContext<'a>> for Context<'a> {
+    #[inline(always)]
+    fn lerp(&'a self, tween_factor: f64) -> TweenContext<'a> {
+        TweenContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            tween_factor: Value(tween_factor),
         }
     }
 }
