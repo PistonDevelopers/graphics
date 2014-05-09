@@ -1,6 +1,8 @@
 use {
     AddPolygons, 
+    BackEnd,
     Borrowed, 
+    Clear,
     Color, 
     Field, 
     Matrix2d,
@@ -110,6 +112,15 @@ impl<'a> View<'a> for TweenColorContext<'a> {
             color: Borrowed(self.color.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
         }
+    }
+}
+
+impl<'a> Clear for TweenColorContext<'a> {
+    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+        if back_end.supports_clear_rgba() {
+            let color = self.color.get();
+            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
+        }        
     }
 }
 
