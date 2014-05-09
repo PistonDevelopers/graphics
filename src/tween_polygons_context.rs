@@ -7,6 +7,10 @@ use {
     TweenPolygonsColorContext,
     Value,
 };
+use internal::{
+    CanTransform,
+    HasTransform,
+};
 
 /// An animation inbetweening context with color.
 pub struct TweenPolygonsContext<'a> {
@@ -28,6 +32,25 @@ impl<'a> AddColor<'a, TweenPolygonsColorContext<'a>> for TweenPolygonsContext<'a
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value([r, g, b, a]),
+            tween_factor: Borrowed(self.tween_factor.get()),
+            polygons: Borrowed(self.polygons.get()),
+        }
+    }
+}
+
+impl<'a> HasTransform<'a, Matrix2d> for TweenPolygonsContext<'a> {
+    #[inline(alwyas)]
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
+    }
+}
+
+impl<'a> CanTransform<'a, TweenPolygonsContext<'a>, Matrix2d> for TweenPolygonsContext<'a> {
+    #[inline(always)]
+    fn transform(&'a self, value: Matrix2d) -> TweenPolygonsContext<'a> {
+        TweenPolygonsContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(value),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Borrowed(self.polygons.get()),
         }
