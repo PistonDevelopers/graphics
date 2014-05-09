@@ -1,6 +1,7 @@
 
 use {
-    AddEllipse, 
+    AddEllipse,
+    AddImage, 
     AddPolygon, 
     AddRectangle, 
     AddTween,
@@ -9,7 +10,9 @@ use {
     Clear, 
     Color,
     EllipseColorContext, 
-    Field, 
+    Field,
+    Image, 
+    ImageRectangleColorContext,
     Matrix2d, 
     PolygonColorContext, 
     RectangleColorContext,
@@ -164,6 +167,19 @@ impl<'a> View<'a> for ColorContext<'a> {
         ColorContext {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for ColorContext<'a> {
+    #[inline(always)]
+    fn image(&'a self, image: Image) -> ImageRectangleColorContext<'a> {
+        ImageRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value([0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]),
+            image: Value(image),
             color: Borrowed(self.color.get()),
         }
     }
