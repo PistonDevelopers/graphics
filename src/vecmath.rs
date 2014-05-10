@@ -34,6 +34,24 @@ pub fn rotate_radians(angle: f64) -> Matrix2d {
      s,  c, 0.0]
 }
 
+/// Orients x axis to look at point.
+///
+/// Leaves x axis unchanged if the point to look at is the origin.
+#[inline(always)]
+pub fn orient(x: f64, y: f64) -> Matrix2d {
+    let len = x * x + y * y;
+    if len == 0.0 {
+         return [1.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0];
+    }
+
+    let len = len.sqrt();
+    let c = x / len;
+    let s = y / len;
+    [c, -s, 0.0,
+     s,  c, 0.0]
+}
+
 /// Create a scale matrix.
 #[inline(always)]
 pub fn scale(sx: f64, sy: f64) -> Matrix2d {
