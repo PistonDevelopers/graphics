@@ -30,8 +30,8 @@ pub fn translate(x: f64, y: f64) -> Matrix2d {
 pub fn rotate_radians(angle: f64) -> Matrix2d {
     let c = angle.cos();
     let s = angle.sin();
-    [c, s, 0.0,
-    -s, c, 0.0]
+    [c, -s, 0.0,
+     s,  c, 0.0]
 }
 
 /// Create a scale matrix.
