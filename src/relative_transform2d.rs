@@ -3,6 +3,7 @@ use {
 };
 use vecmath::{
     multiply,
+    orient,
     rotate_radians,
     scale,
     shear,
@@ -40,6 +41,16 @@ pub trait RelativeTransform2d<'a> {
 
     /// Rotate radians in local coordinates.
     fn rot_rad_local(&'a self, angle: f64) -> Self;
+
+    /// Orients x axis to look at point.
+    ///
+    /// Leaves x axis unchanged if the point to look at is the origin.
+    fn orient(&'a self, x: f64, y: f64) -> Self;
+
+    /// Orients x axis to look at point locally.
+    ///
+    /// Leaves x axis unchanged if the point to look at is the origin.
+    fn orient_local(&'a self, x: f64, y: f64) -> Self;
 
     /// Scale.
     fn scale(&'a self, sx: f64, sy: f64) -> Self;
@@ -116,6 +127,18 @@ impl<
     fn rot_rad_local(&'a self, angle: f64) -> T {
         let rot = rotate_radians(angle);
         self.transform(multiply(self.get_transform(), &rot))
+    }
+
+    #[inline(always)]
+    fn orient(&'a self, x: f64, y: f64) -> T {
+        let orient = orient(x, y);
+        self.transform(multiply(&orient, self.get_transform()))
+    }
+
+    #[inline(always)]
+    fn orient_local(&'a self, x: f64, y: f64) -> T {
+        let orient = orient(x, y);
+        self.transform(multiply(self.get_transform(), &orient))
     }
 
     #[inline(always)]
