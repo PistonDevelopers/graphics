@@ -40,9 +40,6 @@
 
 extern crate std;
 
-pub use Context = context::Context;
-pub use BackEnd = back_end::BackEnd;
-pub use RelativeTransform2d = relative_transform2d::RelativeTransform2d;
 pub use AddColor = add_color::AddColor;
 pub use AddEllipse = add_ellipse::AddEllipse;
 pub use AddImage = add_image::AddImage;
@@ -50,15 +47,16 @@ pub use AddPolygon = add_polygon::AddPolygon;
 pub use AddPolygons = add_polygons::AddPolygons;
 pub use AddRectangle = add_rectangle::AddRectangle;
 pub use AddRound = add_round::AddRound;
+pub use AddRoundBorder = add_round_border::AddRoundBorder;
 pub use AddTween = add_tween::AddTween;
-pub use RelativeColor = relative_color::RelativeColor;
-pub use RelativeRectangle = relative_rectangle::RelativeRectangle;
-pub use Draw = draw::Draw;
-pub use Fill = fill::Fill;
+pub use BackEnd = back_end::BackEnd;
 pub use Clear = clear::Clear;
 pub use ColorContext = color_context::ColorContext;
+pub use Context = context::Context;
+pub use Draw = draw::Draw;
 pub use EllipseContext = ellipse_context::EllipseContext;
 pub use EllipseColorContext = ellipse_color_context::EllipseColorContext;
+pub use Fill = fill::Fill;
 pub use ImageRectangleContext = image_rectangle_context::ImageRectangleContext;
 pub use ImageRectangleColorContext = image_rectangle_color_context::ImageRectangleColorContext;
 pub use LineContext = line_context::LineContext;
@@ -66,6 +64,11 @@ pub use PolygonContext = polygon_context::PolygonContext;
 pub use PolygonColorContext = polygon_color_context::PolygonColorContext;
 pub use RectangleContext = rectangle_context::RectangleContext;
 pub use RectangleColorContext = rectangle_color_context::RectangleColorContext;
+pub use RelativeColor = relative_color::RelativeColor;
+pub use RelativeRectangle = relative_rectangle::RelativeRectangle;
+pub use RelativeTransform2d = relative_transform2d::RelativeTransform2d;
+pub use RoundBorderLineContext = round_border_line_context::RoundBorderLineContext;
+pub use RoundBorderLineColorContext = round_border_line_color_context::RoundBorderLineColorContext;
 pub use RoundRectangleContext = round_rectangle_context::RoundRectangleContext;
 pub use RoundRectangleColorContext = round_rectangle_color_context::RoundRectangleColorContext;
 pub use TweenContext = tween_context::TweenContext;
@@ -85,6 +88,7 @@ mod add_polygon;
 mod add_polygons;
 mod add_rectangle;
 mod add_round;
+mod add_round_border;
 mod add_tween;
 mod relative_color;
 mod relative_rectangle;
@@ -101,6 +105,8 @@ mod polygon_context;
 mod polygon_color_context;
 mod rectangle_context;
 mod rectangle_color_context;
+mod round_border_line_context;
+mod round_border_line_color_context;
 mod round_rectangle_context;
 mod round_rectangle_color_context;
 mod tween_context;
@@ -121,6 +127,9 @@ pub type Line = [f64, ..4];
 
 /// [x, y, dir_x, dir_y]
 pub type Ray = [f64, ..4];
+
+/// [radius, width]
+pub type RoundBorder = [f64, ..2];
 
 /// [m00, m01, m02, m10, m11, m12]
 ///
