@@ -1,8 +1,10 @@
 
 use {
+    AddColor,
     Borrowed,
     Field,
     Line,
+    LineColorContext,
     Matrix2d,
     Value,
     View,
@@ -72,4 +74,15 @@ impl<'a> View<'a> for LineContext<'a> {
     }
 }
 
+impl<'a> AddColor<'a, LineColorContext<'a>> for LineContext<'a> {
+    #[inline(always)]
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> LineColorContext<'a> {
+        LineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            color: Value([r, g, b, a]),
+        }
+    }
+}
 
