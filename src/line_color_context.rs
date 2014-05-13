@@ -1,10 +1,12 @@
 
 use {
+    AddRoundBorder,
     Borrowed, 
     Color,
     Field, 
     Line,
     Matrix2d, 
+    RoundBorderLineColorContext,
     Value, 
     View,
 };
@@ -79,4 +81,16 @@ impl<'a> View<'a> for LineColorContext<'a> {
     }
 }
 
+impl<'a> AddRoundBorder<'a, RoundBorderLineColorContext<'a>> for LineColorContext<'a> {
+    #[inline(always)]
+    fn round_border(&'a self, radius: f64, width: f64) -> RoundBorderLineColorContext<'a> {
+        RoundBorderLineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            round_border: Value([radius, width]),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
 
