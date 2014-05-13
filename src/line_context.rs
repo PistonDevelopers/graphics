@@ -1,10 +1,10 @@
 
 use {
-    Field, 
-    Borrowed, 
+    Field,
+    Borrowed,
     Line,
-    Matrix2d, 
-    Value, 
+    Matrix2d,
+    Value,
     View,
 };
 use vecmath::{

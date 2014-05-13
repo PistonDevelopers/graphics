@@ -3,10 +3,10 @@
 
 use {
     Line,
-    Matrix2d, 
-    Ray, 
-    Rectangle, 
-    Vec2d, 
+    Matrix2d,
+    Ray,
+    Rectangle,
+    Vec2d,
     Triangle
 };
 use modular_index::{previous};
@@ -133,7 +133,7 @@ pub fn relative_rectangle(rect: &Rectangle, x: f64, y: f64) -> Rectangle {
 /// Computes modular offset safely for numbers.
 #[inline(always)]
 pub fn modular_offset<T: Add<T, T> + Rem<T, T>>(n: &T, i: &T, off: &T) -> T {
-    (*i + (*off % *n + *n)) % *n 
+    (*i + (*off % *n + *n)) % *n
 }
 
 #[test]
@@ -149,10 +149,10 @@ fn test_modular_offset() {
     assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &1.0_f64), 1.0_f64);
 }
 
-/// Computes the area and centroid of a simple polygon.  
+/// Computes the area and centroid of a simple polygon.
 ///
-/// A simple polygon is one that does not intersect itself.  
-/// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons  
+/// A simple polygon is one that does not intersect itself.
+/// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
 pub fn area_centroid(polygon: &[f64]) -> (f64, Vec2d) {
     let n = polygon.len() / 2;
     let mut sum = 0.0_f64;
@@ -193,9 +193,9 @@ pub fn centroid(polygon: &[f64]) -> Vec2d {
 
 /// Returns a number that tells which side it is relative to a line.
 ///
-/// Computes the cross product of the vector that gives the line  
-/// with the vector between point and starting point of line.  
-/// One side of the line has opposite sign of the other.  
+/// Computes the cross product of the vector that gives the line
+/// with the vector between point and starting point of line.
+/// One side of the line has opposite sign of the other.
 #[inline(always)]
 pub fn line_side(line: &Line, x: f64, y: f64) -> f64 {
     let (ax, ay) = (line[0], line[1]);
@@ -205,9 +205,9 @@ pub fn line_side(line: &Line, x: f64, y: f64) -> f64 {
 
 /// Returns true if point is inside triangle.
 ///
-/// This is done by computing a `side` number for each edge.  
-/// If the number is inside if it is on the same side for all edges.  
-/// Might break for very small triangles.  
+/// This is done by computing a `side` number for each edge.
+/// If the number is inside if it is on the same side for all edges.
+/// Might break for very small triangles.
 pub fn inside_triangle(triangle: &Triangle, x: f64, y: f64) -> bool {
     let (ax, ay) = (triangle[0], triangle[1]);
     let (bx, by) = (triangle[2], triangle[3]);

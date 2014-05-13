@@ -1,17 +1,17 @@
 
 use {
     AddImage,
-    AddRound, 
+    AddRound,
     BackEnd,
-    Borrowed, 
-    Clear, 
+    Borrowed,
+    Clear,
     Color,
-    Field, 
-    Fill, 
+    Field,
+    Fill,
     Image,
     ImageRectangleColorContext,
-    Matrix2d, 
-    Rectangle, 
+    Matrix2d,
+    Rectangle,
     RoundRectangleColorContext,
     Value,
     View
@@ -20,7 +20,7 @@ use vecmath::{
     identity,
 };
 use triangulation::{
-    rect_tri_list_xy_f32, 
+    rect_tri_list_xy_f32,
     rect_tri_list_rgba_f32,
 };
 use internal::{

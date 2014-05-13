@@ -1,12 +1,12 @@
 use {
-    BackEnd, 
-    Borrowed, 
-    Clear, 
+    BackEnd,
+    Borrowed,
+    Clear,
     Color,
-    Field, 
-    Fill, 
-    Matrix2d, 
-    Value, 
+    Field,
+    Fill,
+    Matrix2d,
+    Value,
     View,
 };
 use vecmath::{

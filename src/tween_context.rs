@@ -1,12 +1,12 @@
 use {
     AddColor,
     AddPolygons,
-    Borrowed, 
-    Field, 
+    Borrowed,
+    Field,
     Matrix2d,
     TweenColorContext,
     TweenPolygonsContext,
-    Value, 
+    Value,
     View,
 };
 use vecmath::{
@@ -45,7 +45,7 @@ impl<'a> View<'a> for TweenContext<'a> {
             tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
-    
+
     #[inline(always)]
     fn store_view(&'a self) -> TweenContext<'a> {
         TweenContext {

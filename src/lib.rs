@@ -25,12 +25,12 @@
 //!
 //! ```
 //! // ERROR: Borrowed value does not live long enough
-//! let rect = Context::new().rect(x, y, w, h); 
+//! let rect = Context::new().rect(x, y, w, h);
 //! ```
 //!
 //! This is because the lifetime of the first step only lives inside the expression.
 //! To solve this problem, break the statement into two parts, one for each step:
-//! 
+//!
 //! ```
 //! let c = Context::new();
 //! let rect = c.rect(x, y, w, h);
@@ -122,9 +122,9 @@ pub type Line = [f64, ..4];
 /// [x, y, dir_x, dir_y]
 pub type Ray = [f64, ..4];
 
-/// [m00, m01, m02, m10, m11, m12]  
+/// [m00, m01, m02, m10, m11, m12]
 ///
-/// The first 3 numbers transforms `x`,  
+/// The first 3 numbers transforms `x`,
 /// the last 3 numbers transforms `y`:
 ///
 /// ```
@@ -168,15 +168,15 @@ impl<'a, T> Field<'a, T> {
 
 /// Represents an image.
 ///
-/// Images are often packed together in sprite sheets.  
-/// For this reason it refers to a rectangle within a texture.  
+/// Images are often packed together in sprite sheets.
+/// For this reason it refers to a rectangle within a texture.
 ///
-/// The texture is a unique identifier recognized by the back-end.  
-/// An image contains the size of a texture to be able to  
-/// compute normalized coordinates.  
+/// The texture is a unique identifier recognized by the back-end.
+/// An image contains the size of a texture to be able to
+/// compute normalized coordinates.
 ///
-/// There is no garbage collection of textures,  
-/// this responsibility is given to the back-end.  
+/// There is no garbage collection of textures,
+/// this responsibility is given to the back-end.
 pub struct Image {
     /// A unique identifier of the texture, recognizable by back-end.
     pub texture_id: uint,

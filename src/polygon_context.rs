@@ -1,10 +1,10 @@
 use {
-    AddColor, 
+    AddColor,
     Borrowed,
-    Field, 
-    Matrix2d, 
+    Field,
+    Matrix2d,
     PolygonColorContext,
-    Value, 
+    Value,
     View
 };
 use vecmath::{

@@ -1,13 +1,13 @@
 
 use {
-    BackEnd, 
-    Clear, 
+    BackEnd,
+    Clear,
     Color,
-    Borrowed, 
-    Field, 
-    Fill, 
-    Matrix2d, 
-    Rectangle, 
+    Borrowed,
+    Field,
+    Fill,
+    Matrix2d,
+    Rectangle,
     Value,
     View,
 };

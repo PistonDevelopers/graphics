@@ -35,10 +35,10 @@ pub trait BackEnd {
 
     /// Should return true if texture has alpha channel.
     ///
-    /// This will enable alpha blending.  
-    /// Alpha blending might be enabled if color per vertex has alpha.  
-    /// Ignore if alpha blending is not supported.  
-    /// Ignore if alpha channel is not used.  
+    /// This will enable alpha blending.
+    /// Alpha blending might be enabled if color per vertex has alpha.
+    /// Ignore if alpha blending is not supported.
+    /// Ignore if alpha channel is not used.
     #[inline(always)]
     fn has_texture_alpha(&self, _texture_id: uint) -> bool { false }
 
@@ -48,8 +48,8 @@ pub trait BackEnd {
 
     /// Renders list of 2d triangles with color assigned per vertex.
     fn tri_list_xy_f64_rgba_f32(
-        &mut self, 
-        _vertices: &[f64], 
+        &mut self,
+        _vertices: &[f64],
         _colors: &[f32]
     ) {}
 
@@ -59,8 +59,8 @@ pub trait BackEnd {
 
     /// Renders list of 2d triangles with color assigned per vertex.
     fn tri_list_xy_f32_rgba_f32(
-        &mut self, 
-        _vertices: &[f32], 
+        &mut self,
+        _vertices: &[f32],
         _colors: &[f32]
     ) {}
 
@@ -70,8 +70,8 @@ pub trait BackEnd {
 
     /// Renders list of 2d triangles.
     ///
-    /// A color and a texture coordinate is assigned per vertex.  
-    /// The texture coordinates refers to the current single-texture.  
+    /// A color and a texture coordinate is assigned per vertex.
+    /// The texture coordinates refers to the current single-texture.
     fn tri_list_xy_f32_rgba_f32_uv_f32(
         &mut self,
         _vertices: &[f32],

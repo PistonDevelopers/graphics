@@ -1,9 +1,9 @@
 use {
     AddColor,
-    Borrowed, 
+    Borrowed,
     EllipseColorContext,
-    Field, 
-    Matrix2d, 
+    Field,
+    Matrix2d,
     Rectangle,
     Value,
     View,
