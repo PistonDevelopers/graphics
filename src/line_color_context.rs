@@ -1,12 +1,11 @@
 
 use {
-    AddColor,
-    Borrowed,
-    Field,
+    Borrowed, 
+    Color,
+    Field, 
     Line,
-    LineColorContext,
-    Matrix2d,
-    Value,
+    Matrix2d, 
+    Value, 
     View,
 };
 use vecmath::{
@@ -18,71 +17,66 @@ use internal::{
 };
 
 /// A line context.
-pub struct LineContext<'a> {
+pub struct LineColorContext<'a> {
     /// Base/original transform.
     pub base: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current line.
     pub line: Field<'a, Line>,
+    /// Current color.
+    pub color: Field<'a, Color>,
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for LineContext<'a> {
+impl<'a> HasTransform<'a, Matrix2d> for LineColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, LineContext<'a>, Matrix2d> for LineContext<'a> {
+impl<'a> CanTransform<'a, LineColorContext<'a>, Matrix2d> for LineColorContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> LineContext<'a> {
-        LineContext {
+    fn transform(&'a self, value: Matrix2d) -> LineColorContext<'a> {
+        LineColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
             line: Borrowed(self.line.get()),
+            color: Borrowed(self.color.get()),
         }
     }
 }
 
-impl<'a> View<'a> for LineContext<'a> {
+impl<'a> View<'a> for LineColorContext<'a> {
     #[inline(always)]
-    fn view(&'a self) -> LineContext<'a> {
-        LineContext {
+    fn view(&'a self) -> LineColorContext<'a> {
+        LineColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.base.get()),
             line: Borrowed(self.line.get()),
+            color: Borrowed(self.color.get()),
         }
     }
 
     #[inline(always)]
-    fn reset(&'a self) -> LineContext<'a> {
-        LineContext {
+    fn reset(&'a self) -> LineColorContext<'a> {
+        LineColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(identity()),
             line: Borrowed(self.line.get()),
+            color: Borrowed(self.color.get()),
         }
     }
 
     #[inline(always)]
-    fn store_view(&'a self) -> LineContext<'a> {
-        LineContext {
+    fn store_view(&'a self) -> LineColorContext<'a> {
+        LineColorContext {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
+            color: Borrowed(self.color.get()),
         }
     }
 }
 
-impl<'a> AddColor<'a, LineColorContext<'a>> for LineContext<'a> {
-    #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> LineColorContext<'a> {
-        LineColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
-            color: Value([r, g, b, a]),
-        }
-    }
-}
 
