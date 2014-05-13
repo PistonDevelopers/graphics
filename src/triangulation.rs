@@ -3,8 +3,10 @@
 use std;
 use {
     Image,
+    Line,
     Matrix2d,
     Rectangle,
+    RoundBorder,
 };
 use interpolation::{lerp};
 
@@ -76,6 +78,52 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
         i += 1;
         Some([cx + angle.cos() * cw, cy + angle.sin() * ch])
     }, color, f);
+}
+
+/// Streams a round border line.
+#[inline(always)]
+pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
+    _resolution_corner: uint,
+    _m: &Matrix2d,
+    _line: &Line,
+    _round_border: &RoundBorder,
+    _color: [f32, ..4],
+    _f: |vertices: &[f32], colors: &[f32]|) {
+
+    /*
+    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let radius = round_border[0];
+    let n = resolution_corner * 4 + 4;
+    let mut i = 0u;
+    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
+        if i >= n { return None; }
+
+        let j = i;
+        i += 1;
+        match j {
+            j if j >= resolution_corner * 3 => {
+                let angle = j as f64 / (n - 3) as f64 * std::f64::consts::PI_2;
+                let (cx, cy) = (x + w - radius, y + radius);
+                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+            },
+            j if j >= resolution_corner * 2 => {
+                let angle = j as f64 / (n - 2) as f64 * std::f64::consts::PI_2;
+                let (cx, cy) = (x + radius, y + radius);
+                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+            },
+            j if j >= resolution_corner * 1 => {
+                let angle = j as f64 / (n - 1) as f64 * std::f64::consts::PI_2;
+                let (cx, cy) = (x + radius, y + h - radius);
+                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+            },
+            j => {
+                let angle = j as f64 / (n - 0) as f64 * std::f64::consts::PI_2;
+                let (cx, cy) = (x + w - radius, y + h - radius);
+                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+            },
+        }
+    }, color, f);
+    */
 }
 
 /// Streams a round rectangle.
