@@ -6,7 +6,7 @@ use {
     RoundBorder,
 };
 
-/// A line context.
+/// A line context with round border information.
 pub struct RoundBorderLineColorContext<'a> {
     /// Base/original transform.
     pub base: Field<'a, Matrix2d>,
