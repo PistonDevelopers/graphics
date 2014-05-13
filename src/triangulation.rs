@@ -3,8 +3,8 @@
 use std;
 use {
     Image,
-    Matrix2d, 
-    Rectangle, 
+    Matrix2d,
+    Rectangle,
 };
 use interpolation::{lerp};
 
@@ -63,14 +63,14 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
     rect: &Rectangle,
     color: [f32, ..4],
     f: |vertices: &[f32], colors: &[f32]|) {
-    
+
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (cw, ch) = (0.5 * w, 0.5 * h);
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
     let mut i = 0u;
     stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
-        if i >= n { return None; }        
+        if i >= n { return None; }
 
         let angle = i as f64 / n as f64 * std::f64::consts::PI_2;
         i += 1;
@@ -87,7 +87,7 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
     round_radius: &f64,
     color: [f32, ..4],
     f: |vertices: &[f32], colors: &[f32]|) {
-    
+
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = *round_radius;
     let n = resolution_corner * 4 + 4;
@@ -98,17 +98,17 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
         let j = i;
         i += 1;
         match j {
-            j if j >= resolution_corner * 3 => { 
+            j if j >= resolution_corner * 3 => {
                 let angle = j as f64 / (n - 3) as f64 * std::f64::consts::PI_2;
                 let (cx, cy) = (x + w - radius, y + radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
-            j if j >= resolution_corner * 2 => {  
+            j if j >= resolution_corner * 2 => {
                 let angle = j as f64 / (n - 2) as f64 * std::f64::consts::PI_2;
                 let (cx, cy) = (x + radius, y + radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
-            j if j >= resolution_corner * 1 => { 
+            j if j >= resolution_corner * 1 => {
                 let angle = j as f64 / (n - 1) as f64 * std::f64::consts::PI_2;
                 let (cx, cy) = (x + radius, y + h - radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
@@ -120,7 +120,7 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
             },
         }
     }, color, f);
-} 
+}
 
 /// Streams a polygon into tri list with color per vertex.
 /// Uses buffers that fit inside L1 cache.
@@ -129,7 +129,7 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     polygon: || -> Option<[f64, ..2]>,
     color: [f32, ..4],
     f: |vertices: &[f32], colors: &[f32]|) {
-    
+
     let mut vertices: [f32, ..740] = [0.0, ..740];
     let mut colors: [f32, ..1480] = [0.0, ..1480];
     // Get the first point which will be used a lot.
@@ -152,14 +152,14 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
 
         // Copy vertex.
         let ind_out = i * 2 * 3 + 2;
-        let p = 
+        let p =
             match polygon() {
                 None => break 'read_vertices,
                 Some(val) => val,
             };
         let x = tx(m, p[0], p[1]);
         let y = ty(m, p[0], p[1]);
-            
+
         vertices[ind_out + 0] = gx;
         vertices[ind_out + 1] = gy;
         vertices[ind_out + 2] = x;
@@ -187,8 +187,8 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     }
 
     if i > 0 {
-        f(vertices.slice(0, i * 2 * 3), 
-            colors.slice(0, i * 4 * 3)); 
+        f(vertices.slice(0, i * 2 * 3),
+            colors.slice(0, i * 4 * 3));
     }
 }
 

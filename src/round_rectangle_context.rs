@@ -1,11 +1,11 @@
 use {
-    AddColor, 
-    Borrowed, 
-    Field, 
-    Matrix2d, 
+    AddColor,
+    Borrowed,
+    Field,
+    Matrix2d,
     Rectangle,
     RoundRectangleColorContext,
-    Value, 
+    Value,
     View,
 };
 use vecmath::{

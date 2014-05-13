@@ -1,18 +1,18 @@
 
 use {
-    AddColor, 
+    AddColor,
     AddImage,
-    AddRound, 
-    Borrowed, 
-    Field, 
+    AddRound,
+    Borrowed,
+    Field,
     Image,
     ImageRectangleContext,
-    Matrix2d, 
-    Rectangle, 
+    Matrix2d,
+    Rectangle,
     RectangleColorContext,
-    RoundRectangleContext, 
+    RoundRectangleContext,
     Value,
-    View, 
+    View,
 };
 use vecmath::{
     identity,

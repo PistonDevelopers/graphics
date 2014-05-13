@@ -1,20 +1,20 @@
 
 use {
     AddEllipse,
-    AddImage, 
-    AddPolygon, 
-    AddRectangle, 
+    AddImage,
+    AddPolygon,
+    AddRectangle,
     AddTween,
-    BackEnd, 
-    Borrowed, 
-    Clear, 
+    BackEnd,
+    Borrowed,
+    Clear,
     Color,
-    EllipseColorContext, 
+    EllipseColorContext,
     Field,
-    Image, 
+    Image,
     ImageRectangleColorContext,
-    Matrix2d, 
-    PolygonColorContext, 
+    Matrix2d,
+    PolygonColorContext,
     RectangleColorContext,
     TweenColorContext,
     View,
@@ -139,7 +139,7 @@ impl<'a> Clear for ColorContext<'a> {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
-        }        
+        }
     }
 }
 

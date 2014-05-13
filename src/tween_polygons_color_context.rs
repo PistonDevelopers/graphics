@@ -1,12 +1,12 @@
 use {
-    BackEnd, 
-    Borrowed, 
+    BackEnd,
+    Borrowed,
     Clear,
-    Color, 
-    Field, 
+    Color,
+    Field,
     Fill,
     Matrix2d,
-    Value, 
+    Value,
     View,
 };
 use vecmath::{
@@ -90,7 +90,7 @@ impl<'a> Fill<'a> for TweenPolygonsColorContext<'a> {
             with_lerp_polygons_tri_list_xy_f32_rgba_f32(
                 self.transform.get(),
                 *polygons,
-                *self.tween_factor.get(),                
+                *self.tween_factor.get(),
                 color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
@@ -143,7 +143,7 @@ impl<'a> Clear for TweenPolygonsColorContext<'a> {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
-        }        
+        }
     }
 }
 
