@@ -225,6 +225,20 @@ pub fn inside_triangle(triangle: &Triangle, x: f64, y: f64) -> bool {
     && bc_positive == ca_positive
 }
 
+/// Returns true if triangle is clockwise.
+///
+/// This is done by computing which side the third vertex is relative to
+/// the line starting from the first vertex to second vertex.
+pub fn triangle_face(triangle: &Triangle) -> bool {
+    let (ax, ay) = (triangle[0], triangle[1]);
+    let (bx, by) = (triangle[2], triangle[3]);
+    let (cx, cy) = (triangle[4], triangle[5]);
+
+    let ab_side = line_side(&([ax, ay, bx, by]), cx, cy);
+
+    ab_side.is_negative()
+}
+
 #[test]
 fn test_triangle() {
     // Triangle counter clock-wise.
@@ -234,4 +248,6 @@ fn test_triangle() {
     let (x, y) = (0.5, 0.25);
     assert_eq!(inside_triangle(&tri_1, x, y), true);
     assert_eq!(inside_triangle(&tri_2, x, y), true);
+    assert_eq!(triangle_face(&tri_1), false);
+    assert_eq!(triangle_face(&tri_2), true);
 }
