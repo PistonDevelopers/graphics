@@ -66,6 +66,8 @@ impl<'a> Context<'a> {
 
 #[test]
 fn test_context() {
+    use RelativeTransform2d;
+
     let c = Context::new();
     {
         let d = c.trans(20.0, 40.0);
@@ -78,11 +80,13 @@ fn test_context() {
 
     let c = c.rot_deg(90.0);
     assert!((c.transform.get()[0] - 0.0).abs() < 0.00001);
-    assert!((c.transform.get()[1] - 1.0).abs() < 0.00001);
+    assert!((c.transform.get()[1] + 1.0).abs() < 0.00001);
 }
 
 #[test]
 fn test_scale() {
+    use RelativeTransform2d;
+
     let c = Context::new();
     let c = c.scale(2.0, 3.0);
     assert!((c.transform.get()[0] - 2.0).abs() < 0.00001);
