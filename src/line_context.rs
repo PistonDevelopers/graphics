@@ -1,7 +1,7 @@
 
 use {
-    Field,
     Borrowed,
+    Field,
     Line,
     Matrix2d,
     Value,
