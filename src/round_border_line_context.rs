@@ -1,9 +1,13 @@
 
 use {
+    AddColor,
+    Borrowed,
     Field,
     Line,
     Matrix2d,
     RoundBorder,
+    RoundBorderLineColorContext,
+    Value,
 };
 
 /// A line context with round border information.
@@ -16,5 +20,18 @@ pub struct RoundBorderLineContext<'a> {
     pub line: Field<'a, Line>,
     /// Current round border.
     pub round_border: Field<'a, RoundBorder>,
+}
+
+impl<'a> AddColor<'a, RoundBorderLineColorContext<'a>> for RoundBorderLineContext<'a> {
+    #[inline(always)]
+    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> RoundBorderLineColorContext<'a> {
+        RoundBorderLineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            color: Value([r, g, b, a]),
+            round_border: Borrowed(self.round_border.get()),
+        }
+    }
 }
 
