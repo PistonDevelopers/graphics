@@ -7,6 +7,8 @@ A library for 2D graphics, written in Rust, that works with multiple back-ends
 
 *Notice: This is a very early stage of the project!*
 
+[How to contribute](https://github.com/bvssvni/rust-graphics/issues/277)
+
 *Last news: Images!*
 
 Example back-end for OpenGL (game engine): [Piston](https://github.com/bvssvni/piston)  
