@@ -128,12 +128,6 @@ pub type Color = [f32, ..4];
 /// [x1, y1, x2, y2]
 pub type Line = [f64, ..4];
 
-/// [x, y, dir_x, dir_y]
-pub type Ray = [f64, ..4];
-
-/// [radius, width]
-pub type RoundBorder = [f64, ..2];
-
 /// [m00, m01, m02, m10, m11, m12]
 ///
 /// The first 3 numbers transforms `x`,
@@ -148,6 +142,11 @@ pub type Matrix2d = [f64, ..6];
 /// [x, y, w, h]
 pub type PixelRectangle = [u32, ..4];
 
+/// [x, y, dir_x, dir_y]
+pub type Ray = [f64, ..4];
+
+/// [radius, width]
+pub type RoundBorder = [f64, ..2];
 /// [x, y, w, h]
 pub type Rectangle = [f64, ..4];
 
