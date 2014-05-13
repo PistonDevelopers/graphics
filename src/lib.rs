@@ -62,6 +62,7 @@ pub use EllipseColorContext = ellipse_color_context::EllipseColorContext;
 pub use ImageRectangleContext = image_rectangle_context::ImageRectangleContext;
 pub use ImageRectangleColorContext = image_rectangle_color_context::ImageRectangleColorContext;
 pub use LineContext = line_context::LineContext;
+pub use RoundBorderLineColorContext = round_border_line_color_context::RoundBorderLineColorContext;
 pub use PolygonContext = polygon_context::PolygonContext;
 pub use PolygonColorContext = polygon_color_context::PolygonColorContext;
 pub use RectangleContext = rectangle_context::RectangleContext;
@@ -101,6 +102,7 @@ mod polygon_context;
 mod polygon_color_context;
 mod rectangle_context;
 mod rectangle_color_context;
+mod round_border_line_color_context;
 mod round_rectangle_context;
 mod round_rectangle_color_context;
 mod tween_context;
@@ -121,6 +123,9 @@ pub type Line = [f64, ..4];
 
 /// [x, y, dir_x, dir_y]
 pub type Ray = [f64, ..4];
+
+/// [radius, width]
+pub type RoundBorder = [f64, ..2];
 
 /// [m00, m01, m02, m10, m11, m12]  
 ///
