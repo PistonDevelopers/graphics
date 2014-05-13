@@ -5,7 +5,6 @@ use {
     Field,
     Line,
     Matrix2d,
-    RoundBorder,
     RoundBorderLineColorContext,
     Value,
 };
@@ -19,7 +18,7 @@ pub struct RoundBorderLineContext<'a> {
     /// Current line.
     pub line: Field<'a, Line>,
     /// Current round border.
-    pub round_border: Field<'a, RoundBorder>,
+    pub round_border_radius: Field<'a, f64>,
 }
 
 impl<'a> AddColor<'a, RoundBorderLineColorContext<'a>> for RoundBorderLineContext<'a> {
@@ -30,7 +29,7 @@ impl<'a> AddColor<'a, RoundBorderLineColorContext<'a>> for RoundBorderLineContex
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             color: Value([r, g, b, a]),
-            round_border: Borrowed(self.round_border.get()),
+            round_border_radius: Borrowed(self.round_border_radius.get()),
         }
     }
 }

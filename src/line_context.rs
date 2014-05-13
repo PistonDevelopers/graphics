@@ -90,12 +90,12 @@ impl<'a> AddColor<'a, LineColorContext<'a>> for LineContext<'a> {
 
 impl<'a> AddRoundBorder<'a, RoundBorderLineContext<'a>> for LineContext<'a> {
     #[inline(always)]
-    fn round_border(&'a self, radius: f64, width: f64) -> RoundBorderLineContext<'a> {
+    fn round_border_radius(&'a self, radius: f64) -> RoundBorderLineContext<'a> {
         RoundBorderLineContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
-            round_border: Value([radius, width]),
+            round_border_radius: Value(radius),
         }
     }
 }

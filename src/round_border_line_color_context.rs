@@ -3,7 +3,6 @@ use {
     Field,
     Line,
     Matrix2d,
-    RoundBorder,
 };
 
 /// A line context with round border information.
@@ -17,6 +16,6 @@ pub struct RoundBorderLineColorContext<'a> {
     /// Current color.
     pub color: Field<'a, Color>,
     /// Current round border.
-    pub round_border: Field<'a, RoundBorder>,
+    pub round_border_radius: Field<'a, f64>,
 }
 

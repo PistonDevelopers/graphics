@@ -6,7 +6,6 @@ use {
     Line,
     Matrix2d,
     Rectangle,
-    RoundBorder,
 };
 use interpolation::{lerp};
 
@@ -86,7 +85,7 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
     _resolution_corner: uint,
     _m: &Matrix2d,
     _line: &Line,
-    _round_border: &RoundBorder,
+    _round_border_radius: &f64,
     _color: [f32, ..4],
     _f: |vertices: &[f32], colors: &[f32]|) {
 

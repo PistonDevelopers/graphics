@@ -147,8 +147,6 @@ pub type PixelRectangle = [u32, ..4];
 /// [x, y, dir_x, dir_y]
 pub type Ray = [f64, ..4];
 
-/// [radius, width]
-pub type RoundBorder = [f64, ..2];
 /// [x, y, w, h]
 pub type Rectangle = [f64, ..4];
 
