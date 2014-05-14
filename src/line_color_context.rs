@@ -1,13 +1,14 @@
 
 use {
     AddRoundBorder,
-    Borrowed, 
+    Borrowed,
+    Clear,
     Color,
-    Field, 
+    Field,
     Line,
-    Matrix2d, 
+    Matrix2d,
     RoundBorderLineColorContext,
-    Value, 
+    Value,
     View,
 };
 use vecmath::{
@@ -90,6 +91,15 @@ impl<'a> AddRoundBorder<'a, RoundBorderLineColorContext<'a>> for LineColorContex
             line: Borrowed(self.line.get()),
             round_border_radius: Value(radius),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> Clear for LineColorContext<'a> {
+    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+        if back_end.supports_clear_rgba() {
+            let color = self.color.get();
+            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }
 }
