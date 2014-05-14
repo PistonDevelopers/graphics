@@ -8,6 +8,11 @@ use {
     Rectangle,
 };
 use interpolation::{lerp};
+use vecmath::{
+    multiply,
+    orient,
+    translate,
+};
 
 #[inline(always)]
 fn tx(m: &Matrix2d, x: f64, y: f64) -> f32 {
@@ -82,13 +87,37 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
 /// Streams a round border line.
 #[inline(always)]
 pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
-    _resolution_corner: uint,
-    _m: &Matrix2d,
-    _line: &Line,
-    _round_border_radius: &f64,
-    _color: [f32, ..4],
-    _f: |vertices: &[f32], colors: &[f32]|) {
+    resolution_cap: uint,
+    m: &Matrix2d,
+    line: &Line,
+    round_border_radius: &f64,
+    color: [f32, ..4],
+    f: |vertices: &[f32], colors: &[f32]|) {
 
+    let radius = *round_border_radius;
+    let (x1, y1, x2, y2) = (line[0], line[1], line[2], line[3]);
+    let (dx, dy) = (x2 - x1, y2 - y1);
+    let w = (dx * dx + dy * dy).sqrt();
+    let m = multiply(m, &translate(x1, y1));
+    let m = multiply(&m, &orient(dx, dy));
+    let n = resolution_cap * 2 + 2;
+    let mut i = 0u;
+    stream_polygon_tri_list_xy_f32_rgba_f32(&m, || {
+        if i >= n { return None; }
+
+        let j = i;
+        i += 1;
+        match j {
+            j if j >= resolution_cap => {
+                let angle = j as f64 / (n - 1) as f64 * std::f64::consts::PI_2;
+                Some([w + angle.cos() * radius, angle.sin() * radius])
+            },
+            j => {
+                let angle = j as f64 / (n - 0) as f64 * std::f64::consts::PI_2;
+                Some([angle.cos() * radius, angle.sin() * radius])
+            },
+        }
+    }, color, f);
     /*
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_border[0];
@@ -293,4 +322,3 @@ pub fn rect_tri_list_uv_f32(image: &Image) -> [f32, ..12] {
     [x1, y1, x2, y1, x1, y2,
      x2, y1, x2, y2, x1, y2]
 }
-
