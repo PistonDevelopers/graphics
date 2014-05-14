@@ -147,31 +147,48 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = *round_radius;
-    let n = resolution_corner * 4 + 4;
+    let n = resolution_corner * 4;
     let mut i = 0u;
     stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
         if i >= n { return None; }
 
         let j = i;
         i += 1;
+        // Detect quarter circle from index.
+        // There is one quarter circle at each corner.
+        // Together they form a full circle if each side of rectangle is 2 times the radius.
         match j {
             j if j >= resolution_corner * 3 => {
-                let angle = j as f64 / (n - 3) as f64 * PI_2;
+                // Compute the angle to match start and end point of quarter circle.
+                // This requires an angle offset since this is the last quarter.
+                let angle = (j - resolution_corner * 3) as f64 / (resolution_corner - 1) as f64 * FRAC_PI_2
+                    + 3.0 * FRAC_PI_2;
+                // Set center of the circle to the last corner.
                 let (cx, cy) = (x + w - radius, y + radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j if j >= resolution_corner * 2 => {
-                let angle = j as f64 / (n - 2) as f64 * PI_2;
+                // Compute the angle to match start and end point of quarter circle.
+                // This requires an angle offset since this is the second last quarter.
+                let angle = (j - resolution_corner * 2) as f64 / (resolution_corner - 1) as f64 * FRAC_PI_2
+                    + PI;
+                // Set center of the circle to the second last corner.
                 let (cx, cy) = (x + radius, y + radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j if j >= resolution_corner * 1 => {
-                let angle = j as f64 / (n - 1) as f64 * PI_2;
+                // Compute the angle to match start and end point of quarter circle.
+                // This requires an angle offset since this is the second quarter.
+                let angle = (j - resolution_corner) as f64 / (resolution_corner - 1) as f64 * FRAC_PI_2
+                    + FRAC_PI_2;
+                // Set center of the circle to the second corner.
                 let (cx, cy) = (x + radius, y + h - radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j => {
-                let angle = j as f64 / (n - 0) as f64 * PI_2;
+                // Compute the angle to match start and end point of quarter circle.
+                let angle = j as f64 / (resolution_corner - 1) as f64 * FRAC_PI_2;
+                // Set center of the circle to the first corner.
                 let (cx, cy) = (x + w - radius, y + h - radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
