@@ -3,6 +3,7 @@ use {
     BackEnd,
     Borrowed,
     Color,
+    Clear,
     Field,
     Line,
     Matrix2d,
@@ -90,6 +91,15 @@ impl<'a> View<'a> for RoundBorderLineColorContext<'a> {
             line: Borrowed(self.line.get()),
             color: Borrowed(self.color.get()),
             round_border_radius: Borrowed(self.round_border_radius.get()),
+        }
+    }
+}
+
+impl<'a> Clear for RoundBorderLineColorContext<'a> {
+    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+        if back_end.supports_clear_rgba() {
+            let color = self.color.get();
+            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }
 }
