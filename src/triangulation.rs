@@ -100,7 +100,7 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
     let w = (dx * dx + dy * dy).sqrt();
     let m = multiply(m, &translate(x1, y1));
     let m = multiply(&m, &orient(dx, dy));
-    let n = resolution_cap * 2 + 2;
+    let n = resolution_cap * 2;
     let mut i = 0u;
     stream_polygon_tri_list_xy_f32_rgba_f32(&m, || {
         if i >= n { return None; }
@@ -109,11 +109,14 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
         i += 1;
         match j {
             j if j >= resolution_cap => {
-                let angle = j as f64 / (n - 1) as f64 * std::f64::consts::PI_2;
+                let angle = (j - resolution_cap) as f64 / (resolution_cap - 1) as f64 * std::f64::consts::PI
+                    + std::f64::consts::PI;
+                let angle = angle + std::f64::consts::FRAC_PI_2;
                 Some([w + angle.cos() * radius, angle.sin() * radius])
             },
             j => {
-                let angle = j as f64 / (n - 0) as f64 * std::f64::consts::PI_2;
+                let angle = j as f64 / (resolution_cap - 1) as f64 * std::f64::consts::PI;
+                let angle = angle + std::f64::consts::FRAC_PI_2;
                 Some([angle.cos() * radius, angle.sin() * radius])
             },
         }
