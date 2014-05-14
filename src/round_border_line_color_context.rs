@@ -40,7 +40,7 @@ impl<'a> Stroke<'a> for RoundBorderLineColorContext<'a> {
                 self.transform.get(),
                 line,
                 round_border_radius,
-                *color,
+                color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }

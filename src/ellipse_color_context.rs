@@ -100,7 +100,6 @@ impl<'a> Fill<'a> for EllipseColorContext<'a> {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let color = self.color.get();
-            let color: [f32, ..4] = [color[0], color[1], color[2], color[3]];
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.

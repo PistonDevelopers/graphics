@@ -108,7 +108,6 @@ impl<'a> Draw<'a> for ImageRectangleColorContext<'a> {
         && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
             let rect = self.rect.get();
             let color = self.color.get();
-            let color: [f32, ..4] = [color[0], color[1], color[2], color[3]];
             let texture_id = self.image.get().texture_id;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }

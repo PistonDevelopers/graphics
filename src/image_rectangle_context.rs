@@ -116,7 +116,7 @@ impl<'a> Draw<'a> for ImageRectangleContext<'a> {
             back_end.enable_single_texture(texture_id);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
                 rect_tri_list_xy_f32(self.transform.get(), rect),
-                rect_tri_list_rgba_f32(color),
+                rect_tri_list_rgba_f32(&color),
                 rect_tri_list_uv_f32(self.image.get())
             );
             back_end.disable_single_texture();

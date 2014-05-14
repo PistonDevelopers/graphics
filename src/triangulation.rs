@@ -2,6 +2,7 @@
 
 use std;
 use {
+    Color,
     Image,
     Line,
     Matrix2d,
@@ -30,7 +31,7 @@ pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     polygons: &[&[f64]],
     tween_factor: f64,
-    color: [f32, ..4],
+    color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let poly_len = polygons.len() as f64;
@@ -67,7 +68,7 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
     resolution: uint,
     m: &Matrix2d,
     rect: &Rectangle,
-    color: [f32, ..4],
+    color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
@@ -91,7 +92,7 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     line: &Line,
     round_border_radius: &f64,
-    color: [f32, ..4],
+    color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let radius = *round_border_radius;
@@ -164,7 +165,7 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     rect: &Rectangle,
     round_radius: &f64,
-    color: [f32, ..4],
+    color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
@@ -206,7 +207,7 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
 pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     polygon: || -> Option<[f64, ..2]>,
-    color: [f32, ..4],
+    color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let mut vertices: [f32, ..740] = [0.0, ..740];
@@ -276,7 +277,7 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
 pub fn with_polygon_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     polygon: &[f64],
-    color: [f32, ..4],
+    color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let n = polygon.len();
@@ -300,7 +301,7 @@ pub fn rect_tri_list_xy_f32(m: &Matrix2d, rect: &Rectangle) -> [f32, ..12] {
 }
 
 /// Creates triangle list colors from rectangle.
-pub fn rect_tri_list_rgba_f32(color: [f32, ..4]) -> [f32, ..48] {
+pub fn rect_tri_list_rgba_f32(color: &Color) -> [f32, ..48] {
     let (r, g, b, a) = (color[0], color[1], color[2], color[3]);
     [r, g, b, a, // 0
      r, g, b, a, // 1
