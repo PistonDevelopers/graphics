@@ -7,6 +7,10 @@ use {
     Matrix2d,
     RoundBorderLineColorContext,
     Value,
+    View,
+};
+use vecmath::{
+    identity,
 };
 
 /// A line context with round border information.
@@ -29,6 +33,38 @@ impl<'a> AddColor<'a, RoundBorderLineColorContext<'a>> for RoundBorderLineContex
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             color: Value([r, g, b, a]),
+            round_border_radius: Borrowed(self.round_border_radius.get()),
+        }
+    }
+}
+
+impl<'a> View<'a> for RoundBorderLineContext<'a> {
+    #[inline(always)]
+    fn view(&'a self) -> RoundBorderLineContext<'a> {
+        RoundBorderLineContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.base.get()),
+            line: Borrowed(self.line.get()),
+            round_border_radius: Borrowed(self.round_border_radius.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn reset(&'a self) -> RoundBorderLineContext<'a> {
+        RoundBorderLineContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(identity()),
+            line: Borrowed(self.line.get()),
+            round_border_radius: Borrowed(self.round_border_radius.get()),
+        }
+    }
+
+    #[inline(always)]
+    fn store_view(&'a self) -> RoundBorderLineContext<'a> {
+        RoundBorderLineContext {
+            base: Borrowed(self.transform.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
             round_border_radius: Borrowed(self.round_border_radius.get()),
         }
     }
