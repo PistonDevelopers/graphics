@@ -209,7 +209,7 @@ impl<'a> AddTween<'a, TweenContext<'a>> for Context<'a> {
     }
 }
 
-impl<'a> AddLine<'a, LineContext<'a>> for LineContext<'a> {
+impl<'a> AddLine<'a, LineContext<'a>> for Context<'a> {
     #[inline(always)]
     fn line(&'a self, x1: f64, y1: f64, x2: f64, y2: f64) -> LineContext<'a> {
         LineContext {
