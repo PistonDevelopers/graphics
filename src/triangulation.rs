@@ -1,6 +1,10 @@
 //! Methods for converting shapes into triangles.
 
-use std;
+use std::f64::consts::{
+    PI,
+    PI_2,
+    FRAC_PI_2,
+};
 use {
     Color,
     Image,
@@ -79,7 +83,7 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
     stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
         if i >= n { return None; }
 
-        let angle = i as f64 / n as f64 * std::f64::consts::PI_2;
+        let angle = i as f64 / n as f64 * PI_2;
         i += 1;
         Some([cx + angle.cos() * cw, cy + angle.sin() * ch])
     }, color, f);
@@ -110,14 +114,13 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
         i += 1;
         match j {
             j if j >= resolution_cap => {
-                let angle = (j - resolution_cap) as f64 / (resolution_cap - 1) as f64 * std::f64::consts::PI
-                    + std::f64::consts::PI;
-                let angle = angle + std::f64::consts::FRAC_PI_2;
+                let angle = (j - resolution_cap) as f64 / (resolution_cap - 1) as f64 * PI + PI;
+                let angle = angle + FRAC_PI_2;
                 Some([w + angle.cos() * radius, angle.sin() * radius])
             },
             j => {
-                let angle = j as f64 / (resolution_cap - 1) as f64 * std::f64::consts::PI;
-                let angle = angle + std::f64::consts::FRAC_PI_2;
+                let angle = j as f64 / (resolution_cap - 1) as f64 * PI;
+                let angle = angle + FRAC_PI_2;
                 Some([angle.cos() * radius, angle.sin() * radius])
             },
         }
@@ -179,22 +182,22 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
         i += 1;
         match j {
             j if j >= resolution_corner * 3 => {
-                let angle = j as f64 / (n - 3) as f64 * std::f64::consts::PI_2;
+                let angle = j as f64 / (n - 3) as f64 * PI_2;
                 let (cx, cy) = (x + w - radius, y + radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j if j >= resolution_corner * 2 => {
-                let angle = j as f64 / (n - 2) as f64 * std::f64::consts::PI_2;
+                let angle = j as f64 / (n - 2) as f64 * PI_2;
                 let (cx, cy) = (x + radius, y + radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j if j >= resolution_corner * 1 => {
-                let angle = j as f64 / (n - 1) as f64 * std::f64::consts::PI_2;
+                let angle = j as f64 / (n - 1) as f64 * PI_2;
                 let (cx, cy) = (x + radius, y + h - radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j => {
-                let angle = j as f64 / (n - 0) as f64 * std::f64::consts::PI_2;
+                let angle = j as f64 / (n - 0) as f64 * PI_2;
                 let (cx, cy) = (x + w - radius, y + h - radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
