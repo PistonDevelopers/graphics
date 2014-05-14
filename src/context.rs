@@ -3,6 +3,7 @@ use {
     AddColor,
     AddEllipse,
     AddImage,
+    AddLine,
     AddPolygon,
     AddRectangle,
     AddTween,
@@ -12,6 +13,7 @@ use {
     Field,
     Image,
     ImageRectangleContext,
+    LineContext,
     Matrix2d,
     PolygonContext,
     RectangleContext,
@@ -203,6 +205,17 @@ impl<'a> AddTween<'a, TweenContext<'a>> for Context<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Value(tween_factor),
+        }
+    }
+}
+
+impl<'a> AddLine<'a, LineContext<'a>> for LineContext<'a> {
+    #[inline(always)]
+    fn line(&'a self, x1: f64, y1: f64, x2: f64, y2: f64) -> LineContext<'a> {
+        LineContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Value([x1, y1, x2, y2]),
         }
     }
 }
