@@ -112,14 +112,22 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
 
         let j = i;
         i += 1;
+        // Detect the half circle from index.
+        // There is one half circle at each end of the line.
+        // Together they form a full circle if the length of the line is zero.
         match j {
             j if j >= resolution_cap => {
+                // Compute the angle to match start and end point of half circle.
+                // This requires an angle offset since the other end of line is the first half circle.
                 let angle = (j - resolution_cap) as f64 / (resolution_cap - 1) as f64 * PI + PI;
+                // Rotate 90 degrees since the line is horizontal.
                 let angle = angle + FRAC_PI_2;
                 Some([w + angle.cos() * radius, angle.sin() * radius])
             },
             j => {
+                // Compute the angle to match start and end point of half circle.
                 let angle = j as f64 / (resolution_cap - 1) as f64 * PI;
+                // Rotate 90 degrees since the line is horizontal.
                 let angle = angle + FRAC_PI_2;
                 Some([angle.cos() * radius, angle.sin() * radius])
             },
