@@ -12,6 +12,10 @@ use {
 use vecmath::{
     identity,
 };
+use internal::{
+    CanTransform,
+    HasTransform,
+};
 
 /// A line context with round border information.
 pub struct RoundBorderLineContext<'a> {
@@ -23,6 +27,25 @@ pub struct RoundBorderLineContext<'a> {
     pub line: Field<'a, Line>,
     /// Current round border.
     pub round_border_radius: Field<'a, f64>,
+}
+
+impl<'a> HasTransform<'a, Matrix2d> for RoundBorderLineContext<'a> {
+    #[inline(always)]
+    fn get_transform(&'a self) -> &'a Matrix2d {
+        self.transform.get()
+    }
+}
+
+impl<'a> CanTransform<'a, RoundBorderLineContext<'a>, Matrix2d> for RoundBorderLineContext<'a> {
+    #[inline(always)]
+    fn transform(&'a self, value: Matrix2d) -> RoundBorderLineContext<'a> {
+        RoundBorderLineContext {
+            base: Borrowed(self.base.get()),
+            transform: Value(value),
+            line: Borrowed(self.line.get()),
+            round_border_radius: Borrowed(self.round_border_radius.get()),
+        }
+    }
 }
 
 impl<'a> AddColor<'a, RoundBorderLineColorContext<'a>> for RoundBorderLineContext<'a> {
