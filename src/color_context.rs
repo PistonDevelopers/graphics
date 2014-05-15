@@ -2,6 +2,7 @@
 use {
     AddEllipse,
     AddImage,
+    AddLine,
     AddPolygon,
     AddRectangle,
     AddTween,
@@ -13,6 +14,7 @@ use {
     Field,
     Image,
     ImageRectangleColorContext,
+    LineColorContext,
     Matrix2d,
     PolygonColorContext,
     RectangleColorContext,
@@ -180,6 +182,18 @@ impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for ColorContext<'a> {
             transform: Borrowed(self.transform.get()),
             rect: Value([0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]),
             image: Value(image),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> AddLine<'a, LineColorContext<'a>> for ColorContext<'a> {
+    #[inline(always)]
+    fn line(&'a self, x1: f64, y1: f64, x2: f64, y2: f64) -> LineColorContext<'a> {
+        LineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Value([x1, y1, x2, y2]),
             color: Borrowed(self.color.get()),
         }
     }
