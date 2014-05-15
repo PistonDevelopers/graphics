@@ -1,7 +1,9 @@
 
 use {
+    AddBevelBorder,
     AddRoundBorder,
     BackEnd,
+    BevelBorderLineColorContext,
     Borrowed,
     Clear,
     Color,
@@ -112,6 +114,19 @@ impl<'a> AddRoundBorder<'a, RoundBorderLineColorContext<'a>> for LineColorContex
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             round_border_radius: Value(radius),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> AddBevelBorder<'a, BevelBorderLineColorContext<'a>> for LineColorContext<'a> {
+    #[inline(always)]
+    fn bevel_border_radius(&'a self, radius: f64) -> BevelBorderLineColorContext<'a> {
+        BevelBorderLineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            bevel_border_radius: Value(radius),
             color: Borrowed(self.color.get()),
         }
     }
