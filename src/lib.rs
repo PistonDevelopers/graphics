@@ -78,6 +78,8 @@ pub use RoundBorderLineColorContext = round_border_line_color_context::RoundBord
 pub use RoundRectangleContext = round_rectangle_context::RoundRectangleContext;
 pub use RoundRectangleColorContext = round_rectangle_color_context::RoundRectangleColorContext;
 pub use Stroke = stroke::Stroke;
+pub use SquareBorderLineColorContext = square_border_line_color_context::SquareBorderLineColorContext;
+pub use SquareBorderLineContext = square_border_line_context::SquareBorderLineContext;
 pub use TweenContext = tween_context::TweenContext;
 pub use TweenColorContext = tween_color_context::TweenColorContext;
 pub use TweenPolygonsContext = tween_polygons_context::TweenPolygonsContext;
@@ -122,6 +124,8 @@ mod round_border_line_color_context;
 mod round_border_line_context;
 mod round_rectangle_color_context;
 mod round_rectangle_context;
+mod square_border_line_color_context;
+mod square_border_line_context;
 mod stroke;
 mod tween_color_context;
 mod tween_context;
