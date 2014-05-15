@@ -1,20 +1,24 @@
 
 use {
     AddRoundBorder,
-    Borrowed, 
+    BackEnd,
+    Borrowed,
+    Clear,
     Color,
-    Field, 
+    Field,
     Line,
-    Matrix2d, 
+    Matrix2d,
     RoundBorderLineColorContext,
-    Value, 
+    Value,
     View,
 };
 use vecmath::{
     identity,
 };
 use internal::{
+    CanColor,
     CanTransform,
+    HasColor,
     HasTransform,
 };
 
@@ -45,6 +49,25 @@ impl<'a> CanTransform<'a, LineColorContext<'a>, Matrix2d> for LineColorContext<'
             transform: Value(value),
             line: Borrowed(self.line.get()),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasColor<'a, Color> for LineColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, LineColorContext<'a>, Color> for LineColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> LineColorContext<'a> {
+        LineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            color: Value(value),
         }
     }
 }
@@ -90,6 +113,15 @@ impl<'a> AddRoundBorder<'a, RoundBorderLineColorContext<'a>> for LineColorContex
             line: Borrowed(self.line.get()),
             round_border_radius: Value(radius),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> Clear for LineColorContext<'a> {
+    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+        if back_end.supports_clear_rgba() {
+            let color = self.color.get();
+            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }
 }
