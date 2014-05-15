@@ -23,7 +23,7 @@ use internal::{
 };
 
 /// An animation inbetweening context with color.
-pub struct TweenPolygonsColorContext<'a> {
+pub struct TweenPolygonsColorContext<'a, 'b> {
     /// Base/origin transform.
     pub base: Field<'a, Matrix2d>,
     /// Current transform.
@@ -33,19 +33,32 @@ pub struct TweenPolygonsColorContext<'a> {
     /// Animation inbetweening factor.
     pub tween_factor: Field<'a, f64>,
     /// The animated polygons.
-    pub polygons: Field<'a, &'a [&'a [f64]]>,
+    pub polygons: Field<'a, &'b [&'b [f64]]>,
 }
 
-impl<'a> HasColor<'a, Color> for TweenPolygonsColorContext<'a> {
+impl<'a, 'b> Clone for TweenPolygonsColorContext<'a, 'b> {
+    #[inline(always)]
+    fn clone(&self) -> TweenPolygonsColorContext<'static, 'b> {
+        TweenPolygonsColorContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            color: self.color.clone(),
+            tween_factor: self.tween_factor.clone(),
+            polygons: self.polygons.clone(),
+        }
+    }
+}
+
+impl<'a, 'b> HasColor<'a, Color> for TweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, TweenPolygonsColorContext<'a>, Color> for TweenPolygonsColorContext<'a> {
+impl<'a, 'b> CanColor<'a, TweenPolygonsColorContext<'a, 'b>, Color> for TweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> TweenPolygonsColorContext<'a> {
+    fn color(&'a self, value: Color) -> TweenPolygonsColorContext<'a, 'b> {
         TweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
@@ -56,16 +69,16 @@ impl<'a> CanColor<'a, TweenPolygonsColorContext<'a>, Color> for TweenPolygonsCol
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for TweenPolygonsColorContext<'a> {
+impl<'a, 'b> HasTransform<'a, Matrix2d> for TweenPolygonsColorContext<'a, 'b> {
     #[inline(alwyas)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, TweenPolygonsColorContext<'a>, Matrix2d> for TweenPolygonsColorContext<'a> {
+impl<'a, 'b> CanTransform<'a, TweenPolygonsColorContext<'a, 'b>, Matrix2d> for TweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> TweenPolygonsColorContext<'a> {
+    fn transform(&'a self, value: Matrix2d) -> TweenPolygonsColorContext<'a, 'b> {
         TweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
@@ -76,7 +89,7 @@ impl<'a> CanTransform<'a, TweenPolygonsColorContext<'a>, Matrix2d> for TweenPoly
     }
 }
 
-impl<'a> Fill<'a> for TweenPolygonsColorContext<'a> {
+impl<'a, 'b> Fill<'a> for TweenPolygonsColorContext<'a, 'b> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygons = self.polygons.get();
@@ -102,9 +115,9 @@ impl<'a> Fill<'a> for TweenPolygonsColorContext<'a> {
     }
 }
 
-impl<'a> View<'a> for TweenPolygonsColorContext<'a> {
+impl<'a, 'b> View<'a> for TweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn view(&'a self) -> TweenPolygonsColorContext<'a> {
+    fn view(&'a self) -> TweenPolygonsColorContext<'a, 'b> {
         TweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.base.get()),
@@ -115,7 +128,7 @@ impl<'a> View<'a> for TweenPolygonsColorContext<'a> {
     }
 
     #[inline(always)]
-    fn reset(&'a self) -> TweenPolygonsColorContext<'a> {
+    fn reset(&'a self) -> TweenPolygonsColorContext<'a, 'b> {
         TweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(identity()),
@@ -126,7 +139,7 @@ impl<'a> View<'a> for TweenPolygonsColorContext<'a> {
     }
 
     #[inline(always)]
-    fn store_view(&'a self) -> TweenPolygonsColorContext<'a> {
+    fn store_view(&'a self) -> TweenPolygonsColorContext<'a, 'b> {
         TweenPolygonsColorContext {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),
@@ -137,7 +150,7 @@ impl<'a> View<'a> for TweenPolygonsColorContext<'a> {
     }
 }
 
-impl<'a> Clear for TweenPolygonsColorContext<'a> {
+impl<'a, 'b> Clear for TweenPolygonsColorContext<'a, 'b> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();

@@ -82,9 +82,9 @@ impl<'a> CanTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorContext
     }
 }
 
-impl<'a> AddPolygons<'a, TweenPolygonsColorContext<'a>> for TweenColorContext<'a> {
+impl<'a, 'b> AddPolygons<'a, TweenPolygonsColorContext<'a, 'b>> for TweenColorContext<'a> {
     #[inline(always)]
-    fn polygons(&'a self, polygons: &'a [&'a [f64]]) -> TweenPolygonsColorContext<'a> {
+    fn polygons(&'a self, polygons: &'b [&'b [f64]]) -> TweenPolygonsColorContext<'a, 'b> {
         TweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),

@@ -80,9 +80,9 @@ impl<'a> AddColor<'a, TweenColorContext<'a>> for TweenContext<'a> {
     }
 }
 
-impl<'a> AddPolygons<'a, TweenPolygonsContext<'a>> for TweenContext<'a> {
+impl<'a, 'b> AddPolygons<'a, TweenPolygonsContext<'a, 'b>> for TweenContext<'a> {
     #[inline(always)]
-    fn polygons(&'a self, polygons: &'a [&'a [f64]]) -> TweenPolygonsContext<'a> {
+    fn polygons(&'a self, polygons: &'b [&'b [f64]]) -> TweenPolygonsContext<'a, 'b> {
         TweenPolygonsContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
