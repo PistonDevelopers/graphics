@@ -7,6 +7,16 @@
 //!
 //! ## Usage
 //!
+//! If you are using [Rust-Empty](https://github.com/bvssvni/rust-empty) or Cargo, put the compiled library in the "target/cpu-vendor-platform/lib/" directory, then add the following to your source:
+//!
+//! ```Rust
+//! #![feature(globs)] // Allow global imports
+//!
+//! extern crate graphics; // Link to 'graphics' library
+//!
+//! use graphics::*; // Use the graphics types in the module
+//! ```
+//!
 //! To draw to the back-end, you need a context.
 //! The context contains the information necessary to perform the drawing.
 //! Unlike other graphics libraries, this library is not bound to the back-end.
