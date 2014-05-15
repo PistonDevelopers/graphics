@@ -26,7 +26,7 @@ pub struct RoundRectangleContext<'a> {
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle.
     pub rect: Field<'a, Rectangle>,
-    /// Current roundnes radius.
+    /// Current roundness radius.
     pub round_radius: Field<'a, f64>,
 }
 
