@@ -1,8 +1,10 @@
 
 use {
+    AddBevel,
     AddImage,
     AddRound,
     BackEnd,
+    BevelRectangleColorContext,
     Borrowed,
     Clear,
     Color,
@@ -142,6 +144,19 @@ impl<'a> AddRound<'a, RoundRectangleColorContext<'a>> for RectangleColorContext<
             color: Borrowed(self.color.get()),
             rect: Borrowed(self.rect.get()),
             round_radius: Value(radius),
+        }
+    }
+}
+
+impl<'a> AddBevel<'a, BevelRectangleColorContext<'a>> for RectangleColorContext<'a> {
+    #[inline(always)]
+    fn bevel(&'a self, radius: f64) -> BevelRectangleColorContext<'a> {
+        BevelRectangleColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            color: Borrowed(self.color.get()),
+            rect: Borrowed(self.rect.get()),
+            bevel_radius: Value(radius),
         }
     }
 }
