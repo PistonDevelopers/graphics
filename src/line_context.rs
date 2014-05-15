@@ -3,6 +3,7 @@ use {
     AddBevelBorder,
     AddColor,
     AddRoundBorder,
+    AddSquareBorder,
     BevelBorderLineContext,
     Borrowed,
     Field,
@@ -10,6 +11,7 @@ use {
     LineColorContext,
     Matrix2d,
     RoundBorderLineContext,
+    SquareBorderLineContext,
     Value,
     View,
 };
@@ -113,4 +115,17 @@ impl<'a> AddBevelBorder<'a, BevelBorderLineContext<'a>> for LineContext<'a> {
         }
     }
 }
+
+impl<'a> AddSquareBorder<'a, SquareBorderLineContext<'a>> for LineContext<'a> {
+    #[inline(always)]
+    fn square_border_radius(&'a self, radius: f64) -> SquareBorderLineContext<'a> {
+        SquareBorderLineContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            square_border_radius: Value(radius),
+        }
+    }
+}
+
 
