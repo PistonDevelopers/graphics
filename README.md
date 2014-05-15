@@ -9,7 +9,7 @@ A library for 2D graphics, written in Rust, that works with multiple back-ends
 
 [How to contribute](https://github.com/bvssvni/rust-graphics/issues/277)
 
-*Last news: Round line!*
+*Last news: Bevel and square lines!*
 
 Example back-end for OpenGL (game engine): [Piston](https://github.com/bvssvni/piston)  
 Experimental algorithms are developed in a separate repository: [Rust-Graphics-Lab](https://github.com/bvssvni/rust-graphics-lab)  
