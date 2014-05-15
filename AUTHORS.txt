@@ -1,4 +1,4 @@
 Rust-Graphics was written by these fine people:
 
-Coeuvre Wong
+Coeuvre Wong <coeuvre@gmail.com>
 Sven Nilsen <bvssvni@gmail.com>
