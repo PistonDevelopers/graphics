@@ -16,7 +16,9 @@ use vecmath::{
     identity,
 };
 use internal::{
+    CanColor,
     CanTransform,
+    HasColor,
     HasTransform,
 };
 
@@ -47,6 +49,25 @@ impl<'a> CanTransform<'a, LineColorContext<'a>, Matrix2d> for LineColorContext<'
             transform: Value(value),
             line: Borrowed(self.line.get()),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasColor<'a, Color> for LineColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, LineColorContext<'a>, Color> for LineColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> LineColorContext<'a> {
+        LineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            color: Value(value),
         }
     }
 }
