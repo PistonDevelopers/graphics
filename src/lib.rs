@@ -40,6 +40,7 @@
 
 extern crate std;
 
+pub use AddBevelBorder = add_bevel_border::AddBevelBorder;
 pub use AddColor = add_color::AddColor;
 pub use AddEllipse = add_ellipse::AddEllipse;
 pub use AddImage = add_image::AddImage;
@@ -80,6 +81,7 @@ pub use TweenPolygonsContext = tween_polygons_context::TweenPolygonsContext;
 pub use TweenPolygonsColorContext = tween_polygons_color_context::TweenPolygonsColorContext;
 pub use View = view::View;
 
+mod add_bevel_border;
 mod add_color;
 mod add_ellipse;
 mod add_image;
