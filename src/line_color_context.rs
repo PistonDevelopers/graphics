@@ -2,6 +2,7 @@
 use {
     AddBevelBorder,
     AddRoundBorder,
+    AddSquareBorder,
     BackEnd,
     BevelBorderLineColorContext,
     Borrowed,
@@ -11,6 +12,7 @@ use {
     Line,
     Matrix2d,
     RoundBorderLineColorContext,
+    SquareBorderLineColorContext,
     Value,
     View,
 };
@@ -127,6 +129,19 @@ impl<'a> AddBevelBorder<'a, BevelBorderLineColorContext<'a>> for LineColorContex
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             bevel_border_radius: Value(radius),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> AddSquareBorder<'a, SquareBorderLineColorContext<'a>> for LineColorContext<'a> {
+    #[inline(always)]
+    fn square_border_radius(&'a self, radius: f64) -> SquareBorderLineColorContext<'a> {
+        SquareBorderLineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            square_border_radius: Value(radius),
             color: Borrowed(self.color.get()),
         }
     }
