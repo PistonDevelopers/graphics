@@ -17,6 +17,10 @@ use triangulation::{
 use vecmath::{
     identity,
 };
+use internal::{
+    CanColor,
+    HasColor,
+};
 
 /// A line context with round border information.
 pub struct RoundBorderLineColorContext<'a> {
@@ -30,6 +34,26 @@ pub struct RoundBorderLineColorContext<'a> {
     pub color: Field<'a, Color>,
     /// Current round border.
     pub round_border_radius: Field<'a, f64>,
+}
+
+impl<'a> HasColor<'a, Color> for RoundBorderLineColorContext<'a> {
+    #[inline(always)]
+    fn get_color(&'a self) -> &'a Color {
+        self.color.get()
+    }
+}
+
+impl<'a> CanColor<'a, RoundBorderLineColorContext<'a>, Color> for RoundBorderLineColorContext<'a> {
+    #[inline(always)]
+    fn color(&'a self, value: Color) -> RoundBorderLineColorContext<'a> {
+        RoundBorderLineColorContext {
+            base: Borrowed(self.base.get()),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            color: Value(value),
+            round_border_radius: Borrowed(self.round_border_radius.get()),
+        }
+    }
 }
 
 impl<'a> Stroke<'a> for RoundBorderLineColorContext<'a> {
