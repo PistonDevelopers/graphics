@@ -1,6 +1,7 @@
 use {
     AddColor,
     Borrowed,
+    Color,
     Field,
     Matrix2d,
     PolygonColorContext,
@@ -49,7 +50,7 @@ impl<'a> AddColor<'a, PolygonColorContext<'a>> for PolygonContext<'a> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
             polygon: Borrowed(self.polygon.get()),
         }
     }

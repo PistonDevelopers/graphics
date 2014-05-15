@@ -1,6 +1,7 @@
 use {
     AddColor,
     Borrowed,
+    Color,
     EllipseColorContext,
     Field,
     Matrix2d,
@@ -28,6 +29,17 @@ pub struct EllipseContext<'a> {
     pub rect: Field<'a, Rectangle>,
 }
 
+impl<'a> Clone for EllipseContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> EllipseContext<'static> {
+        EllipseContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            rect: self.rect.clone(),
+        }
+    }
+}
+
 impl<'a> HasTransform<'a, Matrix2d> for EllipseContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
@@ -53,7 +65,7 @@ impl<'a> AddColor<'a, EllipseColorContext<'a>> for EllipseContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
         }
     }
 }

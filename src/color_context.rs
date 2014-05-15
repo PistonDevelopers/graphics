@@ -14,9 +14,12 @@ use {
     Field,
     Image,
     ImageRectangleColorContext,
+    Line,
     LineColorContext,
     Matrix2d,
+    PixelRectangle,
     PolygonColorContext,
+    Rectangle,
     RectangleColorContext,
     TweenColorContext,
     View,
@@ -40,6 +43,17 @@ pub struct ColorContext<'a> {
     pub transform: Field<'a, Matrix2d>,
     /// Current color.
     pub color: Field<'a, Color>,
+}
+
+impl<'a> Clone for ColorContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> ColorContext<'static> {
+        ColorContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            color: self.color.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for ColorContext<'a> {
@@ -85,7 +99,7 @@ impl<'a> AddRectangle<'a, RectangleColorContext<'a>> for ColorContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
-            rect: Value([x, y, w, h]),
+            rect: Value(Rectangle([x, y, w, h])),
         }
     }
 }
@@ -96,8 +110,8 @@ fn test_rect() {
 
     let c = Context::new();
     let color = c.rgba(1.0, 0.0, 0.0, 1.0);
-    let rect_color = color.rect(0.0, 0.0, 100.0, 100.0);
-    assert_eq!(rect_color.rect.get()[2], 100.0);
+    let &Rectangle(rect_color) = color.rect(0.0, 0.0, 100.0, 100.0).rect.get();
+    assert_eq!(rect_color[2], 100.0);
 }
 
 impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
@@ -107,7 +121,7 @@ impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
-            rect: Value([x, y, w, h]),
+            rect: Value(Rectangle([x, y, w, h])),
         }
     }
 }
@@ -139,7 +153,7 @@ impl<'a> AddTween<'a, TweenColorContext<'a>> for ColorContext<'a> {
 impl<'a> Clear for ColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }
@@ -177,10 +191,13 @@ impl<'a> View<'a> for ColorContext<'a> {
 impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
     fn image(&'a self, image: Image) -> ImageRectangleColorContext<'a> {
+        let PixelRectangle(source_rect) = image.source_rect;
         ImageRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value([0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]),
+            rect: Value(Rectangle(
+                [0.0, 0.0, source_rect[2] as f64, source_rect[3] as f64]
+            )),
             image: Value(image),
             color: Borrowed(self.color.get()),
         }
@@ -193,7 +210,7 @@ impl<'a> AddLine<'a, LineColorContext<'a>> for ColorContext<'a> {
         LineColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            line: Value([x1, y1, x2, y2]),
+            line: Value(Line([x1, y1, x2, y2])),
             color: Borrowed(self.color.get()),
         }
     }

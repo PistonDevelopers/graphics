@@ -2,6 +2,7 @@
 use {
     AddColor,
     Borrowed,
+    Color,
     Field,
     Matrix2d,
     TweenPolygonsColorContext,
@@ -35,7 +36,7 @@ impl<'a> AddColor<'a, TweenPolygonsColorContext<'a>> for TweenPolygonsContext<'a
         TweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Borrowed(self.polygons.get()),
         }

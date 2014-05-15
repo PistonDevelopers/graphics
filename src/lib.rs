@@ -48,6 +48,7 @@
 //!
 //! This is only the case when you are assigning the context to a variable.
 
+extern crate core;
 extern crate std;
 
 pub use AddBevel = add_bevel::AddBevel;
@@ -155,10 +156,26 @@ pub mod triangulation;
 pub mod vecmath;
 
 /// [red, green, blue, alpha]
-pub type Color = [f32, ..4];
+pub struct Color(pub [f32, ..4]);
+
+impl Clone for Color {
+    #[inline(always)]
+    fn clone(&self) -> Color {
+        let &Color(c) = self;
+        Color(c)
+    }
+}
 
 /// [x1, y1, x2, y2]
-pub type Line = [f64, ..4];
+pub struct Line(pub [f64, ..4]);
+
+impl Clone for Line {
+    #[inline(always)]
+    fn clone(&self) -> Line {
+        let &Line(c) = self;
+        Line(c)
+    }
+}
 
 /// [m00, m01, m02, m10, m11, m12]
 ///
@@ -169,22 +186,70 @@ pub type Line = [f64, ..4];
 /// tx = m00 * x + m01 * y + m02;
 /// ty = m10 * x + m11 * y + m12;
 /// ```
-pub type Matrix2d = [f64, ..6];
+pub struct Matrix2d(pub [f64, ..6]);
+
+impl Clone for Matrix2d {
+    #[inline(always)]
+    fn clone(&self) -> Matrix2d {
+        let &Matrix2d(m) = self;
+        Matrix2d(m)
+    }
+}
 
 /// [x, y, w, h]
-pub type PixelRectangle = [u32, ..4];
+pub struct PixelRectangle(pub [u32, ..4]);
+
+impl Clone for PixelRectangle {
+    #[inline(always)]
+    fn clone(&self) -> PixelRectangle {
+        let &PixelRectangle(p) = self;
+        PixelRectangle(p)
+    }
+}
 
 /// [x, y, dir_x, dir_y]
-pub type Ray = [f64, ..4];
+pub struct Ray(pub [f64, ..4]);
+
+impl Clone for Ray {
+    #[inline(always)]
+    fn clone(&self) -> Ray {
+        let &Ray(r) = self;
+        Ray(r)
+    }
+}
 
 /// [x, y, w, h]
-pub type Rectangle = [f64, ..4];
+pub struct Rectangle(pub [f64, ..4]);
+
+impl Clone for Rectangle {
+    #[inline(always)]
+    fn clone(&self) -> Rectangle {
+        let &Rectangle(r) = self;
+        Rectangle(r)
+    }
+}
 
 /// [x1, y1, x2, y2, x3, y3]
-pub type Triangle = [f64, ..6];
+pub struct Triangle(pub [f64, ..6]);
+
+impl Clone for Triangle {
+    #[inline(always)]
+    fn clone(&self) -> Triangle {
+        let &Triangle(t) = self;
+        Triangle(t)
+    }
+}
 
 /// [x, y]
-pub type Vec2d = [f64, ..2];
+pub struct Vec2d(pub [f64, ..2]);
+
+impl Clone for Vec2d {
+    #[inline(always)]
+    fn clone(&self) -> Vec2d {
+        let &Vec2d(v) = self;
+        Vec2d(v)
+    }
+}
 
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
@@ -207,6 +272,13 @@ impl<'a, T> Field<'a, T> {
     }
 }
 
+impl<'a, T: Clone> Clone for Field<'a, T> {
+    #[inline(always)]
+    fn clone(&self) -> Field<'static, T> {
+        Value(self.get().clone())
+    }
+}
+
 /// Represents an image.
 ///
 /// Images are often packed together in sprite sheets.
@@ -218,6 +290,7 @@ impl<'a, T> Field<'a, T> {
 ///
 /// There is no garbage collection of textures,
 /// this responsibility is given to the back-end.
+#[deriving(Clone)]
 pub struct Image {
     /// A unique identifier of the texture, recognizable by back-end.
     pub texture_id: uint,

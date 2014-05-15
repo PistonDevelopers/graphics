@@ -32,6 +32,18 @@ pub struct TweenColorContext<'a> {
     pub tween_factor: Field<'a, f64>,
 }
 
+impl<'a> Clone for TweenColorContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> TweenColorContext<'static> {
+        TweenColorContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            color: self.color.clone(),
+            tween_factor: self.tween_factor.clone(),
+        }
+    }
+}
+
 impl<'a> HasColor<'a, Color> for TweenColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
@@ -118,7 +130,7 @@ impl<'a> View<'a> for TweenColorContext<'a> {
 impl<'a> Clear for TweenColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }

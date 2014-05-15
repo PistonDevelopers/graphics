@@ -36,8 +36,8 @@ impl<
 > RelativeColor<'a, U> for T {
     #[inline(always)]
     fn mul_rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> U {
-        let color = self.get_color();
-        self.color([color[0] * r, color[1] * g, color[2] * b, color[3] * a])
+        let &Color(color) = self.get_color();
+        self.color(Color([color[0] * r, color[1] * g, color[2] * b, color[3] * a]))
     }
 }
 

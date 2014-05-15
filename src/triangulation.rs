@@ -10,6 +10,7 @@ use {
     Image,
     Line,
     Matrix2d,
+    PixelRectangle,
     Rectangle,
 };
 use interpolation::{lerp};
@@ -20,12 +21,12 @@ use vecmath::{
 };
 
 #[inline(always)]
-fn tx(m: &Matrix2d, x: f64, y: f64) -> f32 {
+fn tx(&Matrix2d(m): &Matrix2d, x: f64, y: f64) -> f32 {
     (m[0] * x + m[1] * y + m[2]) as f32
 }
 
 #[inline(always)]
-fn ty(m: &Matrix2d, x: f64, y: f64) -> f32 {
+fn ty(&Matrix2d(m): &Matrix2d, x: f64, y: f64) -> f32 {
     (m[3] * x + m[4] * y + m[5]) as f32
 }
 
@@ -71,7 +72,7 @@ pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
 pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
     resolution: uint,
     m: &Matrix2d,
-    rect: &Rectangle,
+    &Rectangle(rect): &Rectangle,
     color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
@@ -94,7 +95,7 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
 pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
     resolution_cap: uint,
     m: &Matrix2d,
-    line: &Line,
+    &Line(line): &Line,
     round_border_radius: &f64,
     color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
@@ -140,7 +141,7 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
 pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
     resolution_corner: uint,
     m: &Matrix2d,
-    rect: &Rectangle,
+    &Rectangle(rect): &Rectangle,
     round_radius: &f64,
     color: &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
@@ -201,7 +202,7 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
 pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     m: &Matrix2d,
     polygon: || -> Option<[f64, ..2]>,
-    color: &Color,
+    &Color(color): &Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let mut vertices: [f32, ..740] = [0.0, ..740];
@@ -287,7 +288,10 @@ pub fn with_polygon_tri_list_xy_f32_rgba_f32(
 }
 
 /// Creates triangle list vertices from rectangle.
-pub fn rect_tri_list_xy_f32(m: &Matrix2d, rect: &Rectangle) -> [f32, ..12] {
+pub fn rect_tri_list_xy_f32(
+    m: &Matrix2d, 
+    &Rectangle(rect): &Rectangle
+) -> [f32, ..12] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (x2, y2) = (x + w, y + h);
     [tx(m,x,y), ty(m,x,y), tx(m,x2,y), ty(m,x2,y), tx(m,x,y2), ty(m,x,y2),
@@ -295,7 +299,9 @@ pub fn rect_tri_list_xy_f32(m: &Matrix2d, rect: &Rectangle) -> [f32, ..12] {
 }
 
 /// Creates triangle list colors from rectangle.
-pub fn rect_tri_list_rgba_f32(color: &Color) -> [f32, ..48] {
+pub fn rect_tri_list_rgba_f32(
+    &Color(color): &Color
+) -> [f32, ..48] {
     let (r, g, b, a) = (color[0], color[1], color[2], color[3]);
     [r, g, b, a, // 0
      r, g, b, a, // 1
@@ -313,10 +319,11 @@ pub fn rect_tri_list_rgba_f32(color: &Color) -> [f32, ..48] {
 
 /// Creates triangle list texture coords from image.
 pub fn rect_tri_list_uv_f32(image: &Image) -> [f32, ..12] {
-    let x1 = image.source_rect[0] as f32 / image.texture_width as f32;
-    let y1 = image.source_rect[1] as f32 / image.texture_height as f32;
-    let x2 = (image.source_rect[0] + image.source_rect[2]) as f32 / image.texture_width as f32;
-    let y2 = (image.source_rect[1] + image.source_rect[3]) as f32 / image.texture_height as f32;
+    let PixelRectangle(source_rect) = image.source_rect;
+    let x1 = source_rect[0] as f32 / image.texture_width as f32;
+    let y1 = source_rect[1] as f32 / image.texture_height as f32;
+    let x2 = (source_rect[0] + source_rect[2]) as f32 / image.texture_width as f32;
+    let y2 = (source_rect[1] + source_rect[3]) as f32 / image.texture_height as f32;
     [x1, y1, x2, y1, x1, y2,
      x2, y1, x2, y2, x1, y2]
 }

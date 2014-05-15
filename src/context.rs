@@ -8,14 +8,18 @@ use {
     AddRectangle,
     AddTween,
     Borrowed,
+    Color,
     ColorContext,
     EllipseContext,
     Field,
     Image,
     ImageRectangleContext,
+    Line,
     LineContext,
     Matrix2d,
+    PixelRectangle,
     PolygonContext,
+    Rectangle,
     RectangleContext,
     TweenContext,
     Value,
@@ -35,6 +39,16 @@ pub struct Context<'a> {
     pub base: Field<'a, Matrix2d>,
     /// Current transformation.
     pub transform: Field<'a, Matrix2d>,
+}
+
+impl<'a> Clone for Context<'a> {
+    #[inline(always)]
+    fn clone(&self) -> Context<'static> {
+        Context {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for Context<'a> {
@@ -58,10 +72,14 @@ impl<'a> Context<'a> {
     /// Creates a new drawing context.
     pub fn new() -> Context {
         Context {
-            base:  Value([1.0, 0.0, 0.0,
-                          0.0, 1.0, 0.0]),
-            transform: Value([1.0, 0.0, 0.0,
-                          0.0, 1.0, 0.0]),
+            base:  Value(Matrix2d(
+                [1.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0]
+            )),
+            transform: Value(Matrix2d(
+                [1.0, 0.0, 0.0,
+                 0.0, 1.0, 0.0]
+            )),
         }
     }
 }
@@ -74,15 +92,19 @@ fn test_context() {
     {
         let d = c.trans(20.0, 40.0);
         let d = d.trans(10.0, 10.0);
-        assert_eq!(d.transform.get()[2], 30.0);
-        assert_eq!(d.transform.get()[5], 50.0);
+        let &Matrix2d(transform) = d.transform.get();
+        assert_eq!(transform[2], 30.0);
+        assert_eq!(transform[5], 50.0);
     }
-    assert_eq!(c.transform.get()[2], 0.0);
-    assert_eq!(c.transform.get()[5], 0.0);
+    
+    let &Matrix2d(transform) = c.transform.get();
+    assert_eq!(transform[2], 0.0);
+    assert_eq!(transform[5], 0.0);
 
     let c = c.rot_deg(90.0);
-    assert!((c.transform.get()[0] - 0.0).abs() < 0.00001);
-    assert!((c.transform.get()[1] + 1.0).abs() < 0.00001);
+    let &Matrix2d(transform) = c.transform.get();
+    assert!((transform[0] - 0.0).abs() < 0.00001);
+    assert!((transform[1] + 1.0).abs() < 0.00001);
 }
 
 #[test]
@@ -91,8 +113,9 @@ fn test_scale() {
 
     let c = Context::new();
     let c = c.scale(2.0, 3.0);
-    assert!((c.transform.get()[0] - 2.0).abs() < 0.00001);
-    assert!((c.transform.get()[4] - 3.0).abs() < 0.00001);
+    let &Matrix2d(transform) = c.transform.get();
+    assert!((transform[0] - 2.0).abs() < 0.00001);
+    assert!((transform[4] - 3.0).abs() < 0.00001);
 }
 
 impl<'a> AddRectangle<'a, RectangleContext<'a>> for Context<'a> {
@@ -101,7 +124,7 @@ impl<'a> AddRectangle<'a, RectangleContext<'a>> for Context<'a> {
         RectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value([x, y, w, h]),
+            rect: Value(Rectangle([x, y, w, h])),
         }
     }
 }
@@ -110,7 +133,8 @@ impl<'a> AddRectangle<'a, RectangleContext<'a>> for Context<'a> {
 fn test_rect() {
     let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 50.0);
-    assert_eq!(d.rect.get()[2], 100.0);
+    let &Rectangle(rect) = d.rect.get();
+    assert_eq!(rect[2], 100.0);
 }
 
 impl<'a> AddColor<'a, ColorContext<'a>> for Context<'a> {
@@ -119,7 +143,7 @@ impl<'a> AddColor<'a, ColorContext<'a>> for Context<'a> {
         ColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
         }
     }
 }
@@ -128,7 +152,8 @@ impl<'a> AddColor<'a, ColorContext<'a>> for Context<'a> {
 fn test_rgba() {
     let c = Context::new();
     let d: ColorContext = c.rgba(1.0, 0.0, 0.0, 1.0);
-    assert_eq!(d.color.get()[0], 1.0);
+    let &Color(color) = d.color.get();
+    assert_eq!(color[0], 1.0);
 }
 
 impl<'a> AddEllipse<'a, EllipseContext<'a>> for Context<'a> {
@@ -137,7 +162,7 @@ impl<'a> AddEllipse<'a, EllipseContext<'a>> for Context<'a> {
         EllipseContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value([x, y, w, h]),
+            rect: Value(Rectangle([x, y, w, h])),
         }
     }
 }
@@ -146,7 +171,8 @@ impl<'a> AddEllipse<'a, EllipseContext<'a>> for Context<'a> {
 fn test_ellipse() {
     let c = Context::new();
     let d: EllipseContext = c.ellipse(0.0, 0.0, 100.0, 100.0);
-    assert_eq!(d.rect.get()[2], 100.0);
+    let &Rectangle(rect) = d.rect.get();    
+    assert_eq!(rect[2], 100.0);
 }
 
 impl<'a> AddPolygon<'a, PolygonContext<'a>> for Context<'a> {
@@ -189,10 +215,11 @@ impl<'a> View<'a> for Context<'a> {
 impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
     #[inline(always)]
     fn image(&'a self, image: Image) -> ImageRectangleContext<'a> {
+        let PixelRectangle(source_rect) = image.source_rect;
         ImageRectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value([0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]),
+            rect: Value(Rectangle([0.0, 0.0, source_rect[2] as f64, source_rect[3] as f64])),
             image: Value(image),
         }
     }
@@ -215,7 +242,7 @@ impl<'a> AddLine<'a, LineContext<'a>> for Context<'a> {
         LineContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            line: Value([x1, y1, x2, y2]),
+            line: Value(Line([x1, y1, x2, y2])),
         }
     }
 }

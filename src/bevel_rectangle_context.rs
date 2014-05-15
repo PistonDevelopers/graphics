@@ -1,6 +1,7 @@
 use {
     AddColor,
     Borrowed,
+    Color,
     Field,
     Matrix2d,
     Rectangle,
@@ -28,6 +29,18 @@ pub struct BevelRectangleContext<'a> {
     pub rect: Field<'a, Rectangle>,
     /// Current bevel radius.
     pub bevel_radius: Field<'a, f64>,
+}
+
+impl<'a> Clone for BevelRectangleContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> BevelRectangleContext<'static> {
+        BevelRectangleContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            rect: self.rect.clone(),
+            bevel_radius: self.bevel_radius.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for BevelRectangleContext<'a> {
@@ -75,7 +88,7 @@ impl<'a> AddColor<'a, BevelRectangleColorContext<'a>> for BevelRectangleContext<
         BevelRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
             rect: Borrowed(self.rect.get()),
             bevel_radius: Borrowed(self.bevel_radius.get()),
         }

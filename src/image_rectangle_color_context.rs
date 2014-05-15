@@ -42,6 +42,19 @@ pub struct ImageRectangleColorContext<'a> {
     pub color: Field<'a, Color>,
 }
 
+impl<'a> Clone for ImageRectangleColorContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> ImageRectangleColorContext<'static> {
+        ImageRectangleColorContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            rect: self.rect.clone(),
+            image: self.image.clone(),
+            color: self.color.clone(),
+        }
+    }
+}
+
 impl<'a> HasTransform<'a, Matrix2d> for ImageRectangleColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
@@ -107,7 +120,7 @@ impl<'a> Draw<'a> for ImageRectangleColorContext<'a> {
         if back_end.supports_single_texture()
         && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
             let rect = self.rect.get();
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             let texture_id = self.image.get().texture_id;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
@@ -117,7 +130,7 @@ impl<'a> Draw<'a> for ImageRectangleColorContext<'a> {
             back_end.enable_single_texture(texture_id);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
                 rect_tri_list_xy_f32(self.transform.get(), rect),
-                rect_tri_list_rgba_f32(color),
+                rect_tri_list_rgba_f32(&Color(color)),
                 rect_tri_list_uv_f32(self.image.get())
             );
             back_end.disable_single_texture();
@@ -166,7 +179,7 @@ impl<'a> View<'a> for ImageRectangleColorContext<'a> {
 impl<'a> Clear for ImageRectangleColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }

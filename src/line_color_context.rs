@@ -38,6 +38,18 @@ pub struct LineColorContext<'a> {
     pub color: Field<'a, Color>,
 }
 
+impl<'a> Clone for LineColorContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> LineColorContext<'static> {
+        LineColorContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            line: self.line.clone(),
+            color: self.color.clone(),
+        }
+    }
+}
+
 impl<'a> HasTransform<'a, Matrix2d> for LineColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
@@ -150,7 +162,7 @@ impl<'a> AddSquareBorder<'a, SquareBorderLineColorContext<'a>> for LineColorCont
 impl<'a> Clear for LineColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }

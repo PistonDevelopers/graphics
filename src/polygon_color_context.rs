@@ -75,8 +75,8 @@ impl<'a> CanColor<'a, PolygonColorContext<'a>, Color> for PolygonColorContext<'a
 impl<'a> Fill<'a> for PolygonColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let polygon = self.polygon.get();
-            let color = self.color.get();
+            let polygon = self.polygon.get().as_slice();
+            let &Color(color) = self.color.get();
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -84,8 +84,8 @@ impl<'a> Fill<'a> for PolygonColorContext<'a> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_polygon_tri_list_xy_f32_rgba_f32(
                 self.transform.get(),
-                *polygon,
-                color,
+                polygon,
+                &Color(color),
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }
@@ -100,7 +100,7 @@ impl<'a> Fill<'a> for PolygonColorContext<'a> {
 impl<'a> Clear for PolygonColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();

@@ -1,6 +1,7 @@
 use {
     AddColor,
     Borrowed,
+    Color,
     Field,
     Line,
     Matrix2d,
@@ -26,6 +27,18 @@ pub struct SquareBorderLineContext<'a> {
     pub line: Field<'a, Line>,
     /// Current square border.
     pub square_border_radius: Field<'a, f64>,
+}
+
+impl<'a> Clone for SquareBorderLineContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> SquareBorderLineContext<'static> {
+        SquareBorderLineContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            line: self.line.clone(),
+            square_border_radius: self.square_border_radius.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for SquareBorderLineContext<'a> {
@@ -54,7 +67,7 @@ impl<'a> AddColor<'a, SquareBorderLineColorContext<'a>> for SquareBorderLineCont
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
             square_border_radius: Borrowed(self.square_border_radius.get()),
         }
     }

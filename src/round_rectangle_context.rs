@@ -1,6 +1,7 @@
 use {
     AddColor,
     Borrowed,
+    Color,
     Field,
     Matrix2d,
     Rectangle,
@@ -28,6 +29,18 @@ pub struct RoundRectangleContext<'a> {
     pub rect: Field<'a, Rectangle>,
     /// Current roundness radius.
     pub round_radius: Field<'a, f64>,
+}
+
+impl<'a> Clone for RoundRectangleContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> RoundRectangleContext<'static> {
+        RoundRectangleContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            rect: self.rect.clone(),
+            round_radius: self.round_radius.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for RoundRectangleContext<'a> {
@@ -75,7 +88,7 @@ impl<'a> AddColor<'a, RoundRectangleColorContext<'a>> for RoundRectangleContext<
         RoundRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
         }

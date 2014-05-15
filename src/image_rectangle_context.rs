@@ -41,6 +41,18 @@ pub struct ImageRectangleContext<'a> {
     pub image: Field<'a, Image>,
 }
 
+impl<'a> Clone for ImageRectangleContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> ImageRectangleContext<'static> {
+        ImageRectangleContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            rect: self.rect.clone(),
+            image: self.image.clone(),
+        }
+    }
+}
+
 impl<'a> HasTransform<'a, Matrix2d> for ImageRectangleContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
@@ -60,12 +72,12 @@ impl<'a> CanTransform<'a, ImageRectangleContext<'a>, Matrix2d> for ImageRectangl
     }
 }
 
-static WHITE: Color = [1.0, ..4];
+static WHITE: &'static Color = &Color([1.0, ..4]);
 
 impl<'a> HasColor<'a, Color> for ImageRectangleContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
-        &WHITE
+        WHITE
     }
 }
 
@@ -116,7 +128,7 @@ impl<'a> Draw<'a> for ImageRectangleContext<'a> {
             back_end.enable_single_texture(texture_id);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
                 rect_tri_list_xy_f32(self.transform.get(), rect),
-                rect_tri_list_rgba_f32(&color),
+                rect_tri_list_rgba_f32(&Color(color)),
                 rect_tri_list_uv_f32(self.image.get())
             );
             back_end.disable_single_texture();
@@ -167,7 +179,7 @@ impl<'a> AddColor<'a, ImageRectangleColorContext<'a>> for ImageRectangleContext<
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
         }
     }
 }

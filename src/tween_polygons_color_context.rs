@@ -80,7 +80,7 @@ impl<'a> Fill<'a> for TweenPolygonsColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygons = self.polygons.get();
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -90,7 +90,7 @@ impl<'a> Fill<'a> for TweenPolygonsColorContext<'a> {
                 self.transform.get(),
                 *polygons,
                 *self.tween_factor.get(),
-                color,
+                &Color(color),
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }
@@ -140,7 +140,7 @@ impl<'a> View<'a> for TweenPolygonsColorContext<'a> {
 impl<'a> Clear for TweenPolygonsColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }

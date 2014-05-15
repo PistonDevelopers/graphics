@@ -2,6 +2,7 @@
 use {
     AddColor,
     Borrowed,
+    Color,
     Field,
     Line,
     Matrix2d,
@@ -27,6 +28,18 @@ pub struct RoundBorderLineContext<'a> {
     pub line: Field<'a, Line>,
     /// Current round border.
     pub round_border_radius: Field<'a, f64>,
+}
+
+impl<'a> Clone for RoundBorderLineContext<'a> {
+    #[inline(always)]   
+    fn clone(&self) -> RoundBorderLineContext<'static> {
+        RoundBorderLineContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            line: self.line.clone(),
+            round_border_radius: self.round_border_radius.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for RoundBorderLineContext<'a> {
@@ -55,7 +68,7 @@ impl<'a> AddColor<'a, RoundBorderLineColorContext<'a>> for RoundBorderLineContex
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
             round_border_radius: Borrowed(self.round_border_radius.get()),
         }
     }

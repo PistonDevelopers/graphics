@@ -2,6 +2,7 @@
 use {
     AddColor,
     Borrowed,
+    Color,
     Field,
     Line,
     Matrix2d,
@@ -27,6 +28,18 @@ pub struct BevelBorderLineContext<'a> {
     pub line: Field<'a, Line>,
     /// Current bevel border.
     pub bevel_border_radius: Field<'a, f64>,
+}
+
+impl<'a> Clone for BevelBorderLineContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> BevelBorderLineContext<'static> {
+        BevelBorderLineContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            line: self.line.clone(),
+            bevel_border_radius: self.bevel_border_radius.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for BevelBorderLineContext<'a> {
@@ -55,7 +68,7 @@ impl<'a> AddColor<'a, BevelBorderLineColorContext<'a>> for BevelBorderLineContex
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
             bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
         }
     }

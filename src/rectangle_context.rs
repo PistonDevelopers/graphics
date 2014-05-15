@@ -6,6 +6,7 @@ use {
     AddRound,
     BevelRectangleContext,
     Borrowed,
+    Color,
     Field,
     Image,
     ImageRectangleContext,
@@ -34,6 +35,17 @@ pub struct RectangleContext<'a> {
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle.
     pub rect: Field<'a, Rectangle>,
+}
+
+impl<'a> Clone for RectangleContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> RectangleContext<'static> {
+        RectangleContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            rect: self.rect.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for RectangleContext<'a> {
@@ -79,7 +91,7 @@ impl<'a> AddColor<'a, RectangleColorContext<'a>> for RectangleContext<'a> {
         RectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
             rect: Borrowed(self.rect.get()),
         }
     }
@@ -92,7 +104,8 @@ fn test_rgba() {
     let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 100.0);
     let e = d.rgba(1.0, 0.0, 0.0, 1.0);
-    assert_eq!(e.color.get()[0], 1.0);
+    let &Color(color) = e.color.get();
+    assert_eq!(color[0], 1.0);
 }
 
 impl<'a> AddRound<'a, RoundRectangleContext<'a>> for RectangleContext<'a> {

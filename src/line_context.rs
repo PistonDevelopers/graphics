@@ -6,6 +6,7 @@ use {
     AddSquareBorder,
     BevelBorderLineContext,
     Borrowed,
+    Color,
     Field,
     Line,
     LineColorContext,
@@ -31,6 +32,17 @@ pub struct LineContext<'a> {
     pub transform: Field<'a, Matrix2d>,
     /// Current line.
     pub line: Field<'a, Line>,
+}
+
+impl<'a> Clone for LineContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> LineContext<'static> {
+        LineContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            line: self.line.clone(),
+        }
+    }
 }
 
 impl<'a> HasTransform<'a, Matrix2d> for LineContext<'a> {
@@ -87,7 +99,7 @@ impl<'a> AddColor<'a, LineColorContext<'a>> for LineContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
         }
     }
 }

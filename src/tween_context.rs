@@ -2,6 +2,7 @@ use {
     AddColor,
     AddPolygons,
     Borrowed,
+    Color,
     Field,
     Matrix2d,
     TweenColorContext,
@@ -25,6 +26,17 @@ pub struct TweenContext<'a> {
     pub transform: Field<'a, Matrix2d>,
     /// Animation inbetweening factor.
     pub tween_factor: Field<'a, f64>,
+}
+
+impl<'a> Clone for TweenContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> TweenContext<'static> {
+        TweenContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            tween_factor: self.tween_factor.clone(),
+        }
+    }
 }
 
 impl<'a> View<'a> for TweenContext<'a> {
@@ -63,7 +75,7 @@ impl<'a> AddColor<'a, TweenColorContext<'a>> for TweenContext<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
-            color: Value([r, g, b, a]),
+            color: Value(Color([r, g, b, a])),
         }
     }
 }

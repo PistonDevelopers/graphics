@@ -38,6 +38,18 @@ pub struct EllipseColorContext<'a> {
     pub color: Field<'a, Color>,
 }
 
+impl<'a> Clone for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn clone(&self) -> EllipseColorContext<'static> {
+        EllipseColorContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            rect: self.rect.clone(),
+            color: self.color.clone(),
+        }
+    }
+}
+
 impl<'a> HasTransform<'a, Matrix2d> for EllipseColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
@@ -99,7 +111,7 @@ impl<'a> Fill<'a> for EllipseColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -109,7 +121,7 @@ impl<'a> Fill<'a> for EllipseColorContext<'a> {
                 128,
                 self.transform.get(),
                 rect,
-                color,
+                &Color(color),
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }
@@ -124,7 +136,7 @@ impl<'a> Fill<'a> for EllipseColorContext<'a> {
 impl<'a> Clear for EllipseColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let color = self.color.get();
+            let &Color(color) = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();
