@@ -23,7 +23,7 @@ use internal::{
 };
 
 /// A polygon color context.
-pub struct PolygonColorContext<'a> {
+pub struct PolygonColorContext<'a, 'b> {
     /// Base/origin transform.
     pub base: Field<'a, Matrix2d>,
     /// Current transform.
@@ -31,19 +31,31 @@ pub struct PolygonColorContext<'a> {
     /// Current color.
     pub color: Field<'a, Color>,
     /// Current polygon.
-    pub polygon: Field<'a, &'a [f64]>,
+    pub polygon: Field<'a, &'b [f64]>,
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for PolygonColorContext<'a> {
+impl<'a, 'b> Clone for PolygonColorContext<'a, 'b> {
+    #[inline(always)]
+    fn clone(&self) -> PolygonColorContext<'static, 'b> {
+        PolygonColorContext {
+            base: self.base.clone(),
+            transform: self.transform.clone(),
+            polygon: Value(*self.polygon.get()),
+            color: self.color.clone(),
+        }
+    }
+}
+
+impl<'a, 'b> HasTransform<'a, Matrix2d> for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, PolygonColorContext<'a>, Matrix2d> for PolygonColorContext<'a> {
+impl<'a, 'b> CanTransform<'a, PolygonColorContext<'a, 'b>, Matrix2d> for PolygonColorContext<'a, 'b> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> PolygonColorContext<'a> {
+    fn transform(&'a self, value: Matrix2d) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
@@ -53,16 +65,16 @@ impl<'a> CanTransform<'a, PolygonColorContext<'a>, Matrix2d> for PolygonColorCon
     }
 }
 
-impl<'a> HasColor<'a, Color> for PolygonColorContext<'a> {
+impl<'a, 'b> HasColor<'a, Color> for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, PolygonColorContext<'a>, Color> for PolygonColorContext<'a> {
+impl<'a, 'b> CanColor<'a, PolygonColorContext<'a, 'b>, Color> for PolygonColorContext<'a, 'b> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> PolygonColorContext<'a> {
+    fn color(&'a self, value: Color) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
@@ -72,7 +84,7 @@ impl<'a> CanColor<'a, PolygonColorContext<'a>, Color> for PolygonColorContext<'a
     }
 }
 
-impl<'a> Fill<'a> for PolygonColorContext<'a> {
+impl<'a, 'b> Fill<'a> for PolygonColorContext<'a, 'b> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygon = self.polygon.get().as_slice();
@@ -97,7 +109,7 @@ impl<'a> Fill<'a> for PolygonColorContext<'a> {
     }
 }
 
-impl<'a> Clear for PolygonColorContext<'a> {
+impl<'a, 'b> Clear for PolygonColorContext<'a, 'b> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();
@@ -108,9 +120,9 @@ impl<'a> Clear for PolygonColorContext<'a> {
     }
 }
 
-impl<'a> View<'a> for PolygonColorContext<'a> {
+impl<'a, 'b> View<'a> for PolygonColorContext<'a,'b> {
     #[inline(always)]
-    fn view(&'a self) -> PolygonColorContext<'a> {
+    fn view(&'a self) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.base.get()),
@@ -120,7 +132,7 @@ impl<'a> View<'a> for PolygonColorContext<'a> {
     }
 
     #[inline(always)]
-    fn reset(&'a self) -> PolygonColorContext<'a> {
+    fn reset(&'a self) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(identity()),
@@ -130,7 +142,7 @@ impl<'a> View<'a> for PolygonColorContext<'a> {
     }
 
     #[inline(always)]
-    fn store_view(&'a self) -> PolygonColorContext<'a> {
+    fn store_view(&'a self) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.transform.get()),
             transform: Borrowed(self.transform.get()),

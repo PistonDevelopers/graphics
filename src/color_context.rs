@@ -126,9 +126,9 @@ impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
     }
 }
 
-impl<'a> AddPolygon<'a, PolygonColorContext<'a>> for ColorContext<'a> {
+impl<'a, 'b> AddPolygon<'a, PolygonColorContext<'a, 'b>> for ColorContext<'a> {
     #[inline(always)]
-    fn polygon(&'a self, polygon: &'a [f64]) -> PolygonColorContext<'a> {
+    fn polygon(&'a self, polygon: &'b [f64]) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),

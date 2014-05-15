@@ -175,9 +175,9 @@ fn test_ellipse() {
     assert_eq!(rect[2], 100.0);
 }
 
-impl<'a> AddPolygon<'a, PolygonContext<'a>> for Context<'a> {
+impl<'a, 'b> AddPolygon<'a, PolygonContext<'a, 'b>> for Context<'a> {
     #[inline(always)]
-    fn polygon(&'a self, polygon: &'a [f64]) -> PolygonContext<'a> {
+    fn polygon(&'a self, polygon: &'b [f64]) -> PolygonContext<'a, 'b> {
         PolygonContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
