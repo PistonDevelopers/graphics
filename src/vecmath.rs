@@ -116,10 +116,10 @@ pub fn separation(
 /// The separation returned can be used to solve collision of rectangles.
 #[inline(always)]
 pub fn least_separation_4(
-    Vec2d(sep1): Vec2d, 
-    Vec2d(sep2): Vec2d, 
-    Vec2d(sep3): Vec2d, 
-    Vec2d(sep4): Vec2d
+    &Vec2d(sep1): &Vec2d, 
+    &Vec2d(sep2): &Vec2d, 
+    &Vec2d(sep3): &Vec2d, 
+    &Vec2d(sep4): &Vec2d
 ) -> Vec2d {
     let dot1 = sep1[0] * sep1[0] + sep1[1] * sep1[1];
     let dot2 = sep2[0] * sep2[0] + sep2[1] * sep2[1];
