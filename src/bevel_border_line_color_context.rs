@@ -92,6 +92,7 @@ impl<'a> CanColor<'a, BevelBorderLineColorContext<'a>, Color> for BevelBorderLin
 }
 
 impl<'a> Stroke<'a> for BevelBorderLineColorContext<'a> {
+    #[inline(always)]
     fn stroke<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let line = self.line.get();
@@ -155,6 +156,7 @@ impl<'a> View<'a> for BevelBorderLineColorContext<'a> {
 }
 
 impl<'a> Clear for BevelBorderLineColorContext<'a> {
+    #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();

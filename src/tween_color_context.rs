@@ -128,6 +128,7 @@ impl<'a> View<'a> for TweenColorContext<'a> {
 }
 
 impl<'a> Clear for TweenColorContext<'a> {
+    #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();

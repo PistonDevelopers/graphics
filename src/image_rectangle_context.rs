@@ -114,6 +114,7 @@ impl<'a> CanRectangle<'a, ImageRectangleContext<'a>, Rectangle> for ImageRectang
 }
 
 impl<'a> Draw<'a> for ImageRectangleContext<'a> {
+    #[inline(always)]
     fn draw<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_single_texture()
         && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {

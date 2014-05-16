@@ -116,6 +116,7 @@ impl<'a> CanRectangle<'a, ImageRectangleColorContext<'a>, Rectangle> for ImageRe
 }
 
 impl<'a> Draw<'a> for ImageRectangleColorContext<'a> {
+    #[inline(always)]
     fn draw<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_single_texture()
         && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
@@ -177,6 +178,7 @@ impl<'a> View<'a> for ImageRectangleColorContext<'a> {
 }
 
 impl<'a> Clear for ImageRectangleColorContext<'a> {
+    #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();

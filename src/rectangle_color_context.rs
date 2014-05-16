@@ -116,6 +116,7 @@ impl<'a> CanRectangle<'a, RectangleColorContext<'a>, Rectangle> for RectangleCol
 }
 
 impl<'a> Fill<'a> for RectangleColorContext<'a> {
+    #[inline(always)]
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();

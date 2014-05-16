@@ -85,6 +85,7 @@ impl<'a, 'b> CanColor<'a, PolygonColorContext<'a, 'b>, Color> for PolygonColorCo
 }
 
 impl<'a, 'b> Fill<'a> for PolygonColorContext<'a, 'b> {
+    #[inline(always)]
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygon = self.polygon.get().as_slice();
@@ -110,6 +111,7 @@ impl<'a, 'b> Fill<'a> for PolygonColorContext<'a, 'b> {
 }
 
 impl<'a, 'b> Clear for PolygonColorContext<'a, 'b> {
+    #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();

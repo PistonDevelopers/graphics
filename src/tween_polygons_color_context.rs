@@ -90,6 +90,7 @@ impl<'a, 'b> CanTransform<'a, TweenPolygonsColorContext<'a, 'b>, Matrix2d> for T
 }
 
 impl<'a, 'b> Fill<'a> for TweenPolygonsColorContext<'a, 'b> {
+    #[inline(always)]
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygons = self.polygons.get();
@@ -151,6 +152,7 @@ impl<'a, 'b> View<'a> for TweenPolygonsColorContext<'a, 'b> {
 }
 
 impl<'a, 'b> Clear for TweenPolygonsColorContext<'a, 'b> {
+    #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();
