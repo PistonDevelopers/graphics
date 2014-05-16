@@ -113,6 +113,7 @@ impl<'a> CanRectangle<'a, BevelRectangleColorContext<'a>, Rectangle> for BevelRe
 }
 
 impl<'a> Clear for BevelRectangleColorContext<'a> {
+    #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();
@@ -124,6 +125,7 @@ impl<'a> Clear for BevelRectangleColorContext<'a> {
 }
 
 impl<'a> Fill<'a> for BevelRectangleColorContext<'a> {
+    #[inline(always)]
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();

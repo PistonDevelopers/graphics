@@ -108,6 +108,7 @@ impl<'a> CanRectangle<'a, EllipseColorContext<'a>, Rectangle> for EllipseColorCo
 }
 
 impl<'a> Fill<'a> for EllipseColorContext<'a> {
+    #[inline(always)]
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
@@ -134,6 +135,7 @@ impl<'a> Fill<'a> for EllipseColorContext<'a> {
 }
 
 impl<'a> Clear for EllipseColorContext<'a> {
+    #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();

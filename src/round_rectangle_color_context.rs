@@ -125,6 +125,7 @@ impl<'a> Clear for RoundRectangleColorContext<'a> {
 }
 
 impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
+    #[inline(always)]
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();

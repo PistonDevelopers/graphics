@@ -288,8 +288,9 @@ pub fn with_polygon_tri_list_xy_f32_rgba_f32(
 }
 
 /// Creates triangle list vertices from rectangle.
+#[inline(always)]
 pub fn rect_tri_list_xy_f32(
-    m: &Matrix2d, 
+    m: &Matrix2d,
     &Rectangle(rect): &Rectangle
 ) -> [f32, ..12] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
@@ -299,6 +300,7 @@ pub fn rect_tri_list_xy_f32(
 }
 
 /// Creates triangle list colors from rectangle.
+#[inline(always)]
 pub fn rect_tri_list_rgba_f32(
     &Color(color): &Color
 ) -> [f32, ..48] {
@@ -318,6 +320,7 @@ pub fn rect_tri_list_rgba_f32(
 }
 
 /// Creates triangle list texture coords from image.
+#[inline(always)]
 pub fn rect_tri_list_uv_f32(image: &Image) -> [f32, ..12] {
     let PixelRectangle(source_rect) = image.source_rect;
     let x1 = source_rect[0] as f32 / image.texture_width as f32;
