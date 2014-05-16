@@ -10,7 +10,6 @@ use {
     Image,
     Line,
     Matrix2d,
-    PixelRectangle,
     Rectangle,
 };
 use interpolation::{lerp};
@@ -322,7 +321,7 @@ pub fn rect_tri_list_rgba_f32(
 /// Creates triangle list texture coords from image.
 #[inline(always)]
 pub fn rect_tri_list_uv_f32(image: &Image) -> [f32, ..12] {
-    let PixelRectangle(source_rect) = image.source_rect;
+    let source_rect = image.source_rect;
     let x1 = source_rect[0] as f32 / image.texture_width as f32;
     let y1 = source_rect[1] as f32 / image.texture_height as f32;
     let x2 = (source_rect[0] + source_rect[2]) as f32 / image.texture_width as f32;

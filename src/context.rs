@@ -17,7 +17,6 @@ use {
     Line,
     LineContext,
     Matrix2d,
-    PixelRectangle,
     PolygonContext,
     Rectangle,
     RectangleContext,
@@ -215,11 +214,15 @@ impl<'a> View<'a> for Context<'a> {
 impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
     #[inline(always)]
     fn image(&'a self, image: Image) -> ImageRectangleContext<'a> {
-        let PixelRectangle(source_rect) = image.source_rect;
         ImageRectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(Rectangle([0.0, 0.0, source_rect[2] as f64, source_rect[3] as f64])),
+            rect: Value(Rectangle([
+                0.0, 
+                0.0, 
+                image.source_rect[2] as f64, 
+                image.source_rect[3] as f64
+            ])),
             image: Value(image),
         }
     }

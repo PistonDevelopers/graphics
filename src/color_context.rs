@@ -17,7 +17,6 @@ use {
     Line,
     LineColorContext,
     Matrix2d,
-    PixelRectangle,
     PolygonColorContext,
     Rectangle,
     RectangleColorContext,
@@ -191,12 +190,11 @@ impl<'a> View<'a> for ColorContext<'a> {
 impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
     fn image(&'a self, image: Image) -> ImageRectangleColorContext<'a> {
-        let PixelRectangle(source_rect) = image.source_rect;
         ImageRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(Rectangle(
-                [0.0, 0.0, source_rect[2] as f64, source_rect[3] as f64]
+                [0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]
             )),
             image: Value(image),
             color: Borrowed(self.color.get()),

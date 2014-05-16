@@ -290,7 +290,6 @@ impl<'a, T: Clone> Clone for Field<'a, T> {
 ///
 /// There is no garbage collection of textures,
 /// this responsibility is given to the back-end.
-#[deriving(Clone)]
 pub struct Image {
     /// A unique identifier of the texture, recognizable by back-end.
     pub texture_id: uint,
@@ -299,6 +298,18 @@ pub struct Image {
     /// The pixel height of the texture.
     pub texture_height: u32,
     /// The source rectangle in the texture.
-    pub source_rect: PixelRectangle,
+    pub source_rect: [u32, ..4],
+}
+
+impl Clone for Image {
+    #[inline(always)]
+    fn clone(&self) -> Image {
+        Image {
+            texture_id: self.texture_id,
+            texture_width: self.texture_width,
+            texture_height: self.texture_height,
+            source_rect: self.source_rect,
+        }
+    }
 }
 
