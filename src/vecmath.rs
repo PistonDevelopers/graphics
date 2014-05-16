@@ -96,7 +96,7 @@ pub fn identity() -> Matrix2d {
 /// A ray stores starting point and directional vector.
 #[inline(always)]
 pub fn separation(
-    Ray(ray): Ray, 
+    &Ray(ray): &Ray, 
     x: f64, 
     y: f64) -> Vec2d {
     // Get the directional vector.
