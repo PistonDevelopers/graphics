@@ -21,6 +21,14 @@ pub trait CanTransform<'a, T, U> {
     fn transform(&'a self, value: U) -> T;
 }
 
+/// Implemented by contexts that can view transform.
+///
+/// The context can view transform to type `T` by adding value `U`.
+pub trait CanViewTransform<'a, T, U> {
+    /// Create a new context with view transformation.
+    fn view_transform(&'a self, value: U) -> T;
+}
+
 /// Implemented by contexts that uses type `U` as current color.
 pub trait HasColor<'a, U> {
     /// Returns the current color.
@@ -41,7 +49,7 @@ pub trait HasTransform<'a, U> {
     fn get_transform(&'a self) -> &'a U;
 }
 
-/// Implemented by contexts that uses type `U` as current transform.
+/// Implemented by contexts that uses type `U` as current view transform.
 ///
 /// This helps to remove redundant code.
 pub trait HasViewTransform<'a, U> {
