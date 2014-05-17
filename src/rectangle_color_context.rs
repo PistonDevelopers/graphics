@@ -16,10 +16,6 @@ use {
     Rectangle,
     RoundRectangleColorContext,
     Value,
-    View
-};
-use vecmath::{
-    identity,
 };
 use triangulation::{
     rect_tri_list_xy_f32,
@@ -29,9 +25,11 @@ use internal::{
     CanColor,
     CanRectangle,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasRectangle,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A rectangle color context.
@@ -71,6 +69,26 @@ impl<'a> CanTransform<'a, RectangleColorContext<'a>, Matrix2d> for RectangleColo
         RectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for RectangleColorContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, RectangleColorContext<'a>, Matrix2d> 
+for RectangleColorContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> RectangleColorContext<'a> {
+        RectangleColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             color: Borrowed(self.color.get()),
         }
@@ -170,38 +188,6 @@ impl<'a> AddBevel<'a, BevelRectangleColorContext<'a>> for RectangleColorContext<
             color: Borrowed(self.color.get()),
             rect: Borrowed(self.rect.get()),
             bevel_radius: Value(radius),
-        }
-    }
-}
-
-impl<'a> View<'a> for RectangleColorContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> RectangleColorContext<'a> {
-        RectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> RectangleColorContext<'a> {
-        RectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> RectangleColorContext<'a> {
-        RectangleColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
         }
     }
 }

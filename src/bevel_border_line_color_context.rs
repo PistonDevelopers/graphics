@@ -9,19 +9,17 @@ use {
     Matrix2d,
     Stroke,
     Value,
-    View,
 };
 use triangulation::{
     with_round_border_line_tri_list_xy_f32_rgba_f32
 };
-use vecmath::{
-    identity,
-};
 use internal::{
     CanColor,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A line context with bevel border information.
@@ -64,6 +62,27 @@ impl<'a> CanTransform<'a, BevelBorderLineColorContext<'a>, Matrix2d> for BevelBo
         BevelBorderLineColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            line: Borrowed(self.line.get()),
+            color: Borrowed(self.color.get()),
+            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for BevelBorderLineColorContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, BevelBorderLineColorContext<'a>, Matrix2d> 
+for BevelBorderLineColorContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> BevelBorderLineColorContext<'a> {
+        BevelBorderLineColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             color: Borrowed(self.color.get()),
             bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
@@ -116,41 +135,6 @@ impl<'a> Stroke<'a> for BevelBorderLineColorContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a> View<'a> for BevelBorderLineColorContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> BevelBorderLineColorContext<'a> {
-        BevelBorderLineColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> BevelBorderLineColorContext<'a> {
-        BevelBorderLineColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> BevelBorderLineColorContext<'a> {
-        BevelBorderLineColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
         }
     }
 }

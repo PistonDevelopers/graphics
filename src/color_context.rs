@@ -21,17 +21,15 @@ use {
     Rectangle,
     RectangleColorContext,
     TweenColorContext,
-    View,
     Value,
-};
-use vecmath::{
-    identity,
 };
 use internal::{
     CanColor,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A context with color information.
@@ -68,6 +66,24 @@ impl<'a> CanTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
         ColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for ColorContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> ColorContext<'a> {
+        ColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
         }
     }
@@ -154,35 +170,6 @@ impl<'a> Clear for ColorContext<'a> {
         if back_end.supports_clear_rgba() {
             let &Color(color) = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
-        }
-    }
-}
-
-impl<'a> View<'a> for ColorContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> ColorContext<'a> {
-        ColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> ColorContext<'a> {
-        ColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> ColorContext<'a> {
-        ColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
         }
     }
 }

@@ -9,19 +9,17 @@ use {
     Matrix2d,
     Stroke,
     Value,
-    View,
 };
 use triangulation::{
     with_round_border_line_tri_list_xy_f32_rgba_f32
 };
-use vecmath::{
-    identity,
-};
 use internal::{
     CanColor,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A line context with square border information.
@@ -71,6 +69,27 @@ impl<'a> CanTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> for Square
     }
 }
 
+impl<'a> HasViewTransform<'a, Matrix2d> for SquareBorderLineColorContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> 
+for SquareBorderLineColorContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> SquareBorderLineColorContext<'a> {
+        SquareBorderLineColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
+            line: Borrowed(self.line.get()),
+            square_border_radius: Borrowed(self.square_border_radius.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
 impl<'a> HasColor<'a, Color> for SquareBorderLineColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
@@ -116,41 +135,6 @@ impl<'a> Stroke<'a> for SquareBorderLineColorContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a> View<'a> for SquareBorderLineColorContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> SquareBorderLineColorContext<'a> {
-        SquareBorderLineColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            square_border_radius: Borrowed(self.square_border_radius.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> SquareBorderLineColorContext<'a> {
-        SquareBorderLineColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            square_border_radius: Borrowed(self.square_border_radius.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> SquareBorderLineColorContext<'a> {
-        SquareBorderLineColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            square_border_radius: Borrowed(self.square_border_radius.get()),
         }
     }
 }

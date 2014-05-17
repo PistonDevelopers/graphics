@@ -9,10 +9,6 @@ use {
     Matrix2d,
     Rectangle,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use triangulation::{
     with_ellipse_tri_list_xy_f32_rgba_f32
@@ -21,9 +17,11 @@ use internal::{
     CanColor,
     CanRectangle,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasRectangle,
     HasTransform,
+    HasViewTransform,
 };
 
 /// An ellipse color context.
@@ -63,6 +61,26 @@ impl<'a> CanTransform<'a, EllipseColorContext<'a>, Matrix2d> for EllipseColorCon
         EllipseColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, EllipseColorContext<'a>, Matrix2d> 
+for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> EllipseColorContext<'a> {
+        EllipseColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             color: Borrowed(self.color.get()),
         }
@@ -146,34 +164,3 @@ impl<'a> Clear for EllipseColorContext<'a> {
     }
 }
 
-impl<'a> View<'a> for EllipseColorContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> EllipseColorContext<'a> {
-        EllipseColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> EllipseColorContext<'a> {
-        EllipseColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> EllipseColorContext<'a> {
-        EllipseColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-}

@@ -15,16 +15,14 @@ use {
     RectangleColorContext,
     RoundRectangleContext,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use internal::{
     CanRectangle,
     CanTransform,
+    CanViewTransform,
     HasRectangle,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A rectangle context.
@@ -61,6 +59,25 @@ impl<'a> CanTransform<'a, RectangleContext<'a>, Matrix2d> for RectangleContext<'
         RectangleContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            rect: Borrowed(self.rect.get()),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for RectangleContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, RectangleContext<'a>, Matrix2d> 
+for RectangleContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> RectangleContext<'a> {
+        RectangleContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
         }
     }
@@ -128,35 +145,6 @@ impl<'a> AddBevel<'a, BevelRectangleContext<'a>> for RectangleContext<'a> {
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             bevel_radius: Value(radius),
-        }
-    }
-}
-
-impl<'a> View<'a> for RectangleContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> RectangleContext<'a> {
-        RectangleContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
         }
     }
 }

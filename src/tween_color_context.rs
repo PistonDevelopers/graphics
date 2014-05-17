@@ -8,16 +8,14 @@ use {
     Matrix2d,
     TweenPolygonsColorContext,
     Value,
-    View,
-};
-use vecmath::{
-    identity
 };
 use internal::{
     CanColor,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasTransform,
+    HasViewTransform,
 };
 
 /// An animation inbetweening context with color.
@@ -82,6 +80,26 @@ impl<'a> CanTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorContext
     }
 }
 
+impl<'a> HasViewTransform<'a, Matrix2d> for TweenColorContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> TweenColorContext<'a> {
+        TweenColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+
 impl<'a, 'b> AddPolygons<'a, TweenPolygonsColorContext<'a, 'b>> for TweenColorContext<'a> {
     #[inline(always)]
     fn polygons(&'a self, polygons: &'b [&'b [f64]]) -> TweenPolygonsColorContext<'a, 'b> {
@@ -91,38 +109,6 @@ impl<'a, 'b> AddPolygons<'a, TweenPolygonsColorContext<'a, 'b>> for TweenColorCo
             color: Borrowed(self.color.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Value(polygons),
-        }
-    }
-}
-
-impl<'a> View<'a> for TweenColorContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> TweenColorContext<'a> {
-        TweenColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> TweenColorContext<'a> {
-        TweenColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> TweenColorContext<'a> {
-        TweenColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
 }

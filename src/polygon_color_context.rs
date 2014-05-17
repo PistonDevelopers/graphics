@@ -7,10 +7,6 @@ use {
     Fill,
     Matrix2d,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use triangulation::{
     with_polygon_tri_list_xy_f32_rgba_f32
@@ -18,8 +14,10 @@ use triangulation::{
 use internal::{
     CanColor,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A polygon color context.
@@ -59,6 +57,26 @@ impl<'a, 'b> CanTransform<'a, PolygonColorContext<'a, 'b>, Matrix2d> for Polygon
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            polygon: Borrowed(self.polygon.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a, 'b> HasViewTransform<'a, Matrix2d> for PolygonColorContext<'a, 'b> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a, 'b> CanViewTransform<'a, PolygonColorContext<'a, 'b>, Matrix2d> 
+for PolygonColorContext<'a, 'b> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> PolygonColorContext<'a, 'b> {
+        PolygonColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             polygon: Borrowed(self.polygon.get()),
             color: Borrowed(self.color.get()),
         }
@@ -118,38 +136,6 @@ impl<'a, 'b> Clear for PolygonColorContext<'a, 'b> {
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a, 'b> View<'a> for PolygonColorContext<'a,'b> {
-    #[inline(always)]
-    fn view(&'a self) -> PolygonColorContext<'a, 'b> {
-        PolygonColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            polygon: Borrowed(self.polygon.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> PolygonColorContext<'a, 'b> {
-        PolygonColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            polygon: Borrowed(self.polygon.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> PolygonColorContext<'a, 'b> {
-        PolygonColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            polygon: Borrowed(self.polygon.get()),
-            color: Borrowed(self.color.get()),
         }
     }
 }

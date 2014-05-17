@@ -9,10 +9,6 @@ use {
     Matrix2d,
     Rectangle,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use triangulation::{
     with_round_rectangle_tri_list_xy_f32_rgba_f32
@@ -21,9 +17,11 @@ use internal::{
     CanColor,
     CanRectangle,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasRectangle,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A rectangle color context.
@@ -66,6 +64,27 @@ impl<'a> CanTransform<'a, RoundRectangleColorContext<'a>, Matrix2d> for RoundRec
         RoundRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for RoundRectangleColorContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, RoundRectangleColorContext<'a>, Matrix2d> 
+for RoundRectangleColorContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> RoundRectangleColorContext<'a> {
+        RoundRectangleColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
             color: Borrowed(self.color.get()),
@@ -149,41 +168,6 @@ impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a> View<'a> for RoundRectangleColorContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            rect: Borrowed(self.rect.get()),
-            round_radius: Borrowed(self.round_radius.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            rect: Borrowed(self.rect.get()),
-            round_radius: Borrowed(self.round_radius.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-            round_radius: Borrowed(self.round_radius.get()),
-            color: Borrowed(self.color.get()),
         }
     }
 }

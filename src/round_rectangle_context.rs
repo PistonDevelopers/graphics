@@ -7,16 +7,14 @@ use {
     Rectangle,
     RoundRectangleColorContext,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use internal::{
     CanRectangle,
     CanTransform,
+    CanViewTransform,
     HasRectangle,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A round rectangle context.
@@ -62,6 +60,25 @@ impl<'a> CanTransform<'a, RoundRectangleContext<'a>, Matrix2d> for RoundRectangl
     }
 }
 
+impl<'a> HasViewTransform<'a, Matrix2d> for RoundRectangleContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, RoundRectangleContext<'a>, Matrix2d> for RoundRectangleContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> RoundRectangleContext<'a> {
+        RoundRectangleContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
+        }
+    }
+}
+
 impl<'a> HasRectangle<'a, Rectangle> for RoundRectangleContext<'a> {
     #[inline(always)]
     fn get_rectangle(&'a self) -> &'a Rectangle {
@@ -89,38 +106,6 @@ impl<'a> AddColor<'a, RoundRectangleColorContext<'a>> for RoundRectangleContext<
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(Color([r, g, b, a])),
-            rect: Borrowed(self.rect.get()),
-            round_radius: Borrowed(self.round_radius.get()),
-        }
-    }
-}
-
-impl<'a> View<'a> for RoundRectangleContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> RoundRectangleContext<'a> {
-        RoundRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            rect: Borrowed(self.rect.get()),
-            round_radius: Borrowed(self.round_radius.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> RoundRectangleContext<'a> {
-        RoundRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            rect: Borrowed(self.rect.get()),
-            round_radius: Borrowed(self.round_radius.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> RoundRectangleContext<'a> {
-        RoundRectangleContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
         }

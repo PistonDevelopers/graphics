@@ -14,14 +14,12 @@ use {
     RoundBorderLineContext,
     SquareBorderLineContext,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use internal::{
     CanTransform,
+    CanViewTransform,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A line context.
@@ -63,29 +61,19 @@ impl<'a> CanTransform<'a, LineContext<'a>, Matrix2d> for LineContext<'a> {
     }
 }
 
-impl<'a> View<'a> for LineContext<'a> {
+impl<'a> HasViewTransform<'a, Matrix2d> for LineContext<'a> {
     #[inline(always)]
-    fn view(&'a self) -> LineContext<'a> {
-        LineContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            line: Borrowed(self.line.get()),
-        }
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
     }
+}
 
+impl<'a> CanViewTransform<'a, LineContext<'a>, Matrix2d> 
+for LineContext<'a> {
     #[inline(always)]
-    fn reset(&'a self) -> LineContext<'a> {
+    fn view_transform(&'a self, value: Matrix2d) -> LineContext<'a> {
         LineContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            line: Borrowed(self.line.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> LineContext<'a> {
-        LineContext {
-            base: Borrowed(self.transform.get()),
+            base: Value(value),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
         }

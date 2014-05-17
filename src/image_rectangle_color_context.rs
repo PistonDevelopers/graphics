@@ -9,10 +9,6 @@ use {
     Matrix2d,
     Rectangle,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use triangulation::{
     rect_tri_list_xy_f32,
@@ -23,9 +19,11 @@ use internal::{
     CanColor,
     CanRectangle,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasRectangle,
     HasTransform,
+    HasViewTransform,
 };
 
 /// An image rectangle context.
@@ -68,6 +66,27 @@ impl<'a> CanTransform<'a, ImageRectangleColorContext<'a>, Matrix2d> for ImageRec
         ImageRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            rect: Borrowed(self.rect.get()),
+            image: Borrowed(self.image.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for ImageRectangleColorContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, ImageRectangleColorContext<'a>, Matrix2d> 
+for ImageRectangleColorContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> ImageRectangleColorContext<'a> {
+        ImageRectangleColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
             color: Borrowed(self.color.get()),
@@ -138,41 +157,6 @@ impl<'a> Draw<'a> for ImageRectangleColorContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a> View<'a> for ImageRectangleColorContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> ImageRectangleColorContext<'a> {
-        ImageRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> ImageRectangleColorContext<'a> {
-        ImageRectangleColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-            color: Borrowed(self.color.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> ImageRectangleColorContext<'a> {
-        ImageRectangleColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-            image: Borrowed(self.image.get()),
-            color: Borrowed(self.color.get()),
         }
     }
 }

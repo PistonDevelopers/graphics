@@ -7,16 +7,14 @@ use {
     Matrix2d,
     Rectangle,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use internal::{
     CanRectangle,
     CanTransform,
+    CanViewTransform,
     HasRectangle,
     HasTransform,
+    HasViewTransform,
 };
 
 /// An ellipse context.
@@ -58,6 +56,25 @@ impl<'a> CanTransform<'a, EllipseContext<'a>, Matrix2d> for EllipseContext<'a> {
     }
 }
 
+impl<'a> HasViewTransform<'a, Matrix2d> for EllipseContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, EllipseContext<'a>, Matrix2d> 
+for EllipseContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> EllipseContext<'a> {
+        EllipseContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+        }
+    }
+}
+
 impl<'a> AddColor<'a, EllipseColorContext<'a>> for EllipseContext<'a> {
     #[inline(always)]
     fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> EllipseColorContext<'a> {
@@ -87,34 +104,4 @@ impl<'a> CanRectangle<'a, EllipseContext<'a>, Rectangle> for EllipseContext<'a> 
         }
     }
 }
-
-impl<'a> View<'a> for EllipseContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> EllipseContext<'a> {
-        EllipseContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-        }
-    }
-}
-
 

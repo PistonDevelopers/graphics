@@ -7,16 +7,14 @@ use {
     Rectangle,
     BevelRectangleColorContext,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use internal::{
     CanRectangle,
     CanTransform,
+    CanViewTransform,
     HasRectangle,
     HasTransform,
+    HasViewTransform,
 };
 
 /// A bevel rectangle context.
@@ -62,6 +60,25 @@ impl<'a> CanTransform<'a, BevelRectangleContext<'a>, Matrix2d> for BevelRectangl
     }
 }
 
+impl<'a> HasViewTransform<'a, Matrix2d> for BevelRectangleContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, BevelRectangleContext<'a>, Matrix2d> for BevelRectangleContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> BevelRectangleContext<'a> {
+        BevelRectangleContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            bevel_radius: Borrowed(self.bevel_radius.get()),
+        }
+    }
+}
+
 impl<'a> HasRectangle<'a, Rectangle> for BevelRectangleContext<'a> {
     #[inline(always)]
     fn get_rectangle(&'a self) -> &'a Rectangle {
@@ -89,38 +106,6 @@ impl<'a> AddColor<'a, BevelRectangleColorContext<'a>> for BevelRectangleContext<
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(Color([r, g, b, a])),
-            rect: Borrowed(self.rect.get()),
-            bevel_radius: Borrowed(self.bevel_radius.get()),
-        }
-    }
-}
-
-impl<'a> View<'a> for BevelRectangleContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> BevelRectangleContext<'a> {
-        BevelRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            rect: Borrowed(self.rect.get()),
-            bevel_radius: Borrowed(self.bevel_radius.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> BevelRectangleContext<'a> {
-        BevelRectangleContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            rect: Borrowed(self.rect.get()),
-            bevel_radius: Borrowed(self.bevel_radius.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> BevelRectangleContext<'a> {
-        BevelRectangleContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             bevel_radius: Borrowed(self.bevel_radius.get()),
         }

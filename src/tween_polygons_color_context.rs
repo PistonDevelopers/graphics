@@ -7,10 +7,6 @@ use {
     Fill,
     Matrix2d,
     Value,
-    View,
-};
-use vecmath::{
-    identity
 };
 use triangulation::{
     with_lerp_polygons_tri_list_xy_f32_rgba_f32
@@ -18,8 +14,10 @@ use triangulation::{
 use internal::{
     CanColor,
     CanTransform,
+    CanViewTransform,
     HasColor,
     HasTransform,
+    HasViewTransform,
 };
 
 /// An animation inbetweening context with color.
@@ -89,6 +87,28 @@ impl<'a, 'b> CanTransform<'a, TweenPolygonsColorContext<'a, 'b>, Matrix2d> for T
     }
 }
 
+impl<'a, 'b> HasViewTransform<'a, Matrix2d> for TweenPolygonsColorContext<'a, 'b> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a, 'b> CanViewTransform<'a, TweenPolygonsColorContext<'a, 'b>, Matrix2d> 
+for TweenPolygonsColorContext<'a, 'b> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> TweenPolygonsColorContext<'a, 'b> {
+        TweenPolygonsColorContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
+            tween_factor: Borrowed(self.tween_factor.get()),
+            polygons: Borrowed(self.polygons.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+
 impl<'a, 'b> Fill<'a> for TweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
@@ -112,41 +132,6 @@ impl<'a, 'b> Fill<'a> for TweenPolygonsColorContext<'a, 'b> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'a, 'b> View<'a> for TweenPolygonsColorContext<'a, 'b> {
-    #[inline(always)]
-    fn view(&'a self) -> TweenPolygonsColorContext<'a, 'b> {
-        TweenPolygonsColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            polygons: Borrowed(self.polygons.get()),
-            color: Borrowed(self.color.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> TweenPolygonsColorContext<'a, 'b> {
-        TweenPolygonsColorContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            polygons: Borrowed(self.polygons.get()),
-            color: Borrowed(self.color.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> TweenPolygonsColorContext<'a, 'b> {
-        TweenPolygonsColorContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            polygons: Borrowed(self.polygons.get()),
-            color: Borrowed(self.color.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
 }

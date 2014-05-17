@@ -7,14 +7,12 @@ use {
     Matrix2d,
     TweenPolygonsColorContext,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use internal::{
     CanTransform,
+    CanViewTransform,
     HasTransform,
+    HasViewTransform,
 };
 
 /// An animation inbetweening context with color.
@@ -74,34 +72,22 @@ impl<'a, 'b> CanTransform<'a, TweenPolygonsContext<'a, 'b>, Matrix2d> for TweenP
     }
 }
 
-impl<'a, 'b> View<'a> for TweenPolygonsContext<'a, 'b> {
+impl<'a, 'b> HasViewTransform<'a, Matrix2d> for TweenPolygonsContext<'a, 'b> {
     #[inline(always)]
-    fn view(&'a self) -> TweenPolygonsContext<'a, 'b> {
-        TweenPolygonsContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            polygons: Borrowed(self.polygons.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-        }
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
     }
+}
 
+impl<'a, 'b> CanViewTransform<'a, TweenPolygonsContext<'a, 'b>, Matrix2d> for TweenPolygonsContext<'a, 'b> {
     #[inline(always)]
-    fn reset(&'a self) -> TweenPolygonsContext<'a, 'b> {
+    fn view_transform(&'a self, value: Matrix2d) -> TweenPolygonsContext<'a, 'b> {
         TweenPolygonsContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            polygons: Borrowed(self.polygons.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> TweenPolygonsContext<'a, 'b> {
-        TweenPolygonsContext {
-            base: Borrowed(self.transform.get()),
+            base: Value(value),
             transform: Borrowed(self.transform.get()),
-            polygons: Borrowed(self.polygons.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
+            polygons: Borrowed(self.polygons.get()),
         }
     }
 }
+

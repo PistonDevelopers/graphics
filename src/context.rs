@@ -22,14 +22,12 @@ use {
     RectangleContext,
     TweenContext,
     Value,
-    View,
-};
-use vecmath::{
-    identity,
 };
 use internal::{
     CanTransform,
+    CanViewTransform,
     HasTransform,
+    HasViewTransform,
 };
 
 /// Drawing 2d context.
@@ -63,6 +61,23 @@ impl<'a> CanTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
         Context {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for Context<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> Context<'a> {
+        Context {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
         }
     }
 }
@@ -181,32 +196,6 @@ impl<'a, 'b> AddPolygon<'a, PolygonContext<'a, 'b>> for Context<'a> {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             polygon: Value(polygon),
-        }
-    }
-}
-
-impl<'a> View<'a> for Context<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> Context<'a> {
-        Context {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> Context<'a> {
-        Context {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
         }
     }
 }

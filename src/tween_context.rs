@@ -8,14 +8,12 @@ use {
     TweenColorContext,
     TweenPolygonsContext,
     Value,
-    View,
-};
-use vecmath::{
-    identity
 };
 use internal::{
     CanTransform,
+    CanViewTransform,
     HasTransform,
+    HasViewTransform,
 };
 
 /// An animation inbetweening context.
@@ -35,35 +33,6 @@ impl<'a> Clone for TweenContext<'a> {
             base: self.base.clone(),
             transform: self.transform.clone(),
             tween_factor: self.tween_factor.clone(),
-        }
-    }
-}
-
-impl<'a> View<'a> for TweenContext<'a> {
-    #[inline(always)]
-    fn view(&'a self) -> TweenContext<'a> {
-        TweenContext {
-            base: Borrowed(self.base.get()),
-            transform: Borrowed(self.base.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn reset(&'a self) -> TweenContext<'a> {
-        TweenContext {
-            base: Borrowed(self.base.get()),
-            transform: Value(identity()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-        }
-    }
-
-    #[inline(always)]
-    fn store_view(&'a self) -> TweenContext<'a> {
-        TweenContext {
-            base: Borrowed(self.transform.get()),
-            transform: Borrowed(self.transform.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
 }
@@ -105,6 +74,24 @@ impl<'a> CanTransform<'a, TweenContext<'a>, Matrix2d> for TweenContext<'a> {
         TweenContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
+            tween_factor: Borrowed(self.tween_factor.get()),
+        }
+    }
+}
+
+impl<'a> HasViewTransform<'a, Matrix2d> for TweenContext<'a> {
+    #[inline(always)]
+    fn get_view_transform(&'a self) -> &'a Matrix2d {
+        self.base.get()
+    }
+}
+
+impl<'a> CanViewTransform<'a, TweenContext<'a>, Matrix2d> for TweenContext<'a> {
+    #[inline(always)]
+    fn view_transform(&'a self, value: Matrix2d) -> TweenContext<'a> {
+        TweenContext {
+            base: Value(value),
+            transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
         }
     }
