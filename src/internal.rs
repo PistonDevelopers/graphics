@@ -41,3 +41,11 @@ pub trait HasTransform<'a, U> {
     fn get_transform(&'a self) -> &'a U;
 }
 
+/// Implemented by contexts that uses type `U` as current transform.
+///
+/// This helps to remove redundant code.
+pub trait HasViewTransform<'a, U> {
+    /// Returns the current view transform.
+    fn get_view_transform(&'a self) -> &'a U;
+}
+
