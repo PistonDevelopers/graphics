@@ -207,17 +207,6 @@ impl Clone for PixelRectangle {
     }
 }
 
-/// [x, y, dir_x, dir_y]
-pub struct Ray(pub [f64, ..4]);
-
-impl Clone for Ray {
-    #[inline(always)]
-    fn clone(&self) -> Ray {
-        let &Ray(r) = self;
-        Ray(r)
-    }
-}
-
 /// [x, y, w, h]
 pub struct Rectangle(pub [f64, ..4]);
 
@@ -237,17 +226,6 @@ impl Clone for Triangle {
     fn clone(&self) -> Triangle {
         let &Triangle(t) = self;
         Triangle(t)
-    }
-}
-
-/// [x, y]
-pub struct Vec2d(pub [f64, ..2]);
-
-impl Clone for Vec2d {
-    #[inline(always)]
-    fn clone(&self) -> Vec2d {
-        let &Vec2d(v) = self;
-        Vec2d(v)
     }
 }
 

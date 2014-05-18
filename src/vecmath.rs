@@ -4,9 +4,7 @@
 use {
     Line,
     Matrix2d,
-    Ray,
     Rectangle,
-    Vec2d,
     Triangle
 };
 use modular_index::{previous};
@@ -14,7 +12,7 @@ use modular_index::{previous};
 /// Multiplies two matrices.
 #[inline(always)]
 pub fn multiply(
-    &Matrix2d(m): &Matrix2d, 
+    &Matrix2d(m): &Matrix2d,
     &Matrix2d(b): &Matrix2d
 ) -> Matrix2d {
     Matrix2d(
@@ -96,9 +94,9 @@ pub fn identity() -> Matrix2d {
 /// A ray stores starting point and directional vector.
 #[inline(always)]
 pub fn separation(
-    &Ray(ray): &Ray, 
-    x: f64, 
-    y: f64) -> Vec2d {
+    &ray: &[f64, ..4],
+    x: f64,
+    y: f64) -> [f64, ..2] {
     // Get the directional vector.
     let (dir_x, dir_y) = (ray[2], ray[3]);
     // Get displacement vector from point.
@@ -108,7 +106,7 @@ pub fn separation(
     // The directional vector multiplied with the dot gives us a parallel vector.
     // When we subtract this from the displacement we get a vector normal to the ray.
     // This is the shortest vector from the point to the ray.
-    Vec2d([dx - dot * dir_x, dy - dot * dir_y])
+    [dx - dot * dir_x, dy - dot * dir_y]
 }
 
 /// Returns the least separation out of four.
@@ -116,37 +114,35 @@ pub fn separation(
 /// The separation returned can be used to solve collision of rectangles.
 #[inline(always)]
 pub fn least_separation_4(
-    &Vec2d(sep1): &Vec2d, 
-    &Vec2d(sep2): &Vec2d, 
-    &Vec2d(sep3): &Vec2d, 
-    &Vec2d(sep4): &Vec2d
-) -> Vec2d {
+    &sep1: &[f64, ..2],
+    &sep2: &[f64, ..2],
+    &sep3: &[f64, ..2],
+    &sep4: &[f64, ..2]
+) -> [f64, ..2] {
     let dot1 = sep1[0] * sep1[0] + sep1[1] * sep1[1];
     let dot2 = sep2[0] * sep2[0] + sep2[1] * sep2[1];
     let dot3 = sep3[0] * sep3[0] + sep3[1] * sep3[1];
     let dot4 = sep4[0] * sep4[0] + sep4[1] * sep4[1];
     // Search for the smallest dot product.
-    Vec2d(
-        if dot1 < dot2 {
-            if dot3 < dot4 {
-                if dot1 < dot3 { sep1 } else { sep3 }
-            } else {
-                if dot1 < dot4 { sep1 } else { sep4 }
-            }
+    if dot1 < dot2 {
+        if dot3 < dot4 {
+            if dot1 < dot3 { sep1 } else { sep3 }
         } else {
-            if dot3 < dot4 {
-                if dot2 < dot3 { sep2 } else { sep3 }
-            } else {
-                if dot2 < dot4 { sep2 } else { sep4 }
-            }
+            if dot1 < dot4 { sep1 } else { sep4 }
         }
-    )
+    } else {
+        if dot3 < dot4 {
+            if dot2 < dot3 { sep2 } else { sep3 }
+        } else {
+            if dot2 < dot4 { sep2 } else { sep4 }
+        }
+    }
 }
 
 /// Shrinks a rectangle by a factor on all sides.
 #[inline(always)]
 pub fn margin_rectangle(
-    &Rectangle(rect): &Rectangle, 
+    &Rectangle(rect): &Rectangle,
     m: f64
 ) -> Rectangle {
     let w = rect[2] - 2.0 * m;
@@ -159,8 +155,8 @@ pub fn margin_rectangle(
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
 pub fn relative_rectangle(
-    &Rectangle(rect): &Rectangle, 
-    x: f64, 
+    &Rectangle(rect): &Rectangle,
+    x: f64,
     y: f64
 ) -> Rectangle {
     Rectangle([rect[0] + x * rect[2], rect[1] + y * rect[3], rect[2], rect[3]])
@@ -189,7 +185,7 @@ fn test_modular_offset() {
 ///
 /// A simple polygon is one that does not intersect itself.
 /// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
-pub fn area_centroid(polygon: &[f64]) -> (f64, Vec2d) {
+pub fn area_centroid(polygon: &[f64]) -> (f64, [f64, ..2]) {
     let n = polygon.len() / 2;
     let mut sum = 0.0_f64;
     let (mut cx, mut cy) = (0.0_f64, 0.0_f64);
@@ -205,7 +201,7 @@ pub fn area_centroid(polygon: &[f64]) -> (f64, Vec2d) {
 
     let area = 0.5 * sum;
     // 'cx / (6.0 * area)' = 'cx / (3.0 * sum)'
-    let centroid = Vec2d([cx / (3.0 * sum), cy / (3.0 * sum)]);
+    let centroid = [cx / (3.0 * sum), cy / (3.0 * sum)];
     (area, centroid)
 }
 
@@ -222,7 +218,7 @@ pub fn area(polygon: &[f64]) -> f64 {
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn centroid(polygon: &[f64]) -> Vec2d {
+pub fn centroid(polygon: &[f64]) -> [f64, ..2] {
     let (_, res) = area_centroid(polygon);
     res
 }
@@ -234,8 +230,8 @@ pub fn centroid(polygon: &[f64]) -> Vec2d {
 /// One side of the line has opposite sign of the other.
 #[inline(always)]
 pub fn line_side(
-    &Line(line): &Line, 
-    x: f64, 
+    &Line(line): &Line,
+    x: f64,
     y: f64
 ) -> f64 {
     let (ax, ay) = (line[0], line[1]);
@@ -249,8 +245,8 @@ pub fn line_side(
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
 pub fn inside_triangle(
-    &Triangle(triangle): &Triangle, 
-    x: f64, 
+    &Triangle(triangle): &Triangle,
+    x: f64,
     y: f64
 ) -> bool {
     let (ax, ay) = (triangle[0], triangle[1]);
