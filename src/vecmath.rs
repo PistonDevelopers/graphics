@@ -4,7 +4,6 @@
 use {
     Line,
     Matrix2d,
-    Ray,
     Rectangle,
     Triangle
 };
@@ -95,7 +94,7 @@ pub fn identity() -> Matrix2d {
 /// A ray stores starting point and directional vector.
 #[inline(always)]
 pub fn separation(
-    &Ray(ray): &Ray,
+    &ray: &[f64, ..4],
     x: f64,
     y: f64) -> [f64, ..2] {
     // Get the directional vector.

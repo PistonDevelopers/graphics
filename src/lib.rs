@@ -207,17 +207,6 @@ impl Clone for PixelRectangle {
     }
 }
 
-/// [x, y, dir_x, dir_y]
-pub struct Ray(pub [f64, ..4]);
-
-impl Clone for Ray {
-    #[inline(always)]
-    fn clone(&self) -> Ray {
-        let &Ray(r) = self;
-        Ray(r)
-    }
-}
-
 /// [x, y, w, h]
 pub struct Rectangle(pub [f64, ..4]);
 
