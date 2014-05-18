@@ -240,17 +240,6 @@ impl Clone for Triangle {
     }
 }
 
-/// [x, y]
-pub struct Vec2d(pub [f64, ..2]);
-
-impl Clone for Vec2d {
-    #[inline(always)]
-    fn clone(&self) -> Vec2d {
-        let &Vec2d(v) = self;
-        Vec2d(v)
-    }
-}
-
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
 /// that is partially based on an existing structure.
