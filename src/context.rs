@@ -17,6 +17,7 @@ use {
     Line,
     LineContext,
     Matrix2d,
+    Polygon,
     PolygonContext,
     Rectangle,
     RectangleContext,
@@ -191,7 +192,7 @@ fn test_ellipse() {
 
 impl<'a, 'b> AddPolygon<'a, PolygonContext<'a, 'b>> for Context<'a> {
     #[inline(always)]
-    fn polygon(&'a self, polygon: &'b [f64]) -> PolygonContext<'a, 'b> {
+    fn polygon(&'a self, polygon: Polygon<'b>) -> PolygonContext<'a, 'b> {
         PolygonContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
