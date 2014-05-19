@@ -5,6 +5,7 @@ use {
     Color,
     Field,
     Matrix2d,
+    Polygons,
     TweenPolygonsColorContext,
     Value,
 };
@@ -24,7 +25,7 @@ pub struct TweenPolygonsContext<'a, 'b> {
     /// Animation inbetweening factor.
     pub tween_factor: Field<'a, f64>,
     /// The animated polygons.
-    pub polygons: Field<'a, &'b [&'b [f64]]>,
+    pub polygons: Field<'a, Polygons<'b>>,
 }
 
 impl<'a, 'b> Clone for TweenPolygonsContext<'a, 'b> {
