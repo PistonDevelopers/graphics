@@ -1,17 +1,18 @@
 use {
     AddColor,
     Borrowed,
-    Color,
     Field,
-    Matrix2d,
     PolygonColorContext,
     Value,
 };
 use internal::{
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Polygon,
 };
 
 /// A polygon context.
@@ -21,15 +22,15 @@ pub struct PolygonContext<'a, 'b> {
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current polygon.
-    pub polygon: Field<'a, &'b [f64]>
+    pub polygon: Field<'a, Polygon<'b>>
 }
 
 impl<'a, 'b> Clone for PolygonContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> PolygonContext<'static, 'b> {
         PolygonContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
             polygon: Value(*self.polygon.get()),
         }
     }
@@ -74,11 +75,17 @@ for PolygonContext<'a, 'b> {
 
 impl<'a, 'b> AddColor<'a, PolygonColorContext<'a, 'b>> for PolygonContext<'a, 'b> {
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> PolygonColorContext<'a, 'b> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
             polygon: Borrowed(self.polygon.get()),
         }
     }

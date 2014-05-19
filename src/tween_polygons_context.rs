@@ -2,17 +2,19 @@
 use {
     AddColor,
     Borrowed,
-    Color,
     Field,
-    Matrix2d,
     TweenPolygonsColorContext,
     Value,
 };
 use internal::{
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Polygons,
+    Scalar,
 };
 
 /// An animation inbetweening context with color.
@@ -22,19 +24,19 @@ pub struct TweenPolygonsContext<'a, 'b> {
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Animation inbetweening factor.
-    pub tween_factor: Field<'a, f64>,
+    pub tween_factor: Field<'a, Scalar>,
     /// The animated polygons.
-    pub polygons: Field<'a, &'b [&'b [f64]]>,
+    pub polygons: Field<'a, Polygons<'b>>,
 }
 
 impl<'a, 'b> Clone for TweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> TweenPolygonsContext<'static, 'b> {
         TweenPolygonsContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            tween_factor: self.tween_factor.clone(),
-            polygons: self.polygons.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            tween_factor: Value(*self.tween_factor.get()),
+            polygons: Value(*self.polygons.get()),
         }
     }
 }
@@ -42,11 +44,17 @@ impl<'a, 'b> Clone for TweenPolygonsContext<'a, 'b> {
 impl<'a, 'b> AddColor<'a, TweenPolygonsColorContext<'a, 'b>> for TweenPolygonsContext<'a, 'b> {
     /// Creates a RectangleColorContext.
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> TweenPolygonsColorContext<'a, 'b> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> TweenPolygonsColorContext<'a, 'b> {
         TweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Borrowed(self.polygons.get()),
         }

@@ -1,11 +1,10 @@
-use {
-    Matrix2d,
-};
+
 use internal::{
     CanTransform,
     CanViewTransform,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
 };
 use vecmath::{
     identity,

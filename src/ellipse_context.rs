@@ -1,20 +1,20 @@
 use {
     AddColor,
     Borrowed,
-    Color,
     EllipseColorContext,
     Field,
-    Matrix2d,
-    Rectangle,
     Value,
 };
 use internal::{
     CanRectangle,
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasRectangle,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Rectangle,
 };
 
 /// An ellipse context.
@@ -31,9 +31,9 @@ impl<'a> Clone for EllipseContext<'a> {
     #[inline(always)]
     fn clone(&self) -> EllipseContext<'static> {
         EllipseContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            rect: self.rect.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            rect: Value(*self.rect.get()),
         }
     }
 }
@@ -77,12 +77,18 @@ for EllipseContext<'a> {
 
 impl<'a> AddColor<'a, EllipseColorContext<'a>> for EllipseContext<'a> {
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> EllipseColorContext<'a> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> EllipseColorContext<'a> {
         EllipseColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
         }
     }
 }
