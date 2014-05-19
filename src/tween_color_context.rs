@@ -3,10 +3,7 @@ use {
     BackEnd,
     Borrowed,
     Clear,
-    Color,
     Field,
-    Matrix2d,
-    Polygons,
     TweenPolygonsColorContext,
     Value,
 };
@@ -14,9 +11,12 @@ use internal::{
     CanColor,
     CanTransform,
     CanViewTransform,
+    Color,
     HasColor,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Polygons,
 };
 
 /// An animation inbetweening context with color.
@@ -35,10 +35,10 @@ impl<'a> Clone for TweenColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> TweenColorContext<'static> {
         TweenColorContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            color: self.color.clone(),
-            tween_factor: self.tween_factor.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            color: Value(*self.color.get()),
+            tween_factor: Value(*self.tween_factor.get()),
         }
     }
 }
@@ -118,7 +118,7 @@ impl<'a> Clear for TweenColorContext<'a> {
     #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let &Color(color) = self.color.get();
+            let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }

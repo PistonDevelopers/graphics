@@ -8,18 +8,13 @@ use {
     AddRectangle,
     AddTween,
     Borrowed,
-    Color,
     ColorContext,
     EllipseContext,
     Field,
     Image,
     ImageRectangleContext,
-    Line,
     LineContext,
-    Matrix2d,
-    Polygon,
     PolygonContext,
-    Rectangle,
     RectangleContext,
     TweenContext,
     Value,
@@ -27,8 +22,12 @@ use {
 use internal::{
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Polygon,
+    Scalar,
 };
 
 /// Drawing 2d context.
@@ -43,8 +42,8 @@ impl<'a> Clone for Context<'a> {
     #[inline(always)]
     fn clone(&self) -> Context<'static> {
         Context {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
         }
     }
 }
@@ -87,14 +86,14 @@ impl<'a> Context<'a> {
     /// Creates a new drawing context.
     pub fn new() -> Context {
         Context {
-            base:  Value(Matrix2d(
+            base:  Value(
                 [1.0, 0.0, 0.0,
                  0.0, 1.0, 0.0]
-            )),
-            transform: Value(Matrix2d(
+            ),
+            transform: Value(
                 [1.0, 0.0, 0.0,
                  0.0, 1.0, 0.0]
-            )),
+            ),
         }
     }
 }
@@ -107,17 +106,17 @@ fn test_context() {
     {
         let d = c.trans(20.0, 40.0);
         let d = d.trans(10.0, 10.0);
-        let &Matrix2d(transform) = d.transform.get();
+        let transform = d.transform.get();
         assert_eq!(transform[2], 30.0);
         assert_eq!(transform[5], 50.0);
     }
     
-    let &Matrix2d(transform) = c.transform.get();
+    let transform = c.transform.get();
     assert_eq!(transform[2], 0.0);
     assert_eq!(transform[5], 0.0);
 
     let c = c.rot_deg(90.0);
-    let &Matrix2d(transform) = c.transform.get();
+    let transform = c.transform.get();
     assert!((transform[0] - 0.0).abs() < 0.00001);
     assert!((transform[1] + 1.0).abs() < 0.00001);
 }
@@ -128,18 +127,18 @@ fn test_scale() {
 
     let c = Context::new();
     let c = c.scale(2.0, 3.0);
-    let &Matrix2d(transform) = c.transform.get();
+    let transform = c.transform.get();
     assert!((transform[0] - 2.0).abs() < 0.00001);
     assert!((transform[4] - 3.0).abs() < 0.00001);
 }
 
 impl<'a> AddRectangle<'a, RectangleContext<'a>> for Context<'a> {
     #[inline(always)]
-    fn rect(&'a self, x: f64, y: f64, w: f64, h: f64) -> RectangleContext<'a> {
+    fn rect(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> RectangleContext<'a> {
         RectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(Rectangle([x, y, w, h])),
+            rect: Value([x, y, w, h]),
         }
     }
 }
@@ -148,17 +147,23 @@ impl<'a> AddRectangle<'a, RectangleContext<'a>> for Context<'a> {
 fn test_rect() {
     let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 50.0);
-    let &Rectangle(rect) = d.rect.get();
+    let rect = d.rect.get();
     assert_eq!(rect[2], 100.0);
 }
 
 impl<'a> AddColor<'a, ColorContext<'a>> for Context<'a> {
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> ColorContext<'a> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> ColorContext<'a> {
         ColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
         }
     }
 }
@@ -167,17 +172,17 @@ impl<'a> AddColor<'a, ColorContext<'a>> for Context<'a> {
 fn test_rgba() {
     let c = Context::new();
     let d: ColorContext = c.rgba(1.0, 0.0, 0.0, 1.0);
-    let &Color(color) = d.color.get();
+    let color = d.color.get();
     assert_eq!(color[0], 1.0);
 }
 
 impl<'a> AddEllipse<'a, EllipseContext<'a>> for Context<'a> {
     #[inline(always)]
-    fn ellipse(&'a self, x: f64, y: f64, w: f64, h: f64) -> EllipseContext<'a> {
+    fn ellipse(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> EllipseContext<'a> {
         EllipseContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(Rectangle([x, y, w, h])),
+            rect: Value([x, y, w, h]),
         }
     }
 }
@@ -186,7 +191,7 @@ impl<'a> AddEllipse<'a, EllipseContext<'a>> for Context<'a> {
 fn test_ellipse() {
     let c = Context::new();
     let d: EllipseContext = c.ellipse(0.0, 0.0, 100.0, 100.0);
-    let &Rectangle(rect) = d.rect.get();    
+    let rect = d.rect.get();    
     assert_eq!(rect[2], 100.0);
 }
 
@@ -207,12 +212,12 @@ impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
         ImageRectangleContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(Rectangle([
+            rect: Value([
                 0.0, 
                 0.0, 
                 image.source_rect[2] as f64, 
                 image.source_rect[3] as f64
-            ])),
+            ]),
             image: Value(image),
         }
     }
@@ -220,7 +225,7 @@ impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
 
 impl<'a> AddTween<'a, TweenContext<'a>> for Context<'a> {
     #[inline(always)]
-    fn lerp(&'a self, tween_factor: f64) -> TweenContext<'a> {
+    fn lerp(&'a self, tween_factor: Scalar) -> TweenContext<'a> {
         TweenContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
@@ -231,11 +236,11 @@ impl<'a> AddTween<'a, TweenContext<'a>> for Context<'a> {
 
 impl<'a> AddLine<'a, LineContext<'a>> for Context<'a> {
     #[inline(always)]
-    fn line(&'a self, x1: f64, y1: f64, x2: f64, y2: f64) -> LineContext<'a> {
+    fn line(&'a self, x1: Scalar, y1: Scalar, x2: Scalar, y2: Scalar) -> LineContext<'a> {
         LineContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            line: Value(Line([x1, y1, x2, y2])),
+            line: Value([x1, y1, x2, y2]),
         }
     }
 }

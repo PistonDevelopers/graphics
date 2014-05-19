@@ -1,10 +1,7 @@
 use {
     AddColor,
     Borrowed,
-    Color,
     Field,
-    Matrix2d,
-    Rectangle,
     BevelRectangleColorContext,
     Value,
 };
@@ -12,9 +9,13 @@ use internal::{
     CanRectangle,
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasRectangle,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Radius,
+    Rectangle,
 };
 
 /// A bevel rectangle context.
@@ -26,17 +27,17 @@ pub struct BevelRectangleContext<'a> {
     /// Current rectangle.
     pub rect: Field<'a, Rectangle>,
     /// Current bevel radius.
-    pub bevel_radius: Field<'a, f64>,
+    pub bevel_radius: Field<'a, Radius>,
 }
 
 impl<'a> Clone for BevelRectangleContext<'a> {
     #[inline(always)]
     fn clone(&self) -> BevelRectangleContext<'static> {
         BevelRectangleContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            rect: self.rect.clone(),
-            bevel_radius: self.bevel_radius.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            rect: Value(*self.rect.get()),
+            bevel_radius: Value(*self.bevel_radius.get()),
         }
     }
 }
@@ -101,11 +102,17 @@ impl<'a> CanRectangle<'a, BevelRectangleContext<'a>, Rectangle> for BevelRectang
 impl<'a> AddColor<'a, BevelRectangleColorContext<'a>> for BevelRectangleContext<'a> {
     /// Creates a RectangleColorContext.
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> BevelRectangleColorContext<'a> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> BevelRectangleColorContext<'a> {
         BevelRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
             rect: Borrowed(self.rect.get()),
             bevel_radius: Borrowed(self.bevel_radius.get()),
         }

@@ -6,36 +6,45 @@ use std::f64::consts::{
     FRAC_PI_2,
 };
 use {
-    Color,
     Image,
-    Line,
-    Matrix2d,
-    Rectangle,
 };
 use interpolation::{lerp};
+use internal::{
+    Color,
+    Line,
+    Matrix2d,
+    Polygon,
+    Polygons,
+    Radius,
+    Rectangle,
+    Scalar,
+    Vec2d,
+};
 use vecmath::{
     multiply,
     orient,
     translate,
 };
 
+/// Transformed x coordinate as f32.
 #[inline(always)]
-fn tx(&Matrix2d(m): &Matrix2d, x: f64, y: f64) -> f32 {
+fn tx(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
     (m[0] * x + m[1] * y + m[2]) as f32
 }
 
+/// Transformed y coordinate as f32.
 #[inline(always)]
-fn ty(&Matrix2d(m): &Matrix2d, x: f64, y: f64) -> f32 {
+fn ty(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
     (m[3] * x + m[4] * y + m[5]) as f32
 }
 
 /// Streams tweened polygons using linear interpolation.
 #[inline(always)]
 pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
-    m: &Matrix2d,
-    polygons: &[&[f64]],
-    tween_factor: f64,
-    color: &Color,
+    m: Matrix2d,
+    polygons: Polygons,
+    tween_factor: Scalar,
+    color: Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let poly_len = polygons.len() as f64;
@@ -70,9 +79,9 @@ pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
 #[inline(always)]
 pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
     resolution: uint,
-    m: &Matrix2d,
-    &Rectangle(rect): &Rectangle,
-    color: &Color,
+    m: Matrix2d,
+    rect: Rectangle,
+    color: Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
@@ -93,21 +102,21 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
 #[inline(always)]
 pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
     resolution_cap: uint,
-    m: &Matrix2d,
-    &Line(line): &Line,
-    round_border_radius: &f64,
-    color: &Color,
+    m: Matrix2d,
+    line: Line,
+    round_border_radius: Radius,
+    color: Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
-    let radius = *round_border_radius;
+    let radius = round_border_radius;
     let (x1, y1, x2, y2) = (line[0], line[1], line[2], line[3]);
     let (dx, dy) = (x2 - x1, y2 - y1);
     let w = (dx * dx + dy * dy).sqrt();
-    let m = multiply(m, &translate(x1, y1));
-    let m = multiply(&m, &orient(dx, dy));
+    let m = multiply(m, translate(x1, y1));
+    let m = multiply(m, orient(dx, dy));
     let n = resolution_cap * 2;
     let mut i = 0u;
-    stream_polygon_tri_list_xy_f32_rgba_f32(&m, || {
+    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
         if i >= n { return None; }
 
         let j = i;
@@ -139,14 +148,14 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
 #[inline(always)]
 pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
     resolution_corner: uint,
-    m: &Matrix2d,
-    &Rectangle(rect): &Rectangle,
-    round_radius: &f64,
-    color: &Color,
+    m: Matrix2d,
+    rect: Rectangle,
+    round_radius: Radius,
+    color: Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
-    let radius = *round_radius;
+    let radius = round_radius;
     let n = resolution_corner * 4;
     let mut i = 0u;
     stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
@@ -199,9 +208,9 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
 /// Streams a polygon into tri list with color per vertex.
 /// Uses buffers that fit inside L1 cache.
 pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
-    m: &Matrix2d,
-    polygon: || -> Option<[f64, ..2]>,
-    &Color(color): &Color,
+    m: Matrix2d,
+    polygon: || -> Option<Vec2d>,
+    color: Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let mut vertices: [f32, ..740] = [0.0, ..740];
@@ -269,9 +278,9 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
 /// Splits polygon into convex segments with one color per vertex.
 /// Create a buffer that fits into L1 cache with 1KB overhead.
 pub fn with_polygon_tri_list_xy_f32_rgba_f32(
-    m: &Matrix2d,
-    polygon: &[f64],
-    color: &Color,
+    m: Matrix2d,
+    polygon: Polygon,
+    color: Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
     let n = polygon.len();
@@ -289,8 +298,8 @@ pub fn with_polygon_tri_list_xy_f32_rgba_f32(
 /// Creates triangle list vertices from rectangle.
 #[inline(always)]
 pub fn rect_tri_list_xy_f32(
-    m: &Matrix2d,
-    &Rectangle(rect): &Rectangle
+    m: Matrix2d,
+    rect: Rectangle
 ) -> [f32, ..12] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (x2, y2) = (x + w, y + h);
@@ -301,7 +310,7 @@ pub fn rect_tri_list_xy_f32(
 /// Creates triangle list colors from rectangle.
 #[inline(always)]
 pub fn rect_tri_list_rgba_f32(
-    &Color(color): &Color
+    color: Color
 ) -> [f32, ..48] {
     let (r, g, b, a) = (color[0], color[1], color[2], color[3]);
     [r, g, b, a, // 0

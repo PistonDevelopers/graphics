@@ -1,4 +1,4 @@
-use {
+use internal::{
     Polygons,
 };
 

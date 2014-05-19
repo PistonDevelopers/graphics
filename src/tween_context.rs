@@ -2,10 +2,7 @@ use {
     AddColor,
     AddPolygons,
     Borrowed,
-    Color,
     Field,
-    Matrix2d,
-    Polygons,
     TweenColorContext,
     TweenPolygonsContext,
     Value,
@@ -13,8 +10,12 @@ use {
 use internal::{
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Polygons,
+    Scalar,
 };
 
 /// An animation inbetweening context.
@@ -24,28 +25,34 @@ pub struct TweenContext<'a> {
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Animation inbetweening factor.
-    pub tween_factor: Field<'a, f64>,
+    pub tween_factor: Field<'a, Scalar>,
 }
 
 impl<'a> Clone for TweenContext<'a> {
     #[inline(always)]
     fn clone(&self) -> TweenContext<'static> {
         TweenContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            tween_factor: self.tween_factor.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            tween_factor: Value(*self.tween_factor.get()),
         }
     }
 }
 
 impl<'a> AddColor<'a, TweenColorContext<'a>> for TweenContext<'a> {
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> TweenColorContext<'a> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> TweenColorContext<'a> {
         TweenColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
         }
     }
 }

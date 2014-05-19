@@ -2,11 +2,8 @@ use {
     BackEnd,
     Borrowed,
     Clear,
-    Color,
     Field,
     Fill,
-    Matrix2d,
-    Rectangle,
     Value,
 };
 use triangulation::{
@@ -17,10 +14,14 @@ use internal::{
     CanRectangle,
     CanTransform,
     CanViewTransform,
+    Color,
     HasColor,
     HasRectangle,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Radius,
+    Rectangle,
 };
 
 /// A rectangle color context.
@@ -32,7 +33,7 @@ pub struct BevelRectangleColorContext<'a> {
     /// Current rectangle.
     pub rect: Field<'a, Rectangle>,
     /// Current bevel radius.
-    pub bevel_radius: Field<'a, f64>,
+    pub bevel_radius: Field<'a, Radius>,
     /// Current color.
     pub color: Field<'a, Color>,
 }
@@ -41,11 +42,11 @@ impl<'a> Clone for BevelRectangleColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> BevelRectangleColorContext<'static> {
         BevelRectangleColorContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            rect: self.rect.clone(),
-            bevel_radius: self.bevel_radius.clone(),
-            color: self.color.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            rect: Value(*self.rect.get()),
+            bevel_radius: Value(*self.bevel_radius.get()),
+            color: Value(*self.color.get()),
         }
     }
 }
@@ -135,7 +136,7 @@ impl<'a> Clear for BevelRectangleColorContext<'a> {
     #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let &Color(color) = self.color.get();
+            let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();
@@ -149,7 +150,7 @@ impl<'a> Fill<'a> for BevelRectangleColorContext<'a> {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let bevel_radius = self.bevel_radius.get();
-            let &Color(color) = self.color.get();
+            let color = self.color.get();
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -157,10 +158,10 @@ impl<'a> Fill<'a> for BevelRectangleColorContext<'a> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_rectangle_tri_list_xy_f32_rgba_f32(
                 2,
-                self.transform.get(),
-                rect,
-                bevel_radius,
-                &Color(color),
+                *self.transform.get(),
+                *rect,
+                *bevel_radius,
+                *color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }

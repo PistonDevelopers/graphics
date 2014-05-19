@@ -2,18 +2,19 @@
 use {
     AddColor,
     Borrowed,
-    Color,
     Field,
-    Line,
-    Matrix2d,
     BevelBorderLineColorContext,
     Value,
 };
 use internal::{
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasTransform,
     HasViewTransform,
+    Line,
+    Matrix2d,
+    Radius,
 };
 
 /// A line context with bevel border information.
@@ -25,17 +26,17 @@ pub struct BevelBorderLineContext<'a> {
     /// Current line.
     pub line: Field<'a, Line>,
     /// Current bevel border.
-    pub bevel_border_radius: Field<'a, f64>,
+    pub bevel_border_radius: Field<'a, Radius>,
 }
 
 impl<'a> Clone for BevelBorderLineContext<'a> {
     #[inline(always)]
     fn clone(&self) -> BevelBorderLineContext<'static> {
         BevelBorderLineContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            line: self.line.clone(),
-            bevel_border_radius: self.bevel_border_radius.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            line: Value(*self.line.get()),
+            bevel_border_radius: Value(*self.bevel_border_radius.get()),
         }
     }
 }
@@ -80,12 +81,18 @@ impl<'a> CanViewTransform<'a, BevelBorderLineContext<'a>, Matrix2d> for BevelBor
 
 impl<'a> AddColor<'a, BevelBorderLineColorContext<'a>> for BevelBorderLineContext<'a> {
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> BevelBorderLineColorContext<'a> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> BevelBorderLineColorContext<'a> {
         BevelBorderLineColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
             bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
         }
     }

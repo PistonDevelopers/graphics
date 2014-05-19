@@ -7,13 +7,10 @@ use {
     BevelRectangleColorContext,
     Borrowed,
     Clear,
-    Color,
     Field,
     Fill,
     Image,
     ImageRectangleColorContext,
-    Matrix2d,
-    Rectangle,
     RoundRectangleColorContext,
     Value,
 };
@@ -26,10 +23,13 @@ use internal::{
     CanRectangle,
     CanTransform,
     CanViewTransform,
+    Color,
     HasColor,
     HasRectangle,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Rectangle,
 };
 
 /// A rectangle color context.
@@ -48,10 +48,10 @@ impl<'a> Clone for RectangleColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> RectangleColorContext<'static> {
         RectangleColorContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            rect: self.rect.clone(),
-            color: self.color.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            rect: Value(*self.rect.get()),
+            color: Value(*self.color.get()),
         }
     }
 }
@@ -138,15 +138,15 @@ impl<'a> Fill<'a> for RectangleColorContext<'a> {
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
-            let &Color(color) = self.color.get();
+            let color = self.color.get();
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.tri_list_xy_f32_rgba_f32(
-                rect_tri_list_xy_f32(self.transform.get(), rect),
-                rect_tri_list_rgba_f32(&Color(color))
+                rect_tri_list_xy_f32(*self.transform.get(), *rect),
+                rect_tri_list_rgba_f32(*color)
             );
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
@@ -158,7 +158,7 @@ impl<'a> Fill<'a> for RectangleColorContext<'a> {
 impl<'a> Clear for RectangleColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let &Color(color) = self.color.get();
+            let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();

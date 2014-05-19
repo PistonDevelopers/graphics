@@ -127,7 +127,6 @@ mod ellipse_context;
 mod fill;
 mod image_rectangle_color_context;
 mod image_rectangle_context;
-mod internal;
 mod line_color_context;
 mod line_context;
 mod polygon_color_context;
@@ -150,96 +149,11 @@ mod tween_polygons_color_context;
 mod tween_polygons_context;
 mod view;
 
+pub mod internal;
 pub mod interpolation;
 pub mod modular_index;
 pub mod triangulation;
 pub mod vecmath;
-
-/// [red, green, blue, alpha]
-pub struct Color(pub [f32, ..4]);
-
-impl Clone for Color {
-    #[inline(always)]
-    fn clone(&self) -> Color {
-        let &Color(c) = self;
-        Color(c)
-    }
-}
-
-/// [x1, y1, x2, y2]
-pub struct Line(pub [f64, ..4]);
-
-impl Clone for Line {
-    #[inline(always)]
-    fn clone(&self) -> Line {
-        let &Line(c) = self;
-        Line(c)
-    }
-}
-
-/// [m00, m01, m02, m10, m11, m12]
-///
-/// The first 3 numbers transforms `x`,
-/// the last 3 numbers transforms `y`:
-///
-/// ```
-/// tx = m00 * x + m01 * y + m02;
-/// ty = m10 * x + m11 * y + m12;
-/// ```
-pub struct Matrix2d(pub [f64, ..6]);
-
-impl Clone for Matrix2d {
-    #[inline(always)]
-    fn clone(&self) -> Matrix2d {
-        let &Matrix2d(m) = self;
-        Matrix2d(m)
-    }
-}
-
-/// [x, y, w, h]
-pub struct PixelRectangle(pub [u32, ..4]);
-
-impl Clone for PixelRectangle {
-    #[inline(always)]
-    fn clone(&self) -> PixelRectangle {
-        let &PixelRectangle(p) = self;
-        PixelRectangle(p)
-    }
-}
-
-/// [x0, y0, x1, y1, ...]
-pub type Polygon<'a> = &'a [f64];
-
-/// A slice of polygons.
-pub type Polygons<'a> = &'a [Polygon<'a>];
-
-/// [x, y, dir_x, dir_y]
-pub type Ray = [f64, ..4];
-
-/// [x, y, w, h]
-pub struct Rectangle(pub [f64, ..4]);
-
-impl Clone for Rectangle {
-    #[inline(always)]
-    fn clone(&self) -> Rectangle {
-        let &Rectangle(r) = self;
-        Rectangle(r)
-    }
-}
-
-/// [x1, y1, x2, y2, x3, y3]
-pub struct Triangle(pub [f64, ..6]);
-
-impl Clone for Triangle {
-    #[inline(always)]
-    fn clone(&self) -> Triangle {
-        let &Triangle(t) = self;
-        Triangle(t)
-    }
-}
-
-/// [x, y]
-pub type Vec2d = [f64, ..2];
 
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
@@ -262,13 +176,6 @@ impl<'a, T> Field<'a, T> {
     }
 }
 
-impl<'a, T: Clone> Clone for Field<'a, T> {
-    #[inline(always)]
-    fn clone(&self) -> Field<'static, T> {
-        Value(self.get().clone())
-    }
-}
-
 /// Represents an image.
 ///
 /// Images are often packed together in sprite sheets.
@@ -288,7 +195,7 @@ pub struct Image {
     /// The pixel height of the texture.
     pub texture_height: u32,
     /// The source rectangle in the texture.
-    pub source_rect: [u32, ..4],
+    pub source_rect: internal::PixelRectangle,
 }
 
 impl Clone for Image {

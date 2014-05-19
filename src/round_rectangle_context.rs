@@ -1,10 +1,7 @@
 use {
     AddColor,
     Borrowed,
-    Color,
     Field,
-    Matrix2d,
-    Rectangle,
     RoundRectangleColorContext,
     Value,
 };
@@ -12,9 +9,13 @@ use internal::{
     CanRectangle,
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasRectangle,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Radius,
+    Rectangle,
 };
 
 /// A round rectangle context.
@@ -26,17 +27,17 @@ pub struct RoundRectangleContext<'a> {
     /// Current rectangle.
     pub rect: Field<'a, Rectangle>,
     /// Current roundness radius.
-    pub round_radius: Field<'a, f64>,
+    pub round_radius: Field<'a, Radius>,
 }
 
 impl<'a> Clone for RoundRectangleContext<'a> {
     #[inline(always)]
     fn clone(&self) -> RoundRectangleContext<'static> {
         RoundRectangleContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            rect: self.rect.clone(),
-            round_radius: self.round_radius.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            rect: Value(*self.rect.get()),
+            round_radius: Value(*self.round_radius.get()),
         }
     }
 }
@@ -101,11 +102,17 @@ impl<'a> CanRectangle<'a, RoundRectangleContext<'a>, Rectangle> for RoundRectang
 impl<'a> AddColor<'a, RoundRectangleColorContext<'a>> for RoundRectangleContext<'a> {
     /// Creates a RectangleColorContext.
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> RoundRectangleColorContext<'a> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> RoundRectangleColorContext<'a> {
         RoundRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
         }
