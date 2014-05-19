@@ -75,6 +75,12 @@ pub fn identity() -> Matrix2d {
      0.0, 1.0, 0.0]
 }
 
+/// Extract scale information from amtrix.
+#[inline(always)]
+pub fn get_scale(m: Matrix2d) -> Vec2d {
+    [(m[0] * m[0] + m[3] * m[3]).sqrt(), (m[1] * m[1] + m[4] * m[4]).sqrt()]
+}
+
 /// Compute the shortest vector from point to ray.
 /// A ray stores starting point and directional vector.
 #[inline(always)]
