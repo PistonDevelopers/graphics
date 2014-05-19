@@ -4,7 +4,10 @@
 use {
     Line,
     Matrix2d,
+    Polygon,
+    Ray,
     Rectangle,
+    Vec2d,
     Triangle
 };
 use modular_index::{previous};
@@ -94,9 +97,10 @@ pub fn identity() -> Matrix2d {
 /// A ray stores starting point and directional vector.
 #[inline(always)]
 pub fn separation(
-    &ray: &[f64, ..4],
+    ray: &Ray,
     x: f64,
-    y: f64) -> [f64, ..2] {
+    y: f64
+) -> [f64, ..2] {
     // Get the directional vector.
     let (dir_x, dir_y) = (ray[2], ray[3]);
     // Get displacement vector from point.
@@ -114,11 +118,11 @@ pub fn separation(
 /// The separation returned can be used to solve collision of rectangles.
 #[inline(always)]
 pub fn least_separation_4(
-    &sep1: &[f64, ..2],
-    &sep2: &[f64, ..2],
-    &sep3: &[f64, ..2],
-    &sep4: &[f64, ..2]
-) -> [f64, ..2] {
+    &sep1: &Vec2d,
+    &sep2: &Vec2d,
+    &sep3: &Vec2d,
+    &sep4: &Vec2d
+) -> Vec2d {
     let dot1 = sep1[0] * sep1[0] + sep1[1] * sep1[1];
     let dot2 = sep2[0] * sep2[0] + sep2[1] * sep2[1];
     let dot3 = sep3[0] * sep3[0] + sep3[1] * sep3[1];
@@ -164,7 +168,11 @@ pub fn relative_rectangle(
 
 /// Computes modular offset safely for numbers.
 #[inline(always)]
-pub fn modular_offset<T: Add<T, T> + Rem<T, T>>(n: &T, i: &T, off: &T) -> T {
+pub fn modular_offset<T: Add<T, T> + Rem<T, T>>(
+    n: &T, 
+    i: &T, 
+    off: &T
+) -> T {
     (*i + (*off % *n + *n)) % *n
 }
 
@@ -185,7 +193,7 @@ fn test_modular_offset() {
 ///
 /// A simple polygon is one that does not intersect itself.
 /// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
-pub fn area_centroid(polygon: &[f64]) -> (f64, [f64, ..2]) {
+pub fn area_centroid(polygon: Polygon) -> (f64, Vec2d) {
     let n = polygon.len() / 2;
     let mut sum = 0.0_f64;
     let (mut cx, mut cy) = (0.0_f64, 0.0_f64);
@@ -209,7 +217,7 @@ pub fn area_centroid(polygon: &[f64]) -> (f64, [f64, ..2]) {
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn area(polygon: &[f64]) -> f64 {
+pub fn area(polygon: Polygon) -> f64 {
     let (res, _) = area_centroid(polygon);
     res
 }
@@ -218,7 +226,7 @@ pub fn area(polygon: &[f64]) -> f64 {
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn centroid(polygon: &[f64]) -> [f64, ..2] {
+pub fn centroid(polygon: Polygon) -> Vec2d {
     let (_, res) = area_centroid(polygon);
     res
 }

@@ -207,6 +207,12 @@ impl Clone for PixelRectangle {
     }
 }
 
+/// [x0, y0, x1, y1, ...]
+pub type Polygon<'a> = &'a [f64];
+
+/// [x, y, dir_x, dir_y]
+pub type Ray = [f64, ..4];
+
 /// [x, y, w, h]
 pub struct Rectangle(pub [f64, ..4]);
 
@@ -228,6 +234,9 @@ impl Clone for Triangle {
         Triangle(t)
     }
 }
+
+/// [x, y]
+pub type Vec2d = [f64, ..2];
 
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
