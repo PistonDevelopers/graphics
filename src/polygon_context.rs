@@ -4,6 +4,7 @@ use {
     Color,
     Field,
     Matrix2d,
+    Polygon,
     PolygonColorContext,
     Value,
 };
@@ -21,7 +22,7 @@ pub struct PolygonContext<'a, 'b> {
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current polygon.
-    pub polygon: Field<'a, &'b [f64]>
+    pub polygon: Field<'a, Polygon<'b>>
 }
 
 impl<'a, 'b> Clone for PolygonContext<'a, 'b> {
