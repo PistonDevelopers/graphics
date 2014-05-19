@@ -218,17 +218,6 @@ impl Clone for Rectangle {
     }
 }
 
-/// [x1, y1, x2, y2, x3, y3]
-pub struct Triangle(pub [f64, ..6]);
-
-impl Clone for Triangle {
-    #[inline(always)]
-    fn clone(&self) -> Triangle {
-        let &Triangle(t) = self;
-        Triangle(t)
-    }
-}
-
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
 /// that is partially based on an existing structure.
