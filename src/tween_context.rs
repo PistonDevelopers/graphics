@@ -5,6 +5,7 @@ use {
     Color,
     Field,
     Matrix2d,
+    Polygons,
     TweenColorContext,
     TweenPolygonsContext,
     Value,
@@ -51,7 +52,7 @@ impl<'a> AddColor<'a, TweenColorContext<'a>> for TweenContext<'a> {
 
 impl<'a, 'b> AddPolygons<'a, TweenPolygonsContext<'a, 'b>> for TweenContext<'a> {
     #[inline(always)]
-    fn polygons(&'a self, polygons: &'b [&'b [f64]]) -> TweenPolygonsContext<'a, 'b> {
+    fn polygons(&'a self, polygons: Polygons<'b>) -> TweenPolygonsContext<'a, 'b> {
         TweenPolygonsContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
