@@ -210,6 +210,9 @@ impl Clone for PixelRectangle {
 /// [x0, y0, x1, y1, ...]
 pub type Polygon<'a> = &'a [f64];
 
+/// A slice of polygons.
+pub type Polygons<'a> = &'a [Polygon<'a>];
+
 /// [x, y, dir_x, dir_y]
 pub type Ray = [f64, ..4];
 
