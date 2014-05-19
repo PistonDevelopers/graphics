@@ -6,6 +6,7 @@ use {
     Color,
     Field,
     Matrix2d,
+    Polygons,
     TweenPolygonsColorContext,
     Value,
 };
@@ -102,7 +103,7 @@ impl<'a> CanViewTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorCon
 
 impl<'a, 'b> AddPolygons<'a, TweenPolygonsColorContext<'a, 'b>> for TweenColorContext<'a> {
     #[inline(always)]
-    fn polygons(&'a self, polygons: &'b [&'b [f64]]) -> TweenPolygonsColorContext<'a, 'b> {
+    fn polygons(&'a self, polygons: Polygons<'b>) -> TweenPolygonsColorContext<'a, 'b> {
         TweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
