@@ -17,6 +17,7 @@ use {
     Line,
     LineColorContext,
     Matrix2d,
+    Polygon,
     PolygonColorContext,
     Rectangle,
     RectangleColorContext,
@@ -143,7 +144,7 @@ impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
 
 impl<'a, 'b> AddPolygon<'a, PolygonColorContext<'a, 'b>> for ColorContext<'a> {
     #[inline(always)]
-    fn polygon(&'a self, polygon: &'b [f64]) -> PolygonColorContext<'a, 'b> {
+    fn polygon(&'a self, polygon: Polygon<'b>) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
