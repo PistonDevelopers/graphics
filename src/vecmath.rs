@@ -5,6 +5,7 @@ use {
     Line,
     Matrix2d,
     Rectangle,
+    Triangle
 };
 use modular_index::{previous};
 
@@ -244,7 +245,7 @@ pub fn line_side(
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
 pub fn inside_triangle(
-    &triangle: &[f64, ..6],
+    &Triangle(triangle): &Triangle,
     x: f64,
     y: f64
 ) -> bool {
@@ -269,7 +270,7 @@ pub fn inside_triangle(
 /// This is done by computing which side the third vertex is relative to
 /// the line starting from the first vertex to second vertex.
 pub fn triangle_face(
-    &triangle: &[f64, ..6]
+    &Triangle(triangle): &Triangle
 ) -> bool {
     let (ax, ay) = (triangle[0], triangle[1]);
     let (bx, by) = (triangle[2], triangle[3]);
@@ -283,9 +284,9 @@ pub fn triangle_face(
 #[test]
 fn test_triangle() {
     // Triangle counter clock-wise.
-    let tri_1 = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0];
+    let tri_1 = Triangle([0.0, 0.0, 1.0, 0.0, 1.0, 1.0]);
     // Triangle clock-wise.
-    let tri_2 = [0.0, 0.0, 1.0, 1.0, 1.0, 0.0];
+    let tri_2 = Triangle([0.0, 0.0, 1.0, 1.0, 1.0, 0.0]);
     let (x, y) = (0.5, 0.25);
     assert_eq!(inside_triangle(&tri_1, x, y), true);
     assert_eq!(inside_triangle(&tri_2, x, y), true);
