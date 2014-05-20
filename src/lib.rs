@@ -76,6 +76,7 @@ pub use Draw = draw::Draw;
 pub use EllipseContext = ellipse_context::EllipseContext;
 pub use EllipseColorContext = ellipse_color_context::EllipseColorContext;
 pub use Fill = fill::Fill;
+pub use Image = image::Image;
 pub use ImageRectangleContext = image_rectangle_context::ImageRectangleContext;
 pub use ImageRectangleColorContext = image_rectangle_color_context::ImageRectangleColorContext;
 pub use LineContext = line_context::LineContext;
@@ -125,6 +126,7 @@ mod draw;
 mod ellipse_color_context;
 mod ellipse_context;
 mod fill;
+mod image;
 mod image_rectangle_color_context;
 mod image_rectangle_context;
 mod line_color_context;
@@ -172,40 +174,6 @@ impl<'a, T> Field<'a, T> {
         match *self {
             Value(ref val) => val,
             Borrowed(rval) => rval,
-        }
-    }
-}
-
-/// Represents an image.
-///
-/// Images are often packed together in sprite sheets.
-/// For this reason it refers to a rectangle within a texture.
-///
-/// The texture is a unique identifier recognized by the back-end.
-/// An image contains the size of a texture to be able to
-/// compute normalized coordinates.
-///
-/// There is no garbage collection of textures,
-/// this responsibility is given to the back-end.
-pub struct Image {
-    /// A unique identifier of the texture, recognizable by back-end.
-    pub texture_id: uint,
-    /// The pixel width of the texture.
-    pub texture_width: u32,
-    /// The pixel height of the texture.
-    pub texture_height: u32,
-    /// The source rectangle in the texture.
-    pub source_rect: internal::PixelRectangle,
-}
-
-impl Clone for Image {
-    #[inline(always)]
-    fn clone(&self) -> Image {
-        Image {
-            texture_id: self.texture_id,
-            texture_width: self.texture_width,
-            texture_height: self.texture_height,
-            source_rect: self.source_rect,
         }
     }
 }
