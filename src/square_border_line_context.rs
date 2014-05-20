@@ -1,18 +1,19 @@
 use {
     AddColor,
     Borrowed,
-    Color,
     Field,
-    Line,
-    Matrix2d,
     SquareBorderLineColorContext,
     Value,
 };
 use internal::{
     CanTransform,
     CanViewTransform,
+    ColorComponent,
     HasTransform,
     HasViewTransform,
+    Line,
+    Matrix2d,
+    Radius,
 };
 
 /// A line context with square border information.
@@ -24,17 +25,17 @@ pub struct SquareBorderLineContext<'a> {
     /// Current line.
     pub line: Field<'a, Line>,
     /// Current square border.
-    pub square_border_radius: Field<'a, f64>,
+    pub square_border_radius: Field<'a, Radius>,
 }
 
 impl<'a> Clone for SquareBorderLineContext<'a> {
     #[inline(always)]
     fn clone(&self) -> SquareBorderLineContext<'static> {
         SquareBorderLineContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            line: self.line.clone(),
-            square_border_radius: self.square_border_radius.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            line: Value(*self.line.get()),
+            square_border_radius: Value(*self.square_border_radius.get()),
         }
     }
 }
@@ -80,12 +81,18 @@ impl<'a> CanViewTransform<'a, SquareBorderLineContext<'a>, Matrix2d> for SquareB
 
 impl<'a> AddColor<'a, SquareBorderLineColorContext<'a>> for SquareBorderLineContext<'a> {
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> SquareBorderLineColorContext<'a> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> SquareBorderLineColorContext<'a> {
         SquareBorderLineColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
             square_border_radius: Borrowed(self.square_border_radius.get()),
         }
     }

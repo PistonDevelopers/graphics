@@ -9,16 +9,12 @@ use {
     BackEnd,
     Borrowed,
     Clear,
-    Color,
     EllipseColorContext,
     Field,
     Image,
     ImageRectangleColorContext,
-    Line,
     LineColorContext,
-    Matrix2d,
     PolygonColorContext,
-    Rectangle,
     RectangleColorContext,
     TweenColorContext,
     Value,
@@ -27,9 +23,13 @@ use internal::{
     CanColor,
     CanTransform,
     CanViewTransform,
+    Color,
     HasColor,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Polygon,
+    Scalar,
 };
 
 /// A context with color information.
@@ -46,9 +46,9 @@ impl<'a> Clone for ColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> ColorContext<'static> {
         ColorContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            color: self.color.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            color: Value(*self.color.get()),
         }
     }
 }
@@ -109,12 +109,12 @@ impl<'a> CanColor<'a, ColorContext<'a>, Color> for ColorContext<'a> {
 
 impl<'a> AddRectangle<'a, RectangleColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
-    fn rect(&'a self, x: f64, y: f64, w: f64, h: f64) -> RectangleColorContext<'a> {
+    fn rect(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> RectangleColorContext<'a> {
         RectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
-            rect: Value(Rectangle([x, y, w, h])),
+            rect: Value([x, y, w, h]),
         }
     }
 }
@@ -125,25 +125,26 @@ fn test_rect() {
 
     let c = Context::new();
     let color = c.rgba(1.0, 0.0, 0.0, 1.0);
-    let &Rectangle(rect_color) = color.rect(0.0, 0.0, 100.0, 100.0).rect.get();
+    let color_rect = color.rect(0.0, 0.0, 100.0, 100.0);
+    let rect_color = color_rect.rect.get();
     assert_eq!(rect_color[2], 100.0);
 }
 
 impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
-    fn ellipse(&'a self, x: f64, y: f64, w: f64, h: f64) -> EllipseColorContext<'a> {
+    fn ellipse(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> EllipseColorContext<'a> {
         EllipseColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
-            rect: Value(Rectangle([x, y, w, h])),
+            rect: Value([x, y, w, h]),
         }
     }
 }
 
 impl<'a, 'b> AddPolygon<'a, PolygonColorContext<'a, 'b>> for ColorContext<'a> {
     #[inline(always)]
-    fn polygon(&'a self, polygon: &'b [f64]) -> PolygonColorContext<'a, 'b> {
+    fn polygon(&'a self, polygon: Polygon<'b>) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
@@ -155,7 +156,7 @@ impl<'a, 'b> AddPolygon<'a, PolygonColorContext<'a, 'b>> for ColorContext<'a> {
 
 impl<'a> AddTween<'a, TweenColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
-    fn lerp(&'a self, tween_factor: f64) -> TweenColorContext<'a> {
+    fn lerp(&'a self, tween_factor: Scalar) -> TweenColorContext<'a> {
         TweenColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
@@ -168,7 +169,7 @@ impl<'a> AddTween<'a, TweenColorContext<'a>> for ColorContext<'a> {
 impl<'a> Clear for ColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let &Color(color) = self.color.get();
+            let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }
@@ -180,9 +181,9 @@ impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for ColorContext<'a> {
         ImageRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(Rectangle(
+            rect: Value(
                 [0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]
-            )),
+            ),
             image: Value(image),
             color: Borrowed(self.color.get()),
         }
@@ -191,11 +192,11 @@ impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for ColorContext<'a> {
 
 impl<'a> AddLine<'a, LineColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
-    fn line(&'a self, x1: f64, y1: f64, x2: f64, y2: f64) -> LineColorContext<'a> {
+    fn line(&'a self, x1: Scalar, y1: Scalar, x2: Scalar, y2: Scalar) -> LineColorContext<'a> {
         LineColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
-            line: Value(Line([x1, y1, x2, y2])),
+            line: Value([x1, y1, x2, y2]),
             color: Borrowed(self.color.get()),
         }
     }

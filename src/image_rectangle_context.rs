@@ -2,13 +2,10 @@ use {
     AddColor,
     BackEnd,
     Borrowed,
-    Color,
     Draw,
     Field,
     Image,
     ImageRectangleColorContext,
-    Matrix2d,
-    Rectangle,
     Value,
 };
 use triangulation::{
@@ -21,10 +18,14 @@ use internal::{
     CanRectangle,
     CanTransform,
     CanViewTransform,
+    Color,
+    ColorComponent,
     HasColor,
     HasRectangle,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Rectangle,
 };
 
 /// An image rectangle context.
@@ -43,10 +44,10 @@ impl<'a> Clone for ImageRectangleContext<'a> {
     #[inline(always)]
     fn clone(&self) -> ImageRectangleContext<'static> {
         ImageRectangleContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            rect: self.rect.clone(),
-            image: self.image.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            rect: Value(*self.rect.get()),
+            image: Value(*self.image.get()),
         }
     }
 }
@@ -90,7 +91,7 @@ for ImageRectangleContext<'a> {
     }
 }
 
-static WHITE: &'static Color = &Color([1.0, ..4]);
+static WHITE: &'static Color = &[1.0, ..4];
 
 impl<'a> HasColor<'a, Color> for ImageRectangleContext<'a> {
     #[inline(always)]
@@ -146,8 +147,8 @@ impl<'a> Draw<'a> for ImageRectangleContext<'a> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture_id);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                rect_tri_list_xy_f32(self.transform.get(), rect),
-                rect_tri_list_rgba_f32(&Color(color)),
+                rect_tri_list_xy_f32(*self.transform.get(), *rect),
+                rect_tri_list_rgba_f32(color),
                 rect_tri_list_uv_f32(self.image.get())
             );
             back_end.disable_single_texture();
@@ -160,13 +161,19 @@ impl<'a> Draw<'a> for ImageRectangleContext<'a> {
 
 impl<'a> AddColor<'a, ImageRectangleColorContext<'a>> for ImageRectangleContext<'a> {
     #[inline(always)]
-    fn rgba(&'a self, r: f32, g: f32, b: f32, a: f32) -> ImageRectangleColorContext<'a> {
+    fn rgba(
+        &'a self, 
+        r: ColorComponent, 
+        g: ColorComponent, 
+        b: ColorComponent, 
+        a: ColorComponent
+    ) -> ImageRectangleColorContext<'a> {
         ImageRectangleColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
-            color: Value(Color([r, g, b, a])),
+            color: Value([r, g, b, a]),
         }
     }
 }

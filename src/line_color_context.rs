@@ -7,10 +7,7 @@ use {
     BevelBorderLineColorContext,
     Borrowed,
     Clear,
-    Color,
     Field,
-    Line,
-    Matrix2d,
     RoundBorderLineColorContext,
     SquareBorderLineColorContext,
     Value,
@@ -19,9 +16,13 @@ use internal::{
     CanColor,
     CanTransform,
     CanViewTransform,
+    Color,
     HasColor,
     HasTransform,
     HasViewTransform,
+    Line,
+    Matrix2d,
+    Radius,
 };
 
 /// A line context.
@@ -40,10 +41,10 @@ impl<'a> Clone for LineColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> LineColorContext<'static> {
         LineColorContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
-            line: self.line.clone(),
-            color: self.color.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
+            line: Value(*self.line.get()),
+            color: Value(*self.color.get()),
         }
     }
 }
@@ -108,7 +109,7 @@ impl<'a> CanColor<'a, LineColorContext<'a>, Color> for LineColorContext<'a> {
 
 impl<'a> AddRoundBorder<'a, RoundBorderLineColorContext<'a>> for LineColorContext<'a> {
     #[inline(always)]
-    fn round_border_radius(&'a self, radius: f64) -> RoundBorderLineColorContext<'a> {
+    fn round_border_radius(&'a self, radius: Radius) -> RoundBorderLineColorContext<'a> {
         RoundBorderLineColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
@@ -121,7 +122,7 @@ impl<'a> AddRoundBorder<'a, RoundBorderLineColorContext<'a>> for LineColorContex
 
 impl<'a> AddBevelBorder<'a, BevelBorderLineColorContext<'a>> for LineColorContext<'a> {
     #[inline(always)]
-    fn bevel_border_radius(&'a self, radius: f64) -> BevelBorderLineColorContext<'a> {
+    fn bevel_border_radius(&'a self, radius: Radius) -> BevelBorderLineColorContext<'a> {
         BevelBorderLineColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
@@ -134,7 +135,7 @@ impl<'a> AddBevelBorder<'a, BevelBorderLineColorContext<'a>> for LineColorContex
 
 impl<'a> AddSquareBorder<'a, SquareBorderLineColorContext<'a>> for LineColorContext<'a> {
     #[inline(always)]
-    fn square_border_radius(&'a self, radius: f64) -> SquareBorderLineColorContext<'a> {
+    fn square_border_radius(&'a self, radius: Radius) -> SquareBorderLineColorContext<'a> {
         SquareBorderLineColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
@@ -148,7 +149,7 @@ impl<'a> AddSquareBorder<'a, SquareBorderLineColorContext<'a>> for LineColorCont
 impl<'a> Clear for LineColorContext<'a> {
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let &Color(color) = self.color.get();
+            let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }

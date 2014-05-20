@@ -76,6 +76,7 @@ pub use Draw = draw::Draw;
 pub use EllipseContext = ellipse_context::EllipseContext;
 pub use EllipseColorContext = ellipse_color_context::EllipseColorContext;
 pub use Fill = fill::Fill;
+pub use Image = image::Image;
 pub use ImageRectangleContext = image_rectangle_context::ImageRectangleContext;
 pub use ImageRectangleColorContext = image_rectangle_color_context::ImageRectangleColorContext;
 pub use LineContext = line_context::LineContext;
@@ -125,9 +126,9 @@ mod draw;
 mod ellipse_color_context;
 mod ellipse_context;
 mod fill;
+mod image;
 mod image_rectangle_color_context;
 mod image_rectangle_context;
-mod internal;
 mod line_color_context;
 mod line_context;
 mod polygon_color_context;
@@ -150,84 +151,11 @@ mod tween_polygons_color_context;
 mod tween_polygons_context;
 mod view;
 
+pub mod internal;
 pub mod interpolation;
 pub mod modular_index;
 pub mod triangulation;
 pub mod vecmath;
-
-/// [red, green, blue, alpha]
-pub struct Color(pub [f32, ..4]);
-
-impl Clone for Color {
-    #[inline(always)]
-    fn clone(&self) -> Color {
-        let &Color(c) = self;
-        Color(c)
-    }
-}
-
-/// [x1, y1, x2, y2]
-pub struct Line(pub [f64, ..4]);
-
-impl Clone for Line {
-    #[inline(always)]
-    fn clone(&self) -> Line {
-        let &Line(c) = self;
-        Line(c)
-    }
-}
-
-/// [m00, m01, m02, m10, m11, m12]
-///
-/// The first 3 numbers transforms `x`,
-/// the last 3 numbers transforms `y`:
-///
-/// ```
-/// tx = m00 * x + m01 * y + m02;
-/// ty = m10 * x + m11 * y + m12;
-/// ```
-pub struct Matrix2d(pub [f64, ..6]);
-
-impl Clone for Matrix2d {
-    #[inline(always)]
-    fn clone(&self) -> Matrix2d {
-        let &Matrix2d(m) = self;
-        Matrix2d(m)
-    }
-}
-
-/// [x, y, w, h]
-pub struct PixelRectangle(pub [u32, ..4]);
-
-impl Clone for PixelRectangle {
-    #[inline(always)]
-    fn clone(&self) -> PixelRectangle {
-        let &PixelRectangle(p) = self;
-        PixelRectangle(p)
-    }
-}
-
-/// [x, y, w, h]
-pub struct Rectangle(pub [f64, ..4]);
-
-impl Clone for Rectangle {
-    #[inline(always)]
-    fn clone(&self) -> Rectangle {
-        let &Rectangle(r) = self;
-        Rectangle(r)
-    }
-}
-
-/// [x1, y1, x2, y2, x3, y3]
-pub struct Triangle(pub [f64, ..6]);
-
-impl Clone for Triangle {
-    #[inline(always)]
-    fn clone(&self) -> Triangle {
-        let &Triangle(t) = self;
-        Triangle(t)
-    }
-}
 
 /// A structure that might contain a value or a borrowed value.
 /// This is to used as building block to create data structure
@@ -246,47 +174,6 @@ impl<'a, T> Field<'a, T> {
         match *self {
             Value(ref val) => val,
             Borrowed(rval) => rval,
-        }
-    }
-}
-
-impl<'a, T: Clone> Clone for Field<'a, T> {
-    #[inline(always)]
-    fn clone(&self) -> Field<'static, T> {
-        Value(self.get().clone())
-    }
-}
-
-/// Represents an image.
-///
-/// Images are often packed together in sprite sheets.
-/// For this reason it refers to a rectangle within a texture.
-///
-/// The texture is a unique identifier recognized by the back-end.
-/// An image contains the size of a texture to be able to
-/// compute normalized coordinates.
-///
-/// There is no garbage collection of textures,
-/// this responsibility is given to the back-end.
-pub struct Image {
-    /// A unique identifier of the texture, recognizable by back-end.
-    pub texture_id: uint,
-    /// The pixel width of the texture.
-    pub texture_width: u32,
-    /// The pixel height of the texture.
-    pub texture_height: u32,
-    /// The source rectangle in the texture.
-    pub source_rect: [u32, ..4],
-}
-
-impl Clone for Image {
-    #[inline(always)]
-    fn clone(&self) -> Image {
-        Image {
-            texture_id: self.texture_id,
-            texture_width: self.texture_width,
-            texture_height: self.texture_height,
-            source_rect: self.source_rect,
         }
     }
 }

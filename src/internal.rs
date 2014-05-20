@@ -1,4 +1,63 @@
 
+//! Contains internal type aliases and traits.
+//!
+//! These do not affect the normal usage of the library.
+//! Using these might lead to breaking changes.
+//! Made public to clarify documentation.
+
+/// The type used for area.
+pub type Area = Scalar;
+
+/// [red, green, blue, alpha]
+pub type Color = [ColorComponent, ..4];
+
+/// The type used for color component.
+pub type ColorComponent = f32;
+
+/// [x1, y1, x2, y2]
+pub type Line = [Scalar, ..4];
+
+/// [m00, m01, m02, m10, m11, m12]
+///
+/// The first 3 numbers transforms `x`,
+/// the last 3 numbers transforms `y`:
+///
+/// ```
+/// tx = m00 * x + m01 * y + m02;
+/// ty = m10 * x + m11 * y + m12;
+/// ```
+pub type Matrix2d = [Scalar, ..6];
+
+/// [x, y, w, h]
+pub type PixelRectangle = [u32, ..4];
+
+/// [x0, y0, x1, y1, ...]
+pub type Polygon<'a> = &'a [Scalar];
+
+/// A slice of polygons.
+pub type Polygons<'a> = &'a [Polygon<'a>];
+
+/// The type used for radius.
+pub type Radius = Scalar;
+
+/// [x, y, dir_x, dir_y]
+pub type Ray = [Scalar, ..4];
+
+/// [x, y, w, h]
+pub type Rectangle = [Scalar, ..4];
+
+/// The type used for scalars.
+pub type Scalar = f64;
+
+/// [x1, y1, x2, y2, x3, y3]
+pub type Triangle = [Scalar, ..6];
+
+/// [x, y]
+pub type Vec2d = [Scalar, ..2];
+
+/// The type used for width.
+pub type Width = Scalar;
+
 /// Implemented by contexts that can color.
 ///
 /// The context can color to type `T` by adding value `U`.

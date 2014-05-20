@@ -1,14 +1,15 @@
-use {
-    Matrix2d,
-};
+
 use internal::{
     CanTransform,
     CanViewTransform,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Scalar,
 };
 use vecmath::{
     identity,
+    get_scale,
 };
 
 /// Should be implemented by contexts that draws something relative to view.
@@ -29,6 +30,9 @@ pub trait View<'a> {
 
     /// Stores the current transform as new view.
     fn store_view(&'a self) -> Self;
+
+    /// Computes the current view size.
+    fn get_view_size(&'a self) -> (Scalar, Scalar);
 }
 
 impl<
@@ -52,6 +56,12 @@ impl<
     #[inline(always)]
     fn store_view(&'a self) -> T {
         self.view_transform(*self.get_transform())
+    }
+
+    #[inline(always)]
+    fn get_view_size(&'a self) -> (Scalar, Scalar) {
+        let scale = get_scale(*self.get_view_transform());
+        (2.0 / scale[0], 2.0 / scale[1])
     }
 }
 

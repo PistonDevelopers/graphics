@@ -2,10 +2,8 @@ use {
     BackEnd,
     Borrowed,
     Clear,
-    Color,
     Field,
     Fill,
-    Matrix2d,
     Value,
 };
 use triangulation::{
@@ -15,9 +13,12 @@ use internal::{
     CanColor,
     CanTransform,
     CanViewTransform,
+    Color,
     HasColor,
     HasTransform,
     HasViewTransform,
+    Matrix2d,
+    Polygon,
 };
 
 /// A polygon color context.
@@ -29,17 +30,17 @@ pub struct PolygonColorContext<'a, 'b> {
     /// Current color.
     pub color: Field<'a, Color>,
     /// Current polygon.
-    pub polygon: Field<'a, &'b [f64]>,
+    pub polygon: Field<'a, Polygon<'b>>,
 }
 
 impl<'a, 'b> Clone for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> PolygonColorContext<'static, 'b> {
         PolygonColorContext {
-            base: self.base.clone(),
-            transform: self.transform.clone(),
+            base: Value(*self.base.get()),
+            transform: Value(*self.transform.get()),
             polygon: Value(*self.polygon.get()),
-            color: self.color.clone(),
+            color: Value(*self.color.get()),
         }
     }
 }
@@ -106,17 +107,17 @@ impl<'a, 'b> Fill<'a> for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let polygon = self.polygon.get().as_slice();
-            let &Color(color) = self.color.get();
+            let polygon = self.polygon.get();
+            let color = self.color.get();
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_polygon_tri_list_xy_f32_rgba_f32(
-                self.transform.get(),
-                polygon,
-                &Color(color),
+                *self.transform.get(),
+                *polygon,
+                *color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }
@@ -132,7 +133,7 @@ impl<'a, 'b> Clear for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let &Color(color) = self.color.get();
+            let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();
