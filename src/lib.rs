@@ -79,6 +79,10 @@ pub use Fill = fill::Fill;
 pub use Image = image::Image;
 pub use ImageRectangleContext = image_rectangle_context::ImageRectangleContext;
 pub use ImageRectangleColorContext = image_rectangle_color_context::ImageRectangleColorContext;
+pub use LerpTweenContext = lerp_tween_context::LerpTweenContext;
+pub use LerpTweenColorContext = lerp_tween_color_context::LerpTweenColorContext;
+pub use LerpTweenPolygonsContext = lerp_tween_polygons_context::LerpTweenPolygonsContext;
+pub use LerpTweenPolygonsColorContext = lerp_tween_polygons_color_context::LerpTweenPolygonsColorContext;
 pub use LineContext = line_context::LineContext;
 pub use LineColorContext = line_color_context::LineColorContext;
 pub use PolygonContext = polygon_context::PolygonContext;
@@ -95,10 +99,6 @@ pub use RoundRectangleColorContext = round_rectangle_color_context::RoundRectang
 pub use Stroke = stroke::Stroke;
 pub use SquareBorderLineColorContext = square_border_line_color_context::SquareBorderLineColorContext;
 pub use SquareBorderLineContext = square_border_line_context::SquareBorderLineContext;
-pub use TweenContext = tween_context::TweenContext;
-pub use TweenColorContext = tween_color_context::TweenColorContext;
-pub use TweenPolygonsContext = tween_polygons_context::TweenPolygonsContext;
-pub use TweenPolygonsColorContext = tween_polygons_color_context::TweenPolygonsColorContext;
 pub use View = view::View;
 
 mod add_bevel;
@@ -145,10 +145,10 @@ mod round_rectangle_context;
 mod square_border_line_color_context;
 mod square_border_line_context;
 mod stroke;
-mod tween_color_context;
-mod tween_context;
-mod tween_polygons_color_context;
-mod tween_polygons_context;
+mod lerp_tween_color_context;
+mod lerp_tween_context;
+mod lerp_tween_polygons_color_context;
+mod lerp_tween_polygons_context;
 mod view;
 
 pub mod internal;

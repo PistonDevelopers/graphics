@@ -3,7 +3,7 @@ use {
     AddColor,
     Borrowed,
     Field,
-    TweenPolygonsColorContext,
+    LerpTweenPolygonsColorContext,
     Value,
 };
 use internal::{
@@ -18,7 +18,7 @@ use internal::{
 };
 
 /// An animation inbetweening context with color.
-pub struct TweenPolygonsContext<'a, 'b> {
+pub struct LerpTweenPolygonsContext<'a, 'b> {
     /// Base/origin transform.
     pub base: Field<'a, Matrix2d>,
     /// Current transform.
@@ -29,10 +29,10 @@ pub struct TweenPolygonsContext<'a, 'b> {
     pub polygons: Field<'a, Polygons<'b>>,
 }
 
-impl<'a, 'b> Clone for TweenPolygonsContext<'a, 'b> {
+impl<'a, 'b> Clone for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
-    fn clone(&self) -> TweenPolygonsContext<'static, 'b> {
-        TweenPolygonsContext {
+    fn clone(&self) -> LerpTweenPolygonsContext<'static, 'b> {
+        LerpTweenPolygonsContext {
             base: Value(*self.base.get()),
             transform: Value(*self.transform.get()),
             tween_factor: Value(*self.tween_factor.get()),
@@ -41,7 +41,8 @@ impl<'a, 'b> Clone for TweenPolygonsContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> AddColor<'a, TweenPolygonsColorContext<'a, 'b>> for TweenPolygonsContext<'a, 'b> {
+impl<'a, 'b> AddColor<'a, LerpTweenPolygonsColorContext<'a, 'b>> 
+for LerpTweenPolygonsContext<'a, 'b> {
     /// Creates a RectangleColorContext.
     #[inline(always)]
     fn rgba(
@@ -50,8 +51,8 @@ impl<'a, 'b> AddColor<'a, TweenPolygonsColorContext<'a, 'b>> for TweenPolygonsCo
         g: ColorComponent, 
         b: ColorComponent, 
         a: ColorComponent
-    ) -> TweenPolygonsColorContext<'a, 'b> {
-        TweenPolygonsColorContext {
+    ) -> LerpTweenPolygonsColorContext<'a, 'b> {
+        LerpTweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value([r, g, b, a]),
@@ -61,17 +62,19 @@ impl<'a, 'b> AddColor<'a, TweenPolygonsColorContext<'a, 'b>> for TweenPolygonsCo
     }
 }
 
-impl<'a, 'b> HasTransform<'a, Matrix2d> for TweenPolygonsContext<'a, 'b> {
+impl<'a, 'b> HasTransform<'a, Matrix2d> 
+for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(alwyas)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a, 'b> CanTransform<'a, TweenPolygonsContext<'a, 'b>, Matrix2d> for TweenPolygonsContext<'a, 'b> {
+impl<'a, 'b> CanTransform<'a, LerpTweenPolygonsContext<'a, 'b>, Matrix2d> 
+for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> TweenPolygonsContext<'a, 'b> {
-        TweenPolygonsContext {
+    fn transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsContext<'a, 'b> {
+        LerpTweenPolygonsContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
             tween_factor: Borrowed(self.tween_factor.get()),
@@ -80,17 +83,19 @@ impl<'a, 'b> CanTransform<'a, TweenPolygonsContext<'a, 'b>, Matrix2d> for TweenP
     }
 }
 
-impl<'a, 'b> HasViewTransform<'a, Matrix2d> for TweenPolygonsContext<'a, 'b> {
+impl<'a, 'b> HasViewTransform<'a, Matrix2d> 
+for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.base.get()
     }
 }
 
-impl<'a, 'b> CanViewTransform<'a, TweenPolygonsContext<'a, 'b>, Matrix2d> for TweenPolygonsContext<'a, 'b> {
+impl<'a, 'b> CanViewTransform<'a, LerpTweenPolygonsContext<'a, 'b>, Matrix2d> 
+for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> TweenPolygonsContext<'a, 'b> {
-        TweenPolygonsContext {
+    fn view_transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsContext<'a, 'b> {
+        LerpTweenPolygonsContext {
             base: Value(value),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
