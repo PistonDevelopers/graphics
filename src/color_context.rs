@@ -16,7 +16,7 @@ use {
     LineColorContext,
     PolygonColorContext,
     RectangleColorContext,
-    TweenColorContext,
+    LerpTweenColorContext,
     Value,
 };
 use internal::{
@@ -154,10 +154,11 @@ impl<'a, 'b> AddPolygon<'a, PolygonColorContext<'a, 'b>> for ColorContext<'a> {
     }
 }
 
-impl<'a> AddTween<'a, TweenColorContext<'a>> for ColorContext<'a> {
+impl<'a> AddTween<'a, LerpTweenColorContext<'a>> 
+for ColorContext<'a> {
     #[inline(always)]
-    fn lerp(&'a self, tween_factor: Scalar) -> TweenColorContext<'a> {
-        TweenColorContext {
+    fn lerp(&'a self, tween_factor: Scalar) -> LerpTweenColorContext<'a> {
+        LerpTweenColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),

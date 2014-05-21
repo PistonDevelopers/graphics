@@ -4,7 +4,7 @@ use {
     Borrowed,
     Clear,
     Field,
-    TweenPolygonsColorContext,
+    LerpTweenPolygonsColorContext,
     Value,
 };
 use internal::{
@@ -20,7 +20,7 @@ use internal::{
 };
 
 /// An animation inbetweening context with color.
-pub struct TweenColorContext<'a> {
+pub struct LerpTweenColorContext<'a> {
     /// Base/origin transform.
     pub base: Field<'a, Matrix2d>,
     /// Current transform.
@@ -31,10 +31,10 @@ pub struct TweenColorContext<'a> {
     pub tween_factor: Field<'a, f64>,
 }
 
-impl<'a> Clone for TweenColorContext<'a> {
+impl<'a> Clone for LerpTweenColorContext<'a> {
     #[inline(always)]
-    fn clone(&self) -> TweenColorContext<'static> {
-        TweenColorContext {
+    fn clone(&self) -> LerpTweenColorContext<'static> {
+        LerpTweenColorContext {
             base: Value(*self.base.get()),
             transform: Value(*self.transform.get()),
             color: Value(*self.color.get()),
@@ -43,17 +43,17 @@ impl<'a> Clone for TweenColorContext<'a> {
     }
 }
 
-impl<'a> HasColor<'a, Color> for TweenColorContext<'a> {
+impl<'a> HasColor<'a, Color> for LerpTweenColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, TweenColorContext<'a>, Color> for TweenColorContext<'a> {
+impl<'a> CanColor<'a, LerpTweenColorContext<'a>, Color> for LerpTweenColorContext<'a> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> TweenColorContext<'a> {
-        TweenColorContext {
+    fn color(&'a self, value: Color) -> LerpTweenColorContext<'a> {
+        LerpTweenColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
@@ -62,17 +62,17 @@ impl<'a> CanColor<'a, TweenColorContext<'a>, Color> for TweenColorContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for TweenColorContext<'a> {
+impl<'a> HasTransform<'a, Matrix2d> for LerpTweenColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorContext<'a> {
+impl<'a> CanTransform<'a, LerpTweenColorContext<'a>, Matrix2d> for LerpTweenColorContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> TweenColorContext<'a> {
-        TweenColorContext {
+    fn transform(&'a self, value: Matrix2d) -> LerpTweenColorContext<'a> {
+        LerpTweenColorContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
             color: Borrowed(self.color.get()),
@@ -81,17 +81,17 @@ impl<'a> CanTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorContext
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for TweenColorContext<'a> {
+impl<'a> HasViewTransform<'a, Matrix2d> for LerpTweenColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.base.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorContext<'a> {
+impl<'a> CanViewTransform<'a, LerpTweenColorContext<'a>, Matrix2d> for LerpTweenColorContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> TweenColorContext<'a> {
-        TweenColorContext {
+    fn view_transform(&'a self, value: Matrix2d) -> LerpTweenColorContext<'a> {
+        LerpTweenColorContext {
             base: Value(value),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
@@ -101,10 +101,10 @@ impl<'a> CanViewTransform<'a, TweenColorContext<'a>, Matrix2d> for TweenColorCon
 }
 
 
-impl<'a, 'b> AddPolygons<'a, TweenPolygonsColorContext<'a, 'b>> for TweenColorContext<'a> {
+impl<'a, 'b> AddPolygons<'a, LerpTweenPolygonsColorContext<'a, 'b>> for LerpTweenColorContext<'a> {
     #[inline(always)]
-    fn polygons(&'a self, polygons: Polygons<'b>) -> TweenPolygonsColorContext<'a, 'b> {
-        TweenPolygonsColorContext {
+    fn polygons(&'a self, polygons: Polygons<'b>) -> LerpTweenPolygonsColorContext<'a, 'b> {
+        LerpTweenPolygonsColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
@@ -114,7 +114,7 @@ impl<'a, 'b> AddPolygons<'a, TweenPolygonsColorContext<'a, 'b>> for TweenColorCo
     }
 }
 
-impl<'a> Clear for TweenColorContext<'a> {
+impl<'a> Clear for LerpTweenColorContext<'a> {
     #[inline(always)]
     fn clear<B: BackEnd>(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {

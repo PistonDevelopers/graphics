@@ -3,8 +3,8 @@ use {
     AddPolygons,
     Borrowed,
     Field,
-    TweenColorContext,
-    TweenPolygonsContext,
+    LerpTweenColorContext,
+    LerpTweenPolygonsContext,
     Value,
 };
 use internal::{
@@ -19,7 +19,7 @@ use internal::{
 };
 
 /// An animation inbetweening context.
-pub struct TweenContext<'a> {
+pub struct LerpTweenContext<'a> {
     /// Base/origin transform.
     pub base: Field<'a, Matrix2d>,
     /// Current transform.
@@ -28,10 +28,10 @@ pub struct TweenContext<'a> {
     pub tween_factor: Field<'a, Scalar>,
 }
 
-impl<'a> Clone for TweenContext<'a> {
+impl<'a> Clone for LerpTweenContext<'a> {
     #[inline(always)]
-    fn clone(&self) -> TweenContext<'static> {
-        TweenContext {
+    fn clone(&self) -> LerpTweenContext<'static> {
+        LerpTweenContext {
             base: Value(*self.base.get()),
             transform: Value(*self.transform.get()),
             tween_factor: Value(*self.tween_factor.get()),
@@ -39,7 +39,7 @@ impl<'a> Clone for TweenContext<'a> {
     }
 }
 
-impl<'a> AddColor<'a, TweenColorContext<'a>> for TweenContext<'a> {
+impl<'a> AddColor<'a, LerpTweenColorContext<'a>> for LerpTweenContext<'a> {
     #[inline(always)]
     fn rgba(
         &'a self, 
@@ -47,8 +47,8 @@ impl<'a> AddColor<'a, TweenColorContext<'a>> for TweenContext<'a> {
         g: ColorComponent, 
         b: ColorComponent, 
         a: ColorComponent
-    ) -> TweenColorContext<'a> {
-        TweenColorContext {
+    ) -> LerpTweenColorContext<'a> {
+        LerpTweenColorContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
@@ -57,10 +57,10 @@ impl<'a> AddColor<'a, TweenColorContext<'a>> for TweenContext<'a> {
     }
 }
 
-impl<'a, 'b> AddPolygons<'a, TweenPolygonsContext<'a, 'b>> for TweenContext<'a> {
+impl<'a, 'b> AddPolygons<'a, LerpTweenPolygonsContext<'a, 'b>> for LerpTweenContext<'a> {
     #[inline(always)]
-    fn polygons(&'a self, polygons: Polygons<'b>) -> TweenPolygonsContext<'a, 'b> {
-        TweenPolygonsContext {
+    fn polygons(&'a self, polygons: Polygons<'b>) -> LerpTweenPolygonsContext<'a, 'b> {
+        LerpTweenPolygonsContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
@@ -69,17 +69,17 @@ impl<'a, 'b> AddPolygons<'a, TweenPolygonsContext<'a, 'b>> for TweenContext<'a> 
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for TweenContext<'a> {
+impl<'a> HasTransform<'a, Matrix2d> for LerpTweenContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, TweenContext<'a>, Matrix2d> for TweenContext<'a> {
+impl<'a> CanTransform<'a, LerpTweenContext<'a>, Matrix2d> for LerpTweenContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> TweenContext<'a> {
-        TweenContext {
+    fn transform(&'a self, value: Matrix2d) -> LerpTweenContext<'a> {
+        LerpTweenContext {
             base: Borrowed(self.base.get()),
             transform: Value(value),
             tween_factor: Borrowed(self.tween_factor.get()),
@@ -87,17 +87,17 @@ impl<'a> CanTransform<'a, TweenContext<'a>, Matrix2d> for TweenContext<'a> {
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for TweenContext<'a> {
+impl<'a> HasViewTransform<'a, Matrix2d> for LerpTweenContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.base.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, TweenContext<'a>, Matrix2d> for TweenContext<'a> {
+impl<'a> CanViewTransform<'a, LerpTweenContext<'a>, Matrix2d> for LerpTweenContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> TweenContext<'a> {
-        TweenContext {
+    fn view_transform(&'a self, value: Matrix2d) -> LerpTweenContext<'a> {
+        LerpTweenContext {
             base: Value(value),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
