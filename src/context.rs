@@ -16,7 +16,7 @@ use {
     LineContext,
     PolygonContext,
     RectangleContext,
-    TweenContext,
+    LerpTweenContext,
     Value,
 };
 use internal::{
@@ -223,10 +223,11 @@ impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
     }
 }
 
-impl<'a> AddTween<'a, TweenContext<'a>> for Context<'a> {
+impl<'a> AddTween<'a, LerpTweenContext<'a>> 
+for Context<'a> {
     #[inline(always)]
-    fn lerp(&'a self, tween_factor: Scalar) -> TweenContext<'a> {
-        TweenContext {
+    fn lerp(&'a self, tween_factor: Scalar) -> LerpTweenContext<'a> {
+        LerpTweenContext {
             base: Borrowed(self.base.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Value(tween_factor),
