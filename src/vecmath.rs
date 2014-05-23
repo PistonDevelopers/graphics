@@ -3,13 +3,14 @@
 
 use internal::{
     Area,
+    Color,
     Line,
     Matrix2d,
     Polygon,
     Ray,
     Rectangle,
     Vec2d,
-    Triangle
+    Triangle,
 };
 use modular_index::{previous};
 
@@ -271,3 +272,25 @@ fn test_triangle() {
     assert_eq!(triangle_face(tri_1), false);
     assert_eq!(triangle_face(tri_2), true);
 }
+
+/// Transform color with hue saturation and value.
+///
+/// Source: http://beesbuzz.biz/code/hsv_color_transforms.php
+#[inline(always)]
+pub fn hsv(color: Color, h_rad: f32, s: f32, v: f32) -> Color {
+    let vsu = v * s * h_rad.cos();
+    let vsw = v * s * h_rad.sin();
+    [
+        (0.299 * v + 0.701 * vsu + 0.168 * vsw) * color[0]
+        + (0.587 * v - 0.587 * vsu + 0.330 * vsw) * color[1]
+        + (0.114 * v - 0.114 * vsu - 0.497 * vsw) * color[2],
+        (0.299 * v - 0.299 * vsu - 0.328 * vsw) * color[0]
+        + (0.587 * v + 0.413 * vsu + 0.035 * vsw) * color[1]
+        + (0.114 * v - 0.114 * vsu + 0.292 * vsw) * color[2],
+        (0.299 * v - 0.3 * vsu + 1.25 * vsw) * color[0]
+        + (0.587 * v - 0.588 * vsu - 1.05 * vsw) * color[1]
+        + (0.114 * v + 0.886 * vsu - 0.203 * vsw) * color[2],
+        color[3],
+    ]
+}
+
