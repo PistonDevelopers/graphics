@@ -24,8 +24,8 @@ use internal::{
 
 /// An animation inbetweening context with color.
 pub struct LerpTweenPolygonsColorContext<'a, 'b> {
-    /// Base/origin transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current color.
@@ -40,7 +40,7 @@ impl<'a, 'b> Clone for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> LerpTweenPolygonsColorContext<'static, 'b> {
         LerpTweenPolygonsColorContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             color: Value(*self.color.get()),
             tween_factor: Value(*self.tween_factor.get()),
@@ -62,7 +62,7 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn color(&'a self, value: Color) -> LerpTweenPolygonsColorContext<'a, 'b> {
         LerpTweenPolygonsColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
             tween_factor: Borrowed(self.tween_factor.get()),
@@ -84,7 +84,7 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsColorContext<'a, 'b> {
         LerpTweenPolygonsColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             color: Borrowed(self.color.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
@@ -97,7 +97,7 @@ impl<'a, 'b> HasViewTransform<'a, Matrix2d>
 for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -106,7 +106,7 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsColorContext<'a, 'b> {
         LerpTweenPolygonsColorContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Borrowed(self.polygons.get()),

@@ -19,8 +19,8 @@ use internal::{
 
 /// A line context with round border information.
 pub struct RoundBorderLineContext<'a> {
-    /// Base/original transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current line.
@@ -33,7 +33,7 @@ impl<'a> Clone for RoundBorderLineContext<'a> {
     #[inline(always)]   
     fn clone(&self) -> RoundBorderLineContext<'static> {
         RoundBorderLineContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             line: Value(*self.line.get()),
             round_border_radius: Value(*self.round_border_radius.get()),
@@ -52,7 +52,7 @@ impl<'a> CanTransform<'a, RoundBorderLineContext<'a>, Matrix2d> for RoundBorderL
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> RoundBorderLineContext<'a> {
         RoundBorderLineContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             line: Borrowed(self.line.get()),
             round_border_radius: Borrowed(self.round_border_radius.get()),
@@ -63,7 +63,7 @@ impl<'a> CanTransform<'a, RoundBorderLineContext<'a>, Matrix2d> for RoundBorderL
 impl<'a> HasViewTransform<'a, Matrix2d> for RoundBorderLineContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -72,7 +72,7 @@ for RoundBorderLineContext<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> RoundBorderLineContext<'a> {
         RoundBorderLineContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             round_border_radius: Borrowed(self.round_border_radius.get()),
@@ -90,7 +90,7 @@ impl<'a> AddColor<'a, RoundBorderLineColorContext<'a>> for RoundBorderLineContex
         a: ColorComponent
     ) -> RoundBorderLineColorContext<'a> {
         RoundBorderLineColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             color: Value([r, g, b, a]),

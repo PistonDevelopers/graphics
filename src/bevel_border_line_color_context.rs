@@ -25,8 +25,8 @@ use internal::{
 
 /// A line context with bevel border information.
 pub struct BevelBorderLineColorContext<'a> {
-    /// Base/original transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current line.
@@ -41,7 +41,7 @@ impl<'a> Clone for BevelBorderLineColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> BevelBorderLineColorContext<'static> {
         BevelBorderLineColorContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             line: Value(*self.line.get()),
             color: Value(*self.color.get()),
@@ -61,7 +61,7 @@ impl<'a> CanTransform<'a, BevelBorderLineColorContext<'a>, Matrix2d> for BevelBo
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> BevelBorderLineColorContext<'a> {
         BevelBorderLineColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             line: Borrowed(self.line.get()),
             color: Borrowed(self.color.get()),
@@ -73,7 +73,7 @@ impl<'a> CanTransform<'a, BevelBorderLineColorContext<'a>, Matrix2d> for BevelBo
 impl<'a> HasViewTransform<'a, Matrix2d> for BevelBorderLineColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -82,7 +82,7 @@ for BevelBorderLineColorContext<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> BevelBorderLineColorContext<'a> {
         BevelBorderLineColorContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             color: Borrowed(self.color.get()),
@@ -102,7 +102,7 @@ impl<'a> CanColor<'a, BevelBorderLineColorContext<'a>, Color> for BevelBorderLin
     #[inline(always)]
     fn color(&'a self, value: Color) -> BevelBorderLineColorContext<'a> {
         BevelBorderLineColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             color: Value(value),

@@ -34,8 +34,8 @@ use internal::{
 
 /// A context with color information.
 pub struct ColorContext<'a> {
-    /// Base/original transformation.
-    pub base: Field<'a, Matrix2d>,
+    /// View transformation.
+    pub view: Field<'a, Matrix2d>,
     /// Current transformation.
     pub transform: Field<'a, Matrix2d>,
     /// Current color.
@@ -46,7 +46,7 @@ impl<'a> Clone for ColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> ColorContext<'static> {
         ColorContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             color: Value(*self.color.get()),
         }
@@ -64,7 +64,7 @@ impl<'a> CanTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> ColorContext<'a> {
         ColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             color: Borrowed(self.color.get()),
         }
@@ -74,7 +74,7 @@ impl<'a> CanTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
 impl<'a> HasViewTransform<'a, Matrix2d> for ColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -82,7 +82,7 @@ impl<'a> CanViewTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> ColorContext<'a> {
         ColorContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
         }
@@ -100,7 +100,7 @@ impl<'a> CanColor<'a, ColorContext<'a>, Color> for ColorContext<'a> {
     #[inline(always)]
     fn color(&'a self, value: Color) -> ColorContext<'a> {
         ColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
         }
@@ -111,7 +111,7 @@ impl<'a> AddRectangle<'a, RectangleColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
     fn rect(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> RectangleColorContext<'a> {
         RectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             rect: Value([x, y, w, h]),
@@ -134,7 +134,7 @@ impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
     fn ellipse(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> EllipseColorContext<'a> {
         EllipseColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             rect: Value([x, y, w, h]),
@@ -146,7 +146,7 @@ impl<'a, 'b> AddPolygon<'a, PolygonColorContext<'a, 'b>> for ColorContext<'a> {
     #[inline(always)]
     fn polygon(&'a self, polygon: Polygon<'b>) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             polygon: Value(polygon),
@@ -159,7 +159,7 @@ for ColorContext<'a> {
     #[inline(always)]
     fn lerp(&'a self, tween_factor: Scalar) -> LerpTweenColorContext<'a> {
         LerpTweenColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             tween_factor: Value(tween_factor),
@@ -180,7 +180,7 @@ impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
     fn image(&'a self, image: Image) -> ImageRectangleColorContext<'a> {
         ImageRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(
                 [0.0, 0.0, image.source_rect[2] as f64, image.source_rect[3] as f64]
@@ -195,7 +195,7 @@ impl<'a> AddLine<'a, LineColorContext<'a>> for ColorContext<'a> {
     #[inline(always)]
     fn line(&'a self, x1: Scalar, y1: Scalar, x2: Scalar, y2: Scalar) -> LineColorContext<'a> {
         LineColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             line: Value([x1, y1, x2, y2]),
             color: Borrowed(self.color.get()),

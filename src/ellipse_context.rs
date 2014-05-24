@@ -19,8 +19,8 @@ use internal::{
 
 /// An ellipse context.
 pub struct EllipseContext<'a> {
-    /// Base/origin transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transformation.
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle enclosing the ellipse.
@@ -31,7 +31,7 @@ impl<'a> Clone for EllipseContext<'a> {
     #[inline(always)]
     fn clone(&self) -> EllipseContext<'static> {
         EllipseContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             rect: Value(*self.rect.get()),
         }
@@ -49,7 +49,7 @@ impl<'a> CanTransform<'a, EllipseContext<'a>, Matrix2d> for EllipseContext<'a> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> EllipseContext<'a> {
         EllipseContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             rect: Borrowed(self.rect.get()),
         }
@@ -59,7 +59,7 @@ impl<'a> CanTransform<'a, EllipseContext<'a>, Matrix2d> for EllipseContext<'a> {
 impl<'a> HasViewTransform<'a, Matrix2d> for EllipseContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -68,7 +68,7 @@ for EllipseContext<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> EllipseContext<'a> {
         EllipseContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
         }
@@ -85,7 +85,7 @@ impl<'a> AddColor<'a, EllipseColorContext<'a>> for EllipseContext<'a> {
         a: ColorComponent
     ) -> EllipseColorContext<'a> {
         EllipseColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             color: Value([r, g, b, a]),
@@ -104,7 +104,7 @@ impl<'a> CanRectangle<'a, EllipseContext<'a>, Rectangle> for EllipseContext<'a> 
     #[inline(always)]
     fn rectangle(&'a self, rect: Rectangle) -> EllipseContext<'a> {
         EllipseContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(rect),
         }

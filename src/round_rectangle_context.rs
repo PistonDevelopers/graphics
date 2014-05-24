@@ -20,8 +20,8 @@ use internal::{
 
 /// A round rectangle context.
 pub struct RoundRectangleContext<'a> {
-    /// Base/origin transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle.
@@ -34,7 +34,7 @@ impl<'a> Clone for RoundRectangleContext<'a> {
     #[inline(always)]
     fn clone(&self) -> RoundRectangleContext<'static> {
         RoundRectangleContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             rect: Value(*self.rect.get()),
             round_radius: Value(*self.round_radius.get()),
@@ -53,7 +53,7 @@ impl<'a> CanTransform<'a, RoundRectangleContext<'a>, Matrix2d> for RoundRectangl
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> RoundRectangleContext<'a> {
         RoundRectangleContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
@@ -64,7 +64,7 @@ impl<'a> CanTransform<'a, RoundRectangleContext<'a>, Matrix2d> for RoundRectangl
 impl<'a> HasViewTransform<'a, Matrix2d> for RoundRectangleContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -72,7 +72,7 @@ impl<'a> CanViewTransform<'a, RoundRectangleContext<'a>, Matrix2d> for RoundRect
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> RoundRectangleContext<'a> {
         RoundRectangleContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
@@ -91,7 +91,7 @@ impl<'a> CanRectangle<'a, RoundRectangleContext<'a>, Rectangle> for RoundRectang
     #[inline(always)]
     fn rectangle(&'a self, rect: Rectangle) -> RoundRectangleContext<'a> {
         RoundRectangleContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(rect),
             round_radius: Borrowed(self.round_radius.get()),
@@ -110,7 +110,7 @@ impl<'a> AddColor<'a, RoundRectangleColorContext<'a>> for RoundRectangleContext<
         a: ColorComponent
     ) -> RoundRectangleColorContext<'a> {
         RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value([r, g, b, a]),
             rect: Borrowed(self.rect.get()),
