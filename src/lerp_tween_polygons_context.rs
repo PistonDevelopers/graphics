@@ -19,8 +19,8 @@ use internal::{
 
 /// An animation inbetweening context with color.
 pub struct LerpTweenPolygonsContext<'a, 'b> {
-    /// Base/origin transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Animation inbetweening factor.
@@ -33,7 +33,7 @@ impl<'a, 'b> Clone for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> LerpTweenPolygonsContext<'static, 'b> {
         LerpTweenPolygonsContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             tween_factor: Value(*self.tween_factor.get()),
             polygons: Value(*self.polygons.get()),
@@ -53,7 +53,7 @@ for LerpTweenPolygonsContext<'a, 'b> {
         a: ColorComponent
     ) -> LerpTweenPolygonsColorContext<'a, 'b> {
         LerpTweenPolygonsColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value([r, g, b, a]),
             tween_factor: Borrowed(self.tween_factor.get()),
@@ -75,7 +75,7 @@ for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsContext<'a, 'b> {
         LerpTweenPolygonsContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Borrowed(self.polygons.get()),
@@ -87,7 +87,7 @@ impl<'a, 'b> HasViewTransform<'a, Matrix2d>
 for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -96,7 +96,7 @@ for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsContext<'a, 'b> {
         LerpTweenPolygonsContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Borrowed(self.polygons.get()),

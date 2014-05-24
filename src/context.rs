@@ -32,8 +32,8 @@ use internal::{
 
 /// Drawing 2d context.
 pub struct Context<'a> {
-    /// Base/original transformation.
-    pub base: Field<'a, Matrix2d>,
+    /// View transformation.
+    pub view: Field<'a, Matrix2d>,
     /// Current transformation.
     pub transform: Field<'a, Matrix2d>,
 }
@@ -42,7 +42,7 @@ impl<'a> Clone for Context<'a> {
     #[inline(always)]
     fn clone(&self) -> Context<'static> {
         Context {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
         }
     }
@@ -59,7 +59,7 @@ impl<'a> CanTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> Context<'a> {
         Context {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
         }
     }
@@ -68,7 +68,7 @@ impl<'a> CanTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
 impl<'a> HasViewTransform<'a, Matrix2d> for Context<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -76,7 +76,7 @@ impl<'a> CanViewTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> Context<'a> {
         Context {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
         }
     }
@@ -86,7 +86,7 @@ impl<'a> Context<'a> {
     /// Creates a new drawing context.
     pub fn new() -> Context {
         Context {
-            base:  Value(
+            view:  Value(
                 [1.0, 0.0, 0.0,
                  0.0, 1.0, 0.0]
             ),
@@ -136,7 +136,7 @@ impl<'a> AddRectangle<'a, RectangleContext<'a>> for Context<'a> {
     #[inline(always)]
     fn rect(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> RectangleContext<'a> {
         RectangleContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value([x, y, w, h]),
         }
@@ -161,7 +161,7 @@ impl<'a> AddColor<'a, ColorContext<'a>> for Context<'a> {
         a: ColorComponent
     ) -> ColorContext<'a> {
         ColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value([r, g, b, a]),
         }
@@ -180,7 +180,7 @@ impl<'a> AddEllipse<'a, EllipseContext<'a>> for Context<'a> {
     #[inline(always)]
     fn ellipse(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> EllipseContext<'a> {
         EllipseContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value([x, y, w, h]),
         }
@@ -199,7 +199,7 @@ impl<'a, 'b> AddPolygon<'a, PolygonContext<'a, 'b>> for Context<'a> {
     #[inline(always)]
     fn polygon(&'a self, polygon: Polygon<'b>) -> PolygonContext<'a, 'b> {
         PolygonContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             polygon: Value(polygon),
         }
@@ -210,7 +210,7 @@ impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
     #[inline(always)]
     fn image(&'a self, image: Image) -> ImageRectangleContext<'a> {
         ImageRectangleContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value([
                 0.0, 
@@ -228,7 +228,7 @@ for Context<'a> {
     #[inline(always)]
     fn lerp(&'a self, tween_factor: Scalar) -> LerpTweenContext<'a> {
         LerpTweenContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Value(tween_factor),
         }
@@ -239,7 +239,7 @@ impl<'a> AddLine<'a, LineContext<'a>> for Context<'a> {
     #[inline(always)]
     fn line(&'a self, x1: Scalar, y1: Scalar, x2: Scalar, y2: Scalar) -> LineContext<'a> {
         LineContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             line: Value([x1, y1, x2, y2]),
         }

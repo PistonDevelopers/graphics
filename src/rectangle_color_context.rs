@@ -34,8 +34,8 @@ use internal::{
 
 /// A rectangle color context.
 pub struct RectangleColorContext<'a> {
-    /// Base/original transformation.
-    pub base: Field<'a, Matrix2d>,
+    /// View transformation.
+    pub view: Field<'a, Matrix2d>,
     /// Current transformation.
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle.
@@ -48,7 +48,7 @@ impl<'a> Clone for RectangleColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> RectangleColorContext<'static> {
         RectangleColorContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             rect: Value(*self.rect.get()),
             color: Value(*self.color.get()),
@@ -67,7 +67,7 @@ impl<'a> CanTransform<'a, RectangleColorContext<'a>, Matrix2d> for RectangleColo
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> RectangleColorContext<'a> {
         RectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             rect: Borrowed(self.rect.get()),
             color: Borrowed(self.color.get()),
@@ -78,7 +78,7 @@ impl<'a> CanTransform<'a, RectangleColorContext<'a>, Matrix2d> for RectangleColo
 impl<'a> HasViewTransform<'a, Matrix2d> for RectangleColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -87,7 +87,7 @@ for RectangleColorContext<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> RectangleColorContext<'a> {
         RectangleColorContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             color: Borrowed(self.color.get()),
@@ -106,7 +106,7 @@ impl<'a> CanColor<'a, RectangleColorContext<'a>, Color> for RectangleColorContex
     #[inline(always)]
     fn color(&'a self, value: Color) -> RectangleColorContext<'a> {
         RectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
             rect: Borrowed(self.rect.get()),
@@ -125,7 +125,7 @@ impl<'a> CanRectangle<'a, RectangleColorContext<'a>, Rectangle> for RectangleCol
     #[inline(always)]
     fn rectangle(&'a self, rect: Rectangle) -> RectangleColorContext<'a> {
         RectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(rect),
             color: Borrowed(self.color.get()),
@@ -170,7 +170,7 @@ impl<'a> AddRound<'a, RoundRectangleColorContext<'a>> for RectangleColorContext<
     #[inline(always)]
     fn round(&'a self, radius: f64) -> RoundRectangleColorContext<'a> {
         RoundRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             rect: Borrowed(self.rect.get()),
@@ -183,7 +183,7 @@ impl<'a> AddBevel<'a, BevelRectangleColorContext<'a>> for RectangleColorContext<
     #[inline(always)]
     fn bevel(&'a self, radius: f64) -> BevelRectangleColorContext<'a> {
         BevelRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Borrowed(self.color.get()),
             rect: Borrowed(self.rect.get()),
@@ -195,7 +195,7 @@ impl<'a> AddBevel<'a, BevelRectangleColorContext<'a>> for RectangleColorContext<
 impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for RectangleColorContext<'a> {
     fn image(&'a self, image: Image) -> ImageRectangleColorContext<'a> {
         ImageRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Value(image),

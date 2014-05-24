@@ -19,8 +19,8 @@ use internal::{
 
 /// A line context with bevel border information.
 pub struct BevelBorderLineContext<'a> {
-    /// Base/original transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current line.
@@ -33,7 +33,7 @@ impl<'a> Clone for BevelBorderLineContext<'a> {
     #[inline(always)]
     fn clone(&self) -> BevelBorderLineContext<'static> {
         BevelBorderLineContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             line: Value(*self.line.get()),
             bevel_border_radius: Value(*self.bevel_border_radius.get()),
@@ -52,7 +52,7 @@ impl<'a> CanTransform<'a, BevelBorderLineContext<'a>, Matrix2d> for BevelBorderL
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> BevelBorderLineContext<'a> {
         BevelBorderLineContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             line: Borrowed(self.line.get()),
             bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
@@ -63,7 +63,7 @@ impl<'a> CanTransform<'a, BevelBorderLineContext<'a>, Matrix2d> for BevelBorderL
 impl<'a> HasViewTransform<'a, Matrix2d> for BevelBorderLineContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -71,7 +71,7 @@ impl<'a> CanViewTransform<'a, BevelBorderLineContext<'a>, Matrix2d> for BevelBor
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> BevelBorderLineContext<'a> {
         BevelBorderLineContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
@@ -89,7 +89,7 @@ impl<'a> AddColor<'a, BevelBorderLineColorContext<'a>> for BevelBorderLineContex
         a: ColorComponent
     ) -> BevelBorderLineColorContext<'a> {
         BevelBorderLineColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             line: Borrowed(self.line.get()),
             color: Value([r, g, b, a]),

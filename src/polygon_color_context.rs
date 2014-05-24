@@ -23,8 +23,8 @@ use internal::{
 
 /// A polygon color context.
 pub struct PolygonColorContext<'a, 'b> {
-    /// Base/origin transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Current color.
@@ -37,7 +37,7 @@ impl<'a, 'b> Clone for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> PolygonColorContext<'static, 'b> {
         PolygonColorContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             polygon: Value(*self.polygon.get()),
             color: Value(*self.color.get()),
@@ -56,7 +56,7 @@ impl<'a, 'b> CanTransform<'a, PolygonColorContext<'a, 'b>, Matrix2d> for Polygon
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             polygon: Borrowed(self.polygon.get()),
             color: Borrowed(self.color.get()),
@@ -67,7 +67,7 @@ impl<'a, 'b> CanTransform<'a, PolygonColorContext<'a, 'b>, Matrix2d> for Polygon
 impl<'a, 'b> HasViewTransform<'a, Matrix2d> for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -76,7 +76,7 @@ for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             polygon: Borrowed(self.polygon.get()),
             color: Borrowed(self.color.get()),
@@ -95,7 +95,7 @@ impl<'a, 'b> CanColor<'a, PolygonColorContext<'a, 'b>, Color> for PolygonColorCo
     #[inline(always)]
     fn color(&'a self, value: Color) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
             polygon: Borrowed(self.polygon.get()),
