@@ -20,8 +20,8 @@ use internal::{
 
 /// An animation inbetweening context.
 pub struct LerpTweenContext<'a> {
-    /// Base/origin transform.
-    pub base: Field<'a, Matrix2d>,
+    /// View transform.
+    pub view: Field<'a, Matrix2d>,
     /// Current transform.
     pub transform: Field<'a, Matrix2d>,
     /// Animation inbetweening factor.
@@ -32,7 +32,7 @@ impl<'a> Clone for LerpTweenContext<'a> {
     #[inline(always)]
     fn clone(&self) -> LerpTweenContext<'static> {
         LerpTweenContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             tween_factor: Value(*self.tween_factor.get()),
         }
@@ -49,7 +49,7 @@ impl<'a> AddColor<'a, LerpTweenColorContext<'a>> for LerpTweenContext<'a> {
         a: ColorComponent
     ) -> LerpTweenColorContext<'a> {
         LerpTweenColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
             color: Value([r, g, b, a]),
@@ -61,7 +61,7 @@ impl<'a, 'b> AddPolygons<'a, LerpTweenPolygonsContext<'a, 'b>> for LerpTweenCont
     #[inline(always)]
     fn polygons(&'a self, polygons: Polygons<'b>) -> LerpTweenPolygonsContext<'a, 'b> {
         LerpTweenPolygonsContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
             polygons: Value(polygons),
@@ -80,7 +80,7 @@ impl<'a> CanTransform<'a, LerpTweenContext<'a>, Matrix2d> for LerpTweenContext<'
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> LerpTweenContext<'a> {
         LerpTweenContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             tween_factor: Borrowed(self.tween_factor.get()),
         }
@@ -90,7 +90,7 @@ impl<'a> CanTransform<'a, LerpTweenContext<'a>, Matrix2d> for LerpTweenContext<'
 impl<'a> HasViewTransform<'a, Matrix2d> for LerpTweenContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -98,7 +98,7 @@ impl<'a> CanViewTransform<'a, LerpTweenContext<'a>, Matrix2d> for LerpTweenConte
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> LerpTweenContext<'a> {
         LerpTweenContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             tween_factor: Borrowed(self.tween_factor.get()),
         }

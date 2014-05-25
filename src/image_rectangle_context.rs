@@ -30,8 +30,8 @@ use internal::{
 
 /// An image rectangle context.
 pub struct ImageRectangleContext<'a> {
-    /// Base/original transformation.
-    pub base: Field<'a, Matrix2d>,
+    /// View transformation.
+    pub view: Field<'a, Matrix2d>,
     /// Current transformation.
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle.
@@ -44,7 +44,7 @@ impl<'a> Clone for ImageRectangleContext<'a> {
     #[inline(always)]
     fn clone(&self) -> ImageRectangleContext<'static> {
         ImageRectangleContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             rect: Value(*self.rect.get()),
             image: Value(*self.image.get()),
@@ -63,7 +63,7 @@ impl<'a> CanTransform<'a, ImageRectangleContext<'a>, Matrix2d> for ImageRectangl
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> ImageRectangleContext<'a> {
         ImageRectangleContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
@@ -74,7 +74,7 @@ impl<'a> CanTransform<'a, ImageRectangleContext<'a>, Matrix2d> for ImageRectangl
 impl<'a> HasViewTransform<'a, Matrix2d> for ImageRectangleContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -83,7 +83,7 @@ for ImageRectangleContext<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> ImageRectangleContext<'a> {
         ImageRectangleContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
@@ -104,7 +104,7 @@ impl<'a> CanColor<'a, ImageRectangleColorContext<'a>, Color> for ImageRectangleC
     #[inline(always)]
     fn color(&'a self, value: Color) -> ImageRectangleColorContext<'a> {
         ImageRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
             rect: Borrowed(self.rect.get()),
@@ -124,7 +124,7 @@ impl<'a> CanRectangle<'a, ImageRectangleContext<'a>, Rectangle> for ImageRectang
     #[inline(always)]
     fn rectangle(&'a self, rect: Rectangle) -> ImageRectangleContext<'a> {
         ImageRectangleContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(rect),
             image: Borrowed(self.image.get()),
@@ -169,7 +169,7 @@ impl<'a> AddColor<'a, ImageRectangleColorContext<'a>> for ImageRectangleContext<
         a: ColorComponent
     ) -> ImageRectangleColorContext<'a> {
         ImageRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),

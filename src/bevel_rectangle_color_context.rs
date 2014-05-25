@@ -26,8 +26,8 @@ use internal::{
 
 /// A rectangle color context.
 pub struct BevelRectangleColorContext<'a> {
-    /// Base/original transformation.
-    pub base: Field<'a, Matrix2d>,
+    /// View transformation.
+    pub view: Field<'a, Matrix2d>,
     /// Current transformation.
     pub transform: Field<'a, Matrix2d>,
     /// Current rectangle.
@@ -42,7 +42,7 @@ impl<'a> Clone for BevelRectangleColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> BevelRectangleColorContext<'static> {
         BevelRectangleColorContext {
-            base: Value(*self.base.get()),
+            view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             rect: Value(*self.rect.get()),
             bevel_radius: Value(*self.bevel_radius.get()),
@@ -62,7 +62,7 @@ impl<'a> CanTransform<'a, BevelRectangleColorContext<'a>, Matrix2d> for BevelRec
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> BevelRectangleColorContext<'a> {
         BevelRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Value(value),
             rect: Borrowed(self.rect.get()),
             bevel_radius: Borrowed(self.bevel_radius.get()),
@@ -74,7 +74,7 @@ impl<'a> CanTransform<'a, BevelRectangleColorContext<'a>, Matrix2d> for BevelRec
 impl<'a> HasViewTransform<'a, Matrix2d> for BevelRectangleColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
-        self.base.get()
+        self.view.get()
     }
 }
 
@@ -83,7 +83,7 @@ for BevelRectangleColorContext<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> BevelRectangleColorContext<'a> {
         BevelRectangleColorContext {
-            base: Value(value),
+            view: Value(value),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             bevel_radius: Borrowed(self.bevel_radius.get()),
@@ -103,7 +103,7 @@ impl<'a> CanColor<'a, BevelRectangleColorContext<'a>, Color> for BevelRectangleC
     #[inline(always)]
     fn color(&'a self, value: Color) -> BevelRectangleColorContext<'a> {
         BevelRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
             rect: Borrowed(self.rect.get()),
@@ -123,7 +123,7 @@ impl<'a> CanRectangle<'a, BevelRectangleColorContext<'a>, Rectangle> for BevelRe
     #[inline(always)]
     fn rectangle(&'a self, rect: Rectangle) -> BevelRectangleColorContext<'a> {
         BevelRectangleColorContext {
-            base: Borrowed(self.base.get()),
+            view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(rect),
             bevel_radius: Borrowed(self.bevel_radius.get()),
