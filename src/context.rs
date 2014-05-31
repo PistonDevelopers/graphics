@@ -84,6 +84,7 @@ impl<'a> CanViewTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
 
 impl<'a> Context<'a> {
     /// Creates a new drawing context.
+    #[inline(always)]
     pub fn new() -> Context {
         Context {
             view:  Value(
@@ -94,6 +95,28 @@ impl<'a> Context<'a> {
                 [1.0, 0.0, 0.0,
                  0.0, 1.0, 0.0]
             ),
+        }
+    }
+
+    /// Creates a new drawing context in absolute coordinates.
+    ///
+    /// This function assumes the default coordinate system
+    /// being centered with x axis pointing to the right
+    /// and y axis pointing up.
+    ///
+    /// Returns a drawing context
+    /// with origin in the upper left corner
+    /// and x axis pointing to the right
+    /// and y axis pointing down.
+    #[inline(always)]
+    pub fn abs(w: f64, h: f64) -> Context {
+        let sx = 2.0 / w;
+        let sy = -2.0 / h;
+        let mat = [ sx, 0.0, -1.0,
+                   0.0,  sy, 1.0 ];
+        Context {
+            view: Value(mat),
+            transform: Value(mat),
         }
     }
 }
