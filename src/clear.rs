@@ -1,8 +1,11 @@
-use {BackEnd};
+use {
+    BackEnd,
+    Image,
+};
 
 /// Implemented by contexts that can clear the background.
-pub trait Clear {
+pub trait Clear<B: BackEnd<I>, I: Image> {
     /// Clears the background.
-    fn clear<B: BackEnd>(&self, back_end: &mut B);
+    fn clear(&self, back_end: &mut B);
 }
 

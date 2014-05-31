@@ -135,7 +135,7 @@ impl<'a> CanRectangle<'a, RectangleColorContext<'a>, Rectangle> for RectangleCol
 
 impl<'a> Fill<'a> for RectangleColorContext<'a> {
     #[inline(always)]
-    fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
+    fn fill<B: BackEnd<I>, I: Image>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let color = self.color.get();
@@ -155,8 +155,8 @@ impl<'a> Fill<'a> for RectangleColorContext<'a> {
     }
 }
 
-impl<'a> Clear for RectangleColorContext<'a> {
-    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for RectangleColorContext<'a> {
+    fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
@@ -192,13 +192,15 @@ impl<'a> AddBevel<'a, BevelRectangleColorContext<'a>> for RectangleColorContext<
     }
 }
 
-impl<'a> AddImage<'a, ImageRectangleColorContext<'a>> for RectangleColorContext<'a> {
-    fn image(&'a self, image: Image) -> ImageRectangleColorContext<'a> {
+impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleColorContext<'a, 'b, I>, I> for RectangleColorContext<'a> {
+    fn image(&'a self, image: &'b I) -> ImageRectangleColorContext<'a, 'b, I> {
+        let (w, h) = image.get_size();
         ImageRectangleColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Value(image),
+            source_rect: Value([0, 0, w, h]),
             color: Borrowed(self.color.get()),
         }
     }

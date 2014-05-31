@@ -4,6 +4,7 @@ use {
     Borrowed,
     Clear,
     Field,
+    Image,
     LerpTweenPolygonsColorContext,
     Value,
 };
@@ -114,9 +115,9 @@ impl<'a, 'b> AddPolygons<'a, LerpTweenPolygonsColorContext<'a, 'b>> for LerpTwee
     }
 }
 
-impl<'a> Clear for LerpTweenColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for LerpTweenColorContext<'a> {
     #[inline(always)]
-    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+    fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);

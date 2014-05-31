@@ -1,3 +1,6 @@
+use {
+    Image,
+};
 
 /// Implemented by all graphics back-ends.
 /// This trait uses default methods to simplify implementation.
@@ -9,7 +12,7 @@
 /// Alpha blending is assumed to be expensive and turned off when not needed.
 /// For cases when alpha blending is explicitly not wanted there will be own methods,
 /// in case the back-end needs to restore to its own default afterwards.
-pub trait BackEnd {
+pub trait BackEnd<I: Image> {
     /// Returns true if feature is supported.
     #[inline(always)]
     fn supports_clear_rgba(&self) -> bool { false }
@@ -28,7 +31,7 @@ pub trait BackEnd {
     fn supports_single_texture(&self) -> bool { false }
 
     /// Sets the current single-texture.
-    fn enable_single_texture(&mut self, _texture_id: uint) {}
+    fn enable_single_texture(&mut self, _texture: &I) {}
 
     /// Disables single-texture.
     fn disable_single_texture(&mut self) {}
@@ -40,7 +43,7 @@ pub trait BackEnd {
     /// Ignore if alpha blending is not supported.
     /// Ignore if alpha channel is not used.
     #[inline(always)]
-    fn has_texture_alpha(&self, _texture_id: uint) -> bool { false }
+    fn has_texture_alpha(&self, _texture: &I) -> bool { false }
 
     /// Returns true if feature is supported.
     #[inline(always)]

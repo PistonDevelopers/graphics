@@ -4,6 +4,7 @@ use {
     Clear,
     Field,
     Fill,
+    Image,
     Value,
 };
 use triangulation::{
@@ -132,9 +133,9 @@ impl<'a> CanRectangle<'a, BevelRectangleColorContext<'a>, Rectangle> for BevelRe
     }
 }
 
-impl<'a> Clear for BevelRectangleColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for BevelRectangleColorContext<'a> {
     #[inline(always)]
-    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+    fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
@@ -146,7 +147,7 @@ impl<'a> Clear for BevelRectangleColorContext<'a> {
 
 impl<'a> Fill<'a> for BevelRectangleColorContext<'a> {
     #[inline(always)]
-    fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
+    fn fill<B: BackEnd<I>, I: Image>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let bevel_radius = self.bevel_radius.get();

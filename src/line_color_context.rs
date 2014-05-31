@@ -8,6 +8,7 @@ use {
     Borrowed,
     Clear,
     Field,
+    Image,
     RoundBorderLineColorContext,
     SquareBorderLineColorContext,
     Value,
@@ -146,8 +147,8 @@ impl<'a> AddSquareBorder<'a, SquareBorderLineColorContext<'a>> for LineColorCont
     }
 }
 
-impl<'a> Clear for LineColorContext<'a> {
-    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for LineColorContext<'a> {
+    fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);

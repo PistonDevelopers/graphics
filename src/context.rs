@@ -229,19 +229,21 @@ impl<'a, 'b> AddPolygon<'a, PolygonContext<'a, 'b>> for Context<'a> {
     }
 }
 
-impl<'a> AddImage<'a, ImageRectangleContext<'a>> for Context<'a> {
+impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleContext<'a, 'b, I>, I> for Context<'a> {
     #[inline(always)]
-    fn image(&'a self, image: Image) -> ImageRectangleContext<'a> {
+    fn image(&'a self, image: &'b I) -> ImageRectangleContext<'a, 'b, I> {
+        let (w, h) = image.get_size();
         ImageRectangleContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value([
                 0.0, 
                 0.0, 
-                image.source_rect[2] as f64, 
-                image.source_rect[3] as f64
+                w as f64, 
+                h as f64
             ]),
             image: Value(image),
+            source_rect: Value([0, 0, w, h]),
         }
     }
 }

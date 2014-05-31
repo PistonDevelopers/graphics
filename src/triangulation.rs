@@ -13,6 +13,7 @@ use internal::{
     Color,
     Line,
     Matrix2d,
+    PixelRectangle,
     Polygon,
     Polygons,
     Radius,
@@ -329,12 +330,12 @@ pub fn rect_tri_list_rgba_f32(
 
 /// Creates triangle list texture coords from image.
 #[inline(always)]
-pub fn rect_tri_list_uv_f32(image: &Image) -> [f32, ..12] {
-    let source_rect = image.source_rect;
-    let x1 = source_rect[0] as f32 / image.texture_width as f32;
-    let y1 = source_rect[1] as f32 / image.texture_height as f32;
-    let x2 = (source_rect[0] + source_rect[2]) as f32 / image.texture_width as f32;
-    let y2 = (source_rect[1] + source_rect[3]) as f32 / image.texture_height as f32;
+pub fn rect_tri_list_uv_f32<I: Image>(image: &I, source_rect: PixelRectangle) -> [f32, ..12] {
+    let (w, h) = image.get_size();
+    let x1 = source_rect[0] as f32 / w as f32;
+    let y1 = source_rect[1] as f32 / h as f32;
+    let x2 = (source_rect[0] + source_rect[2]) as f32 / w as f32;
+    let y2 = (source_rect[1] + source_rect[3]) as f32 / h as f32;
     [x1, y1, x2, y1, x1, y2,
      x2, y1, x2, y2, x1, y2]
 }

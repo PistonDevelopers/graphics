@@ -1,8 +1,11 @@
-use {BackEnd};
+use {
+    BackEnd,
+    Image,
+};
 
 /// Implemented by contexts that can draws something using a back-end.
-pub trait Draw<'a> {
+pub trait Draw<'a, B: BackEnd<I>, I: Image> {
     /// Draw using back-end.
-    fn draw<B: BackEnd>(&'a self, back_end: &mut B);
+    fn draw(&'a self, back_end: &mut B);
 }
 
