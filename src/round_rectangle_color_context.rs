@@ -5,6 +5,7 @@ use {
     Clear,
     Field,
     Fill,
+    Image,
     Value,
 };
 use triangulation::{
@@ -133,8 +134,8 @@ impl<'a> CanRectangle<'a, RoundRectangleColorContext<'a>, Rectangle> for RoundRe
     }
 }
 
-impl<'a> Clear for RoundRectangleColorContext<'a> {
-    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for RoundRectangleColorContext<'a> {
+    fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
@@ -146,7 +147,7 @@ impl<'a> Clear for RoundRectangleColorContext<'a> {
 
 impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
     #[inline(always)]
-    fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
+    fn fill<B: BackEnd<I>, I: Image>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let round_radius = self.round_radius.get();

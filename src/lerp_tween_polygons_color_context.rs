@@ -4,6 +4,7 @@ use {
     Clear,
     Field,
     Fill,
+    Image,
     Value,
 };
 use triangulation::{
@@ -118,7 +119,7 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
 
 impl<'a, 'b> Fill<'a> for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn fill<B: BackEnd>(&'a self, back_end: &mut B) {
+    fn fill<B: BackEnd<I>, I: Image>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygons = self.polygons.get();
             let color = self.color.get();
@@ -143,9 +144,9 @@ impl<'a, 'b> Fill<'a> for LerpTweenPolygonsColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> Clear for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'a, 'b, B: BackEnd<I>, I: Image> Clear<B, I> for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+    fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);

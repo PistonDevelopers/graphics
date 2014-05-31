@@ -2,8 +2,8 @@
 use {Image};
 
 /// Implemented by contexts that can add image.
-pub trait AddImage<'a, T> {
+pub trait AddImage<'a, 'b, T, I: Image> {
     /// Add image to context.
-    fn image(&'a self, image: Image) -> T;
+    fn image(&'a self, image: &'b I) -> T;
 }
 
