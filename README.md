@@ -3,6 +3,8 @@ Rust-Graphics
 
 A library for 2D graphics, written in Rust, that works with multiple back-ends
 
+[![Build Status](https://travis-ci.org/PistonDevelopers/rust-graphics.svg)](https://travis-ci.org/PistonDevelopers/rust-graphics)
+
 [Rust-Graphics online docs](http://pistondevelopers.github.io/docs/rust-graphics/graphics/)
 
 *Notice: This is a very early stage of the project!*
