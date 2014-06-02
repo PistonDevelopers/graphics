@@ -156,13 +156,15 @@ impl<'a> AddBevel<'a, BevelRectangleContext<'a>> for RectangleContext<'a> {
     }
 }
 
-impl<'a> AddImage<'a, ImageRectangleContext<'a>> for RectangleContext<'a> {
-    fn image(&'a self, image: Image) -> ImageRectangleContext<'a> {
+impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleContext<'a, 'b, I>, I> for RectangleContext<'a> {
+    fn image(&'a self, image: &'b I) -> ImageRectangleContext<'a, 'b, I> {
+        let (w, h) = image.get_size();
         ImageRectangleContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Value(image),
+            source_rect: Value([0, 0, w, h]),
         }
     }
 }

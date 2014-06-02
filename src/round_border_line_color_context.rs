@@ -4,6 +4,7 @@ use {
     Borrowed,
     Clear,
     Field,
+    Image,
     Stroke,
     Value,
 };
@@ -111,9 +112,9 @@ impl<'a> CanColor<'a, RoundBorderLineColorContext<'a>, Color> for RoundBorderLin
     }
 }
 
-impl<'a> Stroke<'a> for RoundBorderLineColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: Image> Stroke<'a, B, I> for RoundBorderLineColorContext<'a> {
     #[inline(always)]
-    fn stroke<B: BackEnd>(&'a self, back_end: &mut B) {
+    fn stroke(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let line = self.line.get();
             let round_border_radius = self.round_border_radius.get();
@@ -140,9 +141,9 @@ impl<'a> Stroke<'a> for RoundBorderLineColorContext<'a> {
     }
 }
 
-impl<'a> Clear for RoundBorderLineColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for RoundBorderLineColorContext<'a> {
     #[inline(always)]
-    fn clear<B: BackEnd>(&self, back_end: &mut B) {
+    fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
