@@ -5,7 +5,7 @@ use vecmath::{
 use internal::{
     CanSourceRectangle,
     HasSourceRectangle,
-    PixelRectangle,
+    SourceRectangle,
 };
 
 /// Should be implemented by contexts that have source rectangle information.
@@ -49,7 +49,7 @@ pub trait RelativeSourceRectangle<'a, T> {
 
 impl<
     'a,
-    T: HasSourceRectangle<'a, PixelRectangle> + CanSourceRectangle<'a, U, PixelRectangle>,
+    T: HasSourceRectangle<'a, SourceRectangle> + CanSourceRectangle<'a, U, SourceRectangle>,
     U
 > RelativeSourceRectangle<'a, U> for T {
     #[inline(always)]
