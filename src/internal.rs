@@ -29,7 +29,7 @@ pub type Line = [Scalar, ..4];
 pub type Matrix2d = [Scalar, ..6];
 
 /// [x, y, w, h]
-pub type PixelRectangle = [u32, ..4];
+pub type SourceRectangle = [u32, ..4];
 
 /// [x0, y0, x1, y1, ...]
 pub type Polygon<'a> = &'a [Scalar];

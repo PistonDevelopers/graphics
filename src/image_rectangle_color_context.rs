@@ -22,7 +22,7 @@ use internal::{
     HasRectangle,
     HasTransform,
     HasViewTransform,
-    PixelRectangle,
+    SourceRectangle,
     Matrix2d,
     Rectangle,
 };
@@ -38,7 +38,7 @@ pub struct ImageRectangleColorContext<'a, 'b, I> {
     /// Current image.
     pub image: Field<'a, &'b I>,
     /// Current source rectangle.
-    pub source_rect: Field<'a, PixelRectangle>,
+    pub source_rect: Field<'a, SourceRectangle>,
     /// Current color.
     pub color: Field<'a, Color>,
 }
@@ -85,7 +85,7 @@ impl<'a, 'b, I> HasViewTransform<'a, Matrix2d> for ImageRectangleColorContext<'a
     }
 }
 
-impl<'a, 'b, I> CanViewTransform<'a, ImageRectangleColorContext<'a, 'b, I>, Matrix2d> 
+impl<'a, 'b, I> CanViewTransform<'a, ImageRectangleColorContext<'a, 'b, I>, Matrix2d>
 for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> ImageRectangleColorContext<'a, 'b, I> {
