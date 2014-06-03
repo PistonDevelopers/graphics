@@ -68,8 +68,14 @@ pub trait CanColor<'a, T, U> {
 
 /// Implemented by contexts that can set rectangle information.
 pub trait CanRectangle<'a, T, U> {
-    /// Create new context with recangle information.
+    /// Create new context with rectangle information.
     fn rectangle(&'a self, value: U) -> T;
+}
+
+/// Implemented by contexts that can set source rectangle information.
+pub trait CanSourceRectangle<'a, T, U> {
+    /// Create new context with source rectangle information.
+    fn source_rectangle(&'a self, value: U) -> T;
 }
 
 /// Implemented by contexts that can transform.
@@ -98,6 +104,12 @@ pub trait HasColor<'a, U> {
 pub trait HasRectangle<'a, U> {
     /// Returns the current rectangle.
     fn get_rectangle(&'a self) -> &'a U;
+}
+
+/// Implemented by contexts that uses type `U` as current source rectangle.
+pub trait HasSourceRectangle<'a, U> {
+    /// Returns the current source rectangle.
+    fn get_source_rectangle(&'a self) -> &'a U;
 }
 
 /// Implemented by contexts that uses type `U` as current transform.
