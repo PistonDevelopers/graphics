@@ -15,11 +15,13 @@ use triangulation::{
 use internal::{
     CanColor,
     CanRectangle,
+    CanSourceRectangle,
     CanTransform,
     CanViewTransform,
     Color,
     HasColor,
     HasRectangle,
+    HasSourceRectangle,
     HasTransform,
     HasViewTransform,
     SourceRectangle,
@@ -137,6 +139,29 @@ impl<'a, 'b, I> CanRectangle<'a, ImageRectangleColorContext<'a, 'b, I>, Rectangl
             rect: Value(rect),
             image: Borrowed(self.image.get()),
             source_rect: Borrowed(self.source_rect.get()),
+            color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a, 'b, I> HasSourceRectangle<'a, SourceRectangle> 
+for ImageRectangleColorContext<'a, 'b, I> {
+    #[inline(always)]
+    fn get_source_rectangle(&'a self) -> &'a SourceRectangle {
+        self.source_rect.get()
+    }
+}
+
+impl<'a, 'b, I> CanSourceRectangle<'a, ImageRectangleColorContext<'a, 'b, I>, SourceRectangle> 
+for ImageRectangleColorContext<'a, 'b, I> {
+    #[inline(always)]
+    fn source_rectangle(&'a self, source_rect: SourceRectangle) -> ImageRectangleColorContext<'a, 'b, I> {
+        ImageRectangleColorContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            image: Borrowed(self.image.get()),
+            source_rect: Value(source_rect),
             color: Borrowed(self.color.get()),
         }
     }
