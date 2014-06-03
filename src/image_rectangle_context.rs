@@ -25,7 +25,7 @@ use internal::{
     HasTransform,
     HasViewTransform,
     Matrix2d,
-    PixelRectangle,
+    SourceRectangle,
     Rectangle,
 };
 
@@ -40,7 +40,7 @@ pub struct ImageRectangleContext<'a, 'b, I> {
     /// Current image.
     pub image: Field<'a, &'b I>,
     /// Current source rectangle.
-    pub source_rect: Field<'a, PixelRectangle>,
+    pub source_rect: Field<'a, SourceRectangle>,
 }
 
 impl<'a, 'b, I> Clone for ImageRectangleContext<'a, 'b, I> {
@@ -83,7 +83,7 @@ impl<'a, 'b, I> HasViewTransform<'a, Matrix2d> for ImageRectangleContext<'a, 'b,
     }
 }
 
-impl<'a, 'b, I> CanViewTransform<'a, ImageRectangleContext<'a, 'b, I>, Matrix2d> 
+impl<'a, 'b, I> CanViewTransform<'a, ImageRectangleContext<'a, 'b, I>, Matrix2d>
 for ImageRectangleContext<'a, 'b, I> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> ImageRectangleContext<'a, 'b, I> {
@@ -171,10 +171,10 @@ impl<'a, 'b, B: BackEnd<I>, I: Image> Draw<'a, B, I> for ImageRectangleContext<'
 impl<'a, 'b, I> AddColor<'a, ImageRectangleColorContext<'a, 'b, I>> for ImageRectangleContext<'a, 'b, I> {
     #[inline(always)]
     fn rgba(
-        &'a self, 
-        r: ColorComponent, 
-        g: ColorComponent, 
-        b: ColorComponent, 
+        &'a self,
+        r: ColorComponent,
+        g: ColorComponent,
+        b: ColorComponent,
         a: ColorComponent
     ) -> ImageRectangleColorContext<'a, 'b, I> {
         ImageRectangleColorContext {
