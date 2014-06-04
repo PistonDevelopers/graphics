@@ -1,9 +1,6 @@
 
 /// Implemented by all contexts that can add source rectangle.
 pub trait AddSourceRectangle<'a, T> {
-    /// Adds a source rectangle.
-    fn src_rect(&'a self, x: u32, y: u32, w: u32, h: u32) -> T;
-
     /// Adds a source rectangle with coordinates in the center.
     #[inline(always)]
     fn src_rect_centered(&'a self, center_x: u32, center_y: u32, radius_width: u32, radius_height: u32) -> T {
