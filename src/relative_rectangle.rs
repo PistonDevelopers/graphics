@@ -22,30 +22,6 @@ pub trait RelativeRectangle<'a, T> {
 
     /// Moves to a relative rectangle using the current rectangle as tile.
     fn rel(&'a self, x: f64, y: f64) -> T;
-
-    /// Moves to the rectangle above using the current rectangle as tile.
-    #[inline(always)]
-    fn up(&'a self) -> T {
-        self.rel(0.0, 1.0)
-    }
-
-    /// Moves to the left rectangle using the current rectangle as tile.
-    #[inline(always)]
-    fn left(&'a self) -> T {
-        self.rel(-1.0, 0.0)
-    }
-
-    /// Moves to the right rectangle using the current rectangle as tile.
-    #[inline(always)]
-    fn right(&'a self) -> T {
-        self.rel(1.0, 0.0)
-    }
-
-    /// Moves to the rectangle below using the current rectangle as tile.
-    #[inline(always)]
-    fn down(&'a self) -> T {
-        self.rel(0.0, -1.0)
-    }
 }
 
 impl<
