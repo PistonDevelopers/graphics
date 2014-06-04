@@ -139,17 +139,6 @@ pub fn margin_rectangle(rect: Rectangle, m: f64) -> Rectangle {
     [x, y, w, h]
 }
 
-/// Shrinks a source rectangle by a factor on all sides.
-#[inline(always)]
-pub fn margin_source_rectangle(rect: SourceRectangle, m: i64) -> SourceRectangle {
-    let (rx, ry, rw, rh) = (rect[0] as i64, rect[1] as i64, rect[2] as i64, rect[3] as i64);
-    let w = rw as i64 - 2 * m;
-    let h = rh as i64 - 2 * m;
-    let (x, w) = if w < 0 { (rx + rw / 2, 0) } else { (rx + m, w) };
-    let (y, h) = if h < 0 { (ry + rh / 2, 0) } else { (ry + m, h) };
-    [x as u32, y as u32, w as u32, h as u32]
-}
-
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
 pub fn relative_rectangle(rect: Rectangle, x: f64, y: f64) -> Rectangle {

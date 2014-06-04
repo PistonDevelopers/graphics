@@ -1,6 +1,5 @@
 use {
     AddColor,
-    AddSourceRectangle,
     BackEnd,
     Borrowed,
     Draw,
@@ -161,20 +160,6 @@ for ImageRectangleContext<'a, 'b, I> {
             rect: Borrowed(self.rect.get()),
             image: Borrowed(self.image.get()),
             source_rect: Value(source_rect),
-        }
-    }
-}
-
-impl<'a, 'b, I> AddSourceRectangle<'a, ImageRectangleContext<'a, 'b, I>> 
-for ImageRectangleContext<'a, 'b, I> {
-    #[inline(always)]
-    fn src_rect(&'a self, x: u32, y: u32, w: u32, h: u32) -> ImageRectangleContext<'a, 'b, I> {
-        ImageRectangleContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-            source_rect: Value([x, y, w, h]),
-            image: Borrowed(self.image.get()),
         }
     }
 }
