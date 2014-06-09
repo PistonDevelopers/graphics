@@ -12,7 +12,7 @@ use {
     EllipseColorContext,
     Field,
     Image,
-    ImageRectangleColorContext,
+    ImageColorContext,
     LineColorContext,
     PolygonColorContext,
     RectangleColorContext,
@@ -176,16 +176,13 @@ impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for ColorContext<'a> {
     }
 }
 
-impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleColorContext<'a, 'b, I>, I> for ColorContext<'a> {
+impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageColorContext<'a, 'b, I>, I> for ColorContext<'a> {
     #[inline(always)]
-    fn image(&'a self, image: &'b I) -> ImageRectangleColorContext<'a, 'b, I> {
+    fn image(&'a self, image: &'b I) -> ImageColorContext<'a, 'b, I> {
         let (w, h) = image.get_size();
-        ImageRectangleColorContext {
+        ImageColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value(
-                [0.0, 0.0, w as f64, h as f64]
-            ),
             image: Value(image),
             source_rect: Value([0, 0, w, h]),
             color: Borrowed(self.color.get()),
