@@ -12,7 +12,7 @@ use {
     EllipseContext,
     Field,
     Image,
-    ImageRectangleContext,
+    ImageContext,
     LineContext,
     PolygonContext,
     RectangleContext,
@@ -229,19 +229,13 @@ impl<'a, 'b> AddPolygon<'a, PolygonContext<'a, 'b>> for Context<'a> {
     }
 }
 
-impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleContext<'a, 'b, I>, I> for Context<'a> {
+impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageContext<'a, 'b, I>, I> for Context<'a> {
     #[inline(always)]
-    fn image(&'a self, image: &'b I) -> ImageRectangleContext<'a, 'b, I> {
+    fn image(&'a self, image: &'b I) -> ImageContext<'a, 'b, I> {
         let (w, h) = image.get_size();
-        ImageRectangleContext {
+        ImageContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
-            rect: Value([
-                0.0, 
-                0.0, 
-                w as f64, 
-                h as f64
-            ]),
             image: Value(image),
             source_rect: Value([0, 0, w, h]),
         }
