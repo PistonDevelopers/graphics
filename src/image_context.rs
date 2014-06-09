@@ -1,11 +1,13 @@
 use {
     AddColor,
+    AddRectangle,
     BackEnd,
     Borrowed,
     Draw,
     Field,
     Image,
     ImageColorContext,
+    ImageRectangleContext,
     Value,
 };
 use triangulation::{
@@ -25,6 +27,7 @@ use internal::{
     HasTransform,
     HasViewTransform,
     Matrix2d,
+    Scalar,
     SourceRectangle,
 };
 
@@ -131,6 +134,20 @@ for ImageContext<'a, 'b, I> {
             transform: Borrowed(self.transform.get()),
             image: Borrowed(self.image.get()),
             source_rect: Value(source_rect),
+        }
+    }
+}
+
+impl<'a, 'b, I> AddRectangle<'a, ImageRectangleContext<'a, 'b, I>> 
+for ImageContext<'a, 'b, I> {
+    #[inline(always)]
+    fn rect(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> ImageRectangleContext<'a, 'b, I> {
+        ImageRectangleContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Value([x, y, w, h]),
+            image: Borrowed(self.image.get()),
+            source_rect: Borrowed(self.source_rect.get()),
         }
     }
 }
