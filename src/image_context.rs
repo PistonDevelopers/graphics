@@ -160,7 +160,7 @@ impl<'a, 'b, B: BackEnd<I>, I: Image> Draw<'a, B, I> for ImageContext<'a, 'b, I>
             let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
             let &texture = self.image.get();
             let source_rect = self.source_rect.get();
-            let rect = [0.0, 0.0, source_rect[1] as f64, source_rect[2] as f64];
+            let rect = [0.0, 0.0, source_rect[2] as f64, source_rect[3] as f64];
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque or if the texture has alpha channel.
