@@ -55,6 +55,12 @@ pub trait RelativeTransform2d<'a> {
         self.scale(-1.0, 0.0)
     }
 
+    /// Flips horizontally and vertically in local coordinates.
+    #[inline(always)]
+    fn flip_hv(&'a self) -> Self {
+        self.scale(-1.0, -1.0)
+    }
+
     /// Shears in local coordinates.
     fn shear(&'a self, sx: Scalar, sy: Scalar) -> Self;
 }
