@@ -14,6 +14,15 @@ pub trait RelativeSourceRectangle<'a, T> {
 
     /// Moves to a relative source rectangle using the current source rectangle as tile.
     fn src_rel(&'a self, x: i32, y: i32) -> T;
+
+    /// Flips the source rectangle horizontally.
+    fn src_flip_h(&'a self) -> T;
+
+    /// Flips the source rectangle vertically.
+    fn src_flip_v(&'a self) -> T;
+
+    /// Flips the source rectangle horizontally and vertically.
+    fn src_flip_vh(&'a self) -> T;
 }
 
 impl<
@@ -29,6 +38,39 @@ impl<
     #[inline(always)]
     fn src_rect(&'a self, x: i32, y: i32, w: i32, h: i32) -> U {
         self.source_rectangle([x, y, w, h])
+    }
+
+    #[inline(always)]
+    fn src_flip_h(&'a self) -> U {
+        let source_rect = self.get_source_rectangle();
+        self.source_rectangle([
+            source_rect[0] + source_rect[2],
+            source_rect[1],
+            -source_rect[2],
+            source_rect[3]
+        ])
+    }
+
+    #[inline(always)]
+    fn src_flip_v(&'a self) -> U {
+        let source_rect = self.get_source_rectangle();
+        self.source_rectangle([
+            source_rect[0],
+            source_rect[1] + source_rect[3],
+            source_rect[2],
+            -source_rect[3]
+        ])
+    }
+
+    #[inline(always)]
+    fn src_flip_vh(&'a self) -> U {
+        let source_rect = self.get_source_rectangle();
+        self.source_rectangle([
+            source_rect[0] + source_rect[2],
+            source_rect[1] + source_rect[3],
+            -source_rect[2],
+            -source_rect[3]
+        ])
     }
 }
 
