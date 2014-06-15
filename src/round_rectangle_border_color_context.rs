@@ -4,12 +4,10 @@ use {
     Borrowed,
     Clear,
     Field,
-    Fill,
     Image,
     Value,
 };
 use triangulation::{
-    with_round_rectangle_tri_list_xy_f32_rgba_f32
 };
 use internal::{
     CanColor,
@@ -26,8 +24,8 @@ use internal::{
     Rectangle,
 };
 
-/// A round rectangle color context.
-pub struct RoundRectangleColorContext<'a> {
+/// A round rectangle border color context.
+pub struct RoundRectangleBorderColorContext<'a> {
     /// View transformation.
     pub view: Field<'a, Matrix2d>,
     /// Current transformation.
@@ -38,136 +36,121 @@ pub struct RoundRectangleColorContext<'a> {
     pub round_radius: Field<'a, Radius>,
     /// Current color.
     pub color: Field<'a, Color>,
+    /// Current border.
+    pub border: Field<'a, Radius>,
 }
 
-impl<'a> Clone for RoundRectangleColorContext<'a> {
+impl<'a> Clone for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn clone(&self) -> RoundRectangleColorContext<'static> {
-        RoundRectangleColorContext {
+    fn clone(&self) -> RoundRectangleBorderColorContext<'static> {
+        RoundRectangleBorderColorContext {
             view: Value(*self.view.get()),
             transform: Value(*self.transform.get()),
             rect: Value(*self.rect.get()),
             round_radius: Value(*self.round_radius.get()),
             color: Value(*self.color.get()),
+            border: Value(*self.border.get()),
         }
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for RoundRectangleColorContext<'a> {
+impl<'a> HasTransform<'a, Matrix2d> for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, RoundRectangleColorContext<'a>, Matrix2d> for RoundRectangleColorContext<'a> {
+impl<'a> CanTransform<'a, RoundRectangleBorderColorContext<'a>, Matrix2d> 
+for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
+    fn transform(&'a self, value: Matrix2d) -> RoundRectangleBorderColorContext<'a> {
+        RoundRectangleBorderColorContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
             color: Borrowed(self.color.get()),
+            border: Borrowed(self.border.get()),
         }
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for RoundRectangleColorContext<'a> {
+impl<'a> HasViewTransform<'a, Matrix2d> 
+for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, RoundRectangleColorContext<'a>, Matrix2d> 
-for RoundRectangleColorContext<'a> {
+impl<'a> CanViewTransform<'a, RoundRectangleBorderColorContext<'a>, Matrix2d> 
+for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
+    fn view_transform(&'a self, value: Matrix2d) -> RoundRectangleBorderColorContext<'a> {
+        RoundRectangleBorderColorContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
             color: Borrowed(self.color.get()),
+            border: Borrowed(self.border.get()),
         }
     }
 }
 
-impl<'a> HasColor<'a, Color> for RoundRectangleColorContext<'a> {
+impl<'a> HasColor<'a, Color> 
+for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, RoundRectangleColorContext<'a>, Color> for RoundRectangleColorContext<'a> {
+impl<'a> CanColor<'a, RoundRectangleBorderColorContext<'a>, Color> 
+for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
+    fn color(&'a self, value: Color) -> RoundRectangleBorderColorContext<'a> {
+        RoundRectangleBorderColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             color: Value(value),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
+            border: Borrowed(self.border.get()),
         }
     }
 }
 
-impl<'a> HasRectangle<'a, Rectangle> for RoundRectangleColorContext<'a> {
+impl<'a> HasRectangle<'a, Rectangle> 
+for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn get_rectangle(&'a self) -> &'a Rectangle {
         self.rect.get()
     }
 }
 
-impl<'a> CanRectangle<'a, RoundRectangleColorContext<'a>, Rectangle> for RoundRectangleColorContext<'a> {
+impl<'a> CanRectangle<'a, RoundRectangleBorderColorContext<'a>, Rectangle> 
+for RoundRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn rectangle(&'a self, rect: Rectangle) -> RoundRectangleColorContext<'a> {
-        RoundRectangleColorContext {
+    fn rectangle(&'a self, rect: Rectangle) -> RoundRectangleBorderColorContext<'a> {
+        RoundRectangleBorderColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(rect),
             round_radius: Borrowed(self.round_radius.get()),
             color: Borrowed(self.color.get()),
+            border: Borrowed(self.border.get()),
         }
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for RoundRectangleColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> 
+for RoundRectangleBorderColorContext<'a> {
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
-        } else {
-            unimplemented!();
-        }
-    }
-}
-
-impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
-    #[inline(always)]
-    fn fill<B: BackEnd<I>, I: Image>(&'a self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.rect.get();
-            let round_radius = self.round_radius.get();
-            let color = self.color.get();
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            with_round_rectangle_tri_list_xy_f32_rgba_f32(
-                32,
-                *self.transform.get(),
-                *rect,
-                *round_radius,
-                *color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
         }
