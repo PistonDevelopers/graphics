@@ -53,6 +53,7 @@ extern crate std;
 
 pub use AddBevel = add_bevel::AddBevel;
 pub use AddBevelBorder = add_bevel_border::AddBevelBorder;
+pub use AddBorder = add_border::AddBorder;
 pub use AddColor = add_color::AddColor;
 pub use AddEllipse = add_ellipse::AddEllipse;
 pub use AddImage = add_image::AddImage;
@@ -106,6 +107,7 @@ pub use View = view::View;
 
 mod add_bevel;
 mod add_bevel_border;
+mod add_border;
 mod add_color;
 mod add_ellipse;
 mod add_image;
