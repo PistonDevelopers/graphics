@@ -1,6 +1,7 @@
 
 use {
     AddBevel,
+    AddBorder,
     AddImage,
     AddRound,
     BackEnd,
@@ -11,6 +12,7 @@ use {
     Fill,
     Image,
     ImageRectangleColorContext,
+    RectangleBorderColorContext,
     RoundRectangleColorContext,
     Value,
 };
@@ -202,6 +204,19 @@ impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleColorContext<'a, 'b, I>, I
             image: Value(image),
             source_rect: Value([0, 0, w as i32, h as i32]),
             color: Borrowed(self.color.get()),
+        }
+    }
+}
+
+impl<'a> AddBorder<'a, RectangleBorderColorContext<'a>> for RectangleColorContext<'a> {
+    #[inline(always)]
+    fn border_radius(&'a self, radius: f64) -> RectangleBorderColorContext<'a> {
+        RectangleBorderColorContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+            border: Value(radius),
         }
     }
 }
