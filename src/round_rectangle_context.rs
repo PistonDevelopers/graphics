@@ -1,7 +1,9 @@
 use {
+    AddBorder,
     AddColor,
     Borrowed,
     Field,
+    RoundRectangleBorderContext,
     RoundRectangleColorContext,
     Value,
 };
@@ -115,6 +117,19 @@ impl<'a> AddColor<'a, RoundRectangleColorContext<'a>> for RoundRectangleContext<
             color: Value([r, g, b, a]),
             rect: Borrowed(self.rect.get()),
             round_radius: Borrowed(self.round_radius.get()),
+        }
+    }
+}
+
+impl<'a> AddBorder<'a, RoundRectangleBorderContext<'a>> for RoundRectangleContext<'a> {
+    #[inline(always)]
+    fn border_radius(&'a self, radius: f64) -> RoundRectangleBorderContext<'a> {
+        RoundRectangleBorderContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
+            border: Value(radius),
         }
     }
 }
