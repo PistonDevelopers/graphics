@@ -1,7 +1,9 @@
 use {
+    AddBorder,
     AddColor,
     Borrowed,
     Field,
+    BevelRectangleBorderContext,
     BevelRectangleColorContext,
     Value,
 };
@@ -115,6 +117,20 @@ impl<'a> AddColor<'a, BevelRectangleColorContext<'a>> for BevelRectangleContext<
             color: Value([r, g, b, a]),
             rect: Borrowed(self.rect.get()),
             bevel_radius: Borrowed(self.bevel_radius.get()),
+        }
+    }
+}
+
+impl<'a> AddBorder<'a, BevelRectangleBorderContext<'a>> 
+for BevelRectangleContext<'a> {
+    #[inline(always)]
+    fn border_radius(&'a self, radius: f64) -> BevelRectangleBorderContext<'a> {
+        BevelRectangleBorderContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            bevel_radius: Borrowed(self.bevel_radius.get()),
+            border: Value(radius),
         }
     }
 }
