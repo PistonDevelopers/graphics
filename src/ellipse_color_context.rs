@@ -1,8 +1,10 @@
 
 use {
+    AddBorder,
     BackEnd,
     Clear,
     Borrowed,
+    EllipseBorderColorContext,
     Field,
     Fill,
     Image,
@@ -161,6 +163,19 @@ impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for EllipseColorContext<'a> {
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();
+        }
+    }
+}
+
+impl<'a> AddBorder<'a, EllipseBorderColorContext<'a>> for EllipseColorContext<'a> {
+    #[inline(always)]
+    fn border_radius(&'a self, radius: f64) -> EllipseBorderColorContext<'a> {
+        EllipseBorderColorContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            color: Borrowed(self.color.get()),
+            border: Value(radius),
         }
     }
 }
