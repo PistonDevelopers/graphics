@@ -164,7 +164,7 @@ impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleContext<'a, 'b, I>, I> for
             transform: Borrowed(self.transform.get()),
             rect: Borrowed(self.rect.get()),
             image: Value(image),
-            source_rect: Value([0, 0, w, h]),
+            source_rect: Value([0, 0, w as i32, h as i32]),
         }
     }
 }
