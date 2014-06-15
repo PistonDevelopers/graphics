@@ -147,10 +147,10 @@ pub fn relative_rectangle(rect: Rectangle, x: f64, y: f64) -> Rectangle {
 
 /// Computes a relative source rectangle using the source rectangle as a tile.
 #[inline(always)]
-pub fn relative_source_rectangle(rect: SourceRectangle, x: i64, y: i64) -> SourceRectangle {
-    let (rx, ry, rw, rh) = (rect[0] as i64, rect[1] as i64, rect[2] as i64, rect[3] as i64);
+pub fn relative_source_rectangle(rect: SourceRectangle, x: i32, y: i32) -> SourceRectangle {
+    let (rx, ry, rw, rh) = (rect[0], rect[1], rect[2], rect[3]);
     let (x, y) = (rx + x * rw, ry + y * rh);
-    [x as u32, y as u32, rw as u32, rh as u32]
+    [x, y, rw, rh]
 }
 
 /// Computes modular offset safely for numbers.
