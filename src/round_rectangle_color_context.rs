@@ -1,11 +1,13 @@
 
 use {
+    AddBorder,
     BackEnd,
     Borrowed,
     Clear,
     Field,
     Fill,
     Image,
+    RoundRectangleBorderColorContext,
     Value,
 };
 use triangulation::{
@@ -170,6 +172,21 @@ impl<'a> Fill<'a> for RoundRectangleColorContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
+        }
+    }
+}
+
+impl<'a> AddBorder<'a, RoundRectangleBorderColorContext<'a>> 
+for RoundRectangleColorContext<'a> {
+    #[inline(always)]
+    fn border_radius(&'a self, radius: f64) -> RoundRectangleBorderColorContext<'a> {
+        RoundRectangleBorderColorContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            round_radius: Borrowed(self.round_radius.get()),
+            color: Borrowed(self.color.get()),
+            border: Value(radius),
         }
     }
 }
