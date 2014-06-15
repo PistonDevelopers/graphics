@@ -22,7 +22,7 @@ pub trait RelativeSourceRectangle<'a, T> {
     fn src_flip_v(&'a self) -> T;
 
     /// Flips the source rectangle horizontally and vertically.
-    fn src_flip_vh(&'a self) -> T;
+    fn src_flip_hv(&'a self) -> T;
 }
 
 impl<
@@ -63,7 +63,7 @@ impl<
     }
 
     #[inline(always)]
-    fn src_flip_vh(&'a self) -> U {
+    fn src_flip_hv(&'a self) -> U {
         let source_rect = self.get_source_rectangle();
         self.source_rectangle([
             source_rect[0] + source_rect[2],
