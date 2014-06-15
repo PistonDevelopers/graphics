@@ -1,6 +1,8 @@
 use {
+    AddBorder,
     AddColor,
     Borrowed,
+    EllipseBorderContext,
     EllipseColorContext,
     Field,
     Value,
@@ -107,6 +109,18 @@ impl<'a> CanRectangle<'a, EllipseContext<'a>, Rectangle> for EllipseContext<'a> 
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
             rect: Value(rect),
+        }
+    }
+}
+
+impl<'a> AddBorder<'a, EllipseBorderContext<'a>> for EllipseContext<'a> {
+    #[inline(always)]
+    fn border_radius(&'a self, radius: f64) -> EllipseBorderContext<'a> {
+        EllipseBorderContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            border: Value(radius),
         }
     }
 }
