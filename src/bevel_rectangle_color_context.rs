@@ -1,5 +1,7 @@
 use {
+    AddBorder,
     BackEnd,
+    BevelRectangleBorderColorContext,
     Borrowed,
     Clear,
     Field,
@@ -170,6 +172,21 @@ impl<'a> Fill<'a> for BevelRectangleColorContext<'a> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
+        }
+    }
+}
+
+impl<'a> AddBorder<'a, BevelRectangleBorderColorContext<'a>> 
+for BevelRectangleColorContext<'a> {
+    #[inline(always)]
+    fn border_radius(&'a self, radius: f64) -> BevelRectangleBorderColorContext<'a> {
+        BevelRectangleBorderColorContext {
+            view: Borrowed(self.view.get()),
+            transform: Borrowed(self.transform.get()),
+            rect: Borrowed(self.rect.get()),
+            bevel_radius: Borrowed(self.bevel_radius.get()),
+            color: Borrowed(self.color.get()),
+            border: Value(radius),
         }
     }
 }
