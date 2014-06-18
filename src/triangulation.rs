@@ -263,7 +263,7 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
 
         i += 1;
         // Buffer is full.
-        if i * 2 * 3 + 2 == vertices.len() {
+        if i * 2 * 3 + 2 >= vertices.len() {
             // Send chunk and start over.
             f(vertices.slice(0, i * 2 * 3),
                 colors.slice(0, i * 4 * 3));
