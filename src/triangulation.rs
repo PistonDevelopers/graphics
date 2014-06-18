@@ -212,7 +212,8 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     m: Matrix2d,
     polygon: || -> Option<Vec2d>,
     color: Color,
-    f: |vertices: &[f32], colors: &[f32]|) {
+    f: |vertices: &[f32], colors: &[f32]|
+) {
 
     let mut vertices: [f32, ..720] = [0.0, ..720];
     let mut colors: [f32, ..1440] = [0.0, ..1440];
@@ -273,6 +274,122 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     if i > 0 {
         f(vertices.slice(0, i * 2 * 3),
             colors.slice(0, i * 4 * 3));
+    }
+}
+
+/// Streams a quad into tri list with color per vertex.
+///
+/// Uses buffers that fit inside L1 cache.
+/// The 'quad_edge' stream returns two points defining the next edge.
+pub fn stream_quad_tri_list_xy_f32_rgba_f32(
+    m: Matrix2d,
+    quad_edge: || -> Option<(Vec2d, Vec2d)>,
+    color: Color,
+    f: |vertices: &[f32], colors: &[f32]|
+) {
+
+    let mut vertices: [f32, ..720] = [0.0, ..720];
+    let mut colors: [f32, ..1440] = [0.0, ..1440];
+    // Get the two points .
+    let (fp1, fp2) = match quad_edge() { 
+            None => return, 
+            Some((val1, val2)) => (val1, val2) 
+        };
+    // Transform the points using the matrix.
+    let (mut fx1, mut fy1) = (tx(m, fp1[0], fp1[1]), ty(m, fp1[0], fp1[1]));
+    let (mut fx2, mut fy2) = (tx(m, fp2[0], fp2[1]), ty(m, fp2[0], fp2[1]));
+    // Counts the quads.
+    let mut i = 0;
+    let triangles_per_quad = 2;
+    let vertices_per_triangle = 3;
+    let position_components_per_vertex = 2;
+    let color_components_per_vertex = 4;
+    let align_vertices = 
+        triangles_per_quad 
+        * vertices_per_triangle 
+        * position_components_per_vertex;
+    let align_colors = 
+        triangles_per_quad
+        * vertices_per_triangle
+        * color_components_per_vertex;
+    loop {
+        // Read two more points.
+        let (gp1, gp2) = match quad_edge() {
+            None => break,
+            Some((val1, val2)) => (val1, val2)
+        };
+        // Transform the points using the matrix.
+        let (gx1, gy1) = (tx(m, gp1[0], gp1[1]), ty(m, gp1[0], gp1[1]));
+        let (gx2, gy2) = (tx(m, gp2[0], gp2[1]), ty(m, gp2[0], gp2[1]));
+        let ind_out = i * align_vertices;
+
+        // First triangle.
+        vertices[ind_out + 0] = fx1;
+        vertices[ind_out + 1] = fy1;
+        vertices[ind_out + 2] = fx2;
+        vertices[ind_out + 3] = fy2;
+        vertices[ind_out + 4] = gx1;
+        vertices[ind_out + 5] = gy1;
+
+        // Second triangle.
+        vertices[ind_out + 6] = fx2;
+        vertices[ind_out + 7] = fy2;
+        vertices[ind_out + 8] = gx1;
+        vertices[ind_out + 9] = gy1;
+        vertices[ind_out + 10] = gx2;
+        vertices[ind_out + 11] = gy2;
+
+        let ind_out = i * align_colors;
+
+        // First triangle.
+        colors[ind_out + 0] = color[0];
+        colors[ind_out + 1] = color[1];
+        colors[ind_out + 2] = color[2];
+        colors[ind_out + 3] = color[3];
+        colors[ind_out + 4] = color[0];
+        colors[ind_out + 5] = color[1];
+        colors[ind_out + 6] = color[2];
+        colors[ind_out + 7] = color[3];
+        colors[ind_out + 8] = color[0];
+        colors[ind_out + 9] = color[1];
+        colors[ind_out + 10] = color[2];
+        colors[ind_out + 11] = color[3];
+
+        // Second triangle.
+        colors[ind_out + 12] = color[0];
+        colors[ind_out + 13] = color[1];
+        colors[ind_out + 14] = color[2];
+        colors[ind_out + 15] = color[3];
+        colors[ind_out + 16] = color[0];
+        colors[ind_out + 17] = color[1];
+        colors[ind_out + 18] = color[2];
+        colors[ind_out + 19] = color[3];
+        colors[ind_out + 20] = color[0];
+        colors[ind_out + 21] = color[1];
+        colors[ind_out + 22] = color[2];
+        colors[ind_out + 23] = color[3];
+
+        // Next quad.
+        i += 1;
+
+        // Set next current edge.
+        fx1 = gx1;
+        fy1 = gy1;
+        fx2 = gx2;
+        fy2 = gy2;
+        
+        // Buffer is full.
+        if i * align_vertices >= vertices.len() {
+            // Send chunk and start over.
+            f(vertices.slice(0, i * align_vertices),
+                colors.slice(0, i * align_colors));
+            i = 0;
+        }
+    }
+    
+    if i > 0 {
+        f(vertices.slice(0, i * align_vertices),
+            colors.slice(0, i * align_colors));
     }
 }
 
