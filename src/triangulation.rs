@@ -214,8 +214,8 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     color: Color,
     f: |vertices: &[f32], colors: &[f32]|) {
 
-    let mut vertices: [f32, ..740] = [0.0, ..740];
-    let mut colors: [f32, ..1480] = [0.0, ..1480];
+    let mut vertices: [f32, ..720] = [0.0, ..720];
+    let mut colors: [f32, ..1440] = [0.0, ..1440];
     // Get the first point which will be used a lot.
     let fp = match polygon() { None => return, Some(val) => val };
     let (fx, fy) = (tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1]));
