@@ -225,18 +225,27 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     let mut gx = gx;
     let mut gy = gy;
     let mut i = 0;
+    let vertices_per_triangle = 3;
+    let position_components_per_vertex = 2;
+    let color_components_per_vertex = 4;
+    let align_vertices = 
+        vertices_per_triangle 
+        * position_components_per_vertex;
+    let align_colors = 
+        vertices_per_triangle
+        * color_components_per_vertex;
     'read_vertices: loop {
-        let ind_out = i * 2 * 3;
+        let ind_out = i * align_vertices;
         vertices[ind_out + 0] = fx;
         vertices[ind_out + 1] = fy;
-        let ind_out = i * 4 * 3;
+        let ind_out = i * align_colors;
         colors[ind_out + 0] = color[0];
         colors[ind_out + 1] = color[1];
         colors[ind_out + 2] = color[2];
         colors[ind_out + 3] = color[3];
 
         // Copy vertex.
-        let ind_out = i * 2 * 3 + 2;
+        let ind_out = i * align_vertices + 2;
         let p =
             match polygon() {
                 None => break 'read_vertices,
@@ -251,7 +260,7 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
         vertices[ind_out + 3] = y;
         gx = x;
         gy = y;
-        let ind_out = i * 4 * 3 + 4;
+        let ind_out = i * align_colors + 4;
         colors[ind_out + 0] = color[0];
         colors[ind_out + 1] = color[1];
         colors[ind_out + 2] = color[2];
@@ -263,17 +272,17 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
 
         i += 1;
         // Buffer is full.
-        if i * 2 * 3 + 2 >= vertices.len() {
+        if i * align_vertices + 2 >= vertices.len() {
             // Send chunk and start over.
-            f(vertices.slice(0, i * 2 * 3),
-                colors.slice(0, i * 4 * 3));
+            f(vertices.slice(0, i * align_vertices),
+                colors.slice(0, i * align_colors));
             i = 0;
         }
     }
 
     if i > 0 {
-        f(vertices.slice(0, i * 2 * 3),
-            colors.slice(0, i * 4 * 3));
+        f(vertices.slice(0, i * align_vertices),
+            colors.slice(0, i * align_colors));
     }
 }
 
