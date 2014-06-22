@@ -4,7 +4,7 @@ use {
     Borrowed,
     Clear,
     Field,
-    Image,
+    ImageSize,
     Stroke,
     Value,
 };
@@ -112,7 +112,9 @@ impl<'a> CanColor<'a, SquareBorderLineColorContext<'a>, Color> for SquareBorderL
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Stroke<'a, B, I> for SquareBorderLineColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Stroke<'a, B, I> 
+for SquareBorderLineColorContext<'a> {
     #[inline(always)]
     fn stroke(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
@@ -141,7 +143,9 @@ impl<'a, B: BackEnd<I>, I: Image> Stroke<'a, B, I> for SquareBorderLineColorCont
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for SquareBorderLineColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for SquareBorderLineColorContext<'a> {
     #[inline(always)]
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {

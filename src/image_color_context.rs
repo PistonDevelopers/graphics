@@ -5,7 +5,7 @@ use {
     Clear,
     Draw,
     Field,
-    Image,
+    ImageSize,
     ImageRectangleColorContext,
     Value,
 };
@@ -155,7 +155,9 @@ for ImageColorContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, B: BackEnd<I>, I: Image> Draw<'a, B, I> for ImageColorContext<'a, 'b, I> {
+impl<'a, 'b, B: BackEnd<I>, I: ImageSize> 
+Draw<'a, B, I> 
+for ImageColorContext<'a, 'b, I> {
     #[inline(always)]
     fn draw(&'a self, back_end: &mut B) {
         if back_end.supports_single_texture()
@@ -183,7 +185,9 @@ impl<'a, 'b, B: BackEnd<I>, I: Image> Draw<'a, B, I> for ImageColorContext<'a, '
     }
 }
 
-impl<'a, 'b, B: BackEnd<I>, I: Image> Clear<B, I> for ImageColorContext<'a, 'b, I> {
+impl<'a, 'b, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for ImageColorContext<'a, 'b, I> {
     #[inline(always)]
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {

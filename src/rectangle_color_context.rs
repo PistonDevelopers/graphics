@@ -10,7 +10,7 @@ use {
     Clear,
     Field,
     Fill,
-    Image,
+    ImageSize,
     ImageRectangleColorContext,
     RectangleBorderColorContext,
     RoundRectangleColorContext,
@@ -137,7 +137,7 @@ impl<'a> CanRectangle<'a, RectangleColorContext<'a>, Rectangle> for RectangleCol
 
 impl<'a> Fill<'a> for RectangleColorContext<'a> {
     #[inline(always)]
-    fn fill<B: BackEnd<I>, I: Image>(&'a self, back_end: &mut B) {
+    fn fill<B: BackEnd<I>, I: ImageSize>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let color = self.color.get();
@@ -157,7 +157,9 @@ impl<'a> Fill<'a> for RectangleColorContext<'a> {
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for RectangleColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for RectangleColorContext<'a> {
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
@@ -194,7 +196,9 @@ impl<'a> AddBevel<'a, BevelRectangleColorContext<'a>> for RectangleColorContext<
     }
 }
 
-impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleColorContext<'a, 'b, I>, I> for RectangleColorContext<'a> {
+impl<'a, 'b, I: ImageSize> 
+AddImage<'a, 'b, ImageRectangleColorContext<'a, 'b, I>, I> 
+for RectangleColorContext<'a> {
     fn image(&'a self, image: &'b I) -> ImageRectangleColorContext<'a, 'b, I> {
         let (w, h) = image.get_size();
         ImageRectangleColorContext {

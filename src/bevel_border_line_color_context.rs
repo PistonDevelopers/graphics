@@ -4,7 +4,7 @@ use {
     Borrowed,
     Clear,
     Field,
-    Image,
+    ImageSize,
     Stroke,
     Value,
 };
@@ -112,7 +112,9 @@ impl<'a> CanColor<'a, BevelBorderLineColorContext<'a>, Color> for BevelBorderLin
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Stroke<'a, B, I> for BevelBorderLineColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Stroke<'a, B, I> 
+for BevelBorderLineColorContext<'a> {
     #[inline(always)]
     fn stroke(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
@@ -141,7 +143,9 @@ impl<'a, B: BackEnd<I>, I: Image> Stroke<'a, B, I> for BevelBorderLineColorConte
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for BevelBorderLineColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for BevelBorderLineColorContext<'a> {
     #[inline(always)]
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {

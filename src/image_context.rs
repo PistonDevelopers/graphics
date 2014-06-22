@@ -5,7 +5,7 @@ use {
     Borrowed,
     Draw,
     Field,
-    Image,
+    ImageSize,
     ImageColorContext,
     ImageRectangleContext,
     Value,
@@ -152,7 +152,9 @@ for ImageContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, B: BackEnd<I>, I: Image> Draw<'a, B, I> for ImageContext<'a, 'b, I> {
+impl<'a, 'b, B: BackEnd<I>, I: ImageSize> 
+Draw<'a, B, I> 
+for ImageContext<'a, 'b, I> {
     #[inline(always)]
     fn draw(&'a self, back_end: &mut B) {
         if back_end.supports_single_texture()

@@ -4,7 +4,7 @@ use {
     Clear,
     Borrowed,
     Field,
-    Image,
+    ImageSize,
     Value,
 };
 use triangulation::{
@@ -132,7 +132,9 @@ impl<'a> CanRectangle<'a, EllipseBorderColorContext<'a>, Rectangle> for EllipseB
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for EllipseBorderColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for EllipseBorderColorContext<'a> {
     #[inline(always)]
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {

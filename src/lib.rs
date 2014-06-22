@@ -48,8 +48,18 @@
 //!
 //! This is only the case when you are assigning the context to a variable.
 
+#[cfg(gl)]
+extern crate gl;
+#[cfg(gl)]
+extern crate libc;
+extern crate image;
 extern crate core;
 extern crate std;
+
+#[cfg(gl)]
+pub use Gl = gl_back_end::Gl;
+#[cfg(gl)]
+pub use Texture = texture::Texture;
 
 pub use AddBevel = add_bevel::AddBevel;
 pub use AddBevelBorder = add_bevel_border::AddBevelBorder;
@@ -81,7 +91,7 @@ pub use EllipseBorderContext = ellipse_border_context::EllipseBorderContext;
 pub use EllipseColorContext = ellipse_color_context::EllipseColorContext;
 pub use EllipseBorderColorContext = ellipse_border_color_context::EllipseBorderColorContext;
 pub use Fill = fill::Fill;
-pub use Image = image::Image;
+pub use ImageSize = image_size::ImageSize;
 pub use ImageContext = image_context::ImageContext;
 pub use ImageColorContext = image_color_context::ImageColorContext;
 pub use ImageRectangleContext = image_rectangle_context::ImageRectangleContext;
@@ -113,6 +123,13 @@ pub use SquareBorderLineColorContext = square_border_line_color_context::SquareB
 pub use SquareBorderLineContext = square_border_line_context::SquareBorderLineContext;
 pub use View = view::View;
 
+#[cfg(gl)]
+mod gl_back_end;
+#[cfg(gl)]
+mod texture;
+#[cfg(gl)]
+pub mod shader_utils;
+
 mod add_bevel;
 mod add_bevel_border;
 mod add_border;
@@ -143,7 +160,7 @@ mod ellipse_border_color_context;
 mod ellipse_color_context;
 mod ellipse_context;
 mod fill;
-mod image;
+mod image_size;
 mod image_context;
 mod image_color_context;
 mod image_rectangle_color_context;
