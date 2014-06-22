@@ -303,11 +303,11 @@ impl BackEnd<Texture> for Gl {
         let normalize_vertices = gl::FALSE;
         // The data is tightly packed.
         let stride_vertices = 0;
+        gl::BindBuffer(
+            gl::ARRAY_BUFFER,   // buffer type
+            self.position_id    // position buffer for xy coordinates
+        );
         unsafe {
-            gl::BindBuffer(
-                gl::ARRAY_BUFFER,   // buffer type
-                self.position_id    // position buffer for xy coordinates
-            );
             gl::BufferData(
                 gl::ARRAY_BUFFER, 
                 vertices_byte_len, 
