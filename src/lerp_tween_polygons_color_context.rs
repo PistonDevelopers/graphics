@@ -37,7 +37,9 @@ pub struct LerpTweenPolygonsColorContext<'a, 'b> {
     pub polygons: Field<'a, Polygons<'b>>,
 }
 
-impl<'a, 'b> Clone for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'a, 'b> 
+Clone 
+for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> LerpTweenPolygonsColorContext<'static, 'b> {
         LerpTweenPolygonsColorContext {
@@ -50,7 +52,8 @@ impl<'a, 'b> Clone for LerpTweenPolygonsColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> HasColor<'a, Color> 
+impl<'a, 'b> 
+HasColor<'a, Color> 
 for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
@@ -58,10 +61,14 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> CanColor<'a, LerpTweenPolygonsColorContext<'a, 'b>, Color> 
+impl<'a, 'b> 
+CanColor<'a, LerpTweenPolygonsColorContext<'a, 'b>, Color> 
 for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> LerpTweenPolygonsColorContext<'a, 'b> {
+    fn color(
+        &'a self, 
+        value: Color
+    ) -> LerpTweenPolygonsColorContext<'a, 'b> {
         LerpTweenPolygonsColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -72,7 +79,8 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> HasTransform<'a, Matrix2d> 
+impl<'a, 'b> 
+HasTransform<'a, Matrix2d> 
 for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(alwyas)]
     fn get_transform(&'a self) -> &'a Matrix2d {
@@ -80,10 +88,14 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> CanTransform<'a, LerpTweenPolygonsColorContext<'a, 'b>, Matrix2d> 
+impl<'a, 'b> 
+CanTransform<'a, LerpTweenPolygonsColorContext<'a, 'b>, Matrix2d> 
 for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsColorContext<'a, 'b> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> LerpTweenPolygonsColorContext<'a, 'b> {
         LerpTweenPolygonsColorContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -94,7 +106,8 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> HasViewTransform<'a, Matrix2d> 
+impl<'a, 'b> 
+HasViewTransform<'a, Matrix2d> 
 for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
@@ -102,10 +115,14 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> CanViewTransform<'a, LerpTweenPolygonsColorContext<'a, 'b>, Matrix2d> 
+impl<'a, 'b> 
+CanViewTransform<'a, LerpTweenPolygonsColorContext<'a, 'b>, Matrix2d> 
 for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsColorContext<'a, 'b> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> LerpTweenPolygonsColorContext<'a, 'b> {
         LerpTweenPolygonsColorContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -117,9 +134,14 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
 }
 
 
-impl<'a, 'b> Fill<'a> for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'a, 'b> 
+Fill<'a> 
+for LerpTweenPolygonsColorContext<'a, 'b> {
     #[inline(always)]
-    fn fill<B: BackEnd<I>, I: ImageSize>(&'a self, back_end: &mut B) {
+    fn fill<B: BackEnd<I>, I: ImageSize>(
+        &'a self, 
+        back_end: &mut B
+    ) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygons = self.polygons.get();
             let color = self.color.get();

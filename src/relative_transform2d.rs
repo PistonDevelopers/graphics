@@ -31,7 +31,8 @@ pub trait RelativeTransform2d<'a> {
 
     /// Orients x axis to look at point locally.
     ///
-    /// Leaves x axis unchanged if the point to look at is the origin.
+    /// Leaves x axis unchanged if the point to 
+    /// look at is the origin.
     fn orient(&'a self, x: Scalar, y: Scalar) -> Self;
 
     /// Scales in local coordinates.
@@ -67,7 +68,8 @@ pub trait RelativeTransform2d<'a> {
 
 impl<
     'a,
-    T: HasTransform<'a, Matrix2d> + CanTransform<'a, T, Matrix2d>
+    T: HasTransform<'a, Matrix2d> 
+        + CanTransform<'a, T, Matrix2d>
 > RelativeTransform2d<'a> for T {
     #[inline(always)]
     fn trans(&'a self, x: Scalar, y: Scalar) -> T {

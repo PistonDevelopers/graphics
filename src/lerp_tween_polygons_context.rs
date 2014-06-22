@@ -29,7 +29,9 @@ pub struct LerpTweenPolygonsContext<'a, 'b> {
     pub polygons: Field<'a, Polygons<'b>>,
 }
 
-impl<'a, 'b> Clone for LerpTweenPolygonsContext<'a, 'b> {
+impl<'a, 'b> 
+Clone 
+for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> LerpTweenPolygonsContext<'static, 'b> {
         LerpTweenPolygonsContext {
@@ -41,7 +43,8 @@ impl<'a, 'b> Clone for LerpTweenPolygonsContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> AddColor<'a, LerpTweenPolygonsColorContext<'a, 'b>> 
+impl<'a, 'b> 
+AddColor<'a, LerpTweenPolygonsColorContext<'a, 'b>> 
 for LerpTweenPolygonsContext<'a, 'b> {
     /// Creates a RectangleColorContext.
     #[inline(always)]
@@ -62,7 +65,8 @@ for LerpTweenPolygonsContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> HasTransform<'a, Matrix2d> 
+impl<'a, 'b> 
+HasTransform<'a, Matrix2d> 
 for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(alwyas)]
     fn get_transform(&'a self) -> &'a Matrix2d {
@@ -70,7 +74,8 @@ for LerpTweenPolygonsContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> CanTransform<'a, LerpTweenPolygonsContext<'a, 'b>, Matrix2d> 
+impl<'a, 'b> 
+CanTransform<'a, LerpTweenPolygonsContext<'a, 'b>, Matrix2d> 
 for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsContext<'a, 'b> {
@@ -83,7 +88,8 @@ for LerpTweenPolygonsContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> HasViewTransform<'a, Matrix2d> 
+impl<'a, 'b> 
+HasViewTransform<'a, Matrix2d> 
 for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
@@ -91,7 +97,8 @@ for LerpTweenPolygonsContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> CanViewTransform<'a, LerpTweenPolygonsContext<'a, 'b>, Matrix2d> 
+impl<'a, 'b> 
+CanViewTransform<'a, LerpTweenPolygonsContext<'a, 'b>, Matrix2d> 
 for LerpTweenPolygonsContext<'a, 'b> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> LerpTweenPolygonsContext<'a, 'b> {

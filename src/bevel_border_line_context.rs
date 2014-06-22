@@ -29,7 +29,9 @@ pub struct BevelBorderLineContext<'a> {
     pub bevel_border_radius: Field<'a, Radius>,
 }
 
-impl<'a> Clone for BevelBorderLineContext<'a> {
+impl<'a> 
+Clone 
+for BevelBorderLineContext<'a> {
     #[inline(always)]
     fn clone(&self) -> BevelBorderLineContext<'static> {
         BevelBorderLineContext {
@@ -41,14 +43,18 @@ impl<'a> Clone for BevelBorderLineContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for BevelBorderLineContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for BevelBorderLineContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, BevelBorderLineContext<'a>, Matrix2d> for BevelBorderLineContext<'a> {
+impl<'a> 
+CanTransform<'a, BevelBorderLineContext<'a>, Matrix2d> 
+for BevelBorderLineContext<'a> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> BevelBorderLineContext<'a> {
         BevelBorderLineContext {
@@ -60,16 +66,23 @@ impl<'a> CanTransform<'a, BevelBorderLineContext<'a>, Matrix2d> for BevelBorderL
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for BevelBorderLineContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for BevelBorderLineContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, BevelBorderLineContext<'a>, Matrix2d> for BevelBorderLineContext<'a> {
+impl<'a> 
+CanViewTransform<'a, BevelBorderLineContext<'a>, Matrix2d> 
+for BevelBorderLineContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> BevelBorderLineContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> BevelBorderLineContext<'a> {
         BevelBorderLineContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -79,7 +92,9 @@ impl<'a> CanViewTransform<'a, BevelBorderLineContext<'a>, Matrix2d> for BevelBor
     }
 }
 
-impl<'a> AddColor<'a, BevelBorderLineColorContext<'a>> for BevelBorderLineContext<'a> {
+impl<'a> 
+AddColor<'a, BevelBorderLineColorContext<'a>> 
+for BevelBorderLineContext<'a> {
     #[inline(always)]
     fn rgba(
         &'a self, 

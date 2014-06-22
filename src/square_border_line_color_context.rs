@@ -38,7 +38,9 @@ pub struct SquareBorderLineColorContext<'a> {
     pub square_border_radius: Field<'a, Radius>,
 }
 
-impl<'a> Clone for SquareBorderLineColorContext<'a> {
+impl<'a> 
+Clone 
+for SquareBorderLineColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> SquareBorderLineColorContext<'static> {
         SquareBorderLineColorContext {
@@ -51,16 +53,23 @@ impl<'a> Clone for SquareBorderLineColorContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for SquareBorderLineColorContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for SquareBorderLineColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> for SquareBorderLineColorContext<'a> {
+impl<'a> 
+CanTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> 
+for SquareBorderLineColorContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> SquareBorderLineColorContext<'a> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> SquareBorderLineColorContext<'a> {
         SquareBorderLineColorContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -71,17 +80,23 @@ impl<'a> CanTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> for Square
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for SquareBorderLineColorContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for SquareBorderLineColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> 
+impl<'a> 
+CanViewTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> 
 for SquareBorderLineColorContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> SquareBorderLineColorContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> SquareBorderLineColorContext<'a> {
         SquareBorderLineColorContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -92,16 +107,23 @@ for SquareBorderLineColorContext<'a> {
     }
 }
 
-impl<'a> HasColor<'a, Color> for SquareBorderLineColorContext<'a> {
+impl<'a> 
+HasColor<'a, Color> 
+for SquareBorderLineColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, SquareBorderLineColorContext<'a>, Color> for SquareBorderLineColorContext<'a> {
+impl<'a> 
+CanColor<'a, SquareBorderLineColorContext<'a>, Color> 
+for SquareBorderLineColorContext<'a> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> SquareBorderLineColorContext<'a> {
+    fn color(
+        &'a self, 
+        value: Color
+    ) -> SquareBorderLineColorContext<'a> {
         SquareBorderLineColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),

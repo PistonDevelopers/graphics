@@ -45,7 +45,9 @@ pub struct ImageRectangleColorContext<'a, 'b, I> {
     pub color: Field<'a, Color>,
 }
 
-impl<'a, 'b, I> Clone for ImageRectangleColorContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+Clone 
+for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
     fn clone(&self) -> ImageRectangleColorContext<'static, 'b, I> {
         ImageRectangleColorContext {
@@ -59,16 +61,23 @@ impl<'a, 'b, I> Clone for ImageRectangleColorContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> HasTransform<'a, Matrix2d> for ImageRectangleColorContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+HasTransform<'a, Matrix2d> 
+for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a, 'b, I> CanTransform<'a, ImageRectangleColorContext<'a, 'b, I>, Matrix2d> for ImageRectangleColorContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+CanTransform<'a, ImageRectangleColorContext<'a, 'b, I>, Matrix2d> 
+for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> ImageRectangleColorContext<'a, 'b, I> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> ImageRectangleColorContext<'a, 'b, I> {
         ImageRectangleColorContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -80,17 +89,23 @@ impl<'a, 'b, I> CanTransform<'a, ImageRectangleColorContext<'a, 'b, I>, Matrix2d
     }
 }
 
-impl<'a, 'b, I> HasViewTransform<'a, Matrix2d> for ImageRectangleColorContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+HasViewTransform<'a, Matrix2d> 
+for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a, 'b, I> CanViewTransform<'a, ImageRectangleColorContext<'a, 'b, I>, Matrix2d>
+impl<'a, 'b, I> 
+CanViewTransform<'a, ImageRectangleColorContext<'a, 'b, I>, Matrix2d>
 for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> ImageRectangleColorContext<'a, 'b, I> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> ImageRectangleColorContext<'a, 'b, I> {
         ImageRectangleColorContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -102,16 +117,23 @@ for ImageRectangleColorContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> HasColor<'a, Color> for ImageRectangleColorContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+HasColor<'a, Color> 
+for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a, 'b, I> CanColor<'a, ImageRectangleColorContext<'a, 'b, I>, Color> for ImageRectangleColorContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+CanColor<'a, ImageRectangleColorContext<'a, 'b, I>, Color> 
+for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> ImageRectangleColorContext<'a, 'b, I> {
+    fn color(
+        &'a self, 
+        value: Color
+    ) -> ImageRectangleColorContext<'a, 'b, I> {
         ImageRectangleColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -123,16 +145,23 @@ impl<'a, 'b, I> CanColor<'a, ImageRectangleColorContext<'a, 'b, I>, Color> for I
     }
 }
 
-impl<'a, 'b, I> HasRectangle<'a, Rectangle> for ImageRectangleColorContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+HasRectangle<'a, Rectangle> 
+for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
     fn get_rectangle(&'a self) -> &'a Rectangle {
         self.rect.get()
     }
 }
 
-impl<'a, 'b, I> CanRectangle<'a, ImageRectangleColorContext<'a, 'b, I>, Rectangle> for ImageRectangleColorContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+CanRectangle<'a, ImageRectangleColorContext<'a, 'b, I>, Rectangle> 
+for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
-    fn rectangle(&'a self, rect: Rectangle) -> ImageRectangleColorContext<'a, 'b, I> {
+    fn rectangle(
+        &'a self, 
+        rect: Rectangle
+    ) -> ImageRectangleColorContext<'a, 'b, I> {
         ImageRectangleColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -144,7 +173,8 @@ impl<'a, 'b, I> CanRectangle<'a, ImageRectangleColorContext<'a, 'b, I>, Rectangl
     }
 }
 
-impl<'a, 'b, I> HasSourceRectangle<'a, SourceRectangle> 
+impl<'a, 'b, I> 
+HasSourceRectangle<'a, SourceRectangle> 
 for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
     fn get_source_rectangle(&'a self) -> &'a SourceRectangle {
@@ -152,10 +182,14 @@ for ImageRectangleColorContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> CanSourceRectangle<'a, ImageRectangleColorContext<'a, 'b, I>, SourceRectangle> 
+impl<'a, 'b, I> 
+CanSourceRectangle<'a, ImageRectangleColorContext<'a, 'b, I>, SourceRectangle> 
 for ImageRectangleColorContext<'a, 'b, I> {
     #[inline(always)]
-    fn source_rectangle(&'a self, source_rect: SourceRectangle) -> ImageRectangleColorContext<'a, 'b, I> {
+    fn source_rectangle(
+        &'a self, 
+        source_rect: SourceRectangle
+    ) -> ImageRectangleColorContext<'a, 'b, I> {
         ImageRectangleColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -180,8 +214,10 @@ for ImageRectangleColorContext<'a, 'b, I> {
             let source_rect = self.source_rect.get();
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0 || back_end.has_texture_alpha(texture);
+            // Turn on alpha blending if not completely opaque 
+            // or if the texture has alpha channel.
+            let needs_alpha = color[3] != 1.0 
+                || back_end.has_texture_alpha(texture);
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(

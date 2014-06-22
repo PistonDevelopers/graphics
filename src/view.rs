@@ -12,7 +12,8 @@ use vecmath::{
     get_scale,
 };
 
-/// Should be implemented by contexts that draws something relative to view.
+/// Should be implemented by contexts that
+/// draws something relative to view.
 pub trait View<'a> {
     /// Moves the current transform to the view coordinate system.
     ///

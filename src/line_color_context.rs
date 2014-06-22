@@ -38,7 +38,9 @@ pub struct LineColorContext<'a> {
     pub color: Field<'a, Color>,
 }
 
-impl<'a> Clone for LineColorContext<'a> {
+impl<'a> 
+Clone 
+for LineColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> LineColorContext<'static> {
         LineColorContext {
@@ -50,16 +52,23 @@ impl<'a> Clone for LineColorContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for LineColorContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for LineColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, LineColorContext<'a>, Matrix2d> for LineColorContext<'a> {
+impl<'a> 
+CanTransform<'a, LineColorContext<'a>, Matrix2d> 
+for LineColorContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> LineColorContext<'a> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> LineColorContext<'a> {
         LineColorContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -69,17 +78,23 @@ impl<'a> CanTransform<'a, LineColorContext<'a>, Matrix2d> for LineColorContext<'
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for LineColorContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for LineColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, LineColorContext<'a>, Matrix2d> 
+impl<'a> 
+CanViewTransform<'a, LineColorContext<'a>, Matrix2d> 
 for LineColorContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> LineColorContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> LineColorContext<'a> {
         LineColorContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -89,14 +104,18 @@ for LineColorContext<'a> {
     }
 }
 
-impl<'a> HasColor<'a, Color> for LineColorContext<'a> {
+impl<'a> 
+HasColor<'a, Color> 
+for LineColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, LineColorContext<'a>, Color> for LineColorContext<'a> {
+impl<'a> 
+CanColor<'a, LineColorContext<'a>, Color> 
+for LineColorContext<'a> {
     #[inline(always)]
     fn color(&'a self, value: Color) -> LineColorContext<'a> {
         LineColorContext {
@@ -108,9 +127,14 @@ impl<'a> CanColor<'a, LineColorContext<'a>, Color> for LineColorContext<'a> {
     }
 }
 
-impl<'a> AddRoundBorder<'a, RoundBorderLineColorContext<'a>> for LineColorContext<'a> {
+impl<'a> 
+AddRoundBorder<'a, RoundBorderLineColorContext<'a>> 
+for LineColorContext<'a> {
     #[inline(always)]
-    fn round_border_radius(&'a self, radius: Radius) -> RoundBorderLineColorContext<'a> {
+    fn round_border_radius(
+        &'a self, 
+        radius: Radius
+    ) -> RoundBorderLineColorContext<'a> {
         RoundBorderLineColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -121,9 +145,14 @@ impl<'a> AddRoundBorder<'a, RoundBorderLineColorContext<'a>> for LineColorContex
     }
 }
 
-impl<'a> AddBevelBorder<'a, BevelBorderLineColorContext<'a>> for LineColorContext<'a> {
+impl<'a> 
+AddBevelBorder<'a, BevelBorderLineColorContext<'a>> 
+for LineColorContext<'a> {
     #[inline(always)]
-    fn bevel_border_radius(&'a self, radius: Radius) -> BevelBorderLineColorContext<'a> {
+    fn bevel_border_radius(
+        &'a self, 
+        radius: Radius
+    ) -> BevelBorderLineColorContext<'a> {
         BevelBorderLineColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -134,9 +163,14 @@ impl<'a> AddBevelBorder<'a, BevelBorderLineColorContext<'a>> for LineColorContex
     }
 }
 
-impl<'a> AddSquareBorder<'a, SquareBorderLineColorContext<'a>> for LineColorContext<'a> {
+impl<'a> 
+AddSquareBorder<'a, SquareBorderLineColorContext<'a>> 
+for LineColorContext<'a> {
     #[inline(always)]
-    fn square_border_radius(&'a self, radius: Radius) -> SquareBorderLineColorContext<'a> {
+    fn square_border_radius(
+        &'a self, 
+        radius: Radius
+    ) -> SquareBorderLineColorContext<'a> {
         SquareBorderLineColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -153,7 +187,12 @@ for LineColorContext<'a> {
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
-            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
+            back_end.clear_rgba(
+                color[0], 
+                color[1], 
+                color[2], 
+                color[3]
+            );
         }
     }
 }

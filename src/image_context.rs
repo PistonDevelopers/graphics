@@ -43,7 +43,9 @@ pub struct ImageContext<'a, 'b, I> {
     pub source_rect: Field<'a, SourceRectangle>,
 }
 
-impl<'a, 'b, I> Clone for ImageContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+Clone 
+for ImageContext<'a, 'b, I> {
     #[inline(always)]
     fn clone(&self) -> ImageContext<'static, 'b, I> {
         ImageContext {
@@ -55,17 +57,23 @@ impl<'a, 'b, I> Clone for ImageContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> HasTransform<'a, Matrix2d> for ImageContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+HasTransform<'a, Matrix2d> 
+for ImageContext<'a, 'b, I> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a, 'b, I> CanTransform<'a, ImageContext<'a, 'b, I>, Matrix2d> 
+impl<'a, 'b, I> 
+CanTransform<'a, ImageContext<'a, 'b, I>, Matrix2d> 
 for ImageContext<'a, 'b, I> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> ImageContext<'a, 'b, I> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> ImageContext<'a, 'b, I> {
         ImageContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -75,17 +83,23 @@ for ImageContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> HasViewTransform<'a, Matrix2d> for ImageContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+HasViewTransform<'a, Matrix2d> 
+for ImageContext<'a, 'b, I> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a, 'b, I> CanViewTransform<'a, ImageContext<'a, 'b, I>, Matrix2d>
+impl<'a, 'b, I> 
+CanViewTransform<'a, ImageContext<'a, 'b, I>, Matrix2d>
 for ImageContext<'a, 'b, I> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> ImageContext<'a, 'b, I> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> ImageContext<'a, 'b, I> {
         ImageContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -97,14 +111,18 @@ for ImageContext<'a, 'b, I> {
 
 static WHITE: &'static Color = &[1.0, ..4];
 
-impl<'a, 'b, I> HasColor<'a, Color> for ImageContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+HasColor<'a, Color> 
+for ImageContext<'a, 'b, I> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         WHITE
     }
 }
 
-impl<'a, 'b, I> CanColor<'a, ImageColorContext<'a, 'b, I>, Color> for ImageContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+CanColor<'a, ImageColorContext<'a, 'b, I>, Color> 
+for ImageContext<'a, 'b, I> {
     #[inline(always)]
     fn color(&'a self, value: Color) -> ImageColorContext<'a, 'b, I> {
         ImageColorContext {
@@ -117,7 +135,8 @@ impl<'a, 'b, I> CanColor<'a, ImageColorContext<'a, 'b, I>, Color> for ImageConte
     }
 }
 
-impl<'a, 'b, I> HasSourceRectangle<'a, SourceRectangle> 
+impl<'a, 'b, I> 
+HasSourceRectangle<'a, SourceRectangle> 
 for ImageContext<'a, 'b, I> {
     #[inline(always)]
     fn get_source_rectangle(&'a self) -> &'a SourceRectangle {
@@ -125,10 +144,14 @@ for ImageContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> CanSourceRectangle<'a, ImageContext<'a, 'b, I>, SourceRectangle> 
+impl<'a, 'b, I> 
+CanSourceRectangle<'a, ImageContext<'a, 'b, I>, SourceRectangle> 
 for ImageContext<'a, 'b, I> {
     #[inline(always)]
-    fn source_rectangle(&'a self, source_rect: SourceRectangle) -> ImageContext<'a, 'b, I> {
+    fn source_rectangle(
+        &'a self, 
+        source_rect: SourceRectangle
+    ) -> ImageContext<'a, 'b, I> {
         ImageContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -138,10 +161,17 @@ for ImageContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> AddRectangle<'a, ImageRectangleContext<'a, 'b, I>> 
+impl<'a, 'b, I> 
+AddRectangle<'a, ImageRectangleContext<'a, 'b, I>> 
 for ImageContext<'a, 'b, I> {
     #[inline(always)]
-    fn rect(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> ImageRectangleContext<'a, 'b, I> {
+    fn rect(
+        &'a self, 
+        x: Scalar, 
+        y: Scalar, 
+        w: Scalar, 
+        h: Scalar
+    ) -> ImageRectangleContext<'a, 'b, I> {
         ImageRectangleContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -162,11 +192,18 @@ for ImageContext<'a, 'b, I> {
             let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
             let &texture = self.image.get();
             let source_rect = self.source_rect.get();
-            let rect = [0.0, 0.0, source_rect[2] as f64, source_rect[3] as f64];
+            let rect = [
+                0.0, 
+                0.0, 
+                source_rect[2] as f64, 
+                source_rect[3] as f64
+            ];
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0 || back_end.has_texture_alpha(texture);
+            // Turn on alpha blending if not completely opaque 
+            // or if the texture has alpha channel.
+            let needs_alpha = color[3] != 1.0 
+                || back_end.has_texture_alpha(texture);
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
@@ -182,7 +219,9 @@ for ImageContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> AddColor<'a, ImageColorContext<'a, 'b, I>> for ImageContext<'a, 'b, I> {
+impl<'a, 'b, I> 
+AddColor<'a, ImageColorContext<'a, 'b, I>> 
+for ImageContext<'a, 'b, I> {
     #[inline(always)]
     fn rgba(
         &'a self,

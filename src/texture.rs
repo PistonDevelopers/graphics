@@ -40,12 +40,13 @@ impl Texture {
 
         let img = match Image::load(fin, image::PNG) {
             Ok(img) => img,
-            Err(e)  => return Err(format!("Could not load '{}': {}", path.filename_str().unwrap(), e)),
+            Err(e)  => return Err(format!("Could not load '{}': {}", 
+                path.filename_str().unwrap(), e)),
         };
 
         match img.colortype() {
             image::RGBA(8) => {},
-            c              => fail!("Unsupported color type {} in png", c),
+            c => fail!("Unsupported color type {} in png", c),
         };
 
         let (width, height) = img.dimensions();
@@ -54,8 +55,16 @@ impl Texture {
         unsafe {
             gl::GenTextures(1, &mut id);
             gl::BindTexture(gl::TEXTURE_2D, id);
-            gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as i32);
-            gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as i32);
+            gl::TexParameteri(
+                gl::TEXTURE_2D, 
+                gl::TEXTURE_MIN_FILTER, 
+                gl::LINEAR as i32
+            );
+            gl::TexParameteri(
+                gl::TEXTURE_2D, 
+                gl::TEXTURE_MAG_FILTER, 
+                gl::LINEAR as i32
+            );
             gl::TexImage2D(
                 gl::TEXTURE_2D,
                 0,
