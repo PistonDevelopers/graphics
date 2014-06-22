@@ -52,6 +52,7 @@
 extern crate gl;
 #[cfg(gl)]
 extern crate libc;
+#[cfg(gl)]
 extern crate image;
 extern crate core;
 extern crate std;
