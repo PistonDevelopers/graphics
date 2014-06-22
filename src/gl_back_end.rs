@@ -4,6 +4,8 @@
 use gl;
 use gl::types::{
     GLfloat,
+    GLint,
+    GLsizei,
     GLsizeiptr,
     GLuint,
 };
@@ -224,6 +226,11 @@ impl<'a> Gl {
                 current_program: None,
             }
         }
+    }
+
+    /// Sets viewport with normalized coordinates and center as origin.
+    pub fn viewport(&mut self, x: i32, y: i32, w: i32, h: i32) {
+        gl::Viewport(x as GLint, y as GLint, w as GLsizei, h as GLsizei);
     }
 
     /// Sets the current program only if the program is not in use.
