@@ -39,7 +39,9 @@ pub struct BevelRectangleBorderColorContext<'a> {
     pub border: Field<'a, Radius>,
 }
 
-impl<'a> Clone for BevelRectangleBorderColorContext<'a> {
+impl<'a> 
+Clone 
+for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> BevelRectangleBorderColorContext<'static> {
         BevelRectangleBorderColorContext {
@@ -53,17 +55,23 @@ impl<'a> Clone for BevelRectangleBorderColorContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for BevelRectangleBorderColorContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, BevelRectangleBorderColorContext<'a>, Matrix2d> 
+impl<'a> 
+CanTransform<'a, BevelRectangleBorderColorContext<'a>, Matrix2d> 
 for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> BevelRectangleBorderColorContext<'a> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> BevelRectangleBorderColorContext<'a> {
         BevelRectangleBorderColorContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -75,17 +83,23 @@ for BevelRectangleBorderColorContext<'a> {
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for BevelRectangleBorderColorContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, BevelRectangleBorderColorContext<'a>, Matrix2d> 
+impl<'a> 
+CanViewTransform<'a, BevelRectangleBorderColorContext<'a>, Matrix2d> 
 for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> BevelRectangleBorderColorContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> BevelRectangleBorderColorContext<'a> {
         BevelRectangleBorderColorContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -97,17 +111,23 @@ for BevelRectangleBorderColorContext<'a> {
     }
 }
 
-impl<'a> HasColor<'a, Color> for BevelRectangleBorderColorContext<'a> {
+impl<'a> 
+HasColor<'a, Color> 
+for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, BevelRectangleBorderColorContext<'a>, Color> 
+impl<'a> 
+CanColor<'a, BevelRectangleBorderColorContext<'a>, Color> 
 for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> BevelRectangleBorderColorContext<'a> {
+    fn color(
+        &'a self, 
+        value: Color
+    ) -> BevelRectangleBorderColorContext<'a> {
         BevelRectangleBorderColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -119,17 +139,23 @@ for BevelRectangleBorderColorContext<'a> {
     }
 }
 
-impl<'a> HasRectangle<'a, Rectangle> for BevelRectangleBorderColorContext<'a> {
+impl<'a> 
+HasRectangle<'a, Rectangle> 
+for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn get_rectangle(&'a self) -> &'a Rectangle {
         self.rect.get()
     }
 }
 
-impl<'a> CanRectangle<'a, BevelRectangleBorderColorContext<'a>, Rectangle> 
+impl<'a> 
+CanRectangle<'a, BevelRectangleBorderColorContext<'a>, Rectangle> 
 for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
-    fn rectangle(&'a self, rect: Rectangle) -> BevelRectangleBorderColorContext<'a> {
+    fn rectangle(
+        &'a self, 
+        rect: Rectangle
+    ) -> BevelRectangleBorderColorContext<'a> {
         BevelRectangleBorderColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),

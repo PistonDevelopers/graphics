@@ -29,7 +29,9 @@ pub struct EllipseContext<'a> {
     pub rect: Field<'a, Rectangle>,
 }
 
-impl<'a> Clone for EllipseContext<'a> {
+impl<'a> 
+Clone 
+for EllipseContext<'a> {
     #[inline(always)]
     fn clone(&self) -> EllipseContext<'static> {
         EllipseContext {
@@ -40,14 +42,18 @@ impl<'a> Clone for EllipseContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for EllipseContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for EllipseContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, EllipseContext<'a>, Matrix2d> for EllipseContext<'a> {
+impl<'a> 
+CanTransform<'a, EllipseContext<'a>, Matrix2d> 
+for EllipseContext<'a> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> EllipseContext<'a> {
         EllipseContext {
@@ -58,17 +64,23 @@ impl<'a> CanTransform<'a, EllipseContext<'a>, Matrix2d> for EllipseContext<'a> {
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for EllipseContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for EllipseContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, EllipseContext<'a>, Matrix2d> 
+impl<'a> 
+CanViewTransform<'a, EllipseContext<'a>, Matrix2d> 
 for EllipseContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> EllipseContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> EllipseContext<'a> {
         EllipseContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -77,7 +89,9 @@ for EllipseContext<'a> {
     }
 }
 
-impl<'a> AddColor<'a, EllipseColorContext<'a>> for EllipseContext<'a> {
+impl<'a> 
+AddColor<'a, EllipseColorContext<'a>> 
+for EllipseContext<'a> {
     #[inline(always)]
     fn rgba(
         &'a self, 
@@ -95,16 +109,23 @@ impl<'a> AddColor<'a, EllipseColorContext<'a>> for EllipseContext<'a> {
     }
 }
 
-impl<'a> HasRectangle<'a, Rectangle> for EllipseContext<'a> {
+impl<'a> 
+HasRectangle<'a, Rectangle> 
+for EllipseContext<'a> {
     #[inline(always)]
     fn get_rectangle(&'a self) -> &'a Rectangle {
         self.rect.get()
     }
 }
 
-impl<'a> CanRectangle<'a, EllipseContext<'a>, Rectangle> for EllipseContext<'a> {
+impl<'a> 
+CanRectangle<'a, EllipseContext<'a>, Rectangle> 
+for EllipseContext<'a> {
     #[inline(always)]
-    fn rectangle(&'a self, rect: Rectangle) -> EllipseContext<'a> {
+    fn rectangle(
+        &'a self, 
+        rect: Rectangle
+    ) -> EllipseContext<'a> {
         EllipseContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -113,9 +134,14 @@ impl<'a> CanRectangle<'a, EllipseContext<'a>, Rectangle> for EllipseContext<'a> 
     }
 }
 
-impl<'a> AddBorder<'a, EllipseBorderContext<'a>> for EllipseContext<'a> {
+impl<'a> 
+AddBorder<'a, EllipseBorderContext<'a>> 
+for EllipseContext<'a> {
     #[inline(always)]
-    fn border_radius(&'a self, radius: f64) -> EllipseBorderContext<'a> {
+    fn border_radius(
+        &'a self, 
+        radius: f64
+    ) -> EllipseBorderContext<'a> {
         EllipseBorderContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),

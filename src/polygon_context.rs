@@ -25,7 +25,9 @@ pub struct PolygonContext<'a, 'b> {
     pub polygon: Field<'a, Polygon<'b>>
 }
 
-impl<'a, 'b> Clone for PolygonContext<'a, 'b> {
+impl<'a, 'b> 
+Clone 
+for PolygonContext<'a, 'b> {
     #[inline(always)]
     fn clone(&self) -> PolygonContext<'static, 'b> {
         PolygonContext {
@@ -36,16 +38,23 @@ impl<'a, 'b> Clone for PolygonContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> HasTransform<'a, Matrix2d> for PolygonContext<'a, 'b> {
+impl<'a, 'b> 
+HasTransform<'a, Matrix2d> 
+for PolygonContext<'a, 'b> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a, 'b> CanTransform<'a, PolygonContext<'a, 'b>, Matrix2d> for PolygonContext<'a, 'b> {
+impl<'a, 'b> 
+CanTransform<'a, PolygonContext<'a, 'b>, Matrix2d> 
+for PolygonContext<'a, 'b> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> PolygonContext<'a, 'b> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> PolygonContext<'a, 'b> {
         PolygonContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -54,17 +63,23 @@ impl<'a, 'b> CanTransform<'a, PolygonContext<'a, 'b>, Matrix2d> for PolygonConte
     }
 }
 
-impl<'a, 'b> HasViewTransform<'a, Matrix2d> for PolygonContext<'a, 'b> {
+impl<'a, 'b> 
+HasViewTransform<'a, Matrix2d> 
+for PolygonContext<'a, 'b> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a, 'b> CanViewTransform<'a, PolygonContext<'a, 'b>, Matrix2d> 
+impl<'a, 'b> 
+CanViewTransform<'a, PolygonContext<'a, 'b>, Matrix2d> 
 for PolygonContext<'a, 'b> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> PolygonContext<'a, 'b> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> PolygonContext<'a, 'b> {
         PolygonContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -73,7 +88,9 @@ for PolygonContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> AddColor<'a, PolygonColorContext<'a, 'b>> for PolygonContext<'a, 'b> {
+impl<'a, 'b> 
+AddColor<'a, PolygonColorContext<'a, 'b>> 
+for PolygonContext<'a, 'b> {
     #[inline(always)]
     fn rgba(
         &'a self, 

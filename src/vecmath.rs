@@ -18,8 +18,15 @@ use modular_index::{previous};
 /// Multiplies two matrices.
 #[inline(always)]
 pub fn multiply(m: Matrix2d, b: Matrix2d) -> Matrix2d {
-    [m[0]*b[0]+m[1]*b[3]+m[2]*0.0,  m[0]*b[1]+m[1]*b[4]+m[2]*0.0,  m[0]*b[2]+m[1]*b[5]+m[2]*1.0,
-     m[3]*b[0]+m[4]*b[3]+m[5]*0.0,  m[3]*b[1]+m[4]*b[4]+m[5]*0.0,  m[3]*b[2]+m[4]*b[5]+m[5]*1.0]
+    [
+        m[0]*b[0]+m[1]*b[3]+m[2]*0.0,  
+        m[0]*b[1]+m[1]*b[4]+m[2]*0.0,  
+        m[0]*b[2]+m[1]*b[5]+m[2]*1.0,
+        
+        m[3]*b[0]+m[4]*b[3]+m[5]*0.0,  
+        m[3]*b[1]+m[4]*b[4]+m[5]*0.0,  
+        m[3]*b[2]+m[4]*b[5]+m[5]*1.0
+    ]
 }
 
 /// Creates a translation matrix.
@@ -40,7 +47,8 @@ pub fn rotate_radians(angle: f64) -> Matrix2d {
 
 /// Orients x axis to look at point.
 ///
-/// Leaves x axis unchanged if the point to look at is the origin.
+/// Leaves x axis unchanged if the
+/// point to look at is the origin.
 #[inline(always)]
 pub fn orient(x: f64, y: f64) -> Matrix2d {
     let len = x * x + y * y;
@@ -80,7 +88,10 @@ pub fn identity() -> Matrix2d {
 /// Extract scale information from amtrix.
 #[inline(always)]
 pub fn get_scale(m: Matrix2d) -> Vec2d {
-    [(m[0] * m[0] + m[3] * m[3]).sqrt(), (m[1] * m[1] + m[4] * m[4]).sqrt()]
+    [
+        (m[0] * m[0] + m[3] * m[3]).sqrt(), 
+        (m[1] * m[1] + m[4] * m[4]).sqrt()
+    ]
 }
 
 /// Compute the shortest vector from point to ray.
@@ -93,15 +104,18 @@ pub fn separation(ray: Ray, x: f64, y: f64) -> [f64, ..2] {
     let (dx, dy) = (ray[0] - x, ray[1] - y);
     // Compute the component of position in ray direction.
     let dot = dir_x * x + dir_y * y;
-    // The directional vector multiplied with the dot gives us a parallel vector.
-    // When we subtract this from the displacement we get a vector normal to the ray.
+    // The directional vector multiplied with
+    // the dot gives us a parallel vector.
+    // When we subtract this from the displacement
+    // we get a vector normal to the ray.
     // This is the shortest vector from the point to the ray.
     [dx - dot * dir_x, dy - dot * dir_y]
 }
 
 /// Returns the least separation out of four.
 /// Each seperation can be computed using `separation` function.
-/// The separation returned can be used to solve collision of rectangles.
+/// The separation returned can be used
+/// to solve collision of rectangles.
 #[inline(always)]
 pub fn least_separation_4(
     sep1: Vec2d,
@@ -134,20 +148,44 @@ pub fn least_separation_4(
 pub fn margin_rectangle(rect: Rectangle, m: f64) -> Rectangle {
     let w = rect[2] - 2.0 * m;
     let h = rect[3] - 2.0 * m;
-    let (x, w) = if w < 0.0 { (rect[0] + 0.5 * rect[2], 0.0) } else { (rect[0] + m, w) };
-    let (y, h) = if h < 0.0 { (rect[1] + 0.5 * rect[3], 0.0) } else { (rect[1] + m, h) };
+    let (x, w) 
+        =   if w < 0.0 {
+                (rect[0] + 0.5 * rect[2], 0.0) 
+            } else { 
+                (rect[0] + m, w) 
+            };
+    let (y, h) 
+        =   if h < 0.0 { 
+                (rect[1] + 0.5 * rect[3], 0.0) 
+            } else { 
+                (rect[1] + m, h) 
+            };
     [x, y, w, h]
 }
 
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
-pub fn relative_rectangle(rect: Rectangle, x: f64, y: f64) -> Rectangle {
-    [rect[0] + x * rect[2], rect[1] + y * rect[3], rect[2], rect[3]]
+pub fn relative_rectangle(
+    rect: Rectangle, 
+    x: f64, 
+    y: f64
+) -> Rectangle {
+    [
+        rect[0] + x * rect[2], 
+        rect[1] + y * rect[3], 
+        rect[2], 
+        rect[3]
+    ]
 }
 
-/// Computes a relative source rectangle using the source rectangle as a tile.
+/// Computes a relative source rectangle using
+/// the source rectangle as a tile.
 #[inline(always)]
-pub fn relative_source_rectangle(rect: SourceRectangle, x: i32, y: i32) -> SourceRectangle {
+pub fn relative_source_rectangle(
+    rect: SourceRectangle, 
+    x: i32, 
+    y: i32
+) -> SourceRectangle {
     let (rx, ry, rw, rh) = (rect[0], rect[1], rect[2], rect[3]);
     let (x, y) = (rx + x * rw, ry + y * rh);
     [x, y, rw, rh]

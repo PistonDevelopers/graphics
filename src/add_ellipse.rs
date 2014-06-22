@@ -6,7 +6,13 @@ pub trait AddEllipse<'a, T> {
 
     /// Adds an ellipse with coordinates in the center.
     #[inline(always)]
-    fn ellipse_centered(&'a self, center_x: f64, center_y: f64, radius_width: f64, radius_height: f64) -> T {
+    fn ellipse_centered(
+        &'a self, 
+        center_x: f64, 
+        center_y: f64, 
+        radius_width: f64, 
+        radius_height: f64
+    ) -> T {
         self.ellipse(
             center_x - radius_width,
             center_y - radius_height,
@@ -17,7 +23,12 @@ pub trait AddEllipse<'a, T> {
 
     /// Adds a circle.
     #[inline(always)]
-    fn circle(&'a self, center_x: f64, center_y: f64, radius: f64) -> T {
+    fn circle(
+        &'a self, 
+        center_x: f64, 
+        center_y: f64, 
+        radius: f64
+    ) -> T {
         self.ellipse(center_x - radius,
                   center_y - radius,
                   2.0 * radius,

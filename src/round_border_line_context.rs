@@ -29,7 +29,9 @@ pub struct RoundBorderLineContext<'a> {
     pub round_border_radius: Field<'a, Radius>,
 }
 
-impl<'a> Clone for RoundBorderLineContext<'a> {
+impl<'a> 
+Clone 
+for RoundBorderLineContext<'a> {
     #[inline(always)]   
     fn clone(&self) -> RoundBorderLineContext<'static> {
         RoundBorderLineContext {
@@ -41,16 +43,23 @@ impl<'a> Clone for RoundBorderLineContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for RoundBorderLineContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for RoundBorderLineContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, RoundBorderLineContext<'a>, Matrix2d> for RoundBorderLineContext<'a> {
+impl<'a> 
+CanTransform<'a, RoundBorderLineContext<'a>, Matrix2d> 
+for RoundBorderLineContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> RoundBorderLineContext<'a> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> RoundBorderLineContext<'a> {
         RoundBorderLineContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -60,17 +69,23 @@ impl<'a> CanTransform<'a, RoundBorderLineContext<'a>, Matrix2d> for RoundBorderL
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for RoundBorderLineContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for RoundBorderLineContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, RoundBorderLineContext<'a>, Matrix2d> 
+impl<'a> 
+CanViewTransform<'a, RoundBorderLineContext<'a>, Matrix2d> 
 for RoundBorderLineContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> RoundBorderLineContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> RoundBorderLineContext<'a> {
         RoundBorderLineContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -80,7 +95,9 @@ for RoundBorderLineContext<'a> {
     }
 }
 
-impl<'a> AddColor<'a, RoundBorderLineColorContext<'a>> for RoundBorderLineContext<'a> {
+impl<'a> 
+AddColor<'a, RoundBorderLineColorContext<'a>> 
+for RoundBorderLineContext<'a> {
     #[inline(always)]
     fn rgba(
         &'a self, 

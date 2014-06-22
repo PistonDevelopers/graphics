@@ -38,7 +38,9 @@ pub struct RectangleContext<'a> {
     pub rect: Field<'a, Rectangle>,
 }
 
-impl<'a> Clone for RectangleContext<'a> {
+impl<'a> 
+Clone 
+for RectangleContext<'a> {
     #[inline(always)]
     fn clone(&self) -> RectangleContext<'static> {
         RectangleContext {
@@ -49,14 +51,18 @@ impl<'a> Clone for RectangleContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for RectangleContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for RectangleContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, RectangleContext<'a>, Matrix2d> for RectangleContext<'a> {
+impl<'a> 
+CanTransform<'a, RectangleContext<'a>, Matrix2d> 
+for RectangleContext<'a> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> RectangleContext<'a> {
         RectangleContext {
@@ -67,17 +73,23 @@ impl<'a> CanTransform<'a, RectangleContext<'a>, Matrix2d> for RectangleContext<'
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for RectangleContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for RectangleContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, RectangleContext<'a>, Matrix2d> 
+impl<'a> 
+CanViewTransform<'a, RectangleContext<'a>, Matrix2d> 
 for RectangleContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> RectangleContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> RectangleContext<'a> {
         RectangleContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -86,14 +98,18 @@ for RectangleContext<'a> {
     }
 }
 
-impl<'a> HasRectangle<'a, Rectangle> for RectangleContext<'a> {
+impl<'a> 
+HasRectangle<'a, Rectangle> 
+for RectangleContext<'a> {
     #[inline(always)]
     fn get_rectangle(&'a self) -> &'a Rectangle {
         self.rect.get()
     }
 }
 
-impl<'a> CanRectangle<'a, RectangleContext<'a>, Rectangle> for RectangleContext<'a> {
+impl<'a> 
+CanRectangle<'a, RectangleContext<'a>, Rectangle> 
+for RectangleContext<'a> {
     #[inline(always)]
     fn rectangle(&'a self, rect: Rectangle) -> RectangleContext<'a> {
         RectangleContext {
@@ -104,7 +120,9 @@ impl<'a> CanRectangle<'a, RectangleContext<'a>, Rectangle> for RectangleContext<
     }
 }
 
-impl<'a> AddColor<'a, RectangleColorContext<'a>> for RectangleContext<'a> {
+impl<'a> 
+AddColor<'a, RectangleColorContext<'a>> 
+for RectangleContext<'a> {
     /// Creates a RectangleColorContext.
     #[inline(always)]
     fn rgba(
@@ -134,9 +152,14 @@ fn test_rgba() {
     assert_eq!(color[0], 1.0);
 }
 
-impl<'a> AddRound<'a, RoundRectangleContext<'a>> for RectangleContext<'a> {
+impl<'a> 
+AddRound<'a, RoundRectangleContext<'a>> 
+for RectangleContext<'a> {
     #[inline(always)]
-    fn round(&'a self, radius: Radius) -> RoundRectangleContext<'a> {
+    fn round(
+        &'a self, 
+        radius: Radius
+    ) -> RoundRectangleContext<'a> {
         RoundRectangleContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -146,9 +169,14 @@ impl<'a> AddRound<'a, RoundRectangleContext<'a>> for RectangleContext<'a> {
     }
 }
 
-impl<'a> AddBevel<'a, BevelRectangleContext<'a>> for RectangleContext<'a> {
+impl<'a> 
+AddBevel<'a, BevelRectangleContext<'a>> 
+for RectangleContext<'a> {
     #[inline(always)]
-    fn bevel(&'a self, radius: Radius) -> BevelRectangleContext<'a> {
+    fn bevel(
+        &'a self, 
+        radius: Radius
+    ) -> BevelRectangleContext<'a> {
         BevelRectangleContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -161,7 +189,10 @@ impl<'a> AddBevel<'a, BevelRectangleContext<'a>> for RectangleContext<'a> {
 impl<'a, 'b, I: ImageSize> 
 AddImage<'a, 'b, ImageRectangleContext<'a, 'b, I>, I> 
 for RectangleContext<'a> {
-    fn image(&'a self, image: &'b I) -> ImageRectangleContext<'a, 'b, I> {
+    fn image(
+        &'a self, 
+        image: &'b I
+    ) -> ImageRectangleContext<'a, 'b, I> {
         let (w, h) = image.get_size();
         ImageRectangleContext {
             view: Borrowed(self.view.get()),
@@ -173,9 +204,14 @@ for RectangleContext<'a> {
     }
 }
 
-impl<'a> AddBorder<'a, RectangleBorderContext<'a>> for RectangleContext<'a> {
+impl<'a> 
+AddBorder<'a, RectangleBorderContext<'a>> 
+for RectangleContext<'a> {
     #[inline(always)]
-    fn border_radius(&'a self, radius: f64) -> RectangleBorderContext<'a> {
+    fn border_radius(
+        &'a self, 
+        radius: f64
+    ) -> RectangleBorderContext<'a> {
         RectangleBorderContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),

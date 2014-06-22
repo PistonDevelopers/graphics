@@ -38,7 +38,9 @@ pub struct RoundBorderLineColorContext<'a> {
     pub round_border_radius: Field<'a, Radius>,
 }
 
-impl<'a> Clone for RoundBorderLineColorContext<'a> {
+impl<'a> 
+Clone 
+for RoundBorderLineColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> RoundBorderLineColorContext<'static> {
         RoundBorderLineColorContext {
@@ -51,16 +53,23 @@ impl<'a> Clone for RoundBorderLineColorContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for RoundBorderLineColorContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for RoundBorderLineColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, RoundBorderLineColorContext<'a>, Matrix2d> for RoundBorderLineColorContext<'a> {
+impl<'a> 
+CanTransform<'a, RoundBorderLineColorContext<'a>, Matrix2d> 
+for RoundBorderLineColorContext<'a> {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> RoundBorderLineColorContext<'a> {
+    fn transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> RoundBorderLineColorContext<'a> {
         RoundBorderLineColorContext {
             view: Borrowed(self.view.get()),
             transform: Value(value),
@@ -71,17 +80,23 @@ impl<'a> CanTransform<'a, RoundBorderLineColorContext<'a>, Matrix2d> for RoundBo
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for RoundBorderLineColorContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for RoundBorderLineColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, RoundBorderLineColorContext<'a>, Matrix2d> 
+impl<'a> 
+CanViewTransform<'a, RoundBorderLineColorContext<'a>, Matrix2d> 
 for RoundBorderLineColorContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> RoundBorderLineColorContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> RoundBorderLineColorContext<'a> {
         RoundBorderLineColorContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -92,16 +107,23 @@ for RoundBorderLineColorContext<'a> {
     }
 }
 
-impl<'a> HasColor<'a, Color> for RoundBorderLineColorContext<'a> {
+impl<'a> 
+HasColor<'a, Color> 
+for RoundBorderLineColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, RoundBorderLineColorContext<'a>, Color> for RoundBorderLineColorContext<'a> {
+impl<'a> 
+CanColor<'a, RoundBorderLineColorContext<'a>, Color> 
+for RoundBorderLineColorContext<'a> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> RoundBorderLineColorContext<'a> {
+    fn color(
+        &'a self, 
+        value: Color
+    ) -> RoundBorderLineColorContext<'a> {
         RoundBorderLineColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),

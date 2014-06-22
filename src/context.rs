@@ -38,7 +38,9 @@ pub struct Context<'a> {
     pub transform: Field<'a, Matrix2d>,
 }
 
-impl<'a> Clone for Context<'a> {
+impl<'a> 
+Clone 
+for Context<'a> {
     #[inline(always)]
     fn clone(&self) -> Context<'static> {
         Context {
@@ -48,14 +50,18 @@ impl<'a> Clone for Context<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for Context<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for Context<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
+impl<'a> 
+CanTransform<'a, Context<'a>, Matrix2d> 
+for Context<'a> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> Context<'a> {
         Context {
@@ -65,14 +71,18 @@ impl<'a> CanTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for Context<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for Context<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
+impl<'a> 
+CanViewTransform<'a, Context<'a>, Matrix2d> 
+for Context<'a> {
     #[inline(always)]
     fn view_transform(&'a self, value: Matrix2d) -> Context<'a> {
         Context {
@@ -82,7 +92,8 @@ impl<'a> CanViewTransform<'a, Context<'a>, Matrix2d> for Context<'a> {
     }
 }
 
-impl<'a> Context<'a> {
+impl<'a> 
+Context<'a> {
     /// Creates a new drawing context.
     #[inline(always)]
     pub fn new() -> Context {
@@ -155,9 +166,17 @@ fn test_scale() {
     assert!((transform[4] - 3.0).abs() < 0.00001);
 }
 
-impl<'a> AddRectangle<'a, RectangleContext<'a>> for Context<'a> {
+impl<'a> 
+AddRectangle<'a, RectangleContext<'a>> 
+for Context<'a> {
     #[inline(always)]
-    fn rect(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> RectangleContext<'a> {
+    fn rect(
+        &'a self, 
+        x: Scalar, 
+        y: Scalar, 
+        w: Scalar, 
+        h: Scalar
+    ) -> RectangleContext<'a> {
         RectangleContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -174,7 +193,9 @@ fn test_rect() {
     assert_eq!(rect[2], 100.0);
 }
 
-impl<'a> AddColor<'a, ColorContext<'a>> for Context<'a> {
+impl<'a> 
+AddColor<'a, ColorContext<'a>> 
+for Context<'a> {
     #[inline(always)]
     fn rgba(
         &'a self, 
@@ -199,9 +220,17 @@ fn test_rgba() {
     assert_eq!(color[0], 1.0);
 }
 
-impl<'a> AddEllipse<'a, EllipseContext<'a>> for Context<'a> {
+impl<'a> 
+AddEllipse<'a, EllipseContext<'a>> 
+for Context<'a> {
     #[inline(always)]
-    fn ellipse(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> EllipseContext<'a> {
+    fn ellipse(
+        &'a self, 
+        x: Scalar, 
+        y: Scalar, 
+        w: Scalar, 
+        h: Scalar
+    ) -> EllipseContext<'a> {
         EllipseContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -218,9 +247,14 @@ fn test_ellipse() {
     assert_eq!(rect[2], 100.0);
 }
 
-impl<'a, 'b> AddPolygon<'a, PolygonContext<'a, 'b>> for Context<'a> {
+impl<'a, 'b> 
+AddPolygon<'a, PolygonContext<'a, 'b>> 
+for Context<'a> {
     #[inline(always)]
-    fn polygon(&'a self, polygon: Polygon<'b>) -> PolygonContext<'a, 'b> {
+    fn polygon(
+        &'a self, 
+        polygon: Polygon<'b>
+    ) -> PolygonContext<'a, 'b> {
         PolygonContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -244,7 +278,8 @@ for Context<'a> {
     }
 }
 
-impl<'a> AddTween<'a, LerpTweenContext<'a>> 
+impl<'a> 
+AddTween<'a, LerpTweenContext<'a>> 
 for Context<'a> {
     #[inline(always)]
     fn lerp(&'a self, tween_factor: Scalar) -> LerpTweenContext<'a> {
@@ -256,9 +291,17 @@ for Context<'a> {
     }
 }
 
-impl<'a> AddLine<'a, LineContext<'a>> for Context<'a> {
+impl<'a> 
+AddLine<'a, LineContext<'a>> 
+for Context<'a> {
     #[inline(always)]
-    fn line(&'a self, x1: Scalar, y1: Scalar, x2: Scalar, y2: Scalar) -> LineContext<'a> {
+    fn line(
+        &'a self, 
+        x1: Scalar, 
+        y1: Scalar, 
+        x2: Scalar, 
+        y2: Scalar
+    ) -> LineContext<'a> {
         LineContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),

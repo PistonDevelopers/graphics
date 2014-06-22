@@ -124,19 +124,25 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
         i += 1;
         // Detect the half circle from index.
         // There is one half circle at each end of the line.
-        // Together they form a full circle if the length of the line is zero.
+        // Together they form a full circle if
+        // the length of the line is zero.
         match j {
             j if j >= resolution_cap => {
-                // Compute the angle to match start and end point of half circle.
-                // This requires an angle offset since the other end of line is the first half circle.
-                let angle = (j - resolution_cap) as f64 / (resolution_cap - 1) as f64 * PI + PI;
+                // Compute the angle to match start and end 
+                // point of half circle.
+                // This requires an angle offset since 
+                // the other end of line is the first half circle.
+                let angle = (j - resolution_cap) as f64 
+                    / (resolution_cap - 1) as f64 * PI + PI;
                 // Rotate 90 degrees since the line is horizontal.
                 let angle = angle + FRAC_PI_2;
                 Some([w + angle.cos() * radius, angle.sin() * radius])
             },
             j => {
-                // Compute the angle to match start and end point of half circle.
-                let angle = j as f64 / (resolution_cap - 1) as f64 * PI;
+                // Compute the angle to match start and end 
+                // point of half circle.
+                let angle = j as f64 
+                    / (resolution_cap - 1) as f64 * PI;
                 // Rotate 90 degrees since the line is horizontal.
                 let angle = angle + FRAC_PI_2;
                 Some([angle.cos() * radius, angle.sin() * radius])
@@ -166,38 +172,51 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
         i += 1;
         // Detect quarter circle from index.
         // There is one quarter circle at each corner.
-        // Together they form a full circle if each side of rectangle is 2 times the radius.
+        // Together they form a full circle if
+        // each side of rectangle is 2 times the radius.
         match j {
             j if j >= resolution_corner * 3 => {
-                // Compute the angle to match start and end point of quarter circle.
-                // This requires an angle offset since this is the last quarter.
-                let angle = (j - resolution_corner * 3) as f64 / (resolution_corner - 1) as f64 * FRAC_PI_2
+                // Compute the angle to match start and end
+                // point of quarter circle.
+                // This requires an angle offset since this
+                // is the last quarter.
+                let angle = (j - resolution_corner * 3) as f64 
+                    / (resolution_corner - 1) as f64 * FRAC_PI_2
                     + 3.0 * FRAC_PI_2;
                 // Set center of the circle to the last corner.
                 let (cx, cy) = (x + w - radius, y + radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j if j >= resolution_corner * 2 => {
-                // Compute the angle to match start and end point of quarter circle.
-                // This requires an angle offset since this is the second last quarter.
-                let angle = (j - resolution_corner * 2) as f64 / (resolution_corner - 1) as f64 * FRAC_PI_2
+                // Compute the angle to match start and end
+                // point of quarter circle.
+                // This requires an angle offset since
+                // this is the second last quarter.
+                let angle = (j - resolution_corner * 2) as f64 
+                    / (resolution_corner - 1) as f64 * FRAC_PI_2
                     + PI;
                 // Set center of the circle to the second last corner.
                 let (cx, cy) = (x + radius, y + radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j if j >= resolution_corner * 1 => {
-                // Compute the angle to match start and end point of quarter circle.
-                // This requires an angle offset since this is the second quarter.
-                let angle = (j - resolution_corner) as f64 / (resolution_corner - 1) as f64 * FRAC_PI_2
+                // Compute the angle to match start and end
+                // point of quarter circle.
+                // This requires an angle offset since
+                // this is the second quarter.
+                let angle = (j - resolution_corner) as f64 
+                    / (resolution_corner - 1) as f64 * FRAC_PI_2
                     + FRAC_PI_2;
                 // Set center of the circle to the second corner.
                 let (cx, cy) = (x + radius, y + h - radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
             j => {
-                // Compute the angle to match start and end point of quarter circle.
-                let angle = j as f64 / (resolution_corner - 1) as f64 * FRAC_PI_2;
+                // Compute the angle to match start and end
+                // point of quarter circle.
+                let angle = j as f64 
+                    / (resolution_corner - 1) as f64 
+                    * FRAC_PI_2;
                 // Set center of the circle to the first corner.
                 let (cx, cy) = (x + w - radius, y + h - radius);
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
@@ -289,7 +308,8 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
 /// Streams a quad into tri list with color per vertex.
 ///
 /// Uses buffers that fit inside L1 cache.
-/// The 'quad_edge' stream returns two points defining the next edge.
+/// The 'quad_edge' stream returns two points
+/// defining the next edge.
 pub fn stream_quad_tri_list_xy_f32_rgba_f32(
     m: Matrix2d,
     quad_edge: || -> Option<(Vec2d, Vec2d)>,
@@ -305,8 +325,14 @@ pub fn stream_quad_tri_list_xy_f32_rgba_f32(
             Some((val1, val2)) => (val1, val2) 
         };
     // Transform the points using the matrix.
-    let (mut fx1, mut fy1) = (tx(m, fp1[0], fp1[1]), ty(m, fp1[0], fp1[1]));
-    let (mut fx2, mut fy2) = (tx(m, fp2[0], fp2[1]), ty(m, fp2[0], fp2[1]));
+    let (mut fx1, mut fy1) = (
+        tx(m, fp1[0], fp1[1]), 
+        ty(m, fp1[0], fp1[1])
+    );
+    let (mut fx2, mut fy2) = (
+        tx(m, fp2[0], fp2[1]), 
+        ty(m, fp2[0], fp2[1])
+    );
     // Counts the quads.
     let mut i = 0;
     let triangles_per_quad = 2;
@@ -328,8 +354,14 @@ pub fn stream_quad_tri_list_xy_f32_rgba_f32(
             Some((val1, val2)) => (val1, val2)
         };
         // Transform the points using the matrix.
-        let (gx1, gy1) = (tx(m, gp1[0], gp1[1]), ty(m, gp1[0], gp1[1]));
-        let (gx2, gy2) = (tx(m, gp2[0], gp2[1]), ty(m, gp2[0], gp2[1]));
+        let (gx1, gy1) = (
+            tx(m, gp1[0], gp1[1]), 
+            ty(m, gp1[0], gp1[1])
+        );
+        let (gx2, gy2) = (
+            tx(m, gp2[0], gp2[1]), 
+            ty(m, gp2[0], gp2[1])
+        );
         let ind_out = i * align_vertices;
 
         // First triangle.
@@ -430,8 +462,14 @@ pub fn rect_tri_list_xy_f32(
 ) -> [f32, ..12] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (x2, y2) = (x + w, y + h);
-    [tx(m,x,y), ty(m,x,y), tx(m,x2,y), ty(m,x2,y), tx(m,x,y2), ty(m,x,y2),
-     tx(m,x2,y), ty(m,x2,y), tx(m,x2,y2), ty(m,x2,y2), tx(m,x,y2), ty(m,x,y2)]
+    [
+        tx(m,x,y), ty(m,x,y), 
+        tx(m,x2,y), ty(m,x2,y), 
+        tx(m,x,y2), ty(m,x,y2),
+        tx(m,x2,y), ty(m,x2,y), 
+        tx(m,x2,y2), ty(m,x2,y2), 
+        tx(m,x,y2), ty(m,x,y2)
+    ]
 }
 
 /// Creates triangle list colors from rectangle.
@@ -440,18 +478,20 @@ pub fn rect_tri_list_rgba_f32(
     color: Color
 ) -> [f32, ..48] {
     let (r, g, b, a) = (color[0], color[1], color[2], color[3]);
-    [r, g, b, a, // 0
-     r, g, b, a, // 1
-     r, g, b, a, // 2
-     r, g, b, a, // 3
-     r, g, b, a, // 4
-     r, g, b, a, // 5
-     r, g, b, a, // 6
-     r, g, b, a, // 7
-     r, g, b, a, // 8
-     r, g, b, a, // 9
-     r, g, b, a, // 10
-     r, g, b, a]
+    [
+        r, g, b, a, // 0
+        r, g, b, a, // 1
+        r, g, b, a, // 2
+        r, g, b, a, // 3
+        r, g, b, a, // 4
+        r, g, b, a, // 5
+        r, g, b, a, // 6
+        r, g, b, a, // 7
+        r, g, b, a, // 8
+        r, g, b, a, // 9
+        r, g, b, a, // 10
+        r, g, b, a
+    ]
 }
 
 /// Creates triangle list texture coords from image.
@@ -460,10 +500,16 @@ pub fn rect_tri_list_uv_f32<I: ImageSize>(
     image: &I, source_rect: SourceRectangle
 ) -> [f32, ..12] {
     let (w, h) = image.get_size();
-    let x1 = source_rect[0] as f32 / w as f32;
-    let y1 = source_rect[1] as f32 / h as f32;
-    let x2 = (source_rect[0] + source_rect[2]) as f32 / w as f32;
-    let y2 = (source_rect[1] + source_rect[3]) as f32 / h as f32;
-    [x1, y1, x2, y1, x1, y2,
-     x2, y1, x2, y2, x1, y2]
+    let x1 = source_rect[0] as f32 
+        / w as f32;
+    let y1 = source_rect[1] as f32 
+        / h as f32;
+    let x2 = (source_rect[0] + source_rect[2]) as f32 
+        / w as f32;
+    let y2 = (source_rect[1] + source_rect[3]) as f32 
+        / h as f32;
+    [
+        x1, y1, x2, y1, x1, y2,
+        x2, y1, x2, y2, x1, y2
+    ]
 }

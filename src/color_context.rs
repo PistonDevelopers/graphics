@@ -42,7 +42,9 @@ pub struct ColorContext<'a> {
     pub color: Field<'a, Color>,
 }
 
-impl<'a> Clone for ColorContext<'a> {
+impl<'a> 
+Clone 
+for ColorContext<'a> {
     #[inline(always)]
     fn clone(&self) -> ColorContext<'static> {
         ColorContext {
@@ -53,14 +55,18 @@ impl<'a> Clone for ColorContext<'a> {
     }
 }
 
-impl<'a> HasTransform<'a, Matrix2d> for ColorContext<'a> {
+impl<'a> 
+HasTransform<'a, Matrix2d> 
+for ColorContext<'a> {
     #[inline(always)]
     fn get_transform(&'a self) -> &'a Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> CanTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
+impl<'a> 
+CanTransform<'a, ColorContext<'a>, Matrix2d> 
+for ColorContext<'a> {
     #[inline(always)]
     fn transform(&'a self, value: Matrix2d) -> ColorContext<'a> {
         ColorContext {
@@ -71,16 +77,23 @@ impl<'a> CanTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
     }
 }
 
-impl<'a> HasViewTransform<'a, Matrix2d> for ColorContext<'a> {
+impl<'a> 
+HasViewTransform<'a, Matrix2d> 
+for ColorContext<'a> {
     #[inline(always)]
     fn get_view_transform(&'a self) -> &'a Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> CanViewTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
+impl<'a> 
+CanViewTransform<'a, ColorContext<'a>, Matrix2d> 
+for ColorContext<'a> {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> ColorContext<'a> {
+    fn view_transform(
+        &'a self, 
+        value: Matrix2d
+    ) -> ColorContext<'a> {
         ColorContext {
             view: Value(value),
             transform: Borrowed(self.transform.get()),
@@ -89,14 +102,18 @@ impl<'a> CanViewTransform<'a, ColorContext<'a>, Matrix2d> for ColorContext<'a> {
     }
 }
 
-impl<'a> HasColor<'a, Color> for ColorContext<'a> {
+impl<'a> 
+HasColor<'a, Color> 
+for ColorContext<'a> {
     #[inline(always)]
     fn get_color(&'a self) -> &'a Color {
         self.color.get()
     }
 }
 
-impl<'a> CanColor<'a, ColorContext<'a>, Color> for ColorContext<'a> {
+impl<'a> 
+CanColor<'a, ColorContext<'a>, Color> 
+for ColorContext<'a> {
     #[inline(always)]
     fn color(&'a self, value: Color) -> ColorContext<'a> {
         ColorContext {
@@ -107,9 +124,17 @@ impl<'a> CanColor<'a, ColorContext<'a>, Color> for ColorContext<'a> {
     }
 }
 
-impl<'a> AddRectangle<'a, RectangleColorContext<'a>> for ColorContext<'a> {
+impl<'a> 
+AddRectangle<'a, RectangleColorContext<'a>> 
+for ColorContext<'a> {
     #[inline(always)]
-    fn rect(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> RectangleColorContext<'a> {
+    fn rect(
+        &'a self, 
+        x: Scalar, 
+        y: Scalar, 
+        w: Scalar, 
+        h: Scalar
+    ) -> RectangleColorContext<'a> {
         RectangleColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -130,9 +155,17 @@ fn test_rect() {
     assert_eq!(rect_color[2], 100.0);
 }
 
-impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
+impl<'a> 
+AddEllipse<'a, EllipseColorContext<'a>> 
+for ColorContext<'a> {
     #[inline(always)]
-    fn ellipse(&'a self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> EllipseColorContext<'a> {
+    fn ellipse(
+        &'a self, 
+        x: Scalar, 
+        y: Scalar, 
+        w: Scalar, 
+        h: Scalar
+    ) -> EllipseColorContext<'a> {
         EllipseColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -142,9 +175,14 @@ impl<'a> AddEllipse<'a, EllipseColorContext<'a>> for ColorContext<'a> {
     }
 }
 
-impl<'a, 'b> AddPolygon<'a, PolygonColorContext<'a, 'b>> for ColorContext<'a> {
+impl<'a, 'b> 
+AddPolygon<'a, PolygonColorContext<'a, 'b>> 
+for ColorContext<'a> {
     #[inline(always)]
-    fn polygon(&'a self, polygon: Polygon<'b>) -> PolygonColorContext<'a, 'b> {
+    fn polygon(
+        &'a self, 
+        polygon: Polygon<'b>
+    ) -> PolygonColorContext<'a, 'b> {
         PolygonColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -154,10 +192,14 @@ impl<'a, 'b> AddPolygon<'a, PolygonColorContext<'a, 'b>> for ColorContext<'a> {
     }
 }
 
-impl<'a> AddTween<'a, LerpTweenColorContext<'a>> 
+impl<'a> 
+AddTween<'a, LerpTweenColorContext<'a>> 
 for ColorContext<'a> {
     #[inline(always)]
-    fn lerp(&'a self, tween_factor: Scalar) -> LerpTweenColorContext<'a> {
+    fn lerp(
+        &'a self, 
+        tween_factor: Scalar
+    ) -> LerpTweenColorContext<'a> {
         LerpTweenColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
@@ -194,9 +236,17 @@ for ColorContext<'a> {
     }
 }
 
-impl<'a> AddLine<'a, LineColorContext<'a>> for ColorContext<'a> {
+impl<'a> 
+AddLine<'a, LineColorContext<'a>> 
+for ColorContext<'a> {
     #[inline(always)]
-    fn line(&'a self, x1: Scalar, y1: Scalar, x2: Scalar, y2: Scalar) -> LineColorContext<'a> {
+    fn line(
+        &'a self, 
+        x1: Scalar, 
+        y1: Scalar, 
+        x2: Scalar, 
+        y2: Scalar
+    ) -> LineColorContext<'a> {
         LineColorContext {
             view: Borrowed(self.view.get()),
             transform: Borrowed(self.transform.get()),
