@@ -4,7 +4,7 @@ use {
     Clear,
     Field,
     Fill,
-    Image,
+    ImageSize,
     Value,
 };
 use triangulation::{
@@ -106,7 +106,7 @@ impl<'a, 'b> CanColor<'a, PolygonColorContext<'a, 'b>, Color> for PolygonColorCo
 
 impl<'a, 'b> Fill<'a> for PolygonColorContext<'a, 'b> {
     #[inline(always)]
-    fn fill<B: BackEnd<I>, I: Image>(&'a self, back_end: &mut B) {
+    fn fill<B: BackEnd<I>, I: ImageSize>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygon = self.polygon.get();
             let color = self.color.get();
@@ -130,7 +130,9 @@ impl<'a, 'b> Fill<'a> for PolygonColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b, B: BackEnd<I>, I: Image> Clear<B, I> for PolygonColorContext<'a, 'b> {
+impl<'a, 'b, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for PolygonColorContext<'a, 'b> {
     #[inline(always)]
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {

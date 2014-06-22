@@ -7,7 +7,7 @@ use {
     Borrowed,
     Clear,
     Field,
-    Image,
+    ImageSize,
     RoundRectangleBorderColorContext,
     Value,
 };
@@ -138,7 +138,9 @@ for RectangleBorderColorContext<'a> {
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for RectangleBorderColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for RectangleBorderColorContext<'a> {
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();

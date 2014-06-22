@@ -3,7 +3,7 @@ use {
     Borrowed,
     Clear,
     Field,
-    Image,
+    ImageSize,
     Value,
 };
 use triangulation::{
@@ -141,7 +141,9 @@ for BevelRectangleBorderColorContext<'a> {
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for BevelRectangleBorderColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for BevelRectangleBorderColorContext<'a> {
     #[inline(always)]
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {

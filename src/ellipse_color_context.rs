@@ -7,7 +7,7 @@ use {
     EllipseBorderColorContext,
     Field,
     Fill,
-    Image,
+    ImageSize,
     Value,
 };
 use triangulation::{
@@ -130,7 +130,7 @@ impl<'a> CanRectangle<'a, EllipseColorContext<'a>, Rectangle> for EllipseColorCo
 
 impl<'a> Fill<'a> for EllipseColorContext<'a> {
     #[inline(always)]
-    fn fill<B: BackEnd<I>, I: Image>(&'a self, back_end: &mut B) {
+    fn fill<B: BackEnd<I>, I: ImageSize>(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let color = self.color.get();
@@ -155,7 +155,9 @@ impl<'a> Fill<'a> for EllipseColorContext<'a> {
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for EllipseColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for EllipseColorContext<'a> {
     #[inline(always)]
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {

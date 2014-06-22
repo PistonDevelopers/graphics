@@ -8,7 +8,7 @@ use {
     BevelRectangleContext,
     Borrowed,
     Field,
-    Image,
+    ImageSize,
     ImageRectangleContext,
     RectangleBorderContext,
     RectangleColorContext,
@@ -158,7 +158,9 @@ impl<'a> AddBevel<'a, BevelRectangleContext<'a>> for RectangleContext<'a> {
     }
 }
 
-impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageRectangleContext<'a, 'b, I>, I> for RectangleContext<'a> {
+impl<'a, 'b, I: ImageSize> 
+AddImage<'a, 'b, ImageRectangleContext<'a, 'b, I>, I> 
+for RectangleContext<'a> {
     fn image(&'a self, image: &'b I) -> ImageRectangleContext<'a, 'b, I> {
         let (w, h) = image.get_size();
         ImageRectangleContext {

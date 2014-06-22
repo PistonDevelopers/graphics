@@ -11,7 +11,7 @@ use {
     ColorContext,
     EllipseContext,
     Field,
-    Image,
+    ImageSize,
     ImageContext,
     LineContext,
     PolygonContext,
@@ -229,7 +229,9 @@ impl<'a, 'b> AddPolygon<'a, PolygonContext<'a, 'b>> for Context<'a> {
     }
 }
 
-impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageContext<'a, 'b, I>, I> for Context<'a> {
+impl<'a, 'b, I: ImageSize> 
+AddImage<'a, 'b, ImageContext<'a, 'b, I>, I> 
+for Context<'a> {
     #[inline(always)]
     fn image(&'a self, image: &'b I) -> ImageContext<'a, 'b, I> {
         let (w, h) = image.get_size();

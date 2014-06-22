@@ -6,7 +6,7 @@ use std::f64::consts::{
     FRAC_PI_2,
 };
 use {
-    Image,
+    ImageSize,
 };
 use interpolation::{lerp};
 use internal::{
@@ -456,7 +456,9 @@ pub fn rect_tri_list_rgba_f32(
 
 /// Creates triangle list texture coords from image.
 #[inline(always)]
-pub fn rect_tri_list_uv_f32<I: Image>(image: &I, source_rect: SourceRectangle) -> [f32, ..12] {
+pub fn rect_tri_list_uv_f32<I: ImageSize>(
+    image: &I, source_rect: SourceRectangle
+) -> [f32, ..12] {
     let (w, h) = image.get_size();
     let x1 = source_rect[0] as f32 / w as f32;
     let y1 = source_rect[1] as f32 / h as f32;

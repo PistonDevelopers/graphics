@@ -11,7 +11,7 @@ use {
     Clear,
     EllipseColorContext,
     Field,
-    Image,
+    ImageSize,
     ImageColorContext,
     LineColorContext,
     PolygonColorContext,
@@ -167,7 +167,9 @@ for ColorContext<'a> {
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for ColorContext<'a> {
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
+for ColorContext<'a> {
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
@@ -176,7 +178,9 @@ impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> for ColorContext<'a> {
     }
 }
 
-impl<'a, 'b, I: Image> AddImage<'a, 'b, ImageColorContext<'a, 'b, I>, I> for ColorContext<'a> {
+impl<'a, 'b, I: ImageSize> 
+AddImage<'a, 'b, ImageColorContext<'a, 'b, I>, I> 
+for ColorContext<'a> {
     #[inline(always)]
     fn image(&'a self, image: &'b I) -> ImageColorContext<'a, 'b, I> {
         let (w, h) = image.get_size();

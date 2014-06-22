@@ -4,7 +4,7 @@ use {
     Borrowed,
     Clear,
     Field,
-    Image,
+    ImageSize,
     Value,
 };
 use triangulation::{
@@ -145,7 +145,8 @@ for RoundRectangleBorderColorContext<'a> {
     }
 }
 
-impl<'a, B: BackEnd<I>, I: Image> Clear<B, I> 
+impl<'a, B: BackEnd<I>, I: ImageSize> 
+Clear<B, I> 
 for RoundRectangleBorderColorContext<'a> {
     fn clear(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
