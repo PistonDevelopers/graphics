@@ -178,7 +178,6 @@ impl TriListXYRGBAUV {
             let a_v2TexCoord = "a_v2TexCoord".with_c_str(
                 |ptr| gl::GetAttribLocation(program, ptr)
             );
-            gl::EnableVertexAttribArray(a_v4FillColor as GLuint);
             TriListXYRGBAUV {
                 vertex_shader: vertex_shader,
                 fragment_shader: fragment_shader,
@@ -438,6 +437,7 @@ impl BackEnd<Texture> for Gl {
         let normalize_texture_coords = gl::FALSE;
         // The data is tightly packed.
         let stride_texture_coords = 0;
+        gl::EnableVertexAttribArray(shader.a_v2TexCoord as GLuint);
         unsafe {
             gl::BindBuffer(
                 gl::ARRAY_BUFFER, 
@@ -465,6 +465,7 @@ impl BackEnd<Texture> for Gl {
 
         let items: i32 = vertices.len() as i32 / size_vertices;
         gl::DrawArrays(gl::TRIANGLES, 0, items);
+        gl::DisableVertexAttribArray(shader.a_v2TexCoord as GLuint);
     }
 }
 
