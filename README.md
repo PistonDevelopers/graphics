@@ -13,7 +13,9 @@ A library for 2D graphics, written in Rust, that works with multiple back-ends
 
 *Last news: Bevel and square lines!*
 
-Example back-end for OpenGL (game engine): [Piston](https://github.com/PistonDevelopers/piston)  
+Rust-Graphics comes with an example OpenGL back-end.  
+To compile with the OpenGL back-end, type `make COMPILER_FLAGS+="--cfg gl"`.
+
 Experimental algorithms are developed in a separate repository: [Rust-Graphics-Lab](https://github.com/PistonDevelopers/rust-graphics-lab)  
 
 ## Motivation
