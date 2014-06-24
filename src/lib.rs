@@ -111,8 +111,6 @@ pub use BevelRectangleColorContext
     = bevel_rectangle_color_context::BevelRectangleColorContext;
 pub use BevelRectangleContext 
     = bevel_rectangle_context::BevelRectangleContext;
-pub use Clear 
-    = clear::Clear;
 pub use ColorContext 
     = color_context::ColorContext;
 pub use Context 
@@ -127,8 +125,6 @@ pub use EllipseColorContext
     = ellipse_color_context::EllipseColorContext;
 pub use EllipseBorderColorContext 
     = ellipse_border_color_context::EllipseBorderColorContext;
-pub use Fill 
-    = fill::Fill;
 pub use ImageSize 
     = image_size::ImageSize;
 pub use ImageContext 
@@ -183,8 +179,6 @@ pub use RoundRectangleColorContext
     = round_rectangle_color_context::RoundRectangleColorContext;
 pub use RoundRectangleContext 
     = round_rectangle_context::RoundRectangleContext;
-pub use Stroke 
-    = stroke::Stroke;
 pub use SquareBorderLineColorContext 
     = square_border_line_color_context::SquareBorderLineColorContext;
 pub use SquareBorderLineContext 
@@ -220,7 +214,6 @@ mod bevel_rectangle_border_color_context;
 mod bevel_rectangle_border_context;
 mod bevel_rectangle_color_context;
 mod bevel_rectangle_context;
-mod clear;
 mod color_context;
 mod context;
 mod draw;
@@ -228,7 +221,6 @@ mod ellipse_border_context;
 mod ellipse_border_color_context;
 mod ellipse_color_context;
 mod ellipse_context;
-mod fill;
 mod image_size;
 mod image_context;
 mod image_color_context;
@@ -254,7 +246,6 @@ mod round_rectangle_color_context;
 mod round_rectangle_context;
 mod square_border_line_color_context;
 mod square_border_line_context;
-mod stroke;
 mod lerp_tween_color_context;
 mod lerp_tween_context;
 mod lerp_tween_polygons_color_context;
