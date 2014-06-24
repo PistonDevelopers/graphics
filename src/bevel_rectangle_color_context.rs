@@ -3,9 +3,8 @@ use {
     BackEnd,
     BevelRectangleBorderColorContext,
     Borrowed,
-    Clear,
     Field,
-    Fill,
+    Draw,
     ImageSize,
     Value,
 };
@@ -162,27 +161,10 @@ for BevelRectangleColorContext<'a> {
 }
 
 impl<'a, B: BackEnd<I>, I: ImageSize> 
-Clear<B, I> 
+Draw<'a, B, I> 
 for BevelRectangleColorContext<'a> {
     #[inline(always)]
-    fn clear(&self, back_end: &mut B) {
-        if back_end.supports_clear_rgba() {
-            let color = self.color.get();
-            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
-        } else {
-            unimplemented!();
-        }
-    }
-}
-
-impl<'a> 
-Fill<'a> 
-for BevelRectangleColorContext<'a> {
-    #[inline(always)]
-    fn fill<B: BackEnd<I>, I: ImageSize>(
-        &'a self, 
-        back_end: &mut B
-    ) {
+    fn draw(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let bevel_radius = self.bevel_radius.get();

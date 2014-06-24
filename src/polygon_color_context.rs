@@ -1,9 +1,8 @@
 use {
     BackEnd,
     Borrowed,
-    Clear,
     Field,
-    Fill,
+    Draw,
     ImageSize,
     Value,
 };
@@ -123,14 +122,11 @@ for PolygonColorContext<'a, 'b> {
     }
 }
 
-impl<'a, 'b> 
-Fill<'a> 
+impl<'a, 'b, B: BackEnd<I>, I: ImageSize> 
+Draw<'a, B, I> 
 for PolygonColorContext<'a, 'b> {
     #[inline(always)]
-    fn fill<B: BackEnd<I>, I: ImageSize>(
-        &'a self, 
-        back_end: &mut B
-    ) {
+    fn draw(&'a self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygon = self.polygon.get();
             let color = self.color.get();
@@ -148,20 +144,6 @@ for PolygonColorContext<'a, 'b> {
                 }
             );
             if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
-    }
-}
-
-impl<'a, 'b, B: BackEnd<I>, I: ImageSize> 
-Clear<B, I> 
-for PolygonColorContext<'a, 'b> {
-    #[inline(always)]
-    fn clear(&self, back_end: &mut B) {
-        if back_end.supports_clear_rgba() {
-            let color = self.color.get();
-            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         } else {
             unimplemented!();
         }

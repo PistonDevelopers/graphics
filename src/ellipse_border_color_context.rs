@@ -1,10 +1,7 @@
 
 use {
-    BackEnd,
-    Clear,
     Borrowed,
     Field,
-    ImageSize,
     Value,
 };
 use triangulation::{
@@ -151,20 +148,6 @@ for EllipseBorderColorContext<'a> {
             rect: Value(rect),
             color: Borrowed(self.color.get()),
             border: Borrowed(self.border.get()),
-        }
-    }
-}
-
-impl<'a, B: BackEnd<I>, I: ImageSize> 
-Clear<B, I> 
-for EllipseBorderColorContext<'a> {
-    #[inline(always)]
-    fn clear(&self, back_end: &mut B) {
-        if back_end.supports_clear_rgba() {
-            let color = self.color.get();
-            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
-        } else {
-            unimplemented!();
         }
     }
 }

@@ -8,7 +8,7 @@ use {
     AddTween,
     BackEnd,
     Borrowed,
-    Clear,
+    Draw,
     EllipseColorContext,
     Field,
     ImageSize,
@@ -210,9 +210,9 @@ for ColorContext<'a> {
 }
 
 impl<'a, B: BackEnd<I>, I: ImageSize> 
-Clear<B, I> 
+Draw<'a, B, I> 
 for ColorContext<'a> {
-    fn clear(&self, back_end: &mut B) {
+    fn draw(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
