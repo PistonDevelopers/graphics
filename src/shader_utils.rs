@@ -31,20 +31,26 @@ pub fn compile_shader(
         } else {
             let mut len = 0;
             gl::GetShaderiv(shader, gl::INFO_LOG_LENGTH, &mut len);
-            // Subtract 1 to skip the trailing null character.
-            let mut buf = Vec::from_elem(len as uint - 1, 0u8);
-            gl::GetShaderInfoLog(
-                shader, 
-                len, 
-                ptr::mut_null(), 
-                buf.as_mut_ptr() as *mut GLchar
-            );
 
-            gl::DeleteShader(shader);
-
-            Err(String::from_utf8(buf).ok().expect(
-                "ShaderInfoLog not valid utf8"
-            ))
+            if len == 0 {
+                Err("Compilation failed with no log. The OpenGL context might have been created on another thread, or not have been created.".to_string())
+            }
+            else {
+                // Subtract 1 to skip the trailing null character.
+                let mut buf = Vec::from_elem(len as uint - 1, 0u8);
+                gl::GetShaderInfoLog(
+                    shader, 
+                    len, 
+                    ptr::mut_null(), 
+                    buf.as_mut_ptr() as *mut GLchar
+                );
+                
+                gl::DeleteShader(shader);
+                
+                Err(String::from_utf8(buf).ok().expect(
+                    "ShaderInfoLog not valid utf8"
+                ))
+            }
         }
     }
 }
