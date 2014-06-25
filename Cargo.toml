@@ -1,0 +1,24 @@
+[package]
+
+name = "graphics"
+version = "0.0.0"
+authors = [
+    "bvssvni <bvssvni@gmail.com>",
+    "Coeuvre <coeuvre@gmail.com>",
+    "leonkunert <info@leonkunert.de>",
+    "gmorenz",
+    "Potpourri",
+    "TyOverby <ty@pre-alpha.com>"]
+
+[dependencies.gl-rs]
+
+git = "https://github.com/bjz/gl-rs.git"
+
+[dependencies.image]
+
+git = "https://github.com/PistonDevelopers/rust-image.git"
+
+[[lib]]
+
+name = "graphics"
+path = "./src/lib.rs"
