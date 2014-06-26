@@ -10,14 +10,6 @@ authors = [
     "Potpourri",
     "TyOverby <ty@pre-alpha.com>"]
 
-[dependencies.gl-rs]
-
-git = "https://github.com/bjz/gl-rs.git"
-
-[dependencies.image]
-
-git = "https://github.com/PistonDevelopers/rust-image.git"
-
 [[lib]]
 
 name = "graphics"
