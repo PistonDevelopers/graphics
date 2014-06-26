@@ -55,19 +55,8 @@
 //!
 //! This is only the case when you are assigning the context to a variable.
 
-#[cfg(gl)]
-extern crate gl;
-#[cfg(gl)]
-extern crate libc;
-#[cfg(gl)]
-extern crate image;
 extern crate core;
 extern crate std;
-
-#[cfg(gl)]
-pub use Gl = gl_back_end::Gl;
-#[cfg(gl)]
-pub use Texture = texture::Texture;
 
 pub use AddBevel 
     = add_bevel::AddBevel;
@@ -185,13 +174,6 @@ pub use SquareBorderLineContext
     = square_border_line_context::SquareBorderLineContext;
 pub use View 
     = view::View;
-
-#[cfg(gl)]
-mod gl_back_end;
-#[cfg(gl)]
-mod texture;
-#[cfg(gl)]
-pub mod shader_utils;
 
 mod add_bevel;
 mod add_bevel_border;

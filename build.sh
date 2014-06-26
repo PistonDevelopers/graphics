@@ -31,7 +31,7 @@ function contains() {
 i=0
 function build_deps {
     local current=$(pwd)
-    for symlib in $(find target/*/lib -type l) ; do
+    for symlib in $(find target/deps/ -type l) ; do
         cd $current
         echo $symlib
         local original_file=$(readlink $symlib)
