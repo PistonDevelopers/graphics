@@ -2,7 +2,7 @@
 # written by bvssvni
 # Modify the setting to do conditional compilation.
 # For example "--cfg my_feature"
-SETTINGS="--cfg gl"
+SETTINGS=""
 # ================================================
 
 MAKE=make
