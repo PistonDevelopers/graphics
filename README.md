@@ -3,6 +3,8 @@ Rust-Graphics
 
 A library for 2D graphics, written in Rust, that works with multiple back-ends
 
+Maintainers: @bvssvni, @Coeuvre
+
 [![Build Status](https://travis-ci.org/PistonDevelopers/rust-graphics.svg)](https://travis-ci.org/PistonDevelopers/rust-graphics)
 
 [Rust-Graphics online docs](http://www.piston.rs/docs/rust-graphics/graphics/)
