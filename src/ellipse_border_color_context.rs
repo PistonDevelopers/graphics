@@ -1,9 +1,13 @@
 
 use {
+    BackEnd,
+    Draw,
     Field,
+    ImageSize,
     Value,
 };
 use triangulation::{
+    with_ellipse_border_tri_list_xy_f32_rgba_f32,
 };
 use internal::{
     CanColor,
@@ -150,4 +154,34 @@ for EllipseBorderColorContext {
         }
     }
 }
+
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
+for EllipseBorderColorContext {
+    #[inline(always)]
+    fn draw( &self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let rect = self.rect.get();
+            let color = self.color.get();
+            let border_radius = self.border.get();
+            // Complte transparency does  not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not complete opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            with_ellipse_border_tri_list_xy_f32_rgba_f32(
+                128,
+                self.transform.get(),
+                rect,
+                color,
+                border_radius,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        }
+    }
+}
+
 
