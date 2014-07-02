@@ -2,12 +2,17 @@
 use {
     AddBevel,
     AddRound,
+    BackEnd,
     BevelRectangleBorderColorContext,
+    Draw,
     Field,
+    ImageSize,
     RoundRectangleBorderColorContext,
     Value,
 };
 use triangulation::{
+    rect_border_tri_list_rgba_f32,
+    rect_border_tri_list_xy_f32,
 };
 use internal::{
     CanColor,
@@ -195,6 +200,32 @@ for RectangleBorderColorContext {
             rect: Value(self.rect.get()),
             bevel_radius: Value(radius),
             border: Value(self.border.get()),
+        }
+    }
+}
+
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for RectangleBorderColorContext {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let rect = self.rect.get();
+            let color = self.color.get();
+            let border = self.border.get();
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            back_end.tri_list_xy_f32_rgba_f32(
+                rect_border_tri_list_xy_f32(
+                    self.transform.get(), rect, border),
+                rect_border_tri_list_rgba_f32(color)
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
         }
     }
 }
