@@ -305,6 +305,35 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     }
 }
 
+/// Streams an ellipse specified by a resolution.
+#[inline(always)]
+pub fn with_ellipse_border_tri_list_xy_f32_rgba_f32(
+    resolution: uint,
+    m: Matrix2d,
+    rect: Rectangle,
+    color: Color,
+    border_radius: Radius,
+    f: |vertices: &[f32], colors: &[f32]|) {
+
+    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (cw, ch) = (0.5 * w, 0.5 * h);
+    let (cw1, ch1) = (cw + border_radius, ch + border_radius);
+    let (cw2, ch2) = (cw - border_radius, ch - border_radius);
+    let (cx, cy) = (x + cw, y + ch);
+    let n = resolution;
+    let mut i = 0u;
+    stream_quad_tri_list_xy_f32_rgba_f32(m, || {
+        if i > n { return None; }
+
+        let angle = i as f64 / n as f64 * PI_2;
+        let cos = angle.cos();
+        let sin = angle.sin();
+        i += 1;
+        Some(([cx + cos * cw1, cy + sin * ch1],
+            [cx + cos * cw2, cy + sin * ch2]))
+    }, color, f);
+}
+
 /// Streams a quad into tri list with color per vertex.
 ///
 /// Uses buffers that fit inside L1 cache.
