@@ -7,7 +7,6 @@ use {
     AddPolygon,
     AddRectangle,
     AddTween,
-    Borrowed,
     ColorContext,
     EllipseContext,
     Field,
@@ -31,69 +30,69 @@ use internal::{
 };
 
 /// Drawing 2d context.
-pub struct Context<'a> {
+pub struct Context {
     /// View transformation.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transformation.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
 }
 
-impl<'a> 
+impl
 Clone 
-for Context<'a> {
+for Context {
     #[inline(always)]
-    fn clone(&self) -> Context<'static> {
+    fn clone(&self) -> Context {
         Context {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for Context<'a> {
+impl
+HasTransform<Matrix2d> 
+for Context {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, Context<'a>, Matrix2d> 
-for Context<'a> {
+impl
+CanTransform<Context, Matrix2d> 
+for Context {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> Context<'a> {
+    fn transform(&self, value: Matrix2d) -> Context {
         Context {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for Context<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for Context {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, Context<'a>, Matrix2d> 
-for Context<'a> {
+impl
+CanViewTransform<Context, Matrix2d> 
+for Context {
     #[inline(always)]
-    fn view_transform(&'a self, value: Matrix2d) -> Context<'a> {
+    fn view_transform(&self, value: Matrix2d) -> Context {
         Context {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
+            transform: Value(self.transform.get()),
         }
     }
 }
 
-impl<'a> 
-Context<'a> {
+impl
+Context {
     /// Creates a new drawing context.
     #[inline(always)]
     pub fn new() -> Context {
@@ -166,20 +165,20 @@ fn test_scale() {
     assert!((transform[4] - 3.0).abs() < 0.00001);
 }
 
-impl<'a> 
-AddRectangle<'a, RectangleContext<'a>> 
-for Context<'a> {
+impl
+AddRectangle<RectangleContext> 
+for Context {
     #[inline(always)]
     fn rect(
-        &'a self, 
+        &self, 
         x: Scalar, 
         y: Scalar, 
         w: Scalar, 
         h: Scalar
-    ) -> RectangleContext<'a> {
+    ) -> RectangleContext {
         RectangleContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             rect: Value([x, y, w, h]),
         }
     }
@@ -193,20 +192,20 @@ fn test_rect() {
     assert_eq!(rect[2], 100.0);
 }
 
-impl<'a> 
-AddColor<'a, ColorContext<'a>> 
-for Context<'a> {
+impl
+AddColor<ColorContext> 
+for Context {
     #[inline(always)]
     fn rgba(
-        &'a self, 
+        &self, 
         r: ColorComponent, 
         g: ColorComponent, 
         b: ColorComponent, 
         a: ColorComponent
-    ) -> ColorContext<'a> {
+    ) -> ColorContext {
         ColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             color: Value([r, g, b, a]),
         }
     }
@@ -220,20 +219,20 @@ fn test_rgba() {
     assert_eq!(color[0], 1.0);
 }
 
-impl<'a> 
-AddEllipse<'a, EllipseContext<'a>> 
-for Context<'a> {
+impl
+AddEllipse<EllipseContext> 
+for Context {
     #[inline(always)]
     fn ellipse(
-        &'a self, 
+        &self, 
         x: Scalar, 
         y: Scalar, 
         w: Scalar, 
         h: Scalar
-    ) -> EllipseContext<'a> {
+    ) -> EllipseContext {
         EllipseContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             rect: Value([x, y, w, h]),
         }
     }
@@ -247,64 +246,64 @@ fn test_ellipse() {
     assert_eq!(rect[2], 100.0);
 }
 
-impl<'a, 'b> 
-AddPolygon<'a, PolygonContext<'a, 'b>> 
-for Context<'a> {
+impl<'b> 
+AddPolygon<'b, PolygonContext<'b>> 
+for Context {
     #[inline(always)]
-    fn polygon(
-        &'a self, 
+    fn polygon<'b>(
+        &self, 
         polygon: Polygon<'b>
-    ) -> PolygonContext<'a, 'b> {
+    ) -> PolygonContext<'b> {
         PolygonContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             polygon: Value(polygon),
         }
     }
 }
 
-impl<'a, 'b, I: ImageSize> 
-AddImage<'a, 'b, ImageContext<'a, 'b, I>, I> 
-for Context<'a> {
+impl<'b, I: ImageSize> 
+AddImage<'b, ImageContext<'b, I>, I> 
+for Context {
     #[inline(always)]
-    fn image(&'a self, image: &'b I) -> ImageContext<'a, 'b, I> {
+    fn image(&self, image: &'b I) -> ImageContext<'b, I> {
         let (w, h) = image.get_size();
         ImageContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             image: Value(image),
             source_rect: Value([0, 0, w as i32, h as i32]),
         }
     }
 }
 
-impl<'a> 
-AddTween<'a, LerpTweenContext<'a>> 
-for Context<'a> {
+impl
+AddTween<LerpTweenContext> 
+for Context {
     #[inline(always)]
-    fn lerp(&'a self, tween_factor: Scalar) -> LerpTweenContext<'a> {
+    fn lerp(&self, tween_factor: Scalar) -> LerpTweenContext {
         LerpTweenContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             tween_factor: Value(tween_factor),
         }
     }
 }
 
-impl<'a> 
-AddLine<'a, LineContext<'a>> 
-for Context<'a> {
+impl
+AddLine<LineContext> 
+for Context {
     #[inline(always)]
     fn line(
-        &'a self, 
+        &self, 
         x1: Scalar, 
         y1: Scalar, 
         x2: Scalar, 
         y2: Scalar
-    ) -> LineContext<'a> {
+    ) -> LineContext {
         LineContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             line: Value([x1, y1, x2, y2]),
         }
     }

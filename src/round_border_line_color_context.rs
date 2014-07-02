@@ -1,7 +1,6 @@
 
 use {
     BackEnd,
-    Borrowed,
     Field,
     ImageSize,
     Draw,
@@ -24,120 +23,120 @@ use internal::{
 };
 
 /// A line context with round border information.
-pub struct RoundBorderLineColorContext<'a> {
+pub struct RoundBorderLineColorContext {
     /// View transform.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transform.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current line.
-    pub line: Field<'a, Line>,
+    pub line: Field<Line>,
     /// Current color.
-    pub color: Field<'a, Color>,
+    pub color: Field<Color>,
     /// Current round border.
-    pub round_border_radius: Field<'a, Radius>,
+    pub round_border_radius: Field<Radius>,
 }
 
-impl<'a> 
+impl
 Clone 
-for RoundBorderLineColorContext<'a> {
+for RoundBorderLineColorContext {
     #[inline(always)]
-    fn clone(&self) -> RoundBorderLineColorContext<'static> {
+    fn clone(&self) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            line: Value(*self.line.get()),
-            color: Value(*self.color.get()),
-            round_border_radius: Value(*self.round_border_radius.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            color: Value(self.color.get()),
+            round_border_radius: Value(self.round_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for RoundBorderLineColorContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for RoundBorderLineColorContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, RoundBorderLineColorContext<'a>, Matrix2d> 
-for RoundBorderLineColorContext<'a> {
+impl
+CanTransform<RoundBorderLineColorContext, Matrix2d> 
+for RoundBorderLineColorContext {
     #[inline(always)]
     fn transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> RoundBorderLineColorContext<'a> {
+    ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            round_border_radius: Borrowed(self.round_border_radius.get()),
+            line: Value(self.line.get()),
+            color: Value(self.color.get()),
+            round_border_radius: Value(self.round_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for RoundBorderLineColorContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for RoundBorderLineColorContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, RoundBorderLineColorContext<'a>, Matrix2d> 
-for RoundBorderLineColorContext<'a> {
+impl
+CanViewTransform<RoundBorderLineColorContext, Matrix2d> 
+for RoundBorderLineColorContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> RoundBorderLineColorContext<'a> {
+    ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
-            round_border_radius: Borrowed(self.round_border_radius.get()),
-            color: Borrowed(self.color.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            round_border_radius: Value(self.round_border_radius.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-HasColor<'a, Color> 
-for RoundBorderLineColorContext<'a> {
+impl
+HasColor<Color> 
+for RoundBorderLineColorContext {
     #[inline(always)]
-    fn get_color(&'a self) -> &'a Color {
+    fn get_color(&self) -> Color {
         self.color.get()
     }
 }
 
-impl<'a> 
-CanColor<'a, RoundBorderLineColorContext<'a>, Color> 
-for RoundBorderLineColorContext<'a> {
+impl
+CanColor<RoundBorderLineColorContext, Color> 
+for RoundBorderLineColorContext {
     #[inline(always)]
     fn color(
-        &'a self, 
+        &self, 
         value: Color
-    ) -> RoundBorderLineColorContext<'a> {
+    ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             color: Value(value),
-            round_border_radius: Borrowed(self.round_border_radius.get()),
+            round_border_radius: Value(self.round_border_radius.get()),
         }
     }
 }
 
-impl<'a, B: BackEnd<I>, I: ImageSize> 
-Draw<'a, B, I> 
-for RoundBorderLineColorContext<'a> {
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for RoundBorderLineColorContext {
     #[inline(always)]
-    fn draw(&'a self, back_end: &mut B) {
+    fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let line = self.line.get();
             let round_border_radius = self.round_border_radius.get();
@@ -149,10 +148,10 @@ for RoundBorderLineColorContext<'a> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_border_line_tri_list_xy_f32_rgba_f32(
                 64,
-                *self.transform.get(),
-                *line,
-                *round_border_radius,
-                *color,
+                self.transform.get(),
+                line,
+                round_border_radius,
+                color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }

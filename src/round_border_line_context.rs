@@ -1,7 +1,6 @@
 
 use {
     AddColor,
-    Borrowed,
     Field,
     RoundBorderLineColorContext,
     Value,
@@ -18,100 +17,100 @@ use internal::{
 };
 
 /// A line context with round border information.
-pub struct RoundBorderLineContext<'a> {
+pub struct RoundBorderLineContext {
     /// View transform.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transform.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current line.
-    pub line: Field<'a, Line>,
+    pub line: Field<Line>,
     /// Current round border.
-    pub round_border_radius: Field<'a, Radius>,
+    pub round_border_radius: Field<Radius>,
 }
 
-impl<'a> 
+impl
 Clone 
-for RoundBorderLineContext<'a> {
+for RoundBorderLineContext {
     #[inline(always)]   
-    fn clone(&self) -> RoundBorderLineContext<'static> {
+    fn clone(&self) -> RoundBorderLineContext {
         RoundBorderLineContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            line: Value(*self.line.get()),
-            round_border_radius: Value(*self.round_border_radius.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            round_border_radius: Value(self.round_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for RoundBorderLineContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for RoundBorderLineContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, RoundBorderLineContext<'a>, Matrix2d> 
-for RoundBorderLineContext<'a> {
+impl
+CanTransform<RoundBorderLineContext, Matrix2d> 
+for RoundBorderLineContext {
     #[inline(always)]
     fn transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> RoundBorderLineContext<'a> {
+    ) -> RoundBorderLineContext {
         RoundBorderLineContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            line: Borrowed(self.line.get()),
-            round_border_radius: Borrowed(self.round_border_radius.get()),
+            line: Value(self.line.get()),
+            round_border_radius: Value(self.round_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for RoundBorderLineContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for RoundBorderLineContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, RoundBorderLineContext<'a>, Matrix2d> 
-for RoundBorderLineContext<'a> {
+impl
+CanViewTransform<RoundBorderLineContext, Matrix2d> 
+for RoundBorderLineContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> RoundBorderLineContext<'a> {
+    ) -> RoundBorderLineContext {
         RoundBorderLineContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
-            round_border_radius: Borrowed(self.round_border_radius.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            round_border_radius: Value(self.round_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-AddColor<'a, RoundBorderLineColorContext<'a>> 
-for RoundBorderLineContext<'a> {
+impl
+AddColor<RoundBorderLineColorContext> 
+for RoundBorderLineContext {
     #[inline(always)]
     fn rgba(
-        &'a self, 
+        &self, 
         r: ColorComponent, 
         g: ColorComponent, 
         b: ColorComponent, 
         a: ColorComponent
-    ) -> RoundBorderLineColorContext<'a> {
+    ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             color: Value([r, g, b, a]),
-            round_border_radius: Borrowed(self.round_border_radius.get()),
+            round_border_radius: Value(self.round_border_radius.get()),
         }
     }
 }

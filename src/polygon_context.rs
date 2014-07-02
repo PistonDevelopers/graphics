@@ -1,6 +1,5 @@
 use {
     AddColor,
-    Borrowed,
     Field,
     PolygonColorContext,
     Value,
@@ -16,94 +15,94 @@ use internal::{
 };
 
 /// A polygon context.
-pub struct PolygonContext<'a, 'b> {
+pub struct PolygonContext<'b> {
     /// View transform.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transform.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current polygon.
-    pub polygon: Field<'a, Polygon<'b>>
+    pub polygon: Field<Polygon<'b>>
 }
 
-impl<'a, 'b> 
+impl<'b> 
 Clone 
-for PolygonContext<'a, 'b> {
+for PolygonContext<'b> {
     #[inline(always)]
-    fn clone(&self) -> PolygonContext<'static, 'b> {
+    fn clone(&self) -> PolygonContext<'b> {
         PolygonContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            polygon: Value(*self.polygon.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            polygon: Value(self.polygon.get()),
         }
     }
 }
 
-impl<'a, 'b> 
-HasTransform<'a, Matrix2d> 
-for PolygonContext<'a, 'b> {
+impl<'b> 
+HasTransform<Matrix2d> 
+for PolygonContext<'b> {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a, 'b> 
-CanTransform<'a, PolygonContext<'a, 'b>, Matrix2d> 
-for PolygonContext<'a, 'b> {
+impl<'b> 
+CanTransform<PolygonContext<'b>, Matrix2d> 
+for PolygonContext<'b> {
     #[inline(always)]
     fn transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> PolygonContext<'a, 'b> {
+    ) -> PolygonContext<'b> {
         PolygonContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            polygon: Borrowed(self.polygon.get()),
+            polygon: Value(self.polygon.get()),
         }
     }
 }
 
-impl<'a, 'b> 
-HasViewTransform<'a, Matrix2d> 
-for PolygonContext<'a, 'b> {
+impl<'b> 
+HasViewTransform<Matrix2d> 
+for PolygonContext<'b> {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a, 'b> 
-CanViewTransform<'a, PolygonContext<'a, 'b>, Matrix2d> 
-for PolygonContext<'a, 'b> {
+impl<'b> 
+CanViewTransform<PolygonContext<'b>, Matrix2d> 
+for PolygonContext<'b> {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> PolygonContext<'a, 'b> {
+    ) -> PolygonContext<'b> {
         PolygonContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            polygon: Borrowed(self.polygon.get()),
+            transform: Value(self.transform.get()),
+            polygon: Value(self.polygon.get()),
         }
     }
 }
 
-impl<'a, 'b> 
-AddColor<'a, PolygonColorContext<'a, 'b>> 
-for PolygonContext<'a, 'b> {
+impl<'b> 
+AddColor<PolygonColorContext<'b>> 
+for PolygonContext<'b> {
     #[inline(always)]
     fn rgba(
-        &'a self, 
+        &self, 
         r: ColorComponent, 
         g: ColorComponent, 
         b: ColorComponent, 
         a: ColorComponent
-    ) -> PolygonColorContext<'a, 'b> {
+    ) -> PolygonColorContext<'b> {
         PolygonColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             color: Value([r, g, b, a]),
-            polygon: Borrowed(self.polygon.get()),
+            polygon: Value(self.polygon.get()),
         }
     }
 }

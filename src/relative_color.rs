@@ -10,10 +10,10 @@ use vecmath::{
 };
 
 /// Implemented by contexts that contains color.
-pub trait RelativeColor<'a, T> {
+pub trait RelativeColor<T> {
     /// Multiplies with red, green, blue and alpha values.
     fn mul_rgba(
-        &'a self, 
+        &self, 
         r: ColorComponent, 
         g: ColorComponent, 
         b: ColorComponent, 
@@ -24,7 +24,7 @@ pub trait RelativeColor<'a, T> {
     ///
     /// 0 is black and 1 is white.
     #[inline(always)]
-    fn tint(&'a self, f: ColorComponent) -> T {
+    fn tint(&self, f: ColorComponent) -> T {
         self.mul_rgba(f, f, f, 1.0)
     }
 
@@ -32,30 +32,29 @@ pub trait RelativeColor<'a, T> {
     ///
     /// 0 is white and 1 is black.
     #[inline(always)]
-    fn shade(&'a self, f: ColorComponent) -> T {
+    fn shade(&self, f: ColorComponent) -> T {
         let f = 1.0 - f;
         self.mul_rgba(f, f, f, 1.0)
     }
     
     /// Rotates hue by degrees.
     #[inline(always)]
-    fn hue_deg(&'a self, angle: ColorComponent) -> T {
+    fn hue_deg(&self, angle: ColorComponent) -> T {
         let pi: ColorComponent = Float::pi();
         self.hue_rad(angle * pi / 180.0)
     }
 
     /// Rotates hue by radians.
-    fn hue_rad(&'a self, angle: ColorComponent) -> T;
+    fn hue_rad(&self, angle: ColorComponent) -> T;
 }
 
 impl<
-    'a,
-    T: HasColor<'a, Color> + CanColor<'a, U, Color>,
+    T: HasColor<Color> + CanColor<U, Color>,
     U
-> RelativeColor<'a, U> for T {
+> RelativeColor<U> for T {
     #[inline(always)]
     fn mul_rgba(
-        &'a self, 
+        &self, 
         r: ColorComponent, 
         g: ColorComponent, 
         b: ColorComponent, 
@@ -66,8 +65,8 @@ impl<
     }
     
     #[inline(always)]
-    fn hue_rad(&'a self, angle: ColorComponent) -> U {
-        self.color(hsv(*self.get_color(), angle, 1.0, 1.0))
+    fn hue_rad(&self, angle: ColorComponent) -> U {
+        self.color(hsv(self.get_color(), angle, 1.0, 1.0))
     }
 }
 

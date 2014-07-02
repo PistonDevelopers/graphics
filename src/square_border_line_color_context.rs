@@ -1,7 +1,6 @@
 
 use {
     BackEnd,
-    Borrowed,
     Field,
     ImageSize,
     Draw,
@@ -24,120 +23,120 @@ use internal::{
 };
 
 /// A line context with square border information.
-pub struct SquareBorderLineColorContext<'a> {
+pub struct SquareBorderLineColorContext {
     /// View transform.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transform.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current line.
-    pub line: Field<'a, Line>,
+    pub line: Field<Line>,
     /// Current color.
-    pub color: Field<'a, Color>,
+    pub color: Field<Color>,
     /// Current square border.
-    pub square_border_radius: Field<'a, Radius>,
+    pub square_border_radius: Field<Radius>,
 }
 
-impl<'a> 
+impl
 Clone 
-for SquareBorderLineColorContext<'a> {
+for SquareBorderLineColorContext {
     #[inline(always)]
-    fn clone(&self) -> SquareBorderLineColorContext<'static> {
+    fn clone(&self) -> SquareBorderLineColorContext {
         SquareBorderLineColorContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            line: Value(*self.line.get()),
-            color: Value(*self.color.get()),
-            square_border_radius: Value(*self.square_border_radius.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            color: Value(self.color.get()),
+            square_border_radius: Value(self.square_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for SquareBorderLineColorContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for SquareBorderLineColorContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> 
-for SquareBorderLineColorContext<'a> {
+impl
+CanTransform<SquareBorderLineColorContext, Matrix2d> 
+for SquareBorderLineColorContext {
     #[inline(always)]
     fn transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> SquareBorderLineColorContext<'a> {
+    ) -> SquareBorderLineColorContext {
         SquareBorderLineColorContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            square_border_radius: Borrowed(self.square_border_radius.get()),
+            line: Value(self.line.get()),
+            color: Value(self.color.get()),
+            square_border_radius: Value(self.square_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for SquareBorderLineColorContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for SquareBorderLineColorContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, SquareBorderLineColorContext<'a>, Matrix2d> 
-for SquareBorderLineColorContext<'a> {
+impl
+CanViewTransform<SquareBorderLineColorContext, Matrix2d> 
+for SquareBorderLineColorContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> SquareBorderLineColorContext<'a> {
+    ) -> SquareBorderLineColorContext {
         SquareBorderLineColorContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
-            square_border_radius: Borrowed(self.square_border_radius.get()),
-            color: Borrowed(self.color.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            square_border_radius: Value(self.square_border_radius.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-HasColor<'a, Color> 
-for SquareBorderLineColorContext<'a> {
+impl
+HasColor<Color> 
+for SquareBorderLineColorContext {
     #[inline(always)]
-    fn get_color(&'a self) -> &'a Color {
+    fn get_color(&self) -> Color {
         self.color.get()
     }
 }
 
-impl<'a> 
-CanColor<'a, SquareBorderLineColorContext<'a>, Color> 
-for SquareBorderLineColorContext<'a> {
+impl
+CanColor<SquareBorderLineColorContext, Color> 
+for SquareBorderLineColorContext {
     #[inline(always)]
     fn color(
-        &'a self, 
+        &self, 
         value: Color
-    ) -> SquareBorderLineColorContext<'a> {
+    ) -> SquareBorderLineColorContext {
         SquareBorderLineColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             color: Value(value),
-            square_border_radius: Borrowed(self.square_border_radius.get()),
+            square_border_radius: Value(self.square_border_radius.get()),
         }
     }
 }
 
-impl<'a, B: BackEnd<I>, I: ImageSize> 
-Draw<'a, B, I> 
-for SquareBorderLineColorContext<'a> {
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for SquareBorderLineColorContext {
     #[inline(always)]
-    fn draw(&'a self, back_end: &mut B) {
+    fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let line = self.line.get();
             let square_border_radius = self.square_border_radius.get();
@@ -149,10 +148,10 @@ for SquareBorderLineColorContext<'a> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_border_line_tri_list_xy_f32_rgba_f32(
                 2,
-                *self.transform.get(),
-                *line,
-                *square_border_radius,
-                *color,
+                self.transform.get(),
+                line,
+                square_border_radius,
+                color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }

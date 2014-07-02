@@ -1,7 +1,6 @@
 
 use {
     AddColor,
-    Borrowed,
     Field,
     BevelBorderLineColorContext,
     Value,
@@ -18,97 +17,97 @@ use internal::{
 };
 
 /// A line context with bevel border information.
-pub struct BevelBorderLineContext<'a> {
+pub struct BevelBorderLineContext {
     /// View transform.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transform.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current line.
-    pub line: Field<'a, Line>,
+    pub line: Field<Line>,
     /// Current bevel border.
-    pub bevel_border_radius: Field<'a, Radius>,
+    pub bevel_border_radius: Field<Radius>,
 }
 
-impl<'a> 
+impl
 Clone 
-for BevelBorderLineContext<'a> {
+for BevelBorderLineContext {
     #[inline(always)]
-    fn clone(&self) -> BevelBorderLineContext<'static> {
+    fn clone(&self) -> BevelBorderLineContext {
         BevelBorderLineContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            line: Value(*self.line.get()),
-            bevel_border_radius: Value(*self.bevel_border_radius.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            bevel_border_radius: Value(self.bevel_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for BevelBorderLineContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for BevelBorderLineContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, BevelBorderLineContext<'a>, Matrix2d> 
-for BevelBorderLineContext<'a> {
+impl
+CanTransform<BevelBorderLineContext, Matrix2d> 
+for BevelBorderLineContext {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> BevelBorderLineContext<'a> {
+    fn transform(&self, value: Matrix2d) -> BevelBorderLineContext {
         BevelBorderLineContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            line: Borrowed(self.line.get()),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
+            line: Value(self.line.get()),
+            bevel_border_radius: Value(self.bevel_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for BevelBorderLineContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for BevelBorderLineContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, BevelBorderLineContext<'a>, Matrix2d> 
-for BevelBorderLineContext<'a> {
+impl
+CanViewTransform<BevelBorderLineContext, Matrix2d> 
+for BevelBorderLineContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> BevelBorderLineContext<'a> {
+    ) -> BevelBorderLineContext {
         BevelBorderLineContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            bevel_border_radius: Value(self.bevel_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-AddColor<'a, BevelBorderLineColorContext<'a>> 
-for BevelBorderLineContext<'a> {
+impl
+AddColor<BevelBorderLineColorContext> 
+for BevelBorderLineContext {
     #[inline(always)]
     fn rgba(
-        &'a self, 
+        &self, 
         r: ColorComponent, 
         g: ColorComponent, 
         b: ColorComponent, 
         a: ColorComponent
-    ) -> BevelBorderLineColorContext<'a> {
+    ) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             color: Value([r, g, b, a]),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
+            bevel_border_radius: Value(self.bevel_border_radius.get()),
         }
     }
 }

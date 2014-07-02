@@ -1,7 +1,6 @@
 
 use {
     BackEnd,
-    Borrowed,
     Field,
     ImageSize,
     Draw,
@@ -24,117 +23,117 @@ use internal::{
 };
 
 /// A line context with bevel border information.
-pub struct BevelBorderLineColorContext<'a> {
+pub struct BevelBorderLineColorContext {
     /// View transform.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transform.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current line.
-    pub line: Field<'a, Line>,
+    pub line: Field<Line>,
     /// Current color.
-    pub color: Field<'a, Color>,
+    pub color: Field<Color>,
     /// Current bevel border.
-    pub bevel_border_radius: Field<'a, Radius>,
+    pub bevel_border_radius: Field<Radius>,
 }
 
-impl<'a> 
+impl
 Clone 
-for BevelBorderLineColorContext<'a> {
+for BevelBorderLineColorContext {
     #[inline(always)]
-    fn clone(&self) -> BevelBorderLineColorContext<'static> {
+    fn clone(&self) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            line: Value(*self.line.get()),
-            color: Value(*self.color.get()),
-            bevel_border_radius: Value(*self.bevel_border_radius.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            color: Value(self.color.get()),
+            bevel_border_radius: Value(self.bevel_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for BevelBorderLineColorContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for BevelBorderLineColorContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, BevelBorderLineColorContext<'a>, Matrix2d> 
-for BevelBorderLineColorContext<'a> {
+impl
+CanTransform<BevelBorderLineColorContext, Matrix2d> 
+for BevelBorderLineColorContext {
     #[inline(always)]
     fn transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> BevelBorderLineColorContext<'a> {
+    ) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
+            line: Value(self.line.get()),
+            color: Value(self.color.get()),
+            bevel_border_radius: Value(self.bevel_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for BevelBorderLineColorContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for BevelBorderLineColorContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, BevelBorderLineColorContext<'a>, Matrix2d> 
-for BevelBorderLineColorContext<'a> {
+impl
+CanViewTransform<BevelBorderLineColorContext, Matrix2d> 
+for BevelBorderLineColorContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> BevelBorderLineColorContext<'a> {
+    ) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
-            color: Borrowed(self.color.get()),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
+            color: Value(self.color.get()),
+            bevel_border_radius: Value(self.bevel_border_radius.get()),
         }
     }
 }
 
-impl<'a> 
-HasColor<'a, Color> 
-for BevelBorderLineColorContext<'a> {
+impl
+HasColor<Color> 
+for BevelBorderLineColorContext {
     #[inline(always)]
-    fn get_color(&'a self) -> &'a Color {
+    fn get_color(&self) -> Color {
         self.color.get()
     }
 }
 
-impl<'a> 
-CanColor<'a, BevelBorderLineColorContext<'a>, Color> 
-for BevelBorderLineColorContext<'a> {
+impl
+CanColor<BevelBorderLineColorContext, Color> 
+for BevelBorderLineColorContext {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> BevelBorderLineColorContext<'a> {
+    fn color(&self, value: Color) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             color: Value(value),
-            bevel_border_radius: Borrowed(self.bevel_border_radius.get()),
+            bevel_border_radius: Value(self.bevel_border_radius.get()),
         }
     }
 }
 
-impl<'a, B: BackEnd<I>, I: ImageSize> 
-Draw<'a, B, I> 
-for BevelBorderLineColorContext<'a> {
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for BevelBorderLineColorContext {
     #[inline(always)]
-    fn draw(&'a self, back_end: &mut B) {
+    fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let line = self.line.get();
             let bevel_border_radius = self.bevel_border_radius.get();
@@ -146,10 +145,10 @@ for BevelBorderLineColorContext<'a> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_border_line_tri_list_xy_f32_rgba_f32(
                 3,
-                *self.transform.get(),
-                *line,
-                *bevel_border_radius,
-                *color,
+                self.transform.get(),
+                line,
+                bevel_border_radius,
+                color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }

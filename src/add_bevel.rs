@@ -3,8 +3,8 @@ use internal::{
 };
 
 /// Implemented by contexts that can make a shape bevel.
-pub trait AddBevel<'a, T> {
+pub trait AddBevel<T> {
     /// Bevels the shape of the current context.
-    fn bevel(&'a self, radius: Radius) -> T;
+    fn bevel(&self, radius: Radius) -> T;
 }
 

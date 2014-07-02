@@ -5,7 +5,6 @@ use {
     AddRoundBorder,
     AddSquareBorder,
     BevelBorderLineContext,
-    Borrowed,
     Field,
     LineColorContext,
     RoundBorderLineContext,
@@ -24,141 +23,141 @@ use internal::{
 };
 
 /// A line context.
-pub struct LineContext<'a> {
+pub struct LineContext {
     /// View transform.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transform.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current line.
-    pub line: Field<'a, Line>,
+    pub line: Field<Line>,
 }
 
 impl<'a> 
 Clone for 
-LineContext<'a> {
+LineContext {
     #[inline(always)]
-    fn clone(&self) -> LineContext<'static> {
+    fn clone(&self) -> LineContext {
         LineContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            line: Value(*self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for LineContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for LineContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, LineContext<'a>, Matrix2d> 
-for LineContext<'a> {
+impl
+CanTransform<LineContext, Matrix2d> 
+for LineContext {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> LineContext<'a> {
+    fn transform(&self, value: Matrix2d) -> LineContext {
         LineContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            line: Borrowed(self.line.get()),
+            line: Value(self.line.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for LineContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for LineContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, LineContext<'a>, Matrix2d> 
-for LineContext<'a> {
+impl
+CanViewTransform<LineContext, Matrix2d> 
+for LineContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> LineContext<'a> {
+    ) -> LineContext {
         LineContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
         }
     }
 }
 
-impl<'a> 
-AddColor<'a, LineColorContext<'a>> 
-for LineContext<'a> {
+impl
+AddColor<LineColorContext> 
+for LineContext {
     #[inline(always)]
     fn rgba(
-        &'a self, 
+        &self, 
         r: ColorComponent, 
         g: ColorComponent, 
         b: ColorComponent, 
         a: ColorComponent
-    ) -> LineColorContext<'a> {
+    ) -> LineColorContext {
         LineColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             color: Value([r, g, b, a]),
         }
     }
 }
 
-impl<'a> 
-AddRoundBorder<'a, RoundBorderLineContext<'a>> 
-for LineContext<'a> {
+impl
+AddRoundBorder<RoundBorderLineContext> 
+for LineContext {
     #[inline(always)]
     fn round_border_radius(
-        &'a self, 
+        &self, 
         radius: Radius
-    ) -> RoundBorderLineContext<'a> {
+    ) -> RoundBorderLineContext {
         RoundBorderLineContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             round_border_radius: Value(radius),
         }
     }
 }
 
-impl<'a> 
-AddBevelBorder<'a, BevelBorderLineContext<'a>> 
-for LineContext<'a> {
+impl
+AddBevelBorder<BevelBorderLineContext> 
+for LineContext {
     #[inline(always)]
     fn bevel_border_radius(
-        &'a self, 
+        &self, 
         radius: Radius
-    ) -> BevelBorderLineContext<'a> {
+    ) -> BevelBorderLineContext {
         BevelBorderLineContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             bevel_border_radius: Value(radius),
         }
     }
 }
 
-impl<'a> 
-AddSquareBorder<'a, SquareBorderLineContext<'a>> 
-for LineContext<'a> {
+impl
+AddSquareBorder<SquareBorderLineContext> 
+for LineContext {
     #[inline(always)]
     fn square_border_radius(
-        &'a self, 
+        &self, 
         radius: Radius
-    ) -> SquareBorderLineContext<'a> {
+    ) -> SquareBorderLineContext {
         SquareBorderLineContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            line: Borrowed(self.line.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            line: Value(self.line.get()),
             square_border_radius: Value(radius),
         }
     }

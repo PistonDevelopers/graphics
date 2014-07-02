@@ -5,6 +5,6 @@ use internal::{
 /// Implemented by tweening contexts that can add polygons.
 pub trait AddPolygons<'a, T> {
     /// Add polygons.
-    fn polygons(&'a self, polygons: Polygons<'a>) -> T;
+    fn polygons(&self, polygons: Polygons<'a>) -> T;
 }
 

@@ -10,33 +10,32 @@ use internal::{
 };
 
 /// Should be implemented by contexts that have rectangle information.
-pub trait RelativeRectangle<'a, T> {
+pub trait RelativeRectangle<T> {
     /// Shrinks the current rectangle equally by all sides.
-    fn margin(&'a self, m: f64) -> T;
+    fn margin(&self, m: f64) -> T;
 
     /// Expands the current rectangle equally by all sides.
     #[inline(always)]
-    fn expand(&'a self, m: f64) -> T {
+    fn expand(&self, m: f64) -> T {
         self.margin(-m)
     }
 
     /// Moves to a relative rectangle using the current rectangle as tile.
-    fn rel(&'a self, x: f64, y: f64) -> T;
+    fn rel(&self, x: f64, y: f64) -> T;
 }
 
 impl<
-    'a,
-    T: HasRectangle<'a, Rectangle> + CanRectangle<'a, U, Rectangle>,
+    T: HasRectangle<Rectangle> + CanRectangle<U, Rectangle>,
     U
-> RelativeRectangle<'a, U> for T {
+> RelativeRectangle<U> for T {
     #[inline(always)]
-    fn margin(&'a self, m: f64) -> U {
-        self.rectangle(margin_rectangle(*self.get_rectangle(), m))
+    fn margin(&self, m: f64) -> U {
+        self.rectangle(margin_rectangle(self.get_rectangle(), m))
     }
 
     #[inline(always)]
-    fn rel(&'a self, x: f64, y: f64) -> U {
-        self.rectangle(relative_rectangle(*self.get_rectangle(), x, y))
+    fn rel(&self, x: f64, y: f64) -> U {
+        self.rectangle(relative_rectangle(self.get_rectangle(), x, y))
     }
 }
 
