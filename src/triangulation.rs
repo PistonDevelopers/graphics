@@ -595,6 +595,55 @@ pub fn rect_tri_list_xy_f32(
     ]
 }
 
+/// Creates triangle list vertices from rectangle.
+#[inline(always)]
+pub fn rect_border_tri_list_xy_f32(
+    m: Matrix2d,
+    rect: Rectangle,
+    border_radius: Radius,
+) -> [f32, ..48] {
+    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (w1, h1) = (w + border_radius, h + border_radius);
+    let (w2, h2) = (w - border_radius, h - border_radius);
+    let (x11, y11) = (x - border_radius, y - border_radius);
+    let (x21, y21) = (x + border_radius, y + border_radius);
+    let (x12, y12) = (x + w1, y + h1);
+    let (x22, y22) = (x + w2, y + h2);
+    [
+        tx(m, x11, y11), ty(m, x11, y11),
+        tx(m, x12, y11), ty(m, x12, y11),
+        tx(m, x21, y21), ty(m, x21, y21),
+
+        tx(m, x21, y21), ty(m, x21, y21),
+        tx(m, x12, y11), ty(m, x12, y11),
+        tx(m, x22, y21), ty(m, x22, y21),
+
+        tx(m, x22, y21), ty(m, x22, y21),
+        tx(m, x12, y11), ty(m, x12, y11),
+        tx(m, x12, y12), ty(m, x12, y12),
+
+        tx(m, x22, y21), ty(m, x22, y21),
+        tx(m, x12, y12), ty(m, x12, y12),
+        tx(m, x22, y22), ty(m, x22, y22),
+
+        tx(m, x12, y12), ty(m, x12, y12),
+        tx(m, x22, y22), ty(m, x22, y22),
+        tx(m, x11, y12), ty(m, x11, y12),
+
+        tx(m, x22, y22), ty(m, x22, y22),
+        tx(m, x11, y12), ty(m, x11, y12),
+        tx(m, x21, y22), ty(m, x21, y22),
+
+        tx(m, x11, y12), ty(m, x11, y12),
+        tx(m, x21, y21), ty(m, x21, y21),
+        tx(m, x21, y22), ty(m, x21, y22),
+
+        tx(m, x11, y12), ty(m, x11, y12),
+        tx(m, x11, y11), ty(m, x11, y11),
+        tx(m, x21, y21), ty(m, x21, y21),
+    ]
+}
+
 /// Creates triangle list colors from rectangle.
 #[inline(always)]
 pub fn rect_tri_list_rgba_f32(
@@ -613,6 +662,40 @@ pub fn rect_tri_list_rgba_f32(
         r, g, b, a, // 8
         r, g, b, a, // 9
         r, g, b, a, // 10
+        r, g, b, a
+    ]
+}
+
+/// Creates triangle list colors from rectangle border.
+#[inline(always)]
+pub fn rect_border_tri_list_rgba_f32(
+    color: Color
+) -> [f32, ..96] {
+    let (r, g, b, a) = (color[0], color[1], color[2], color[3]);
+    [
+        r, g, b, a, // 0
+        r, g, b, a, // 1
+        r, g, b, a, // 2
+        r, g, b, a, // 3
+        r, g, b, a, // 4
+        r, g, b, a, // 5
+        r, g, b, a, // 6
+        r, g, b, a, // 7
+        r, g, b, a, // 8
+        r, g, b, a, // 9
+        r, g, b, a, // 10
+        r, g, b, a, // 11
+        r, g, b, a, // 12
+        r, g, b, a, // 13
+        r, g, b, a, // 14
+        r, g, b, a, // 15
+        r, g, b, a, // 16
+        r, g, b, a, // 17
+        r, g, b, a, // 18 
+        r, g, b, a, // 19
+        r, g, b, a, // 20
+        r, g, b, a, // 21
+        r, g, b, a, // 22
         r, g, b, a
     ]
 }
