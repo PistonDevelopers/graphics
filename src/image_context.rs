@@ -2,7 +2,6 @@ use {
     AddColor,
     AddRectangle,
     BackEnd,
-    Borrowed,
     Draw,
     Field,
     ImageSize,
@@ -32,165 +31,165 @@ use internal::{
 };
 
 /// An image context.
-pub struct ImageContext<'a, 'b, I> {
+pub struct ImageContext<'b, I> {
     /// View transformation.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transformation.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current image.
-    pub image: Field<'a, &'b I>,
+    pub image: Field<&'b I>,
     /// Current source rectangle.
-    pub source_rect: Field<'a, SourceRectangle>,
+    pub source_rect: Field<SourceRectangle>,
 }
 
-impl<'a, 'b, I> 
+impl<'b, I> 
 Clone 
-for ImageContext<'a, 'b, I> {
+for ImageContext<'b, I> {
     #[inline(always)]
-    fn clone(&self) -> ImageContext<'static, 'b, I> {
+    fn clone(&self) -> ImageContext<'b, I> {
         ImageContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            image: Value(*self.image.get()),
-            source_rect: Value(*self.source_rect.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            image: Value(self.image.get()),
+            source_rect: Value(self.source_rect.get()),
         }
     }
 }
 
-impl<'a, 'b, I> 
-HasTransform<'a, Matrix2d> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+HasTransform<Matrix2d> 
+for ImageContext<'b, I> {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a, 'b, I> 
-CanTransform<'a, ImageContext<'a, 'b, I>, Matrix2d> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+CanTransform<ImageContext<'b, I>, Matrix2d> 
+for ImageContext<'b, I> {
     #[inline(always)]
     fn transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> ImageContext<'a, 'b, I> {
+    ) -> ImageContext<'b, I> {
         ImageContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            image: Borrowed(self.image.get()),
-            source_rect: Borrowed(self.source_rect.get()),
+            image: Value(self.image.get()),
+            source_rect: Value(self.source_rect.get()),
         }
     }
 }
 
-impl<'a, 'b, I> 
-HasViewTransform<'a, Matrix2d> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+HasViewTransform<Matrix2d> 
+for ImageContext<'b, I> {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a, 'b, I> 
-CanViewTransform<'a, ImageContext<'a, 'b, I>, Matrix2d>
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+CanViewTransform<ImageContext<'b, I>, Matrix2d>
+for ImageContext<'b, I> {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> ImageContext<'a, 'b, I> {
+    ) -> ImageContext<'b, I> {
         ImageContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            image: Borrowed(self.image.get()),
-            source_rect: Borrowed(self.source_rect.get()),
+            transform: Value(self.transform.get()),
+            image: Value(self.image.get()),
+            source_rect: Value(self.source_rect.get()),
         }
     }
 }
 
-static WHITE: &'static Color = &[1.0, ..4];
+static WHITE: Color = [1.0, ..4];
 
-impl<'a, 'b, I> 
-HasColor<'a, Color> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+HasColor<Color> 
+for ImageContext<'b, I> {
     #[inline(always)]
-    fn get_color(&'a self) -> &'a Color {
+    fn get_color(&self) -> Color {
         WHITE
     }
 }
 
-impl<'a, 'b, I> 
-CanColor<'a, ImageColorContext<'a, 'b, I>, Color> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+CanColor<ImageColorContext<'b, I>, Color> 
+for ImageContext<'b, I> {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> ImageColorContext<'a, 'b, I> {
+    fn color(&self, value: Color) -> ImageColorContext<'b, I> {
         ImageColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             color: Value(value),
-            image: Borrowed(self.image.get()),
-            source_rect: Borrowed(self.source_rect.get()),
+            image: Value(self.image.get()),
+            source_rect: Value(self.source_rect.get()),
         }
     }
 }
 
-impl<'a, 'b, I> 
-HasSourceRectangle<'a, SourceRectangle> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+HasSourceRectangle<SourceRectangle> 
+for ImageContext<'b, I> {
     #[inline(always)]
-    fn get_source_rectangle(&'a self) -> &'a SourceRectangle {
+    fn get_source_rectangle(&self) -> SourceRectangle {
         self.source_rect.get()
     }
 }
 
-impl<'a, 'b, I> 
-CanSourceRectangle<'a, ImageContext<'a, 'b, I>, SourceRectangle> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+CanSourceRectangle<ImageContext<'b, I>, SourceRectangle> 
+for ImageContext<'b, I> {
     #[inline(always)]
     fn source_rectangle(
-        &'a self, 
+        &self, 
         source_rect: SourceRectangle
-    ) -> ImageContext<'a, 'b, I> {
+    ) -> ImageContext<'b, I> {
         ImageContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            image: Borrowed(self.image.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            image: Value(self.image.get()),
             source_rect: Value(source_rect),
         }
     }
 }
 
-impl<'a, 'b, I> 
-AddRectangle<'a, ImageRectangleContext<'a, 'b, I>> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+AddRectangle<ImageRectangleContext<'b, I>> 
+for ImageContext<'b, I> {
     #[inline(always)]
     fn rect(
-        &'a self, 
+        &self, 
         x: Scalar, 
         y: Scalar, 
         w: Scalar, 
         h: Scalar
-    ) -> ImageRectangleContext<'a, 'b, I> {
+    ) -> ImageRectangleContext<'b, I> {
         ImageRectangleContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             rect: Value([x, y, w, h]),
-            image: Borrowed(self.image.get()),
-            source_rect: Borrowed(self.source_rect.get()),
+            image: Value(self.image.get()),
+            source_rect: Value(self.source_rect.get()),
         }
     }
 }
 
-impl<'a, 'b, B: BackEnd<I>, I: ImageSize> 
-Draw<'a, B, I> 
-for ImageContext<'a, 'b, I> {
+impl<'b, B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for ImageContext<'b, I> {
     #[inline(always)]
-    fn draw(&'a self, back_end: &mut B) {
+    fn draw(&self, back_end: &mut B) {
         if back_end.supports_single_texture()
         && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
             let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
-            let &texture = self.image.get();
+            let texture = self.image.get();
             let source_rect = self.source_rect.get();
             let rect = [
                 0.0, 
@@ -207,9 +206,9 @@ for ImageContext<'a, 'b, I> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                rect_tri_list_xy_f32(*self.transform.get(), rect),
+                rect_tri_list_xy_f32(self.transform.get(), rect),
                 rect_tri_list_rgba_f32(color),
-                rect_tri_list_uv_f32(texture, *source_rect)
+                rect_tri_list_uv_f32(texture, source_rect)
             );
             back_end.disable_single_texture();
             if needs_alpha { back_end.disable_alpha_blend(); }
@@ -219,22 +218,22 @@ for ImageContext<'a, 'b, I> {
     }
 }
 
-impl<'a, 'b, I> 
-AddColor<'a, ImageColorContext<'a, 'b, I>> 
-for ImageContext<'a, 'b, I> {
+impl<'b, I> 
+AddColor<ImageColorContext<'b, I>> 
+for ImageContext<'b, I> {
     #[inline(always)]
     fn rgba(
-        &'a self,
+        &self,
         r: ColorComponent,
         g: ColorComponent,
         b: ColorComponent,
         a: ColorComponent
-    ) -> ImageColorContext<'a, 'b, I> {
+    ) -> ImageColorContext<'b, I> {
         ImageColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            image: Borrowed(self.image.get()),
-            source_rect: Borrowed(self.source_rect.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            image: Value(self.image.get()),
+            source_rect: Value(self.source_rect.get()),
             color: Value([r, g, b, a]),
         }
     }

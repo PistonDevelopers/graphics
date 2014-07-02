@@ -1,13 +1,13 @@
 
 /// Implemented by all contexts that can add ellipse.
-pub trait AddEllipse<'a, T> {
+pub trait AddEllipse<T> {
     /// Adds an ellipse.
-    fn ellipse(&'a self, x: f64, y: f64, w: f64, h: f64) -> T;
+    fn ellipse(&self, x: f64, y: f64, w: f64, h: f64) -> T;
 
     /// Adds an ellipse with coordinates in the center.
     #[inline(always)]
     fn ellipse_centered(
-        &'a self, 
+        &self, 
         center_x: f64, 
         center_y: f64, 
         radius_width: f64, 
@@ -24,7 +24,7 @@ pub trait AddEllipse<'a, T> {
     /// Adds a circle.
     #[inline(always)]
     fn circle(
-        &'a self, 
+        &self, 
         center_x: f64, 
         center_y: f64, 
         radius: f64

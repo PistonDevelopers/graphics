@@ -2,7 +2,6 @@
 use {
     AddBorder,
     BackEnd,
-    Borrowed,
     EllipseBorderColorContext,
     Field,
     Draw,
@@ -27,134 +26,134 @@ use internal::{
 };
 
 /// An ellipse color context.
-pub struct EllipseColorContext<'a> {
+pub struct EllipseColorContext {
     /// View transformation.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transformation.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current rectangle.
-    pub rect: Field<'a, Rectangle>,
+    pub rect: Field<Rectangle>,
     /// Current color.
-    pub color: Field<'a, Color>,
+    pub color: Field<Color>,
 }
 
-impl<'a> 
+impl
 Clone 
-for EllipseColorContext<'a> {
+for EllipseColorContext {
     #[inline(always)]
-    fn clone(&self) -> EllipseColorContext<'static> {
+    fn clone(&self) -> EllipseColorContext {
         EllipseColorContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            rect: Value(*self.rect.get()),
-            color: Value(*self.color.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            rect: Value(self.rect.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for EllipseColorContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for EllipseColorContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, EllipseColorContext<'a>, Matrix2d> 
-for EllipseColorContext<'a> {
+impl
+CanTransform<EllipseColorContext, Matrix2d> 
+for EllipseColorContext {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> EllipseColorContext<'a> {
+    fn transform(&self, value: Matrix2d) -> EllipseColorContext {
         EllipseColorContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
+            rect: Value(self.rect.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for EllipseColorContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for EllipseColorContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, EllipseColorContext<'a>, Matrix2d> 
-for EllipseColorContext<'a> {
+impl
+CanViewTransform<EllipseColorContext, Matrix2d> 
+for EllipseColorContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> EllipseColorContext<'a> {
+    ) -> EllipseColorContext {
         EllipseColorContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
+            transform: Value(self.transform.get()),
+            rect: Value(self.rect.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-HasColor<'a, Color> 
-for EllipseColorContext<'a> {
+impl
+HasColor<Color> 
+for EllipseColorContext {
     #[inline(always)]
-    fn get_color(&'a self) -> &'a Color {
+    fn get_color(&self) -> Color {
         self.color.get()
     }
 }
 
-impl<'a> 
-CanColor<'a, EllipseColorContext<'a>, Color> 
-for EllipseColorContext<'a> {
+impl
+CanColor<EllipseColorContext, Color> 
+for EllipseColorContext {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> EllipseColorContext<'a> {
+    fn color(&self, value: Color) -> EllipseColorContext {
         EllipseColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             color: Value(value),
-            rect: Borrowed(self.rect.get()),
+            rect: Value(self.rect.get()),
         }
     }
 }
 
-impl<'a> 
-HasRectangle<'a, Rectangle> 
-for EllipseColorContext<'a> {
+impl
+HasRectangle<Rectangle> 
+for EllipseColorContext {
     #[inline(always)]
-    fn get_rectangle(&'a self) -> &'a Rectangle {
+    fn get_rectangle(&self) -> Rectangle {
         self.rect.get()
     }
 }
 
-impl<'a> 
-CanRectangle<'a, EllipseColorContext<'a>, Rectangle> 
-for EllipseColorContext<'a> {
+impl
+CanRectangle<EllipseColorContext, Rectangle> 
+for EllipseColorContext {
     #[inline(always)]
     fn rectangle(
-        &'a self, 
+        &self, 
         rect: Rectangle
-    ) -> EllipseColorContext<'a> {
+    ) -> EllipseColorContext {
         EllipseColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             rect: Value(rect),
-            color: Borrowed(self.color.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a, B: BackEnd<I>, I: ImageSize> 
-Draw<'a, B, I> 
-for EllipseColorContext<'a> {
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for EllipseColorContext {
     #[inline(always)]
-    fn draw(&'a self, back_end: &mut B) {
+    fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let rect = self.rect.get();
             let color = self.color.get();
@@ -165,9 +164,9 @@ for EllipseColorContext<'a> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_ellipse_tri_list_xy_f32_rgba_f32(
                 128,
-                *self.transform.get(),
-                *rect,
-                *color,
+                self.transform.get(),
+                rect,
+                color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }
@@ -179,19 +178,19 @@ for EllipseColorContext<'a> {
     }
 }
 
-impl<'a> 
-AddBorder<'a, EllipseBorderColorContext<'a>> 
-for EllipseColorContext<'a> {
+impl
+AddBorder<EllipseBorderColorContext> 
+for EllipseColorContext {
     #[inline(always)]
     fn border_radius(
-        &'a self, 
+        &self, 
         radius: f64
-    ) -> EllipseBorderColorContext<'a> {
+    ) -> EllipseBorderColorContext {
         EllipseBorderColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            rect: Value(self.rect.get()),
+            color: Value(self.color.get()),
             border: Value(radius),
         }
     }

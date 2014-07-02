@@ -1,6 +1,5 @@
 use {
     BackEnd,
-    Borrowed,
     Field,
     Draw,
     ImageSize,
@@ -23,121 +22,121 @@ use internal::{
 };
 
 /// An animation inbetweening context with color.
-pub struct LerpTweenPolygonsColorContext<'a, 'b> {
+pub struct LerpTweenPolygonsColorContext<'b> {
     /// View transform.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transform.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current color.
-    pub color: Field<'a, Color>,
+    pub color: Field<Color>,
     /// Animation inbetweening factor.
-    pub tween_factor: Field<'a, Scalar>,
+    pub tween_factor: Field<Scalar>,
     /// The animated polygons.
-    pub polygons: Field<'a, Polygons<'b>>,
+    pub polygons: Field<Polygons<'b>>,
 }
 
-impl<'a, 'b> 
+impl<'b> 
 Clone 
-for LerpTweenPolygonsColorContext<'a, 'b> {
+for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
-    fn clone(&self) -> LerpTweenPolygonsColorContext<'static, 'b> {
+    fn clone(&self) -> LerpTweenPolygonsColorContext<'b> {
         LerpTweenPolygonsColorContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            color: Value(*self.color.get()),
-            tween_factor: Value(*self.tween_factor.get()),
-            polygons: Value(*self.polygons.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
+            tween_factor: Value(self.tween_factor.get()),
+            polygons: Value(self.polygons.get()),
         }
     }
 }
 
-impl<'a, 'b> 
-HasColor<'a, Color> 
-for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'b> 
+HasColor<Color> 
+for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
-    fn get_color(&'a self) -> &'a Color {
+    fn get_color(&self) -> Color {
         self.color.get()
     }
 }
 
-impl<'a, 'b> 
-CanColor<'a, LerpTweenPolygonsColorContext<'a, 'b>, Color> 
-for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'b> 
+CanColor<LerpTweenPolygonsColorContext<'b>, Color> 
+for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
     fn color(
-        &'a self, 
+        &self, 
         value: Color
-    ) -> LerpTweenPolygonsColorContext<'a, 'b> {
+    ) -> LerpTweenPolygonsColorContext<'b> {
         LerpTweenPolygonsColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             color: Value(value),
-            tween_factor: Borrowed(self.tween_factor.get()),
-            polygons: Borrowed(self.polygons.get()),
+            tween_factor: Value(self.tween_factor.get()),
+            polygons: Value(self.polygons.get()),
         }
     }
 }
 
-impl<'a, 'b> 
-HasTransform<'a, Matrix2d> 
-for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'b> 
+HasTransform<Matrix2d> 
+for LerpTweenPolygonsColorContext<'b> {
     #[inline(alwyas)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a, 'b> 
-CanTransform<'a, LerpTweenPolygonsColorContext<'a, 'b>, Matrix2d> 
-for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'b> 
+CanTransform<LerpTweenPolygonsColorContext<'b>, Matrix2d> 
+for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
     fn transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> LerpTweenPolygonsColorContext<'a, 'b> {
+    ) -> LerpTweenPolygonsColorContext<'b> {
         LerpTweenPolygonsColorContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            color: Borrowed(self.color.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-            polygons: Borrowed(self.polygons.get()),
+            color: Value(self.color.get()),
+            tween_factor: Value(self.tween_factor.get()),
+            polygons: Value(self.polygons.get()),
         }
     }
 }
 
-impl<'a, 'b> 
-HasViewTransform<'a, Matrix2d> 
-for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'b> 
+HasViewTransform<Matrix2d> 
+for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a, 'b> 
-CanViewTransform<'a, LerpTweenPolygonsColorContext<'a, 'b>, Matrix2d> 
-for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'b> 
+CanViewTransform<LerpTweenPolygonsColorContext<'b>, Matrix2d> 
+for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> LerpTweenPolygonsColorContext<'a, 'b> {
+    ) -> LerpTweenPolygonsColorContext<'b> {
         LerpTweenPolygonsColorContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            tween_factor: Borrowed(self.tween_factor.get()),
-            polygons: Borrowed(self.polygons.get()),
-            color: Borrowed(self.color.get()),
+            transform: Value(self.transform.get()),
+            tween_factor: Value(self.tween_factor.get()),
+            polygons: Value(self.polygons.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
 
-impl<'a, 'b, B: BackEnd<I>, I: ImageSize> 
-Draw<'a, B, I> 
-for LerpTweenPolygonsColorContext<'a, 'b> {
+impl<'b, B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
-    fn draw(&'a self, back_end: &mut B) {
+    fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let polygons = self.polygons.get();
             let color = self.color.get();
@@ -147,10 +146,10 @@ for LerpTweenPolygonsColorContext<'a, 'b> {
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_lerp_polygons_tri_list_xy_f32_rgba_f32(
-                *self.transform.get(),
-                *polygons,
-                *self.tween_factor.get(),
-                *color,
+                self.transform.get(),
+                polygons,
+                self.tween_factor.get(),
+                color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }

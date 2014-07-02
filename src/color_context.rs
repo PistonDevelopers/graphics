@@ -7,7 +7,6 @@ use {
     AddRectangle,
     AddTween,
     BackEnd,
-    Borrowed,
     Draw,
     EllipseColorContext,
     Field,
@@ -33,112 +32,112 @@ use internal::{
 };
 
 /// A context with color information.
-pub struct ColorContext<'a> {
+pub struct ColorContext {
     /// View transformation.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transformation.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current color.
-    pub color: Field<'a, Color>,
+    pub color: Field<Color>,
 }
 
-impl<'a> 
+impl
 Clone 
-for ColorContext<'a> {
+for ColorContext {
     #[inline(always)]
-    fn clone(&self) -> ColorContext<'static> {
+    fn clone(&self) -> ColorContext {
         ColorContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            color: Value(*self.color.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for ColorContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for ColorContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, ColorContext<'a>, Matrix2d> 
-for ColorContext<'a> {
+impl
+CanTransform<ColorContext, Matrix2d> 
+for ColorContext {
     #[inline(always)]
-    fn transform(&'a self, value: Matrix2d) -> ColorContext<'a> {
+    fn transform(&self, value: Matrix2d) -> ColorContext {
         ColorContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            color: Borrowed(self.color.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for ColorContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for ColorContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, ColorContext<'a>, Matrix2d> 
-for ColorContext<'a> {
+impl
+CanViewTransform<ColorContext, Matrix2d> 
+for ColorContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> ColorContext<'a> {
+    ) -> ColorContext {
         ColorContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-HasColor<'a, Color> 
-for ColorContext<'a> {
+impl
+HasColor<Color> 
+for ColorContext {
     #[inline(always)]
-    fn get_color(&'a self) -> &'a Color {
+    fn get_color(&self) -> Color {
         self.color.get()
     }
 }
 
-impl<'a> 
-CanColor<'a, ColorContext<'a>, Color> 
-for ColorContext<'a> {
+impl 
+CanColor<ColorContext, Color> 
+for ColorContext {
     #[inline(always)]
-    fn color(&'a self, value: Color) -> ColorContext<'a> {
+    fn color(&self, value: Color) -> ColorContext {
         ColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             color: Value(value),
         }
     }
 }
 
-impl<'a> 
-AddRectangle<'a, RectangleColorContext<'a>> 
-for ColorContext<'a> {
+impl
+AddRectangle<RectangleColorContext> 
+for ColorContext {
     #[inline(always)]
     fn rect(
-        &'a self, 
+        &self, 
         x: Scalar, 
         y: Scalar, 
         w: Scalar, 
         h: Scalar
-    ) -> RectangleColorContext<'a> {
+    ) -> RectangleColorContext {
         RectangleColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
             rect: Value([x, y, w, h]),
         }
     }
@@ -155,63 +154,63 @@ fn test_rect() {
     assert_eq!(rect_color[2], 100.0);
 }
 
-impl<'a> 
-AddEllipse<'a, EllipseColorContext<'a>> 
-for ColorContext<'a> {
+impl
+AddEllipse<EllipseColorContext> 
+for ColorContext {
     #[inline(always)]
     fn ellipse(
-        &'a self, 
+        &self, 
         x: Scalar, 
         y: Scalar, 
         w: Scalar, 
         h: Scalar
-    ) -> EllipseColorContext<'a> {
+    ) -> EllipseColorContext {
         EllipseColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
             rect: Value([x, y, w, h]),
         }
     }
 }
 
-impl<'a, 'b> 
-AddPolygon<'a, PolygonColorContext<'a, 'b>> 
-for ColorContext<'a> {
+impl<'b> 
+AddPolygon<'b, PolygonColorContext<'b>> 
+for ColorContext {
     #[inline(always)]
     fn polygon(
-        &'a self, 
+        &self, 
         polygon: Polygon<'b>
-    ) -> PolygonColorContext<'a, 'b> {
+    ) -> PolygonColorContext<'b> {
         PolygonColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
             polygon: Value(polygon),
         }
     }
 }
 
-impl<'a> 
-AddTween<'a, LerpTweenColorContext<'a>> 
-for ColorContext<'a> {
+impl
+AddTween<LerpTweenColorContext> 
+for ColorContext {
     #[inline(always)]
     fn lerp(
-        &'a self, 
+        &self, 
         tween_factor: Scalar
-    ) -> LerpTweenColorContext<'a> {
+    ) -> LerpTweenColorContext {
         LerpTweenColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
             tween_factor: Value(tween_factor),
         }
     }
 }
 
-impl<'a, B: BackEnd<I>, I: ImageSize> 
-Draw<'a, B, I> 
-for ColorContext<'a> {
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for ColorContext {
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
             let color = self.color.get();
@@ -220,38 +219,38 @@ for ColorContext<'a> {
     }
 }
 
-impl<'a, 'b, I: ImageSize> 
-AddImage<'a, 'b, ImageColorContext<'a, 'b, I>, I> 
-for ColorContext<'a> {
+impl<'b, I: ImageSize> 
+AddImage<'b, ImageColorContext<'b, I>, I> 
+for ColorContext {
     #[inline(always)]
-    fn image(&'a self, image: &'b I) -> ImageColorContext<'a, 'b, I> {
+    fn image(&self, image: &'b I) -> ImageColorContext<'b, I> {
         let (w, h) = image.get_size();
         ImageColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             image: Value(image),
             source_rect: Value([0, 0, w as i32, h as i32]),
-            color: Borrowed(self.color.get()),
+            color: Value(self.color.get()),
         }
     }
 }
 
-impl<'a> 
-AddLine<'a, LineColorContext<'a>> 
-for ColorContext<'a> {
+impl
+AddLine<LineColorContext> 
+for ColorContext {
     #[inline(always)]
     fn line(
-        &'a self, 
+        &self, 
         x1: Scalar, 
         y1: Scalar, 
         x2: Scalar, 
         y2: Scalar
-    ) -> LineColorContext<'a> {
+    ) -> LineColorContext {
         LineColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             line: Value([x1, y1, x2, y2]),
-            color: Borrowed(self.color.get()),
+            color: Value(self.color.get()),
         }
     }
 }

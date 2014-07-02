@@ -1,13 +1,13 @@
 
 /// Implemented by all contexts that can add rectangle.
-pub trait AddRectangle<'a, T> {
+pub trait AddRectangle<T> {
     /// Adds a rectangle.
-    fn rect(&'a self, x: f64, y: f64, w: f64, h: f64) -> T;
+    fn rect(&self, x: f64, y: f64, w: f64, h: f64) -> T;
 
     /// Adds a rectangle with coordinates in the center.
     #[inline(always)]
     fn rect_centered(
-        &'a self, 
+        &self, 
         center_x: f64, 
         center_y: f64, 
         radius_width: f64, 
@@ -23,14 +23,14 @@ pub trait AddRectangle<'a, T> {
 
     /// Adds a square with coordinates of upper left corner.
     #[inline(always)]
-    fn square(&'a self, x: f64, y: f64, w: f64) -> T {
+    fn square(&self, x: f64, y: f64, w: f64) -> T {
         self.rect(x, y, w, w)
     }
 
     /// Adds a square with coordinates in the center.
     #[inline(always)]
     fn square_centered(
-        &'a self, 
+        &self, 
         center_x: f64, 
         center_y: f64, 
         radius: f64

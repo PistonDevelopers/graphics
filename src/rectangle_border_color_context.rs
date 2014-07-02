@@ -3,7 +3,6 @@ use {
     AddBevel,
     AddRound,
     BevelRectangleBorderColorContext,
-    Borrowed,
     Field,
     RoundRectangleBorderColorContext,
     Value,
@@ -26,176 +25,176 @@ use internal::{
 };
 
 /// A rectangle color context.
-pub struct RectangleBorderColorContext<'a> {
+pub struct RectangleBorderColorContext {
     /// View transformation.
-    pub view: Field<'a, Matrix2d>,
+    pub view: Field<Matrix2d>,
     /// Current transformation.
-    pub transform: Field<'a, Matrix2d>,
+    pub transform: Field<Matrix2d>,
     /// Current rectangle.
-    pub rect: Field<'a, Rectangle>,
+    pub rect: Field<Rectangle>,
     /// Current color.
-    pub color: Field<'a, Color>,
+    pub color: Field<Color>,
     /// Current border.
-    pub border: Field<'a, Radius>,
+    pub border: Field<Radius>,
 }
 
-impl<'a> 
+impl
 Clone 
-for RectangleBorderColorContext<'a> {
+for RectangleBorderColorContext {
     #[inline(always)]
-    fn clone(&self) -> RectangleBorderColorContext<'static> {
+    fn clone(&self) -> RectangleBorderColorContext {
         RectangleBorderColorContext {
-            view: Value(*self.view.get()),
-            transform: Value(*self.transform.get()),
-            rect: Value(*self.rect.get()),
-            color: Value(*self.color.get()),
-            border: Value(*self.border.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            rect: Value(self.rect.get()),
+            color: Value(self.color.get()),
+            border: Value(self.border.get()),
         }
     }
 }
 
-impl<'a> 
-HasTransform<'a, Matrix2d> 
-for RectangleBorderColorContext<'a> {
+impl
+HasTransform<Matrix2d> 
+for RectangleBorderColorContext {
     #[inline(always)]
-    fn get_transform(&'a self) -> &'a Matrix2d {
+    fn get_transform(&self) -> Matrix2d {
         self.transform.get()
     }
 }
 
-impl<'a> 
-CanTransform<'a, RectangleBorderColorContext<'a>, Matrix2d> 
-for RectangleBorderColorContext<'a> {
+impl
+CanTransform<RectangleBorderColorContext, Matrix2d> 
+for RectangleBorderColorContext {
     #[inline(always)]
     fn transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> RectangleBorderColorContext<'a> {
+    ) -> RectangleBorderColorContext {
         RectangleBorderColorContext {
-            view: Borrowed(self.view.get()),
+            view: Value(self.view.get()),
             transform: Value(value),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
-            border: Borrowed(self.border.get()),
+            rect: Value(self.rect.get()),
+            color: Value(self.color.get()),
+            border: Value(self.border.get()),
         }
     }
 }
 
-impl<'a> 
-HasViewTransform<'a, Matrix2d> 
-for RectangleBorderColorContext<'a> {
+impl
+HasViewTransform<Matrix2d> 
+for RectangleBorderColorContext {
     #[inline(always)]
-    fn get_view_transform(&'a self) -> &'a Matrix2d {
+    fn get_view_transform(&self) -> Matrix2d {
         self.view.get()
     }
 }
 
-impl<'a> 
-CanViewTransform<'a, RectangleBorderColorContext<'a>, Matrix2d> 
-for RectangleBorderColorContext<'a> {
+impl
+CanViewTransform<RectangleBorderColorContext, Matrix2d> 
+for RectangleBorderColorContext {
     #[inline(always)]
     fn view_transform(
-        &'a self, 
+        &self, 
         value: Matrix2d
-    ) -> RectangleBorderColorContext<'a> {
+    ) -> RectangleBorderColorContext {
         RectangleBorderColorContext {
             view: Value(value),
-            transform: Borrowed(self.transform.get()),
-            rect: Borrowed(self.rect.get()),
-            color: Borrowed(self.color.get()),
-            border: Borrowed(self.border.get()),
+            transform: Value(self.transform.get()),
+            rect: Value(self.rect.get()),
+            color: Value(self.color.get()),
+            border: Value(self.border.get()),
         }
     }
 }
 
-impl<'a> 
-HasColor<'a, Color> 
-for RectangleBorderColorContext<'a> {
+impl
+HasColor<Color> 
+for RectangleBorderColorContext {
     #[inline(always)]
-    fn get_color(&'a self) -> &'a Color {
+    fn get_color(&self) -> Color {
         self.color.get()
     }
 }
 
-impl<'a> 
-CanColor<'a, RectangleBorderColorContext<'a>, Color> 
-for RectangleBorderColorContext<'a> {
+impl
+CanColor<RectangleBorderColorContext, Color> 
+for RectangleBorderColorContext {
     #[inline(always)]
     fn color(
-        &'a self, 
+        &self, 
         value: Color
-    ) -> RectangleBorderColorContext<'a> {
+    ) -> RectangleBorderColorContext {
         RectangleBorderColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             color: Value(value),
-            rect: Borrowed(self.rect.get()),
-            border: Borrowed(self.border.get()),
+            rect: Value(self.rect.get()),
+            border: Value(self.border.get()),
         }
     }
 }
 
-impl<'a> 
-HasRectangle<'a, Rectangle> 
-for RectangleBorderColorContext<'a> {
+impl
+HasRectangle<Rectangle> 
+for RectangleBorderColorContext {
     #[inline(always)]
-    fn get_rectangle(&'a self) -> &'a Rectangle {
+    fn get_rectangle(&self) -> Rectangle {
         self.rect.get()
     }
 }
 
-impl<'a> 
-CanRectangle<'a, RectangleBorderColorContext<'a>, Rectangle> 
-for RectangleBorderColorContext<'a> {
+impl
+CanRectangle<RectangleBorderColorContext, Rectangle> 
+for RectangleBorderColorContext {
     #[inline(always)]
     fn rectangle(
-        &'a self, 
+        &self, 
         rect: Rectangle
-    ) -> RectangleBorderColorContext<'a> {
+    ) -> RectangleBorderColorContext {
         RectangleBorderColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
             rect: Value(rect),
-            color: Borrowed(self.color.get()),
-            border: Borrowed(self.border.get()),
+            color: Value(self.color.get()),
+            border: Value(self.border.get()),
         }
     }
 }
 
-impl<'a> 
-AddRound<'a, RoundRectangleBorderColorContext<'a>> 
-for RectangleBorderColorContext<'a> {
+impl
+AddRound<RoundRectangleBorderColorContext> 
+for RectangleBorderColorContext {
     #[inline(always)]
     fn round(
-        &'a self, 
+        &self, 
         radius: f64
-    ) -> RoundRectangleBorderColorContext<'a> {
+    ) -> RoundRectangleBorderColorContext {
         RoundRectangleBorderColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            rect: Borrowed(self.rect.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
+            rect: Value(self.rect.get()),
             round_radius: Value(radius),
-            border: Borrowed(self.border.get()),
+            border: Value(self.border.get()),
         }
     }
 }
 
-impl<'a> 
-AddBevel<'a, BevelRectangleBorderColorContext<'a>> 
-for RectangleBorderColorContext<'a> {
+impl
+AddBevel<BevelRectangleBorderColorContext> 
+for RectangleBorderColorContext {
     #[inline(always)]
     fn bevel(
-        &'a self, 
+        &self, 
         radius: f64
-    ) -> BevelRectangleBorderColorContext<'a> {
+    ) -> BevelRectangleBorderColorContext {
         BevelRectangleBorderColorContext {
-            view: Borrowed(self.view.get()),
-            transform: Borrowed(self.transform.get()),
-            color: Borrowed(self.color.get()),
-            rect: Borrowed(self.rect.get()),
+            view: Value(self.view.get()),
+            transform: Value(self.transform.get()),
+            color: Value(self.color.get()),
+            rect: Value(self.rect.get()),
             bevel_radius: Value(radius),
-            border: Borrowed(self.border.get()),
+            border: Value(self.border.get()),
         }
     }
 }
