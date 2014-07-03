@@ -4,10 +4,8 @@ use {
     AddColor,
     AddRound,
     BevelRectangleBorderContext,
-    Field,
     RectangleBorderColorContext,
     RoundRectangleBorderContext,
-    Value,
 };
 use internal::{
     CanRectangle,
@@ -25,13 +23,13 @@ use internal::{
 /// A rectangle context.
 pub struct RectangleBorderContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current border.
-    pub border: Field<Radius>,
+    pub border: Radius,
 }
 
 impl
@@ -40,10 +38,10 @@ for RectangleBorderContext {
     #[inline(always)]
     fn clone(&self) -> RectangleBorderContext {
         RectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            border: self.border,
         }
     }
 }
@@ -53,7 +51,7 @@ HasTransform<Matrix2d>
 for RectangleBorderContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -66,10 +64,10 @@ for RectangleBorderContext {
         value: Matrix2d
     ) -> RectangleBorderContext {
         RectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            border: self.border,
         }
     }
 }
@@ -79,7 +77,7 @@ HasViewTransform<Matrix2d>
 for RectangleBorderContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -92,10 +90,10 @@ for RectangleBorderContext {
         value: Matrix2d
     ) -> RectangleBorderContext {
         RectangleBorderContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            border: Value(self.border.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            border: self.border,
         }
     }
 }
@@ -105,7 +103,7 @@ HasRectangle<Rectangle>
 for RectangleBorderContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -118,10 +116,10 @@ for RectangleBorderContext {
         rect: Rectangle
     ) -> RectangleBorderContext {
         RectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            border: self.border,
         }
     }
 }
@@ -139,11 +137,11 @@ for RectangleBorderContext {
         a: ColorComponent
     ) -> RectangleBorderColorContext {
         RectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value([r, g, b, a]),
-            rect: Value(self.rect.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            color: [r, g, b, a],
+            rect: self.rect,
+            border: self.border,
         }
     }
 }
@@ -155,7 +153,7 @@ fn test_rgba() {
     let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 100.0);
     let e = d.rgba(1.0, 0.0, 0.0, 1.0);
-    let color = e.color.get();
+    let color = e.color;
     assert_eq!(color[0], 1.0);
 }
 
@@ -165,11 +163,11 @@ for RectangleBorderContext {
     #[inline(always)]
     fn round(&self, radius: Radius) -> RoundRectangleBorderContext {
         RoundRectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(radius),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            round_radius: radius,
+            border: self.border,
         }
     }
 }
@@ -183,11 +181,11 @@ for RectangleBorderContext {
         radius: Radius
     ) -> BevelRectangleBorderContext {
         BevelRectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(radius),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: radius,
+            border: self.border,
         }
     }
 }

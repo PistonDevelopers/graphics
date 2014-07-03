@@ -1,9 +1,7 @@
 use {
     BackEnd,
-    Draw,
-    Field,
     ImageSize,
-    Value,
+    Draw,
 };
 use triangulation::{
     with_round_rectangle_border_tri_list_xy_f32_rgba_f32,
@@ -26,17 +24,17 @@ use internal::{
 /// A bevel rectangle border color context.
 pub struct BevelRectangleBorderColorContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current bevel radius.
-    pub bevel_radius: Field<Radius>,
+    pub bevel_radius: Radius,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
     /// Current border.
-    pub border: Field<Radius>,
+    pub border: Radius,
 }
 
 impl
@@ -45,12 +43,12 @@ for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn clone(&self) -> BevelRectangleBorderColorContext {
         BevelRectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
+            border: self.border,
         }
     }
 }
@@ -60,7 +58,7 @@ HasTransform<Matrix2d>
 for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -73,12 +71,12 @@ for BevelRectangleBorderColorContext {
         value: Matrix2d
     ) -> BevelRectangleBorderColorContext {
         BevelRectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
+            border: self.border,
         }
     }
 }
@@ -88,7 +86,7 @@ HasViewTransform<Matrix2d>
 for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -101,12 +99,12 @@ for BevelRectangleBorderColorContext {
         value: Matrix2d
     ) -> BevelRectangleBorderColorContext {
         BevelRectangleBorderColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
-            border: Value(self.border.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
+            border: self.border,
         }
     }
 }
@@ -116,7 +114,7 @@ HasColor<Color>
 for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -129,12 +127,12 @@ for BevelRectangleBorderColorContext {
         value: Color
     ) -> BevelRectangleBorderColorContext {
         BevelRectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            border: self.border,
         }
     }
 }
@@ -144,7 +142,7 @@ HasRectangle<Rectangle>
 for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -157,12 +155,12 @@ for BevelRectangleBorderColorContext {
         rect: Rectangle
     ) -> BevelRectangleBorderColorContext {
         BevelRectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
+            border: self.border,
         }
     }
 }
@@ -173,10 +171,10 @@ for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.rect.get();
-            let bevel_radius = self.bevel_radius.get();
-            let border = self.border.get();
-            let color = self.color.get();
+            let rect = self.rect;
+            let bevel_radius = self.bevel_radius;
+            let border = self.border;
+            let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -184,7 +182,7 @@ for BevelRectangleBorderColorContext {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
                 2,
-                self.transform.get(),
+                self.transform,
                 rect,
                 bevel_radius,
                 border,

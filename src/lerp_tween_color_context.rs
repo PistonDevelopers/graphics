@@ -1,8 +1,6 @@
 use {
     AddPolygons,
-    Field,
     LerpTweenPolygonsColorContext,
-    Value,
 };
 use internal::{
     CanColor,
@@ -19,13 +17,13 @@ use internal::{
 /// An animation inbetweening context with color.
 pub struct LerpTweenColorContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
     /// Animation inbetweening factor.
-    pub tween_factor: Field<f64>,
+    pub tween_factor: f64,
 }
 
 impl
@@ -34,10 +32,10 @@ for LerpTweenColorContext {
     #[inline(always)]
     fn clone(&self) -> LerpTweenColorContext {
         LerpTweenColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
-            tween_factor: Value(self.tween_factor.get()),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            tween_factor: self.tween_factor,
         }
     }
 }
@@ -47,7 +45,7 @@ HasColor<Color>
 for LerpTweenColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -57,10 +55,10 @@ for LerpTweenColorContext {
     #[inline(always)]
     fn color(&self, value: Color) -> LerpTweenColorContext {
         LerpTweenColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            tween_factor: Value(self.tween_factor.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            tween_factor: self.tween_factor,
         }
     }
 }
@@ -70,7 +68,7 @@ HasTransform<Matrix2d>
 for LerpTweenColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -83,10 +81,10 @@ for LerpTweenColorContext {
         value: Matrix2d
     ) -> LerpTweenColorContext {
         LerpTweenColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            color: Value(self.color.get()),
-            tween_factor: Value(self.tween_factor.get()),
+            view: self.view,
+            transform: value,
+            color: self.color,
+            tween_factor: self.tween_factor,
         }
     }
 }
@@ -96,7 +94,7 @@ HasViewTransform<Matrix2d>
 for LerpTweenColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -109,10 +107,10 @@ for LerpTweenColorContext {
         value: Matrix2d
     ) -> LerpTweenColorContext {
         LerpTweenColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            tween_factor: Value(self.tween_factor.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            tween_factor: self.tween_factor,
+            color: self.color,
         }
     }
 }
@@ -127,11 +125,11 @@ for LerpTweenColorContext {
         polygons: Polygons<'b>
     ) -> LerpTweenPolygonsColorContext<'b> {
         LerpTweenPolygonsColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
-            tween_factor: Value(self.tween_factor.get()),
-            polygons: Value(polygons),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            tween_factor: self.tween_factor,
+            polygons: polygons,
         }
     }
 }

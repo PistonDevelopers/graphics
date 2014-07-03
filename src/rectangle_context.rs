@@ -6,13 +6,11 @@ use {
     AddImage,
     AddRound,
     BevelRectangleContext,
-    Field,
     ImageSize,
     ImageRectangleContext,
     RectangleBorderContext,
     RectangleColorContext,
     RoundRectangleContext,
-    Value,
 };
 use internal::{
     CanRectangle,
@@ -30,11 +28,11 @@ use internal::{
 /// A rectangle context.
 pub struct RectangleContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
 }
 
 impl
@@ -43,9 +41,9 @@ for RectangleContext {
     #[inline(always)]
     fn clone(&self) -> RectangleContext {
         RectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
         }
     }
 }
@@ -55,7 +53,7 @@ HasTransform<Matrix2d>
 for RectangleContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -65,9 +63,9 @@ for RectangleContext {
     #[inline(always)]
     fn transform(&self, value: Matrix2d) -> RectangleContext {
         RectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
         }
     }
 }
@@ -77,7 +75,7 @@ HasViewTransform<Matrix2d>
 for RectangleContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -90,9 +88,9 @@ for RectangleContext {
         value: Matrix2d
     ) -> RectangleContext {
         RectangleContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
         }
     }
 }
@@ -102,7 +100,7 @@ HasRectangle<Rectangle>
 for RectangleContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -112,9 +110,9 @@ for RectangleContext {
     #[inline(always)]
     fn rectangle(&self, rect: Rectangle) -> RectangleContext {
         RectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
         }
     }
 }
@@ -132,10 +130,10 @@ for RectangleContext {
         a: ColorComponent
     ) -> RectangleColorContext {
         RectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value([r, g, b, a]),
-            rect: Value(self.rect.get()),
+            view: self.view,
+            transform: self.transform,
+            color: [r, g, b, a],
+            rect: self.rect,
         }
     }
 }
@@ -147,7 +145,7 @@ fn test_rgba() {
     let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 100.0);
     let e = d.rgba(1.0, 0.0, 0.0, 1.0);
-    let color = e.color.get();
+    let color = e.color;
     assert_eq!(color[0], 1.0);
 }
 
@@ -160,10 +158,10 @@ for RectangleContext {
         radius: Radius
     ) -> RoundRectangleContext {
         RoundRectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            round_radius: radius,
         }
     }
 }
@@ -177,10 +175,10 @@ for RectangleContext {
         radius: Radius
     ) -> BevelRectangleContext {
         BevelRectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: radius,
         }
     }
 }
@@ -194,11 +192,11 @@ for RectangleContext {
     ) -> ImageRectangleContext<'b, I> {
         let (w, h) = image.get_size();
         ImageRectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            image: Value(image),
-            source_rect: Value([0, 0, w as i32, h as i32]),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            image: image,
+            source_rect: [0, 0, w as i32, h as i32],
         }
     }
 }
@@ -212,10 +210,10 @@ for RectangleContext {
         radius: f64
     ) -> RectangleBorderContext {
         RectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            border: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            border: radius,
         }
     }
 }

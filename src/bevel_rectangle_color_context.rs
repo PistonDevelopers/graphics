@@ -2,10 +2,8 @@ use {
     AddBorder,
     BackEnd,
     BevelRectangleBorderColorContext,
-    Field,
     Draw,
     ImageSize,
-    Value,
 };
 use triangulation::{
     with_round_rectangle_tri_list_xy_f32_rgba_f32
@@ -28,15 +26,15 @@ use internal::{
 /// A rectangle color context.
 pub struct BevelRectangleColorContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current bevel radius.
-    pub bevel_radius: Field<Radius>,
+    pub bevel_radius: Radius,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
 }
 
 impl
@@ -45,11 +43,11 @@ for BevelRectangleColorContext {
     #[inline(always)]
     fn clone(&self) -> BevelRectangleColorContext {
         BevelRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
         }
     }
 }
@@ -59,7 +57,7 @@ HasTransform<Matrix2d>
 for BevelRectangleColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -72,11 +70,11 @@ for BevelRectangleColorContext {
         value: Matrix2d
     ) -> BevelRectangleColorContext {
         BevelRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
         }
     }
 }
@@ -86,7 +84,7 @@ HasViewTransform<Matrix2d>
 for BevelRectangleColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -99,11 +97,11 @@ for BevelRectangleColorContext {
         value: Matrix2d
     ) -> BevelRectangleColorContext {
         BevelRectangleColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
         }
     }
 }
@@ -113,7 +111,7 @@ HasColor<Color>
 for BevelRectangleColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -123,11 +121,11 @@ for BevelRectangleColorContext {
     #[inline(always)]
     fn color(&self, value: Color) -> BevelRectangleColorContext {
         BevelRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
         }
     }
 }
@@ -137,7 +135,7 @@ HasRectangle<Rectangle>
 for BevelRectangleColorContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -150,11 +148,11 @@ for BevelRectangleColorContext {
         rect: Rectangle
     ) -> BevelRectangleColorContext {
         BevelRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
         }
     }
 }
@@ -165,9 +163,9 @@ for BevelRectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.rect.get();
-            let bevel_radius = self.bevel_radius.get();
-            let color = self.color.get();
+            let rect = self.rect;
+            let bevel_radius = self.bevel_radius;
+            let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -175,7 +173,7 @@ for BevelRectangleColorContext {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_rectangle_tri_list_xy_f32_rgba_f32(
                 2,
-                self.transform.get(),
+                self.transform,
                 rect,
                 bevel_radius,
                 color,
@@ -199,12 +197,12 @@ for BevelRectangleColorContext {
         radius: f64
     ) -> BevelRectangleBorderColorContext {
         BevelRectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            color: Value(self.color.get()),
-            border: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            color: self.color,
+            border: radius,
         }
     }
 }

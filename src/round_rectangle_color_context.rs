@@ -2,11 +2,9 @@
 use {
     AddBorder,
     BackEnd,
-    Field,
     Draw,
     ImageSize,
     RoundRectangleBorderColorContext,
-    Value,
 };
 use triangulation::{
     with_round_rectangle_tri_list_xy_f32_rgba_f32
@@ -29,15 +27,15 @@ use internal::{
 /// A round rectangle color context.
 pub struct RoundRectangleColorContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current roundness radius.
-    pub round_radius: Field<Radius>,
+    pub round_radius: Radius,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
 }
 
 impl
@@ -46,11 +44,11 @@ for RoundRectangleColorContext {
     #[inline(always)]
     fn clone(&self) -> RoundRectangleColorContext {
         RoundRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            round_radius: self.round_radius,
+            color: self.color,
         }
     }
 }
@@ -60,7 +58,7 @@ HasTransform<Matrix2d>
 for RoundRectangleColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -73,11 +71,11 @@ for RoundRectangleColorContext {
         value: Matrix2d
     ) -> RoundRectangleColorContext {
         RoundRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            round_radius: self.round_radius,
+            color: self.color,
         }
     }
 }
@@ -87,7 +85,7 @@ HasViewTransform<Matrix2d>
 for RoundRectangleColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -100,11 +98,11 @@ for RoundRectangleColorContext {
         value: Matrix2d
     ) -> RoundRectangleColorContext {
         RoundRectangleColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            round_radius: self.round_radius,
+            color: self.color,
         }
     }
 }
@@ -114,7 +112,7 @@ HasColor<Color>
 for RoundRectangleColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -127,11 +125,11 @@ for RoundRectangleColorContext {
         value: Color
     ) -> RoundRectangleColorContext {
         RoundRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            rect: self.rect,
+            round_radius: self.round_radius,
         }
     }
 }
@@ -141,7 +139,7 @@ HasRectangle<Rectangle>
 for RoundRectangleColorContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -154,11 +152,11 @@ for RoundRectangleColorContext {
         rect: Rectangle
     ) -> RoundRectangleColorContext {
         RoundRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            round_radius: Value(self.round_radius.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            round_radius: self.round_radius,
+            color: self.color,
         }
     }
 }
@@ -169,9 +167,9 @@ for RoundRectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.rect.get();
-            let round_radius = self.round_radius.get();
-            let color = self.color.get();
+            let rect = self.rect;
+            let round_radius = self.round_radius;
+            let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -179,7 +177,7 @@ for RoundRectangleColorContext {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_rectangle_tri_list_xy_f32_rgba_f32(
                 32,
-                self.transform.get(),
+                self.transform,
                 rect,
                 round_radius,
                 color,
@@ -203,12 +201,12 @@ for RoundRectangleColorContext {
         radius: f64
     ) -> RoundRectangleBorderColorContext {
         RoundRectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
-            color: Value(self.color.get()),
-            border: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            round_radius: self.round_radius,
+            color: self.color,
+            border: radius,
         }
     }
 }

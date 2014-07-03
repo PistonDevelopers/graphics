@@ -1,8 +1,6 @@
 use {
     AddColor,
-    Field,
     SquareBorderLineColorContext,
-    Value,
 };
 use internal::{
     CanTransform,
@@ -18,13 +16,13 @@ use internal::{
 /// A line context with square border information.
 pub struct SquareBorderLineContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current line.
-    pub line: Field<Line>,
+    pub line: Line,
     /// Current square border.
-    pub square_border_radius: Field<Radius>,
+    pub square_border_radius: Radius,
 }
 
 impl
@@ -33,10 +31,10 @@ for SquareBorderLineContext {
     #[inline(always)]
     fn clone(&self) -> SquareBorderLineContext {
         SquareBorderLineContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            square_border_radius: Value(self.square_border_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            square_border_radius: self.square_border_radius,
         }
     }
 }
@@ -46,7 +44,7 @@ HasTransform<Matrix2d>
 for SquareBorderLineContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -59,10 +57,10 @@ for SquareBorderLineContext {
         value: Matrix2d
     ) -> SquareBorderLineContext {
         SquareBorderLineContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            line: Value(self.line.get()),
-            square_border_radius: Value(self.square_border_radius.get()),
+            view: self.view,
+            transform: value,
+            line: self.line,
+            square_border_radius: self.square_border_radius,
         }
     }
 }
@@ -72,7 +70,7 @@ HasViewTransform<Matrix2d>
 for SquareBorderLineContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -85,10 +83,10 @@ for SquareBorderLineContext {
         value: Matrix2d
     ) -> SquareBorderLineContext {
         SquareBorderLineContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            square_border_radius: Value(self.square_border_radius.get()),
+            view: value,
+            transform: self.transform,
+            line: self.line,
+            square_border_radius: self.square_border_radius,
         }
     }
 }
@@ -106,11 +104,11 @@ for SquareBorderLineContext {
         a: ColorComponent
     ) -> SquareBorderLineColorContext {
         SquareBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value([r, g, b, a]),
-            square_border_radius: Value(self.square_border_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: [r, g, b, a],
+            square_border_radius: self.square_border_radius,
         }
     }
 }

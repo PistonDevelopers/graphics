@@ -1,10 +1,8 @@
 
 use {
     BackEnd,
-    Field,
     ImageSize,
     Draw,
-    Value,
 };
 use triangulation::{
     with_round_border_line_tri_list_xy_f32_rgba_f32
@@ -25,15 +23,15 @@ use internal::{
 /// A line context with round border information.
 pub struct RoundBorderLineColorContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current line.
-    pub line: Field<Line>,
+    pub line: Line,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
     /// Current round border.
-    pub round_border_radius: Field<Radius>,
+    pub round_border_radius: Radius,
 }
 
 impl
@@ -42,11 +40,11 @@ for RoundBorderLineColorContext {
     #[inline(always)]
     fn clone(&self) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value(self.color.get()),
-            round_border_radius: Value(self.round_border_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: self.color,
+            round_border_radius: self.round_border_radius,
         }
     }
 }
@@ -56,7 +54,7 @@ HasTransform<Matrix2d>
 for RoundBorderLineColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -69,11 +67,11 @@ for RoundBorderLineColorContext {
         value: Matrix2d
     ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            line: Value(self.line.get()),
-            color: Value(self.color.get()),
-            round_border_radius: Value(self.round_border_radius.get()),
+            view: self.view,
+            transform: value,
+            line: self.line,
+            color: self.color,
+            round_border_radius: self.round_border_radius,
         }
     }
 }
@@ -83,7 +81,7 @@ HasViewTransform<Matrix2d>
 for RoundBorderLineColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -96,11 +94,11 @@ for RoundBorderLineColorContext {
         value: Matrix2d
     ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            round_border_radius: Value(self.round_border_radius.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            line: self.line,
+            round_border_radius: self.round_border_radius,
+            color: self.color,
         }
     }
 }
@@ -110,7 +108,7 @@ HasColor<Color>
 for RoundBorderLineColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -123,11 +121,11 @@ for RoundBorderLineColorContext {
         value: Color
     ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value(value),
-            round_border_radius: Value(self.round_border_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: value,
+            round_border_radius: self.round_border_radius,
         }
     }
 }
@@ -138,9 +136,9 @@ for RoundBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let line = self.line.get();
-            let round_border_radius = self.round_border_radius.get();
-            let color = self.color.get();
+            let line = self.line;
+            let round_border_radius = self.round_border_radius;
+            let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -148,7 +146,7 @@ for RoundBorderLineColorContext {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_border_line_tri_list_xy_f32_rgba_f32(
                 64,
-                self.transform.get(),
+                self.transform,
                 line,
                 round_border_radius,
                 color,

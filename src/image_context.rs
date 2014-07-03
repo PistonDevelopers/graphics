@@ -3,11 +3,9 @@ use {
     AddRectangle,
     BackEnd,
     Draw,
-    Field,
     ImageSize,
     ImageColorContext,
     ImageRectangleContext,
-    Value,
 };
 use triangulation::{
     rect_tri_list_xy_f32,
@@ -33,13 +31,13 @@ use internal::{
 /// An image context.
 pub struct ImageContext<'b, I> {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current image.
-    pub image: Field<&'b I>,
+    pub image: &'b I,
     /// Current source rectangle.
-    pub source_rect: Field<SourceRectangle>,
+    pub source_rect: SourceRectangle,
 }
 
 impl<'b, I> 
@@ -48,10 +46,10 @@ for ImageContext<'b, I> {
     #[inline(always)]
     fn clone(&self) -> ImageContext<'b, I> {
         ImageContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            image: Value(self.image.get()),
-            source_rect: Value(self.source_rect.get()),
+            view: self.view,
+            transform: self.transform,
+            image: self.image,
+            source_rect: self.source_rect,
         }
     }
 }
@@ -61,7 +59,7 @@ HasTransform<Matrix2d>
 for ImageContext<'b, I> {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -74,10 +72,10 @@ for ImageContext<'b, I> {
         value: Matrix2d
     ) -> ImageContext<'b, I> {
         ImageContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            image: Value(self.image.get()),
-            source_rect: Value(self.source_rect.get()),
+            view: self.view,
+            transform: value,
+            image: self.image,
+            source_rect: self.source_rect,
         }
     }
 }
@@ -87,7 +85,7 @@ HasViewTransform<Matrix2d>
 for ImageContext<'b, I> {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -100,10 +98,10 @@ for ImageContext<'b, I> {
         value: Matrix2d
     ) -> ImageContext<'b, I> {
         ImageContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            image: Value(self.image.get()),
-            source_rect: Value(self.source_rect.get()),
+            view: value,
+            transform: self.transform,
+            image: self.image,
+            source_rect: self.source_rect,
         }
     }
 }
@@ -125,11 +123,11 @@ for ImageContext<'b, I> {
     #[inline(always)]
     fn color(&self, value: Color) -> ImageColorContext<'b, I> {
         ImageColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            image: Value(self.image.get()),
-            source_rect: Value(self.source_rect.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            image: self.image,
+            source_rect: self.source_rect,
         }
     }
 }
@@ -139,7 +137,7 @@ HasSourceRectangle<SourceRectangle>
 for ImageContext<'b, I> {
     #[inline(always)]
     fn get_source_rectangle(&self) -> SourceRectangle {
-        self.source_rect.get()
+        self.source_rect
     }
 }
 
@@ -152,10 +150,10 @@ for ImageContext<'b, I> {
         source_rect: SourceRectangle
     ) -> ImageContext<'b, I> {
         ImageContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            image: Value(self.image.get()),
-            source_rect: Value(source_rect),
+            view: self.view,
+            transform: self.transform,
+            image: self.image,
+            source_rect: source_rect,
         }
     }
 }
@@ -172,11 +170,11 @@ for ImageContext<'b, I> {
         h: Scalar
     ) -> ImageRectangleContext<'b, I> {
         ImageRectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value([x, y, w, h]),
-            image: Value(self.image.get()),
-            source_rect: Value(self.source_rect.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: [x, y, w, h],
+            image: self.image,
+            source_rect: self.source_rect,
         }
     }
 }
@@ -189,8 +187,8 @@ for ImageContext<'b, I> {
         if back_end.supports_single_texture()
         && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
             let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
-            let texture = self.image.get();
-            let source_rect = self.source_rect.get();
+            let texture = self.image;
+            let source_rect = self.source_rect;
             let rect = [
                 0.0, 
                 0.0, 
@@ -206,7 +204,7 @@ for ImageContext<'b, I> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                rect_tri_list_xy_f32(self.transform.get(), rect),
+                rect_tri_list_xy_f32(self.transform, rect),
                 rect_tri_list_rgba_f32(color),
                 rect_tri_list_uv_f32(texture, source_rect)
             );
@@ -230,11 +228,11 @@ for ImageContext<'b, I> {
         a: ColorComponent
     ) -> ImageColorContext<'b, I> {
         ImageColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            image: Value(self.image.get()),
-            source_rect: Value(self.source_rect.get()),
-            color: Value([r, g, b, a]),
+            view: self.view,
+            transform: self.transform,
+            image: self.image,
+            source_rect: self.source_rect,
+            color: [r, g, b, a],
         }
     }
 }

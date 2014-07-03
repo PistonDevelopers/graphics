@@ -9,14 +9,12 @@ use {
     AddTween,
     ColorContext,
     EllipseContext,
-    Field,
     ImageSize,
     ImageContext,
     LineContext,
     PolygonContext,
     RectangleContext,
     LerpTweenContext,
-    Value,
 };
 use internal::{
     CanTransform,
@@ -32,9 +30,9 @@ use internal::{
 /// Drawing 2d context.
 pub struct Context {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
 }
 
 impl
@@ -43,8 +41,8 @@ for Context {
     #[inline(always)]
     fn clone(&self) -> Context {
         Context {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
+            view: self.view,
+            transform: self.transform,
         }
     }
 }
@@ -54,7 +52,7 @@ HasTransform<Matrix2d>
 for Context {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -64,8 +62,8 @@ for Context {
     #[inline(always)]
     fn transform(&self, value: Matrix2d) -> Context {
         Context {
-            view: Value(self.view.get()),
-            transform: Value(value),
+            view: self.view,
+            transform: value,
         }
     }
 }
@@ -75,7 +73,7 @@ HasViewTransform<Matrix2d>
 for Context {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -85,8 +83,8 @@ for Context {
     #[inline(always)]
     fn view_transform(&self, value: Matrix2d) -> Context {
         Context {
-            view: Value(value),
-            transform: Value(self.transform.get()),
+            view: value,
+            transform: self.transform,
         }
     }
 }
@@ -97,14 +95,14 @@ Context {
     #[inline(always)]
     pub fn new() -> Context {
         Context {
-            view:  Value(
+            view:
                 [1.0, 0.0, 0.0,
                  0.0, 1.0, 0.0]
-            ),
-            transform: Value(
+            ,
+            transform:
                 [1.0, 0.0, 0.0,
                  0.0, 1.0, 0.0]
-            ),
+            ,
         }
     }
 
@@ -125,8 +123,8 @@ Context {
         let mat = [ sx, 0.0, -1.0,
                    0.0,  sy, 1.0 ];
         Context {
-            view: Value(mat),
-            transform: Value(mat),
+            view: mat,
+            transform: mat,
         }
     }
 }
@@ -177,9 +175,9 @@ for Context {
         h: Scalar
     ) -> RectangleContext {
         RectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value([x, y, w, h]),
+            view: self.view,
+            transform: self.transform,
+            rect: [x, y, w, h],
         }
     }
 }
@@ -204,9 +202,9 @@ for Context {
         a: ColorComponent
     ) -> ColorContext {
         ColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value([r, g, b, a]),
+            view: self.view,
+            transform: self.transform,
+            color: [r, g, b, a],
         }
     }
 }
@@ -215,7 +213,7 @@ for Context {
 fn test_rgba() {
     let c = Context::new();
     let d: ColorContext = c.rgba(1.0, 0.0, 0.0, 1.0);
-    let color = d.color.get();
+    let color = d.color;
     assert_eq!(color[0], 1.0);
 }
 
@@ -231,9 +229,9 @@ for Context {
         h: Scalar
     ) -> EllipseContext {
         EllipseContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value([x, y, w, h]),
+            view: self.view,
+            transform: self.transform,
+            rect: [x, y, w, h],
         }
     }
 }
@@ -242,7 +240,7 @@ for Context {
 fn test_ellipse() {
     let c = Context::new();
     let d: EllipseContext = c.ellipse(0.0, 0.0, 100.0, 100.0);
-    let rect = d.rect.get();    
+    let rect = d.rect;    
     assert_eq!(rect[2], 100.0);
 }
 
@@ -255,9 +253,9 @@ for Context {
         polygon: Polygon<'b>
     ) -> PolygonContext<'b> {
         PolygonContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            polygon: Value(polygon),
+            view: self.view,
+            transform: self.transform,
+            polygon: polygon,
         }
     }
 }
@@ -269,10 +267,10 @@ for Context {
     fn image(&self, image: &'b I) -> ImageContext<'b, I> {
         let (w, h) = image.get_size();
         ImageContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            image: Value(image),
-            source_rect: Value([0, 0, w as i32, h as i32]),
+            view: self.view,
+            transform: self.transform,
+            image: image,
+            source_rect: [0, 0, w as i32, h as i32],
         }
     }
 }
@@ -283,9 +281,9 @@ for Context {
     #[inline(always)]
     fn lerp(&self, tween_factor: Scalar) -> LerpTweenContext {
         LerpTweenContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            tween_factor: Value(tween_factor),
+            view: self.view,
+            transform: self.transform,
+            tween_factor: tween_factor,
         }
     }
 }
@@ -302,9 +300,9 @@ for Context {
         y2: Scalar
     ) -> LineContext {
         LineContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value([x1, y1, x2, y2]),
+            view: self.view,
+            transform: self.transform,
+            line: [x1, y1, x2, y2],
         }
     }
 }

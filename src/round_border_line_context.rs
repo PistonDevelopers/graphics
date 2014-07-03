@@ -1,9 +1,7 @@
 
 use {
     AddColor,
-    Field,
     RoundBorderLineColorContext,
-    Value,
 };
 use internal::{
     CanTransform,
@@ -19,13 +17,13 @@ use internal::{
 /// A line context with round border information.
 pub struct RoundBorderLineContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current line.
-    pub line: Field<Line>,
+    pub line: Line,
     /// Current round border.
-    pub round_border_radius: Field<Radius>,
+    pub round_border_radius: Radius,
 }
 
 impl
@@ -34,10 +32,10 @@ for RoundBorderLineContext {
     #[inline(always)]   
     fn clone(&self) -> RoundBorderLineContext {
         RoundBorderLineContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            round_border_radius: Value(self.round_border_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            round_border_radius: self.round_border_radius,
         }
     }
 }
@@ -47,7 +45,7 @@ HasTransform<Matrix2d>
 for RoundBorderLineContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -60,10 +58,10 @@ for RoundBorderLineContext {
         value: Matrix2d
     ) -> RoundBorderLineContext {
         RoundBorderLineContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            line: Value(self.line.get()),
-            round_border_radius: Value(self.round_border_radius.get()),
+            view: self.view,
+            transform: value,
+            line: self.line,
+            round_border_radius: self.round_border_radius,
         }
     }
 }
@@ -73,7 +71,7 @@ HasViewTransform<Matrix2d>
 for RoundBorderLineContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -86,10 +84,10 @@ for RoundBorderLineContext {
         value: Matrix2d
     ) -> RoundBorderLineContext {
         RoundBorderLineContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            round_border_radius: Value(self.round_border_radius.get()),
+            view: value,
+            transform: self.transform,
+            line: self.line,
+            round_border_radius: self.round_border_radius,
         }
     }
 }
@@ -106,11 +104,11 @@ for RoundBorderLineContext {
         a: ColorComponent
     ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value([r, g, b, a]),
-            round_border_radius: Value(self.round_border_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: [r, g, b, a],
+            round_border_radius: self.round_border_radius,
         }
     }
 }

@@ -1,9 +1,7 @@
 use {
     BackEnd,
-    Field,
     Draw,
     ImageSize,
-    Value,
 };
 use triangulation::{
     with_polygon_tri_list_xy_f32_rgba_f32
@@ -23,13 +21,13 @@ use internal::{
 /// A polygon color context.
 pub struct PolygonColorContext<'b> {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
     /// Current polygon.
-    pub polygon: Field<Polygon<'b>>,
+    pub polygon: Polygon<'b>,
 }
 
 impl<'b> 
@@ -38,10 +36,10 @@ for PolygonColorContext<'b> {
     #[inline(always)]
     fn clone(&self) -> PolygonColorContext<'b> {
         PolygonColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            polygon: Value(self.polygon.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            polygon: self.polygon,
+            color: self.color,
         }
     }
 }
@@ -51,7 +49,7 @@ HasTransform<Matrix2d>
 for PolygonColorContext<'b> {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -64,10 +62,10 @@ for PolygonColorContext<'b> {
         value: Matrix2d
     ) -> PolygonColorContext<'b> {
         PolygonColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            polygon: Value(self.polygon.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: value,
+            polygon: self.polygon,
+            color: self.color,
         }
     }
 }
@@ -77,7 +75,7 @@ HasViewTransform<Matrix2d>
 for PolygonColorContext<'b> {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -90,10 +88,10 @@ for PolygonColorContext<'b> {
         value: Matrix2d
     ) -> PolygonColorContext<'b> {
         PolygonColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            polygon: Value(self.polygon.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            polygon: self.polygon,
+            color: self.color,
         }
     }
 }
@@ -103,7 +101,7 @@ HasColor<Color>
 for PolygonColorContext<'b> {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -113,10 +111,10 @@ for PolygonColorContext<'b> {
     #[inline(always)]
     fn color(&self, value: Color) -> PolygonColorContext<'b> {
         PolygonColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            polygon: Value(self.polygon.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            polygon: self.polygon,
         }
     }
 }
@@ -127,15 +125,15 @@ for PolygonColorContext<'b> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let polygon = self.polygon.get();
-            let color = self.color.get();
+            let polygon = self.polygon;
+            let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_polygon_tri_list_xy_f32_rgba_f32(
-                self.transform.get(),
+                self.transform,
                 polygon,
                 color,
                 |vertices, colors| {

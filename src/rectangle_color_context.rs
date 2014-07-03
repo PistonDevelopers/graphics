@@ -6,13 +6,11 @@ use {
     AddRound,
     BackEnd,
     BevelRectangleColorContext,
-    Field,
     Draw,
     ImageSize,
     ImageRectangleColorContext,
     RectangleBorderColorContext,
     RoundRectangleColorContext,
-    Value,
 };
 use triangulation::{
     rect_tri_list_xy_f32,
@@ -35,13 +33,13 @@ use internal::{
 /// A rectangle color context.
 pub struct RectangleColorContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
 }
 
 impl
@@ -50,10 +48,10 @@ for RectangleColorContext {
     #[inline(always)]
     fn clone(&self) -> RectangleColorContext {
         RectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            color: self.color,
         }
     }
 }
@@ -63,7 +61,7 @@ HasTransform<Matrix2d>
 for RectangleColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -76,10 +74,10 @@ for RectangleColorContext {
         value: Matrix2d
     ) -> RectangleColorContext {
         RectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            color: self.color,
         }
     }
 }
@@ -89,7 +87,7 @@ HasViewTransform<Matrix2d>
 for RectangleColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -102,10 +100,10 @@ for RectangleColorContext {
         value: Matrix2d
     ) -> RectangleColorContext {
         RectangleColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            color: self.color,
         }
     }
 }
@@ -115,7 +113,7 @@ HasColor<Color>
 for RectangleColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -125,10 +123,10 @@ for RectangleColorContext {
     #[inline(always)]
     fn color(&self, value: Color) -> RectangleColorContext {
         RectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            rect: Value(self.rect.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            rect: self.rect,
         }
     }
 }
@@ -138,7 +136,7 @@ HasRectangle<Rectangle>
 for RectangleColorContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -151,10 +149,10 @@ for RectangleColorContext {
         rect: Rectangle
     ) -> RectangleColorContext {
         RectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            color: self.color,
         }
     }
 }
@@ -165,15 +163,15 @@ for RectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.rect.get();
-            let color = self.color.get();
+            let rect = self.rect;
+            let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.tri_list_xy_f32_rgba_f32(
-                rect_tri_list_xy_f32(self.transform.get(), rect),
+                rect_tri_list_xy_f32(self.transform, rect),
                 rect_tri_list_rgba_f32(color)
             );
             if needs_alpha { back_end.disable_alpha_blend(); }
@@ -192,11 +190,11 @@ for RectangleColorContext {
         radius: f64
     ) -> RoundRectangleColorContext {
         RoundRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            rect: self.rect,
+            round_radius: radius,
         }
     }
 }
@@ -210,11 +208,11 @@ for RectangleColorContext {
         radius: f64
     ) -> BevelRectangleColorContext {
         BevelRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            rect: self.rect,
+            bevel_radius: radius,
         }
     }
 }
@@ -228,12 +226,12 @@ for RectangleColorContext {
     ) -> ImageRectangleColorContext<'b, I> {
         let (w, h) = image.get_size();
         ImageRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            image: Value(image),
-            source_rect: Value([0, 0, w as i32, h as i32]),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            image: image,
+            source_rect: [0, 0, w as i32, h as i32],
+            color: self.color,
         }
     }
 }
@@ -247,11 +245,11 @@ for RectangleColorContext {
         radius: f64
     ) -> RectangleBorderColorContext {
         RectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
-            border: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            color: self.color,
+            border: radius,
         }
     }
 }

@@ -1,10 +1,8 @@
 use {
     AddColor,
     AddPolygons,
-    Field,
     LerpTweenColorContext,
     LerpTweenPolygonsContext,
-    Value,
 };
 use internal::{
     CanTransform,
@@ -20,11 +18,11 @@ use internal::{
 /// An animation inbetweening context.
 pub struct LerpTweenContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Animation inbetweening factor.
-    pub tween_factor: Field<Scalar>,
+    pub tween_factor: Scalar,
 }
 
 impl
@@ -33,9 +31,9 @@ for LerpTweenContext {
     #[inline(always)]
     fn clone(&self) -> LerpTweenContext {
         LerpTweenContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            tween_factor: Value(self.tween_factor.get()),
+            view: self.view,
+            transform: self.transform,
+            tween_factor: self.tween_factor,
         }
     }
 }
@@ -52,10 +50,10 @@ for LerpTweenContext {
         a: ColorComponent
     ) -> LerpTweenColorContext {
         LerpTweenColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            tween_factor: Value(self.tween_factor.get()),
-            color: Value([r, g, b, a]),
+            view: self.view,
+            transform: self.transform,
+            tween_factor: self.tween_factor,
+            color: [r, g, b, a],
         }
     }
 }
@@ -69,10 +67,10 @@ for LerpTweenContext {
         polygons: Polygons<'b>
     ) -> LerpTweenPolygonsContext<'b> {
         LerpTweenPolygonsContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            tween_factor: Value(self.tween_factor.get()),
-            polygons: Value(polygons),
+            view: self.view,
+            transform: self.transform,
+            tween_factor: self.tween_factor,
+            polygons: polygons,
         }
     }
 }
@@ -82,7 +80,7 @@ HasTransform<Matrix2d>
 for LerpTweenContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -95,9 +93,9 @@ for LerpTweenContext {
         value: Matrix2d
     ) -> LerpTweenContext {
         LerpTweenContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            tween_factor: Value(self.tween_factor.get()),
+            view: self.view,
+            transform: value,
+            tween_factor: self.tween_factor,
         }
     }
 }
@@ -107,7 +105,7 @@ HasViewTransform<Matrix2d>
 for LerpTweenContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -120,9 +118,9 @@ for LerpTweenContext {
         value: Matrix2d
     ) -> LerpTweenContext {
         LerpTweenContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            tween_factor: Value(self.tween_factor.get()),
+            view: value,
+            transform: self.transform,
+            tween_factor: self.tween_factor,
         }
     }
 }

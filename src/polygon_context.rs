@@ -1,8 +1,6 @@
 use {
     AddColor,
-    Field,
     PolygonColorContext,
-    Value,
 };
 use internal::{
     CanTransform,
@@ -17,11 +15,11 @@ use internal::{
 /// A polygon context.
 pub struct PolygonContext<'b> {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current polygon.
-    pub polygon: Field<Polygon<'b>>
+    pub polygon: Polygon<'b>
 }
 
 impl<'b> 
@@ -30,9 +28,9 @@ for PolygonContext<'b> {
     #[inline(always)]
     fn clone(&self) -> PolygonContext<'b> {
         PolygonContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            polygon: Value(self.polygon.get()),
+            view: self.view,
+            transform: self.transform,
+            polygon: self.polygon,
         }
     }
 }
@@ -42,7 +40,7 @@ HasTransform<Matrix2d>
 for PolygonContext<'b> {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -55,9 +53,9 @@ for PolygonContext<'b> {
         value: Matrix2d
     ) -> PolygonContext<'b> {
         PolygonContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            polygon: Value(self.polygon.get()),
+            view: self.view,
+            transform: value,
+            polygon: self.polygon,
         }
     }
 }
@@ -67,7 +65,7 @@ HasViewTransform<Matrix2d>
 for PolygonContext<'b> {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -80,9 +78,9 @@ for PolygonContext<'b> {
         value: Matrix2d
     ) -> PolygonContext<'b> {
         PolygonContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            polygon: Value(self.polygon.get()),
+            view: value,
+            transform: self.transform,
+            polygon: self.polygon,
         }
     }
 }
@@ -99,10 +97,10 @@ for PolygonContext<'b> {
         a: ColorComponent
     ) -> PolygonColorContext<'b> {
         PolygonColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value([r, g, b, a]),
-            polygon: Value(self.polygon.get()),
+            view: self.view,
+            transform: self.transform,
+            color: [r, g, b, a],
+            polygon: self.polygon,
         }
     }
 }

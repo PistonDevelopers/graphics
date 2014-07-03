@@ -1,8 +1,6 @@
 use {
     AddColor,
-    Field,
     BevelRectangleBorderColorContext,
-    Value,
 };
 use internal::{
     CanRectangle,
@@ -20,15 +18,15 @@ use internal::{
 /// A bevel rectangle border context.
 pub struct BevelRectangleBorderContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current bevel radius.
-    pub bevel_radius: Field<Radius>,
+    pub bevel_radius: Radius,
     /// Current border.
-    pub border: Field<Radius>,
+    pub border: Radius,
 }
 
 impl
@@ -37,11 +35,11 @@ for BevelRectangleBorderContext {
     #[inline(always)]
     fn clone(&self) -> BevelRectangleBorderContext {
         BevelRectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            border: self.border,
         }
     }
 }
@@ -51,7 +49,7 @@ HasTransform<Matrix2d>
 for BevelRectangleBorderContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -64,11 +62,11 @@ for BevelRectangleBorderContext {
         value: Matrix2d
     ) -> BevelRectangleBorderContext {
         BevelRectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            border: self.border,
         }
     }
 }
@@ -78,7 +76,7 @@ HasViewTransform<Matrix2d>
 for BevelRectangleBorderContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -91,11 +89,11 @@ for BevelRectangleBorderContext {
         value: Matrix2d
     ) -> BevelRectangleBorderContext {
         BevelRectangleBorderContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            border: Value(self.border.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            border: self.border,
         }
     }
 }
@@ -105,7 +103,7 @@ HasRectangle<Rectangle>
 for BevelRectangleBorderContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -118,11 +116,11 @@ for BevelRectangleBorderContext {
         rect: Rectangle
     ) -> BevelRectangleBorderContext {
         BevelRectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            bevel_radius: Value(self.bevel_radius.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            bevel_radius: self.bevel_radius,
+            border: self.border,
         }
     }
 }
@@ -139,12 +137,12 @@ for BevelRectangleBorderContext {
         a: ColorComponent
     ) -> BevelRectangleBorderColorContext {
         BevelRectangleBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value([r, g, b, a]),
-            rect: Value(self.rect.get()),
-            bevel_radius: Value(self.bevel_radius.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            color: [r, g, b, a],
+            rect: self.rect,
+            bevel_radius: self.bevel_radius,
+            border: self.border,
         }
     }
 }

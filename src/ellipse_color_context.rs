@@ -3,10 +3,8 @@ use {
     AddBorder,
     BackEnd,
     EllipseBorderColorContext,
-    Field,
     Draw,
     ImageSize,
-    Value,
 };
 use triangulation::{
     with_ellipse_tri_list_xy_f32_rgba_f32
@@ -28,13 +26,13 @@ use internal::{
 /// An ellipse color context.
 pub struct EllipseColorContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
 }
 
 impl
@@ -43,10 +41,10 @@ for EllipseColorContext {
     #[inline(always)]
     fn clone(&self) -> EllipseColorContext {
         EllipseColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            color: self.color,
         }
     }
 }
@@ -56,7 +54,7 @@ HasTransform<Matrix2d>
 for EllipseColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -66,10 +64,10 @@ for EllipseColorContext {
     #[inline(always)]
     fn transform(&self, value: Matrix2d) -> EllipseColorContext {
         EllipseColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            color: self.color,
         }
     }
 }
@@ -79,7 +77,7 @@ HasViewTransform<Matrix2d>
 for EllipseColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -92,10 +90,10 @@ for EllipseColorContext {
         value: Matrix2d
     ) -> EllipseColorContext {
         EllipseColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            color: self.color,
         }
     }
 }
@@ -105,7 +103,7 @@ HasColor<Color>
 for EllipseColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -115,10 +113,10 @@ for EllipseColorContext {
     #[inline(always)]
     fn color(&self, value: Color) -> EllipseColorContext {
         EllipseColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            rect: Value(self.rect.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            rect: self.rect,
         }
     }
 }
@@ -128,7 +126,7 @@ HasRectangle<Rectangle>
 for EllipseColorContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -141,10 +139,10 @@ for EllipseColorContext {
         rect: Rectangle
     ) -> EllipseColorContext {
         EllipseColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            color: self.color,
         }
     }
 }
@@ -155,8 +153,8 @@ for EllipseColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.rect.get();
-            let color = self.color.get();
+            let rect = self.rect;
+            let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -164,7 +162,7 @@ for EllipseColorContext {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_ellipse_tri_list_xy_f32_rgba_f32(
                 128,
-                self.transform.get(),
+                self.transform,
                 rect,
                 color,
                 |vertices, colors| {
@@ -187,11 +185,11 @@ for EllipseColorContext {
         radius: f64
     ) -> EllipseBorderColorContext {
         EllipseBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
-            border: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            color: self.color,
+            border: radius,
         }
     }
 }

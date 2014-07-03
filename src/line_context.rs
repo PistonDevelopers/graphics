@@ -5,11 +5,9 @@ use {
     AddRoundBorder,
     AddSquareBorder,
     BevelBorderLineContext,
-    Field,
     LineColorContext,
     RoundBorderLineContext,
     SquareBorderLineContext,
-    Value,
 };
 use internal::{
     CanTransform,
@@ -25,11 +23,11 @@ use internal::{
 /// A line context.
 pub struct LineContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current line.
-    pub line: Field<Line>,
+    pub line: Line,
 }
 
 impl<'a> 
@@ -38,9 +36,9 @@ LineContext {
     #[inline(always)]
     fn clone(&self) -> LineContext {
         LineContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
         }
     }
 }
@@ -50,7 +48,7 @@ HasTransform<Matrix2d>
 for LineContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -60,9 +58,9 @@ for LineContext {
     #[inline(always)]
     fn transform(&self, value: Matrix2d) -> LineContext {
         LineContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            line: Value(self.line.get()),
+            view: self.view,
+            transform: value,
+            line: self.line,
         }
     }
 }
@@ -72,7 +70,7 @@ HasViewTransform<Matrix2d>
 for LineContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -85,9 +83,9 @@ for LineContext {
         value: Matrix2d
     ) -> LineContext {
         LineContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
+            view: value,
+            transform: self.transform,
+            line: self.line,
         }
     }
 }
@@ -104,10 +102,10 @@ for LineContext {
         a: ColorComponent
     ) -> LineColorContext {
         LineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value([r, g, b, a]),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: [r, g, b, a],
         }
     }
 }
@@ -121,10 +119,10 @@ for LineContext {
         radius: Radius
     ) -> RoundBorderLineContext {
         RoundBorderLineContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            round_border_radius: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            round_border_radius: radius,
         }
     }
 }
@@ -138,10 +136,10 @@ for LineContext {
         radius: Radius
     ) -> BevelBorderLineContext {
         BevelBorderLineContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            bevel_border_radius: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            bevel_border_radius: radius,
         }
     }
 }
@@ -155,10 +153,10 @@ for LineContext {
         radius: Radius
     ) -> SquareBorderLineContext {
         SquareBorderLineContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            square_border_radius: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            square_border_radius: radius,
         }
     }
 }

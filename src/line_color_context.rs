@@ -4,10 +4,8 @@ use {
     AddRoundBorder,
     AddSquareBorder,
     BevelBorderLineColorContext,
-    Field,
     RoundBorderLineColorContext,
     SquareBorderLineColorContext,
-    Value,
 };
 use internal::{
     CanColor,
@@ -25,13 +23,13 @@ use internal::{
 /// A line context.
 pub struct LineColorContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current line.
-    pub line: Field<Line>,
+    pub line: Line,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
 }
 
 impl
@@ -40,10 +38,10 @@ for LineColorContext {
     #[inline(always)]
     fn clone(&self) -> LineColorContext {
         LineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: self.color,
         }
     }
 }
@@ -53,7 +51,7 @@ HasTransform<Matrix2d>
 for LineColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -66,10 +64,10 @@ for LineColorContext {
         value: Matrix2d
     ) -> LineColorContext {
         LineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            line: Value(self.line.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: value,
+            line: self.line,
+            color: self.color,
         }
     }
 }
@@ -79,7 +77,7 @@ HasViewTransform<Matrix2d>
 for LineColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -92,10 +90,10 @@ for LineColorContext {
         value: Matrix2d
     ) -> LineColorContext {
         LineColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            line: self.line,
+            color: self.color,
         }
     }
 }
@@ -105,7 +103,7 @@ HasColor<Color>
 for LineColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -115,10 +113,10 @@ for LineColorContext {
     #[inline(always)]
     fn color(&self, value: Color) -> LineColorContext {
         LineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value(value),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: value,
         }
     }
 }
@@ -132,11 +130,11 @@ for LineColorContext {
         radius: Radius
     ) -> RoundBorderLineColorContext {
         RoundBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            round_border_radius: Value(radius),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            round_border_radius: radius,
+            color: self.color,
         }
     }
 }
@@ -150,11 +148,11 @@ for LineColorContext {
         radius: Radius
     ) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            bevel_border_radius: Value(radius),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            bevel_border_radius: radius,
+            color: self.color,
         }
     }
 }
@@ -168,11 +166,11 @@ for LineColorContext {
         radius: Radius
     ) -> SquareBorderLineColorContext {
         SquareBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            square_border_radius: Value(radius),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            square_border_radius: radius,
+            color: self.color,
         }
     }
 }

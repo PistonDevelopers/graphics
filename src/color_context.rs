@@ -9,14 +9,12 @@ use {
     BackEnd,
     Draw,
     EllipseColorContext,
-    Field,
     ImageSize,
     ImageColorContext,
     LineColorContext,
     PolygonColorContext,
     RectangleColorContext,
     LerpTweenColorContext,
-    Value,
 };
 use internal::{
     CanColor,
@@ -34,11 +32,11 @@ use internal::{
 /// A context with color information.
 pub struct ColorContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
 }
 
 impl
@@ -47,9 +45,9 @@ for ColorContext {
     #[inline(always)]
     fn clone(&self) -> ColorContext {
         ColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
         }
     }
 }
@@ -59,7 +57,7 @@ HasTransform<Matrix2d>
 for ColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -69,9 +67,9 @@ for ColorContext {
     #[inline(always)]
     fn transform(&self, value: Matrix2d) -> ColorContext {
         ColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: value,
+            color: self.color,
         }
     }
 }
@@ -81,7 +79,7 @@ HasViewTransform<Matrix2d>
 for ColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -94,9 +92,9 @@ for ColorContext {
         value: Matrix2d
     ) -> ColorContext {
         ColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
+            view: value,
+            transform: self.transform,
+            color: self.color,
         }
     }
 }
@@ -106,7 +104,7 @@ HasColor<Color>
 for ColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -116,9 +114,9 @@ for ColorContext {
     #[inline(always)]
     fn color(&self, value: Color) -> ColorContext {
         ColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
+            view: self.view,
+            transform: self.transform,
+            color: value,
         }
     }
 }
@@ -135,10 +133,10 @@ for ColorContext {
         h: Scalar
     ) -> RectangleColorContext {
         RectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
-            rect: Value([x, y, w, h]),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            rect: [x, y, w, h],
         }
     }
 }
@@ -150,7 +148,7 @@ fn test_rect() {
     let c = Context::new();
     let color = c.rgba(1.0, 0.0, 0.0, 1.0);
     let color_rect = color.rect(0.0, 0.0, 100.0, 100.0);
-    let rect_color = color_rect.rect.get();
+    let rect_color = color_rect.rect;
     assert_eq!(rect_color[2], 100.0);
 }
 
@@ -166,10 +164,10 @@ for ColorContext {
         h: Scalar
     ) -> EllipseColorContext {
         EllipseColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
-            rect: Value([x, y, w, h]),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            rect: [x, y, w, h],
         }
     }
 }
@@ -183,10 +181,10 @@ for ColorContext {
         polygon: Polygon<'b>
     ) -> PolygonColorContext<'b> {
         PolygonColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
-            polygon: Value(polygon),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            polygon: polygon,
         }
     }
 }
@@ -200,10 +198,10 @@ for ColorContext {
         tween_factor: Scalar
     ) -> LerpTweenColorContext {
         LerpTweenColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(self.color.get()),
-            tween_factor: Value(tween_factor),
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            tween_factor: tween_factor,
         }
     }
 }
@@ -213,7 +211,7 @@ Draw<B, I>
 for ColorContext {
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
-            let color = self.color.get();
+            let color = self.color;
             back_end.clear_rgba(color[0], color[1], color[2], color[3]);
         }
     }
@@ -226,11 +224,11 @@ for ColorContext {
     fn image(&self, image: &'b I) -> ImageColorContext<'b, I> {
         let (w, h) = image.get_size();
         ImageColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            image: Value(image),
-            source_rect: Value([0, 0, w as i32, h as i32]),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            image: image,
+            source_rect: [0, 0, w as i32, h as i32],
+            color: self.color,
         }
     }
 }
@@ -247,10 +245,10 @@ for ColorContext {
         y2: Scalar
     ) -> LineColorContext {
         LineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value([x1, y1, x2, y2]),
-            color: Value(self.color.get()),
+            view: self.view,
+            transform: self.transform,
+            line: [x1, y1, x2, y2],
+            color: self.color,
         }
     }
 }

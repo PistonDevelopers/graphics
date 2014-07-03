@@ -1,10 +1,8 @@
 
 use {
     BackEnd,
-    Field,
     ImageSize,
     Draw,
-    Value,
 };
 use triangulation::{
     with_round_border_line_tri_list_xy_f32_rgba_f32
@@ -25,15 +23,15 @@ use internal::{
 /// A line context with bevel border information.
 pub struct BevelBorderLineColorContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current line.
-    pub line: Field<Line>,
+    pub line: Line,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
     /// Current bevel border.
-    pub bevel_border_radius: Field<Radius>,
+    pub bevel_border_radius: Radius,
 }
 
 impl
@@ -42,11 +40,11 @@ for BevelBorderLineColorContext {
     #[inline(always)]
     fn clone(&self) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value(self.color.get()),
-            bevel_border_radius: Value(self.bevel_border_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: self.color,
+            bevel_border_radius: self.bevel_border_radius,
         }
     }
 }
@@ -56,7 +54,7 @@ HasTransform<Matrix2d>
 for BevelBorderLineColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -69,11 +67,11 @@ for BevelBorderLineColorContext {
         value: Matrix2d
     ) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            line: Value(self.line.get()),
-            color: Value(self.color.get()),
-            bevel_border_radius: Value(self.bevel_border_radius.get()),
+            view: self.view,
+            transform: value,
+            line: self.line,
+            color: self.color,
+            bevel_border_radius: self.bevel_border_radius,
         }
     }
 }
@@ -83,7 +81,7 @@ HasViewTransform<Matrix2d>
 for BevelBorderLineColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -96,11 +94,11 @@ for BevelBorderLineColorContext {
         value: Matrix2d
     ) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value(self.color.get()),
-            bevel_border_radius: Value(self.bevel_border_radius.get()),
+            view: value,
+            transform: self.transform,
+            line: self.line,
+            color: self.color,
+            bevel_border_radius: self.bevel_border_radius,
         }
     }
 }
@@ -110,7 +108,7 @@ HasColor<Color>
 for BevelBorderLineColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -120,11 +118,11 @@ for BevelBorderLineColorContext {
     #[inline(always)]
     fn color(&self, value: Color) -> BevelBorderLineColorContext {
         BevelBorderLineColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            line: Value(self.line.get()),
-            color: Value(value),
-            bevel_border_radius: Value(self.bevel_border_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            line: self.line,
+            color: value,
+            bevel_border_radius: self.bevel_border_radius,
         }
     }
 }
@@ -135,9 +133,9 @@ for BevelBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let line = self.line.get();
-            let bevel_border_radius = self.bevel_border_radius.get();
-            let color = self.color.get();
+            let line = self.line;
+            let bevel_border_radius = self.bevel_border_radius;
+            let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely opaque.
@@ -145,7 +143,7 @@ for BevelBorderLineColorContext {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_round_border_line_tri_list_xy_f32_rgba_f32(
                 3,
-                self.transform.get(),
+                self.transform,
                 line,
                 bevel_border_radius,
                 color,

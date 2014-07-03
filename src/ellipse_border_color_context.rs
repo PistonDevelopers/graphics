@@ -2,9 +2,7 @@
 use {
     BackEnd,
     Draw,
-    Field,
     ImageSize,
-    Value,
 };
 use triangulation::{
     with_ellipse_border_tri_list_xy_f32_rgba_f32,
@@ -27,15 +25,15 @@ use internal::{
 /// An ellipse border color context.
 pub struct EllipseBorderColorContext {
     /// View transformation.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current color.
-    pub color: Field<Color>,
+    pub color: Color,
     /// Current border.
-    pub border: Field<Radius>,
+    pub border: Radius,
 }
 
 impl
@@ -44,11 +42,11 @@ for EllipseBorderColorContext {
     #[inline(always)]
     fn clone(&self) -> EllipseBorderColorContext {
         EllipseBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            color: self.color,
+            border: self.border,
         }
     }
 }
@@ -58,7 +56,7 @@ HasTransform<Matrix2d>
 for EllipseBorderColorContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -68,11 +66,11 @@ for EllipseBorderColorContext {
     #[inline(always)]
     fn transform(&self, value: Matrix2d) -> EllipseBorderColorContext {
         EllipseBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            color: self.color,
+            border: self.border,
         }
     }
 }
@@ -82,7 +80,7 @@ HasViewTransform<Matrix2d>
 for EllipseBorderColorContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -95,11 +93,11 @@ for EllipseBorderColorContext {
         value: Matrix2d
     ) -> EllipseBorderColorContext {
         EllipseBorderColorContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value(self.color.get()),
-            border: Value(self.border.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            color: self.color,
+            border: self.border,
         }
     }
 }
@@ -109,7 +107,7 @@ HasColor<Color>
 for EllipseBorderColorContext {
     #[inline(always)]
     fn get_color(&self) -> Color {
-        self.color.get()
+        self.color
     }
 }
 
@@ -119,11 +117,11 @@ for EllipseBorderColorContext {
     #[inline(always)]
     fn color(&self, value: Color) -> EllipseBorderColorContext {
         EllipseBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value(value),
-            rect: Value(self.rect.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            rect: self.rect,
+            border: self.border,
         }
     }
 }
@@ -133,7 +131,7 @@ HasRectangle<Rectangle>
 for EllipseBorderColorContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -146,11 +144,11 @@ for EllipseBorderColorContext {
         rect: Rectangle
     ) -> EllipseBorderColorContext {
         EllipseBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            color: Value(self.color.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            color: self.color,
+            border: self.border,
         }
     }
 }
@@ -161,9 +159,9 @@ for EllipseBorderColorContext {
     #[inline(always)]
     fn draw( &self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.rect.get();
-            let color = self.color.get();
-            let border_radius = self.border.get();
+            let rect = self.rect;
+            let color = self.color;
+            let border_radius = self.border;
             // Complte transparency does  not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not complete opaque.
@@ -171,7 +169,7 @@ for EllipseBorderColorContext {
             if needs_alpha { back_end.enable_alpha_blend(); }
             with_ellipse_border_tri_list_xy_f32_rgba_f32(
                 128,
-                self.transform.get(),
+                self.transform,
                 rect,
                 color,
                 border_radius,

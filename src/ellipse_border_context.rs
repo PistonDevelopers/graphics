@@ -1,8 +1,6 @@
 use {
     AddColor,
     EllipseBorderColorContext,
-    Field,
-    Value,
 };
 use internal::{
     CanRectangle,
@@ -20,13 +18,13 @@ use internal::{
 /// An ellipse border context.
 pub struct EllipseBorderContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transformation.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle enclosing the ellipse.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current border.
-    pub border: Field<Radius>,
+    pub border: Radius,
 }
 
 impl
@@ -35,10 +33,10 @@ for EllipseBorderContext {
     #[inline(always)]
     fn clone(&self) -> EllipseBorderContext {
         EllipseBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            border: self.border,
         }
     }
 }
@@ -48,7 +46,7 @@ HasTransform<Matrix2d>
 for EllipseBorderContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -61,10 +59,10 @@ for EllipseBorderContext {
         value: Matrix2d
     ) -> EllipseBorderContext {
         EllipseBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            border: self.border,
         }
     }
 }
@@ -74,7 +72,7 @@ HasViewTransform<Matrix2d>
 for EllipseBorderContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -87,10 +85,10 @@ for EllipseBorderContext {
         value: Matrix2d
     ) -> EllipseBorderContext {
         EllipseBorderContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            border: Value(self.border.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            border: self.border,
         }
     }
 }
@@ -107,11 +105,11 @@ for EllipseBorderContext {
         a: ColorComponent
     ) -> EllipseBorderColorContext {
         EllipseBorderColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            color: Value([r, g, b, a]),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            color: [r, g, b, a],
+            border: self.border,
         }
     }
 }
@@ -121,7 +119,7 @@ HasRectangle<Rectangle>
 for EllipseBorderContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -134,10 +132,10 @@ for EllipseBorderContext {
         rect: Rectangle
     ) -> EllipseBorderContext {
         EllipseBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            border: Value(self.border.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            border: self.border,
         }
     }
 }

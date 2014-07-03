@@ -1,10 +1,8 @@
 use {
     AddBorder,
     AddColor,
-    Field,
     RoundRectangleBorderContext,
     RoundRectangleColorContext,
-    Value,
 };
 use internal::{
     CanRectangle,
@@ -22,13 +20,13 @@ use internal::{
 /// A round rectangle context.
 pub struct RoundRectangleContext {
     /// View transform.
-    pub view: Field<Matrix2d>,
+    pub view: Matrix2d,
     /// Current transform.
-    pub transform: Field<Matrix2d>,
+    pub transform: Matrix2d,
     /// Current rectangle.
-    pub rect: Field<Rectangle>,
+    pub rect: Rectangle,
     /// Current roundness radius.
-    pub round_radius: Field<Radius>,
+    pub round_radius: Radius,
 }
 
 impl
@@ -37,10 +35,10 @@ for RoundRectangleContext {
     #[inline(always)]
     fn clone(&self) -> RoundRectangleContext {
         RoundRectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            round_radius: self.round_radius,
         }
     }
 }
@@ -50,7 +48,7 @@ HasTransform<Matrix2d>
 for RoundRectangleContext {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
-        self.transform.get()
+        self.transform
     }
 }
 
@@ -63,10 +61,10 @@ for RoundRectangleContext {
         value: Matrix2d
     ) -> RoundRectangleContext {
         RoundRectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(value),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
+            view: self.view,
+            transform: value,
+            rect: self.rect,
+            round_radius: self.round_radius,
         }
     }
 }
@@ -76,7 +74,7 @@ HasViewTransform<Matrix2d>
 for RoundRectangleContext {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
-        self.view.get()
+        self.view
     }
 }
 
@@ -89,10 +87,10 @@ for RoundRectangleContext {
         value: Matrix2d
     ) -> RoundRectangleContext {
         RoundRectangleContext {
-            view: Value(value),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
+            view: value,
+            transform: self.transform,
+            rect: self.rect,
+            round_radius: self.round_radius,
         }
     }
 }
@@ -102,7 +100,7 @@ HasRectangle<Rectangle>
 for RoundRectangleContext {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rect.get()
+        self.rect
     }
 }
 
@@ -115,10 +113,10 @@ for RoundRectangleContext {
         rect: Rectangle
     ) -> RoundRectangleContext {
         RoundRectangleContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(rect),
-            round_radius: Value(self.round_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            rect: rect,
+            round_radius: self.round_radius,
         }
     }
 }
@@ -136,11 +134,11 @@ for RoundRectangleContext {
         a: ColorComponent
     ) -> RoundRectangleColorContext {
         RoundRectangleColorContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            color: Value([r, g, b, a]),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
+            view: self.view,
+            transform: self.transform,
+            color: [r, g, b, a],
+            rect: self.rect,
+            round_radius: self.round_radius,
         }
     }
 }
@@ -154,11 +152,11 @@ for RoundRectangleContext {
         radius: f64
     ) -> RoundRectangleBorderContext {
         RoundRectangleBorderContext {
-            view: Value(self.view.get()),
-            transform: Value(self.transform.get()),
-            rect: Value(self.rect.get()),
-            round_radius: Value(self.round_radius.get()),
-            border: Value(radius),
+            view: self.view,
+            transform: self.transform,
+            rect: self.rect,
+            round_radius: self.round_radius,
+            border: radius,
         }
     }
 }
