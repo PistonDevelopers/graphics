@@ -12,7 +12,6 @@ use {
     ImageSize,
     ImageColorContext,
     LineColorContext,
-    PolygonColorContext,
     RectangleColorContext,
     LerpTweenColorContext,
 };

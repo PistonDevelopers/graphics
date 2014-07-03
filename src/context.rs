@@ -34,11 +34,13 @@ use triangulation::{
     with_polygon_tri_list_xy_f32_rgba_f32,
 };
 use internal::{
+    CanColor,
     CanRectangle,
     CanTransform,
     CanViewTransform,
     Color,
     ColorComponent,
+    HasColor,
     HasRectangle,
     HasTransform,
     HasViewTransform,
@@ -454,6 +456,30 @@ for PolygonColorContext<'b> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
+        }
+    }
+}
+
+impl<S> 
+HasColor<Color> 
+for Context<S, Color> {
+    #[inline(always)]
+    fn get_color(&self) -> Color {
+        self.color
+    }
+}
+
+
+impl<S: Copy> 
+CanColor<Context<S, Color>, Color> 
+for Context<S, Color> {
+    #[inline(always)]
+    fn color(&self, value: Color) -> Context<S, Color> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: value,
+            shape: self.shape,
         }
     }
 }
