@@ -1,16 +1,9 @@
 
+use add;
 use {
-    AddBevel,
-    AddBorder,
-    AddColor,
-    AddEllipse,
-    AddImage,
-    AddLine,
-    AddPolygon,
-    AddRectangle,
-    AddRound,
-    AddTween,
     BackEnd,
+    BevelBorderLineContext,
+    BevelBorderLineColorContext,
     BevelRectangleContext,
     BevelRectangleBorderContext,
     ColorContext,
@@ -28,6 +21,8 @@ use {
     RectangleColorContext,
     RectangleBorderContext,
     RectangleBorderColorContext,
+    RoundBorderLineContext,
+    RoundBorderLineColorContext,
     RoundRectangleContext,
     RoundRectangleBorderContext,
 };
@@ -191,7 +186,7 @@ fn test_scale() {
 }
 
 impl<C: Copy>
-AddRectangle<Context<shape::RectangleShape, C>> 
+add::AddRectangle<Context<shape::RectangleShape, C>> 
 for Context<(), C> {
     #[inline(always)]
     fn rect(
@@ -223,7 +218,7 @@ fn test_rect() {
 }
 
 impl<S: Copy>
-AddColor<Context<S, Color>> 
+add::AddColor<Context<S, Color>> 
 for Context<S, ()> {
     #[inline(always)]
     fn rgba(
@@ -251,7 +246,7 @@ fn test_rgba() {
 }
 
 impl<C: Copy>
-AddEllipse<Context<shape::EllipseShape, C>> 
+add::AddEllipse<Context<shape::EllipseShape, C>> 
 for Context<(), C> {
     #[inline(always)]
     fn ellipse(
@@ -283,7 +278,7 @@ fn test_ellipse() {
 }
 
 impl<'b, C: Copy> 
-AddPolygon<'b, Context<Polygon<'b>, C>> 
+add::AddPolygon<'b, Context<Polygon<'b>, C>> 
 for Context<(), C> {
     #[inline(always)]
     fn polygon<'b>(
@@ -300,7 +295,7 @@ for Context<(), C> {
 }
 
 impl<'b, I: ImageSize, C: Copy> 
-AddImage<'b, Context<shape::ImageShape<'b, I>, C>, I> 
+add::AddImage<'b, Context<shape::ImageShape<'b, I>, C>, I> 
 for Context<(), C> {
     #[inline(always)]
     fn image(&self, image: &'b I) -> Context<shape::ImageShape<'b, I>, C> {
@@ -331,7 +326,7 @@ for Context<S, C> {
 }
 
 impl<'b, I: ImageSize> 
-AddImage<'b, ImageRectangleContext<'b, I>, I> 
+add::AddImage<'b, ImageRectangleContext<'b, I>, I> 
 for RectangleContext {
     fn image(
         &self, 
@@ -348,8 +343,8 @@ for RectangleContext {
     }
 }
 
-impl<S: AddRound<S2>, S2: Copy, C: Copy>
-AddRound<Context<S2, C>> 
+impl<S: add::AddRound<S2>, S2: Copy, C: Copy>
+add::AddRound<Context<S2, C>> 
 for Context<S, C> {
     #[inline(always)]
     fn round(
@@ -444,7 +439,7 @@ fn test_rgba_1() {
 }
 
 impl<C: Copy>
-AddLine<Context<shape::LineShape, C>> 
+add::AddLine<Context<shape::LineShape, C>> 
 for Context<(), C> {
     #[inline(always)]
     fn line(
@@ -524,7 +519,7 @@ for ColorContext {
 }
 
 impl<C: Copy>
-AddTween<Context<shape::TweenShape, C>> 
+add::AddTween<Context<shape::TweenShape, C>> 
 for Context<(), C> {
     #[inline(always)]
     fn lerp(
@@ -539,6 +534,70 @@ for Context<(), C> {
                     variant: shape::TweenVariant(tween_factor),
                     border_radius: (),
                     corner: (),
+                },
+        }
+    }
+}
+
+impl<C: Copy>
+add::AddSquareBorder<Context<shape::SquareBorderLineShape, C>> 
+for Context<shape::LineShape, C> {
+    #[inline(always)]
+    fn square_border_radius(
+        &self, 
+        radius: Radius
+    ) -> Context<shape::SquareBorderLineShape, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                    corner: shape::SquareCorner(radius),
+                    variant: self.shape.variant,
+                    border_radius: self.shape.border_radius,
+                },
+        }
+    }
+}
+
+
+impl<C: Copy>
+add::AddBevelBorder<Context<shape::BevelBorderLineShape, C>> 
+for Context<shape::LineShape, C> {
+    #[inline(always)]
+    fn bevel_border_radius(
+        &self, 
+        radius: Radius
+    ) -> Context<shape::BevelBorderLineShape, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                    corner: shape::BevelCorner(radius),
+                    variant: self.shape.variant,
+                    border_radius: self.shape.border_radius,
+                },
+        }
+    }
+}
+
+impl<C: Copy>
+add::AddRoundBorder<Context<shape::RoundBorderLineShape, C>> 
+for Context<shape::LineShape, C> {
+    #[inline(always)]
+    fn round_border_radius(
+        &self, 
+        radius: Radius
+    ) -> Context<shape::RoundBorderLineShape, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                    corner: shape::RoundCorner(radius),
+                    variant: self.shape.variant,
+                    border_radius: self.shape.border_radius,
                 },
         }
     }

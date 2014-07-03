@@ -24,6 +24,7 @@ pub struct TweenVariant(pub Scalar);
 
 pub struct BevelCorner(pub Radius);
 pub struct RoundCorner(pub Radius);
+pub struct SquareCorner(pub Radius);
 
 pub type EllipseShape = Shape<EllipseVariant, (), ()>;
 pub type EllipseBorderShape = Shape<EllipseVariant, Radius, ()>;
@@ -31,6 +32,9 @@ pub type BevelRectangleShape = Shape<RectangleVariant, (), BevelCorner>;
 pub type BevelRectangleBorderShape = Shape<RectangleVariant, Radius, BevelCorner>;
 pub type ImageShape<'a, I> = Shape<ImageVariant<'a, I>, (), ()>;
 pub type LineShape = Shape<LineVariant, (), ()>;
+pub type BevelBorderLineShape = Shape<LineVariant, (), BevelCorner>;
+pub type RoundBorderLineShape = Shape<LineVariant, (), RoundCorner>;
+pub type SquareBorderLineShape = Shape<LineVariant, (), SquareCorner>;
 pub type RectangleShape = Shape<RectangleVariant, (), ()>;
 pub type RectangleBorderShape = Shape<RectangleVariant, Radius, ()>;
 pub type RoundRectangleShape = Shape<RectangleVariant, (), RoundCorner>;
