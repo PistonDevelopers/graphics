@@ -56,6 +56,9 @@ pub use square_border_line_color_context::SquareBorderLineColorContext;
 pub use square_border_line_context::SquareBorderLineContext;
 pub use view::View;
 
+pub use context::ctx_id;
+pub use context::ctx_abs;
+
 use shape::Shape;
 use internal::{
     Color,

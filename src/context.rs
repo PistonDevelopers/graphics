@@ -111,11 +111,9 @@ for Context<S, C> {
     }
 }
 
-impl
-Context<(), ()> {
     /// Creates a new drawing context.
     #[inline(always)]
-    pub fn new() -> Context<(), ()> {
+    pub fn ctx_id() -> Context<(), ()> {
         Context {
             view:
                 [1.0, 0.0, 0.0,
@@ -141,7 +139,7 @@ Context<(), ()> {
     /// and x axis pointing to the right
     /// and y axis pointing down.
     #[inline(always)]
-    pub fn abs(w: f64, h: f64) -> Context<(), ()> {
+    pub fn ctx_abs(w: f64, h: f64) -> Context<(), ()> {
         let sx = 2.0 / w;
         let sy = -2.0 / h;
         let mat = [ sx, 0.0, -1.0,
@@ -153,13 +151,12 @@ Context<(), ()> {
             color: (),
         }
     }
-}
 
 #[test]
 fn test_context() {
     use RelativeTransform2d;
 
-    let c = Context::new();
+    let c = ctx_id();
     {
         let d = c.trans(20.0, 40.0);
         let d = d.trans(10.0, 10.0);
@@ -182,7 +179,7 @@ fn test_context() {
 fn test_scale() {
     use RelativeTransform2d;
 
-    let c = Context::new();
+    let c = ctx_id();
     let c = c.scale(2.0, 3.0);
     let transform = c.transform.get();
     assert!((transform[0] - 2.0).abs() < 0.00001);
@@ -217,7 +214,7 @@ for Context<(), C> {
 
 #[test]
 fn test_rect() {
-    let c = Context::new();
+    let c = ctx_id();
     let d = c.rect(0.0, 0.0, 100.0, 50.0);
     let rect = d.rect.get();
     assert_eq!(rect[2], 100.0);
@@ -245,7 +242,7 @@ for Context<S, ()> {
 
 #[test]
 fn test_rgba() {
-    let c = Context::new();
+    let c = ctx_id();
     let d: ColorContext = c.rgba(1.0, 0.0, 0.0, 1.0);
     let color = d.color;
     assert_eq!(color[0], 1.0);
@@ -279,7 +276,7 @@ for Context<(), C> {
 
 #[test]
 fn test_ellipse() {
-    let c = Context::new();
+    let c = ctx_id();
     let d: EllipseContext = c.ellipse(0.0, 0.0, 100.0, 100.0);
     let rect = d.rect;    
     assert_eq!(rect[2], 100.0);
@@ -349,17 +346,6 @@ for Context<(), ()> {
     }
 }
 
-#[test]
-fn test_rgba() {
-    use {Context, AddRectangle};
-
-    let c = Context::new();
-    let d = c.rect(0.0, 0.0, 100.0, 100.0);
-    let e = d.rgba(1.0, 0.0, 0.0, 1.0);
-    let color = e.color;
-    assert_eq!(color[0], 1.0);
-}
-
 impl<S: HasRectangle<Rectangle>, C>
 HasRectangle<Rectangle> 
 for Context<S, C> {
@@ -402,17 +388,6 @@ for Context<S, C> {
             color: self.color,
         }
     }
-}
-
-#[test]
-fn test_rgba() {
-    use {Context, AddRectangle};
-
-    let c = Context::new();
-    let d = c.rect(0.0, 0.0, 100.0, 100.0);
-    let e = d.rgba(1.0, 0.0, 0.0, 1.0);
-    let color = e.color;
-    assert_eq!(color[0], 1.0);
 }
 
 impl<S: Copy + CanRectangle<S, Rectangle>, C: Copy>
@@ -482,5 +457,14 @@ for Context<S, Color> {
             shape: self.shape,
         }
     }
+}
+
+#[test]
+fn test_rgba_1() {
+    let c = ctx_id();
+    let d = c.rect(0.0, 0.0, 100.0, 100.0);
+    let e = d.rgba(1.0, 0.0, 0.0, 1.0);
+    let color = e.color;
+    assert_eq!(color[0], 1.0);
 }
 
