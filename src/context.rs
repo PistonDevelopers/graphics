@@ -33,6 +33,9 @@ use {
 };
 use triangulation::{
     with_polygon_tri_list_xy_f32_rgba_f32,
+    rect_tri_list_xy_f32,
+    rect_tri_list_rgba_f32,
+    rect_tri_list_uv_f32,
 };
 use internal::{
     CanColor,
@@ -307,7 +310,10 @@ for Context<(), C> {
             transform: self.transform,
             color: self.color,
             shape: shape::Shape {
-                    variant: shape::ImageVariant(image),
+                    variant: shape::ImageVariant {
+                            image: image,
+                            src_rect: [0, 0, w as i32, h as i32]
+                        },
                     border_radius: (),
                     corner: (),
                 },
@@ -478,5 +484,44 @@ for Context<(), C> {
 fn test_line() {
     let _c = ctx_id().line(0.0, 0.0, 1.0, 1.0).rgb(1.0, 0.0, 0.0);
     let _c = ctx_id().rgb(1.0, 0.0, 0.0).line(0.0, 0.0, 1.0, 1.0);
+}
+
+impl<'b, B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for ImageContext<'b, I> {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_single_texture()
+        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
+            let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
+            let shape::ImageVariant { 
+                    image: texture,
+                    src_rect: source_rect
+                } = self.shape.variant;
+            let rect = [
+                0.0, 
+                0.0, 
+                source_rect[2] as f64, 
+                source_rect[3] as f64
+            ];
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque 
+            // or if the texture has alpha channel.
+            let needs_alpha = color[3] != 1.0 
+                || back_end.has_texture_alpha(texture);
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            back_end.enable_single_texture(texture);
+            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
+                rect_tri_list_xy_f32(self.transform, rect),
+                rect_tri_list_rgba_f32(color),
+                rect_tri_list_uv_f32(texture, source_rect)
+            );
+            back_end.disable_single_texture();
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
 }
 

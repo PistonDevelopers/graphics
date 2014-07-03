@@ -9,12 +9,16 @@ use internal::{
     Line,
     Radius,
     Rectangle,
+    SourceRectangle,
 };
 
 pub struct RectangleVariant(pub Rectangle);
 pub struct EllipseVariant(pub Rectangle);
 pub struct LineVariant(pub Line);
-pub struct ImageVariant<'a, I>(pub &'a I);
+pub struct ImageVariant<'a, I> {
+    pub image: &'a I, 
+    pub src_rect: SourceRectangle
+}
 
 pub struct BevelCorner(pub Radius);
 pub struct RoundCorner(pub Radius);
