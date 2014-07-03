@@ -1,99 +1,119 @@
 
 use {
+    AddBevel,
+    AddBorder,
     AddColor,
     AddEllipse,
     AddImage,
     AddLine,
     AddPolygon,
     AddRectangle,
+    AddRound,
     AddTween,
+    BackEnd,
+    BevelRectangleContext,
+    BevelRectangleBorderContext,
     ColorContext,
+    Draw,
     EllipseContext,
+    EllipseBorderContext,
     ImageSize,
     ImageContext,
+    ImageRectangleContext,
     LineContext,
-    PolygonContext,
-    RectangleContext,
     LerpTweenContext,
+    PolygonColorContext,
+    RectangleContext,
+    RectangleColorContext,
+    RectangleBorderContext,
+    RectangleBorderColorContext,
+    RoundRectangleContext,
+    RoundRectangleBorderContext,
+};
+use triangulation::{
+    with_polygon_tri_list_xy_f32_rgba_f32,
 };
 use internal::{
+    CanRectangle,
     CanTransform,
     CanViewTransform,
+    Color,
     ColorComponent,
+    HasRectangle,
     HasTransform,
     HasViewTransform,
     Matrix2d,
+    Radius,
+    Rectangle,
     Polygon,
     Scalar,
 };
+use shape;
 
 /// Drawing 2d context.
-pub struct Context {
+#[deriving(Copy)]
+pub struct Context<S, C> {
     /// View transformation.
     pub view: Matrix2d,
     /// Current transformation.
     pub transform: Matrix2d,
+    shape: S,
+    color: C,
 }
 
-impl
+impl<S: Copy, C: Copy>
 Clone 
-for Context {
+for Context<S, C> {
     #[inline(always)]
-    fn clone(&self) -> Context {
-        Context {
-            view: self.view,
-            transform: self.transform,
-        }
+    fn clone(&self) -> Context<S, C> {
+        *self 
     }
 }
 
-impl
+impl<S, C>
 HasTransform<Matrix2d> 
-for Context {
+for Context<S, C> {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
         self.transform
     }
 }
 
-impl
-CanTransform<Context, Matrix2d> 
-for Context {
+impl<S: Copy, C: Copy>
+CanTransform<Context<S, C>, Matrix2d> 
+for Context<S, C> {
     #[inline(always)]
-    fn transform(&self, value: Matrix2d) -> Context {
+    fn transform(&self, value: Matrix2d) -> Context<S, C> {
         Context {
-            view: self.view,
             transform: value,
+            ..*self
         }
     }
 }
 
-impl
+impl<S, C>
 HasViewTransform<Matrix2d> 
-for Context {
+for Context<S, C> {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
         self.view
     }
 }
 
-impl
-CanViewTransform<Context, Matrix2d> 
-for Context {
+impl<S: Copy, C: Copy>
+CanViewTransform<Context<S, C>, Matrix2d> 
+for Context<S, C> {
     #[inline(always)]
-    fn view_transform(&self, value: Matrix2d) -> Context {
-        Context {
-            view: value,
-            transform: self.transform,
-        }
+    fn view_transform(&self, value: Matrix2d) -> Context<S, C> {
+        Context { view: value, ..*self }
     }
 }
 
 impl
-Context {
+Context<(), ()> {
     /// Creates a new drawing context.
     #[inline(always)]
-    pub fn new() -> Context {
+    pub fn new() -> Context<(), ()> {
         Context {
             view:
                 [1.0, 0.0, 0.0,
@@ -103,6 +123,8 @@ Context {
                 [1.0, 0.0, 0.0,
                  0.0, 1.0, 0.0]
             ,
+            shape: (),
+            color: (),
         }
     }
 
@@ -117,7 +139,7 @@ Context {
     /// and x axis pointing to the right
     /// and y axis pointing down.
     #[inline(always)]
-    pub fn abs(w: f64, h: f64) -> Context {
+    pub fn abs(w: f64, h: f64) -> Context<(), ()> {
         let sx = 2.0 / w;
         let sy = -2.0 / h;
         let mat = [ sx, 0.0, -1.0,
@@ -125,6 +147,8 @@ Context {
         Context {
             view: mat,
             transform: mat,
+            shape: (),
+            color: (),
         }
     }
 }
@@ -163,9 +187,9 @@ fn test_scale() {
     assert!((transform[4] - 3.0).abs() < 0.00001);
 }
 
-impl
-AddRectangle<RectangleContext> 
-for Context {
+impl<C: Copy>
+AddRectangle<Context<shape::RectangleShape, C>> 
+for Context<(), C> {
     #[inline(always)]
     fn rect(
         &self, 
@@ -173,11 +197,18 @@ for Context {
         y: Scalar, 
         w: Scalar, 
         h: Scalar
-    ) -> RectangleContext {
-        RectangleContext {
+    ) -> Context<shape::RectangleShape, C> {
+        Context {
             view: self.view,
             transform: self.transform,
-            rect: [x, y, w, h],
+            color: self.color,
+            shape: shape::Shape { 
+                rectangle: [x, y, w, h],
+                ellipse: (),
+                border_radius: (),
+                round_radius: (),
+                bevel_radius: (), 
+            },
         }
     }
 }
@@ -190,9 +221,9 @@ fn test_rect() {
     assert_eq!(rect[2], 100.0);
 }
 
-impl
-AddColor<ColorContext> 
-for Context {
+impl<S: Copy>
+AddColor<Context<S, Color>> 
+for Context<S, ()> {
     #[inline(always)]
     fn rgba(
         &self, 
@@ -200,10 +231,11 @@ for Context {
         g: ColorComponent, 
         b: ColorComponent, 
         a: ColorComponent
-    ) -> ColorContext {
-        ColorContext {
+    ) -> Context<S, Color> {
+        Context {
             view: self.view,
             transform: self.transform,
+            shape: self.shape,
             color: [r, g, b, a],
         }
     }
@@ -217,9 +249,9 @@ fn test_rgba() {
     assert_eq!(color[0], 1.0);
 }
 
-impl
-AddEllipse<EllipseContext> 
-for Context {
+impl<C: Copy>
+AddEllipse<Context<shape::EllipseShape, C>> 
+for Context<(), C> {
     #[inline(always)]
     fn ellipse(
         &self, 
@@ -227,11 +259,18 @@ for Context {
         y: Scalar, 
         w: Scalar, 
         h: Scalar
-    ) -> EllipseContext {
-        EllipseContext {
+    ) -> Context<shape::EllipseShape, C> {
+        Context {
             view: self.view,
             transform: self.transform,
-            rect: [x, y, w, h],
+            color: self.color,
+            shape: shape::Shape { 
+                ellipse: [x, y, w, h],
+                rectangle: (),
+                border_radius: (),
+                round_radius: (),
+                bevel_radius: (), 
+            },
         }
     }
 }
@@ -244,25 +283,26 @@ fn test_ellipse() {
     assert_eq!(rect[2], 100.0);
 }
 
-impl<'b> 
-AddPolygon<'b, PolygonContext<'b>> 
-for Context {
+impl<'b, C: Copy> 
+AddPolygon<'b, Context<Polygon<'b>, C>> 
+for Context<(), C> {
     #[inline(always)]
     fn polygon<'b>(
         &self, 
         polygon: Polygon<'b>
-    ) -> PolygonContext<'b> {
-        PolygonContext {
+    ) -> Context<Polygon<'b>, C> {
+        Context {
             view: self.view,
             transform: self.transform,
-            polygon: polygon,
+            shape: polygon,
+            color: self.color,
         }
     }
 }
 
 impl<'b, I: ImageSize> 
 AddImage<'b, ImageContext<'b, I>, I> 
-for Context {
+for Context<(), ()> {
     #[inline(always)]
     fn image(&self, image: &'b I) -> ImageContext<'b, I> {
         let (w, h) = image.get_size();
@@ -277,7 +317,7 @@ for Context {
 
 impl
 AddTween<LerpTweenContext> 
-for Context {
+for Context<(), ()> {
     #[inline(always)]
     fn lerp(&self, tween_factor: Scalar) -> LerpTweenContext {
         LerpTweenContext {
@@ -290,7 +330,7 @@ for Context {
 
 impl
 AddLine<LineContext> 
-for Context {
+for Context<(), ()> {
     #[inline(always)]
     fn line(
         &self, 
@@ -303,6 +343,117 @@ for Context {
             view: self.view,
             transform: self.transform,
             line: [x1, y1, x2, y2],
+        }
+    }
+}
+
+#[test]
+fn test_rgba() {
+    use {Context, AddRectangle};
+
+    let c = Context::new();
+    let d = c.rect(0.0, 0.0, 100.0, 100.0);
+    let e = d.rgba(1.0, 0.0, 0.0, 1.0);
+    let color = e.color;
+    assert_eq!(color[0], 1.0);
+}
+
+impl<S: HasRectangle<Rectangle>, C>
+HasRectangle<Rectangle> 
+for Context<S, C> {
+    #[inline(always)]
+    fn get_rectangle(&self) -> Rectangle {
+        self.shape.get_rectangle()
+    }
+}
+
+impl<'b, I: ImageSize> 
+AddImage<'b, ImageRectangleContext<'b, I>, I> 
+for RectangleContext {
+    fn image(
+        &self, 
+        image: &'b I
+    ) -> ImageRectangleContext<'b, I> {
+        let (w, h) = image.get_size();
+        ImageRectangleContext {
+            view: self.view,
+            transform: self.transform,
+            rect: self.shape.rectangle,
+            image: image,
+            source_rect: [0, 0, w as i32, h as i32],
+        }
+    }
+}
+
+impl<S: AddRound<S2>, S2: Copy, C: Copy>
+AddRound<Context<S2, C>> 
+for Context<S, C> {
+    #[inline(always)]
+    fn round(
+        &self, 
+        radius: Radius
+    ) -> Context<S2, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            shape: self.shape.round(radius),
+            color: self.color,
+        }
+    }
+}
+
+#[test]
+fn test_rgba() {
+    use {Context, AddRectangle};
+
+    let c = Context::new();
+    let d = c.rect(0.0, 0.0, 100.0, 100.0);
+    let e = d.rgba(1.0, 0.0, 0.0, 1.0);
+    let color = e.color;
+    assert_eq!(color[0], 1.0);
+}
+
+impl<S: Copy + CanRectangle<S, Rectangle>, C: Copy>
+CanRectangle<Context<S, C>, Rectangle> 
+for Context<S, C> {
+    #[inline(always)]
+    fn rectangle(
+        &self, 
+        rect: Rectangle
+    ) -> Context<S, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: self.shape.rectangle(rect),
+        }
+    }
+}
+
+impl<'b, B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for PolygonColorContext<'b> {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let polygon = self.shape;
+            let color = self.color;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            with_polygon_tri_list_xy_f32_rgba_f32(
+                self.transform,
+                polygon,
+                color,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
         }
     }
 }

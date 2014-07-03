@@ -25,9 +25,7 @@ pub use bevel_rectangle_border_context::BevelRectangleBorderContext;
 pub use bevel_rectangle_color_context::BevelRectangleColorContext;
 pub use bevel_rectangle_context::BevelRectangleContext;
 pub use color_context::ColorContext;
-pub use context::Context;
 pub use draw::Draw;
-pub use ellipse_context::EllipseContext;
 pub use ellipse_border_context::EllipseBorderContext;
 pub use ellipse_color_context::EllipseColorContext;
 pub use ellipse_border_color_context::EllipseBorderColorContext;
@@ -42,11 +40,8 @@ pub use lerp_tween_polygons_context::LerpTweenPolygonsContext;
 pub use lerp_tween_polygons_color_context::LerpTweenPolygonsColorContext;
 pub use line_context::LineContext;
 pub use line_color_context::LineColorContext;
-pub use polygon_context::PolygonContext;
 pub use polygon_color_context::PolygonColorContext;
-pub use rectangle_border_context::RectangleBorderContext;
 pub use rectangle_border_color_context::RectangleBorderColorContext;
-pub use rectangle_context::RectangleContext;
 pub use rectangle_color_context::RectangleColorContext;
 pub use relative_color::RelativeColor;
 pub use relative_rectangle::RelativeRectangle;
@@ -61,6 +56,14 @@ pub use round_rectangle_context::RoundRectangleContext;
 pub use square_border_line_color_context::SquareBorderLineColorContext;
 pub use square_border_line_context::SquareBorderLineContext;
 pub use view::View;
+
+use shape::Shape;
+use internal::{
+    Color,
+    Polygon,
+    Radius,
+    Rectangle,
+};
 
 mod add_bevel;
 mod add_bevel_border;
@@ -89,7 +92,6 @@ mod draw;
 mod ellipse_border_context;
 mod ellipse_border_color_context;
 mod ellipse_color_context;
-mod ellipse_context;
 mod image_size;
 mod image_context;
 mod image_color_context;
@@ -98,11 +100,8 @@ mod image_rectangle_context;
 mod line_color_context;
 mod line_context;
 mod polygon_color_context;
-mod polygon_context;
-mod rectangle_border_context;
 mod rectangle_border_color_context;
 mod rectangle_color_context;
-mod rectangle_context;
 mod relative_color;
 mod relative_rectangle;
 mod relative_source_rectangle;
@@ -126,4 +125,20 @@ pub mod interpolation;
 pub mod modular_index;
 pub mod triangulation;
 pub mod vecmath;
+
+mod shape;
+
+pub type Context = context::Context<(), ()>;
+pub type ColorContext = context::Context<(), Color>;
+pub type RectangleContext = context::Context<shape::RectangleShape, ()>;
+pub type RectangleBorderContext = context::Context<
+    shape::RectangleBorderShape, ()>;
+pub type EllipseContext = context::Context<shape::EllipseShape, ()>;
+pub type EllipseBorderContext = context::Context<
+    shape::EllipseBorderShape, ()>;
+pub type EllipseColorContext = context::Context<
+    shape::EllipseShape, Color>;
+pub type PolygonContext<'a> = context::Context<Polygon<'a>, ()>;
+pub type PolygonColorContext<'a> = context::Context<
+    Polygon<'a>, Color>;
 

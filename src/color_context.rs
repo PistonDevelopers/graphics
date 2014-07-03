@@ -153,43 +153,6 @@ fn test_rect() {
 }
 
 impl
-AddEllipse<EllipseColorContext> 
-for ColorContext {
-    #[inline(always)]
-    fn ellipse(
-        &self, 
-        x: Scalar, 
-        y: Scalar, 
-        w: Scalar, 
-        h: Scalar
-    ) -> EllipseColorContext {
-        EllipseColorContext {
-            view: self.view,
-            transform: self.transform,
-            color: self.color,
-            rect: [x, y, w, h],
-        }
-    }
-}
-
-impl<'b> 
-AddPolygon<'b, PolygonColorContext<'b>> 
-for ColorContext {
-    #[inline(always)]
-    fn polygon(
-        &self, 
-        polygon: Polygon<'b>
-    ) -> PolygonColorContext<'b> {
-        PolygonColorContext {
-            view: self.view,
-            transform: self.transform,
-            color: self.color,
-            polygon: polygon,
-        }
-    }
-}
-
-impl
 AddTween<LerpTweenColorContext> 
 for ColorContext {
     #[inline(always)]
