@@ -321,19 +321,6 @@ for Context<(), C> {
     }
 }
 
-impl
-AddTween<LerpTweenContext> 
-for Context<(), ()> {
-    #[inline(always)]
-    fn lerp(&self, tween_factor: Scalar) -> LerpTweenContext {
-        LerpTweenContext {
-            view: self.view,
-            transform: self.transform,
-            tween_factor: tween_factor,
-        }
-    }
-}
-
 impl<S: HasRectangle<Rectangle>, C>
 HasRectangle<Rectangle> 
 for Context<S, C> {
@@ -521,6 +508,38 @@ for ImageContext<'b, I> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
+        }
+    }
+}
+
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for ColorContext {
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_clear_rgba() {
+            let color = self.color;
+            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
+        }
+    }
+}
+
+impl<C: Copy>
+AddTween<Context<shape::TweenShape, C>> 
+for Context<(), C> {
+    #[inline(always)]
+    fn lerp(
+        &self, 
+        tween_factor: Scalar
+    ) -> Context<shape::TweenShape, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                    variant: shape::TweenVariant(tween_factor),
+                    border_radius: (),
+                    corner: (),
+                },
         }
     }
 }

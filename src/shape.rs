@@ -9,6 +9,7 @@ use internal::{
     Line,
     Radius,
     Rectangle,
+    Scalar,
     SourceRectangle,
 };
 
@@ -19,6 +20,7 @@ pub struct ImageVariant<'a, I> {
     pub image: &'a I, 
     pub src_rect: SourceRectangle
 }
+pub struct TweenVariant(pub Scalar);
 
 pub struct BevelCorner(pub Radius);
 pub struct RoundCorner(pub Radius);
@@ -33,6 +35,7 @@ pub type RectangleShape = Shape<RectangleVariant, (), ()>;
 pub type RectangleBorderShape = Shape<RectangleVariant, Radius, ()>;
 pub type RoundRectangleShape = Shape<RectangleVariant, (), RoundCorner>;
 pub type RoundRectangleBorderShape = Shape<RectangleVariant, Radius, RoundCorner>;
+pub type TweenShape = Shape<TweenVariant, (), ()>;
 
 /// A rectangle shape.
 #[deriving(Copy)]

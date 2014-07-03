@@ -151,31 +151,4 @@ fn test_rect() {
     assert_eq!(rect_color[2], 100.0);
 }
 
-impl
-AddTween<LerpTweenColorContext> 
-for ColorContext {
-    #[inline(always)]
-    fn lerp(
-        &self, 
-        tween_factor: Scalar
-    ) -> LerpTweenColorContext {
-        LerpTweenColorContext {
-            view: self.view,
-            transform: self.transform,
-            color: self.color,
-            tween_factor: tween_factor,
-        }
-    }
-}
-
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
-for ColorContext {
-    fn draw(&self, back_end: &mut B) {
-        if back_end.supports_clear_rgba() {
-            let color = self.color;
-            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
-        }
-    }
-}
 
