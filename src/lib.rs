@@ -3,9 +3,6 @@
 
 //! A library for 2D graphics that works with multiple back-ends.
 
-extern crate core;
-extern crate std;
-
 pub use AddBevel 
     = add_bevel::AddBevel;
 pub use AddBevelBorder 
