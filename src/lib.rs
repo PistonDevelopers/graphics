@@ -3,20 +3,20 @@
 
 //! A library for 2D graphics that works with multiple back-ends.
 
-pub use add_bevel::AddBevel;
-pub use add_bevel_border::AddBevelBorder;
-pub use add_border::AddBorder;
-pub use add_color::AddColor;
-pub use add_ellipse::AddEllipse;
-pub use add_image::AddImage;
-pub use add_line::AddLine;
-pub use add_polygon::AddPolygon;
-pub use add_polygons::AddPolygons;
-pub use add_rectangle::AddRectangle;
-pub use add_round::AddRound;
-pub use add_round_border::AddRoundBorder;
-pub use add_square_border::AddSquareBorder;
-pub use add_tween::AddTween;
+pub use add::AddBevel;
+pub use add::AddBevelBorder;
+pub use add::AddBorder;
+pub use add::AddColor;
+pub use add::AddEllipse;
+pub use add::AddImage;
+pub use add::AddLine;
+pub use add::AddPolygon;
+pub use add::AddPolygons;
+pub use add::AddRectangle;
+pub use add::AddRound;
+pub use add::AddRoundBorder;
+pub use add::AddSquareBorder;
+pub use add::AddTween;
 pub use back_end::BackEnd;
 pub use bevel_border_line_color_context::BevelBorderLineColorContext;
 pub use bevel_border_line_context::BevelBorderLineContext;
@@ -66,20 +66,7 @@ use internal::{
     Rectangle,
 };
 
-mod add_bevel;
-mod add_bevel_border;
-mod add_border;
-mod add_color;
-mod add_ellipse;
-mod add_image;
-mod add_line;
-mod add_polygon;
-mod add_polygons;
-mod add_rectangle;
-mod add_round;
-mod add_round_border;
-mod add_square_border;
-mod add_tween;
+mod add;
 mod back_end;
 mod bevel_border_line_color_context;
 mod bevel_border_line_context;
