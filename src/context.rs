@@ -202,8 +202,7 @@ for Context<(), C> {
             transform: self.transform,
             color: self.color,
             shape: shape::Shape { 
-                rectangle: [x, y, w, h],
-                ellipse: (),
+                variant: shape::RectangleVariant([x, y, w, h]),
                 border_radius: (),
                 round_radius: (),
                 bevel_radius: (), 
@@ -264,8 +263,7 @@ for Context<(), C> {
             transform: self.transform,
             color: self.color,
             shape: shape::Shape { 
-                ellipse: [x, y, w, h],
-                rectangle: (),
+                variant: shape::EllipseVariant([x, y, w, h]),
                 border_radius: (),
                 round_radius: (),
                 bevel_radius: (), 
@@ -366,7 +364,7 @@ for RectangleContext {
         ImageRectangleContext {
             view: self.view,
             transform: self.transform,
-            rect: self.shape.rectangle,
+            rect: self.shape.get_rectangle(),
             image: image,
             source_rect: [0, 0, w as i32, h as i32],
         }

@@ -10,28 +10,28 @@ use internal::{
     Rectangle,
 };
 
-pub type EllipseShape = Shape<(), Rectangle, (), (), ()>;
-pub type EllipseBorderShape = Shape<(), Rectangle, Radius, (), ()>;
-pub type BevelRectangleShape = Shape<Rectangle, (), (), (), Radius>;
-pub type BevelRectangleBorderShape = Shape<Rectangle, (), Radius, (), Radius>;
-pub type RectangleShape = Shape<Rectangle, (), (), (), ()>;
-pub type RectangleBorderShape = Shape<Rectangle, (), Radius, (), ()>;
-pub type RoundRectangleShape = Shape<Rectangle, (), (), Radius, ()>;
-pub type RoundRectangleBorderShape = Shape<Rectangle, (), Radius, Radius, ()>;
+pub struct RectangleVariant(pub Rectangle);
+pub struct EllipseVariant(pub Rectangle);
+
+pub type EllipseShape = Shape<EllipseVariant, (), (), ()>;
+pub type EllipseBorderShape = Shape<EllipseVariant, Radius, (), ()>;
+pub type BevelRectangleShape = Shape<RectangleVariant, (), (), Radius>;
+pub type BevelRectangleBorderShape = Shape<RectangleVariant, Radius, (), Radius>;
+pub type RectangleShape = Shape<RectangleVariant, (), (), ()>;
+pub type RectangleBorderShape = Shape<RectangleVariant, Radius, (), ()>;
+pub type RoundRectangleShape = Shape<RectangleVariant, (), Radius, ()>;
+pub type RoundRectangleBorderShape = Shape<RectangleVariant, Radius, Radius, ()>;
 
 /// A rectangle shape.
 #[deriving(Copy)]
 pub struct Shape<
-    TRectangle, 
-    TEllipse, 
+    TVariant, 
     TBorderRadius,
     TRoundRadius,
     TBevelRadius
 > {
     /// Rectangle.
-    pub rectangle: TRectangle,
-    /// Ellipse.
-    pub ellipse: TEllipse,
+    pub variant: TVariant,
     /// Border radius.
     pub border_radius: TBorderRadius,
     /// Round radius.
@@ -50,9 +50,8 @@ for RectangleShape {
         radius: Radius
     ) -> RoundRectangleShape {
         Shape {
-            rectangle: self.rectangle,
+            variant: self.variant,
             round_radius: radius,
-            ellipse: self.ellipse,
             border_radius: self.border_radius,
             bevel_radius: self.bevel_radius,
         }
@@ -65,10 +64,9 @@ for RectangleBorderShape {
     #[inline(always)]
     fn round(&self, radius: Radius) -> RoundRectangleBorderShape {
         Shape {
-            rectangle: self.rectangle,
+            variant: self.variant,
             border_radius: self.border_radius,
             round_radius: radius,
-            ellipse: self.ellipse,
             bevel_radius: self.bevel_radius,
         }
     }
@@ -83,9 +81,8 @@ for RectangleShape {
         radius: Radius
     ) -> BevelRectangleShape {
         Shape {
-            rectangle: self.rectangle,
+            variant: self.variant,
             bevel_radius: radius,
-            ellipse: self.ellipse,
             round_radius: self.round_radius,
             border_radius: self.border_radius,
         }
@@ -102,9 +99,8 @@ for EllipseShape {
         radius: f64
     ) -> EllipseBorderShape {
         Shape {
-            ellipse: self.ellipse,
             border_radius: radius,
-            rectangle: self.rectangle,
+            variant: self.variant,
             round_radius: self.round_radius,
             bevel_radius: self.bevel_radius,
         }
@@ -120,9 +116,8 @@ for RectangleShape {
         radius: f64
     ) -> RectangleBorderShape {
         Shape {
-            ellipse: self.ellipse,
             border_radius: radius,
-            rectangle: self.rectangle,
+            variant: self.variant,
             round_radius: self.round_radius,
             bevel_radius: self.bevel_radius,
         }
@@ -139,8 +134,7 @@ for RectangleBorderShape {
     ) -> BevelRectangleBorderShape {
         Shape {
             bevel_radius: radius,
-            rectangle: self.rectangle,
-            ellipse: self.ellipse,
+            variant: self.variant,
             border_radius: self.border_radius,     
             round_radius: self.round_radius,
         }
@@ -151,12 +145,12 @@ for RectangleBorderShape {
 ///
 /// Can not contain an ellipse.
 impl<B: Copy, C: Copy, D: Copy>
-CanRectangle<Shape<Rectangle, (), B, C, D>, Rectangle> 
-for Shape<Rectangle, (), B, C, D> {
+CanRectangle<Shape<RectangleVariant, B, C, D>, Rectangle> 
+for Shape<RectangleVariant, B, C, D> {
     #[inline(always)]
-    fn rectangle(&self, rect: Rectangle) -> Shape<Rectangle, (), B, C, D> {
+    fn rectangle(&self, rect: Rectangle) -> Shape<RectangleVariant, B, C, D> {
         Shape { 
-            rectangle: rect, 
+            variant: RectangleVariant(rect), 
             ..*self 
         }
     }
@@ -166,12 +160,12 @@ for Shape<Rectangle, (), B, C, D> {
 ///
 /// Can not contain a rectangle.
 impl<B: Copy, C: Copy, D: Copy>
-CanRectangle<Shape<(), Rectangle, B, C, D>, Rectangle> 
-for Shape<(), Rectangle, B, C, D> {
+CanRectangle<Shape<EllipseVariant, B, C, D>, Rectangle> 
+for Shape<EllipseVariant, B, C, D> {
     #[inline(always)]
-    fn rectangle(&self, rect: Rectangle) -> Shape<(), Rectangle, B, C, D> {
+    fn rectangle(&self, rect: Rectangle) -> Shape<EllipseVariant, B, C, D> {
         Shape { 
-            ellipse: rect, 
+            variant: EllipseVariant(rect), 
             ..*self 
         }
     }
@@ -181,20 +175,22 @@ for Shape<(), Rectangle, B, C, D> {
 /// Gets rectangle of rectangle shape.
 impl<B, C, D>
 HasRectangle<Rectangle>
-for Shape<Rectangle, (), B, C, D> {
+for Shape<RectangleVariant, B, C, D> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.rectangle
+        let RectangleVariant(res) = self.variant;
+        res
     }
 }
 
 /// Gets ellipse of ellipse shape.
 impl<B, C, D>
 HasRectangle<Rectangle>
-for Shape<(), Rectangle, B, C, D> {
+for Shape<EllipseVariant, B, C, D> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        self.ellipse
+        let EllipseVariant(res) = self.variant;
+        res
     }
 }
 
