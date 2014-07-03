@@ -19,6 +19,7 @@ use {
     EllipseBorderContext,
     ImageSize,
     ImageContext,
+    ImageColorContext,
     ImageRectangleContext,
     LineContext,
     LerpTweenContext,
@@ -204,8 +205,7 @@ for Context<(), C> {
             shape: shape::Shape { 
                 variant: shape::RectangleVariant([x, y, w, h]),
                 border_radius: (),
-                round_radius: (),
-                bevel_radius: (), 
+                corner: (),
             },
         }
     }
@@ -265,8 +265,7 @@ for Context<(), C> {
             shape: shape::Shape { 
                 variant: shape::EllipseVariant([x, y, w, h]),
                 border_radius: (),
-                round_radius: (),
-                bevel_radius: (), 
+                corner: (),
             },
         }
     }
@@ -297,17 +296,21 @@ for Context<(), C> {
     }
 }
 
-impl<'b, I: ImageSize> 
-AddImage<'b, ImageContext<'b, I>, I> 
-for Context<(), ()> {
+impl<'b, I: ImageSize, C: Copy> 
+AddImage<'b, Context<shape::ImageShape<'b, I>, C>, I> 
+for Context<(), C> {
     #[inline(always)]
-    fn image(&self, image: &'b I) -> ImageContext<'b, I> {
+    fn image(&self, image: &'b I) -> Context<shape::ImageShape<'b, I>, C> {
         let (w, h) = image.get_size();
-        ImageContext {
+        Context {
             view: self.view,
             transform: self.transform,
-            image: image,
-            source_rect: [0, 0, w as i32, h as i32],
+            color: self.color,
+            shape: shape::Shape {
+                    variant: shape::ImageVariant(image),
+                    border_radius: (),
+                    corner: (),
+                },
         }
     }
 }
@@ -321,25 +324,6 @@ for Context<(), ()> {
             view: self.view,
             transform: self.transform,
             tween_factor: tween_factor,
-        }
-    }
-}
-
-impl
-AddLine<LineContext> 
-for Context<(), ()> {
-    #[inline(always)]
-    fn line(
-        &self, 
-        x1: Scalar, 
-        y1: Scalar, 
-        x2: Scalar, 
-        y2: Scalar
-    ) -> LineContext {
-        LineContext {
-            view: self.view,
-            transform: self.transform,
-            line: [x1, y1, x2, y2],
         }
     }
 }
@@ -464,5 +448,35 @@ fn test_rgba_1() {
     let e = d.rgba(1.0, 0.0, 0.0, 1.0);
     let color = e.color;
     assert_eq!(color[0], 1.0);
+}
+
+impl<C: Copy>
+AddLine<Context<shape::LineShape, C>> 
+for Context<(), C> {
+    #[inline(always)]
+    fn line(
+        &self, 
+        x1: Scalar, 
+        y1: Scalar, 
+        x2: Scalar, 
+        y2: Scalar
+    ) -> Context<shape::LineShape, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            shape: shape::Shape {
+                    variant: shape::LineVariant([x1, y1, x2, y2]),
+                    border_radius: (),
+                    corner: (),
+                },
+            color: self.color,
+        }
+    }
+}
+
+#[test]
+fn test_line() {
+    let _c = ctx_id().line(0.0, 0.0, 1.0, 1.0).rgb(1.0, 0.0, 0.0);
+    let _c = ctx_id().rgb(1.0, 0.0, 0.0).line(0.0, 0.0, 1.0, 1.0);
 }
 

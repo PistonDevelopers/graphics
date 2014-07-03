@@ -179,39 +179,3 @@ for ColorContext {
     }
 }
 
-impl<'b, I: ImageSize> 
-AddImage<'b, ImageColorContext<'b, I>, I> 
-for ColorContext {
-    #[inline(always)]
-    fn image(&self, image: &'b I) -> ImageColorContext<'b, I> {
-        let (w, h) = image.get_size();
-        ImageColorContext {
-            view: self.view,
-            transform: self.transform,
-            image: image,
-            source_rect: [0, 0, w as i32, h as i32],
-            color: self.color,
-        }
-    }
-}
-
-impl
-AddLine<LineColorContext> 
-for ColorContext {
-    #[inline(always)]
-    fn line(
-        &self, 
-        x1: Scalar, 
-        y1: Scalar, 
-        x2: Scalar, 
-        y2: Scalar
-    ) -> LineColorContext {
-        LineColorContext {
-            view: self.view,
-            transform: self.transform,
-            line: [x1, y1, x2, y2],
-            color: self.color,
-        }
-    }
-}
-

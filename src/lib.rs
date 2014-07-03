@@ -139,6 +139,10 @@ pub type EllipseBorderContext = context::Context<
     shape::EllipseBorderShape, ()>;
 pub type EllipseColorContext = context::Context<
     shape::EllipseShape, Color>;
+pub type ImageContext<'a, I> = context::Context<
+    shape::ImageShape<'a, I>, ()>;
+pub type ImageColorContext<'a, I> = context::Context<
+    shape::ImageShape<'a, I>, Color>;
 pub type PolygonContext<'a> = context::Context<Polygon<'a>, ()>;
 pub type PolygonColorContext<'a> = context::Context<
     Polygon<'a>, Color>;

@@ -118,21 +118,6 @@ for ImageContext<'b, I> {
 }
 
 impl<'b, I> 
-CanColor<ImageColorContext<'b, I>, Color> 
-for ImageContext<'b, I> {
-    #[inline(always)]
-    fn color(&self, value: Color) -> ImageColorContext<'b, I> {
-        ImageColorContext {
-            view: self.view,
-            transform: self.transform,
-            color: value,
-            image: self.image,
-            source_rect: self.source_rect,
-        }
-    }
-}
-
-impl<'b, I> 
 HasSourceRectangle<SourceRectangle> 
 for ImageContext<'b, I> {
     #[inline(always)]
@@ -212,27 +197,6 @@ for ImageContext<'b, I> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'b, I> 
-AddColor<ImageColorContext<'b, I>> 
-for ImageContext<'b, I> {
-    #[inline(always)]
-    fn rgba(
-        &self,
-        r: ColorComponent,
-        g: ColorComponent,
-        b: ColorComponent,
-        a: ColorComponent
-    ) -> ImageColorContext<'b, I> {
-        ImageColorContext {
-            view: self.view,
-            transform: self.transform,
-            image: self.image,
-            source_rect: self.source_rect,
-            color: [r, g, b, a],
         }
     }
 }
