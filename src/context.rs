@@ -28,13 +28,7 @@ use {
     RoundRectangleContext,
     RoundRectangleBorderContext,
 };
-use triangulation::{
-    rect_tri_list_xy_f32,
-    rect_tri_list_rgba_f32,
-    rect_tri_list_uv_f32,
-    with_ellipse_tri_list_xy_f32_rgba_f32,
-    with_polygon_tri_list_xy_f32_rgba_f32,
-};
+use triangulation;
 use internal::{
     CanColor,
     CanRectangle,
@@ -393,7 +387,7 @@ for PolygonColorContext<'b> {
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
-            with_polygon_tri_list_xy_f32_rgba_f32(
+            triangulation::with_polygon_tri_list_xy_f32_rgba_f32(
                 self.transform,
                 polygon,
                 color,
@@ -498,9 +492,9 @@ for ImageContext<'b, I> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                rect_tri_list_xy_f32(self.transform, rect),
-                rect_tri_list_rgba_f32(color),
-                rect_tri_list_uv_f32(texture, source_rect)
+                triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                triangulation::rect_tri_list_rgba_f32(color),
+                triangulation::rect_tri_list_uv_f32(texture, source_rect)
             );
             back_end.disable_single_texture();
             if needs_alpha { back_end.disable_alpha_blend(); }
@@ -640,7 +634,7 @@ for EllipseColorContext {
             // Turn on alpha blending if not completely opaque.
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
-            with_ellipse_tri_list_xy_f32_rgba_f32(
+            triangulation::with_ellipse_tri_list_xy_f32_rgba_f32(
                 128,
                 self.transform,
                 rect,
