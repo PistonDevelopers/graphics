@@ -35,7 +35,6 @@ pub use Context = context::Context;
 
 use internal::{
     Color,
-    Polygon,
 };
 
 mod add;
@@ -96,10 +95,10 @@ pub type ImageRectangleContext<'a, I>
     = context::Context<shape::ImageRectangleShape<'a, I>>;
 pub type ImageRectangleColorContext<'a, I>
     = context::Context<shape::ImageRectangleShape<'a, I>, Color>;
-pub type PolygonContext<'a> 
-    = context::Context<Polygon<'a>>;
+pub type PolygonContext<'a>
+    = context::Context<shape::PolygonShape<'a>>;
 pub type PolygonColorContext<'a> 
-    = context::Context<Polygon<'a>, Color>;
+    = context::Context<shape::PolygonShape<'a>, Color>;
 pub type RectangleContext 
     = context::Context<shape::RectangleShape>;
 pub type RectangleBorderContext 

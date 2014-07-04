@@ -39,10 +39,11 @@ use internal::{
     HasTransform,
     HasViewTransform,
     Matrix2d,
-    Radius,
-    Rectangle,
     Polygon,
     Polygons,
+    Radius,
+    Rectangle,
+    SourceRectangle,
     Scalar,
 };
 use shape;
@@ -310,18 +311,22 @@ fn test_ellipse() {
 }
 
 impl<'b, C: Copy> 
-add::AddPolygon<'b, Context<Polygon<'b>, C>> 
+add::AddPolygon<'b, Context<shape::PolygonShape<'b>, C>> 
 for Context<(), C> {
     #[inline(always)]
     fn polygon<'b>(
         &self, 
         polygon: Polygon<'b>
-    ) -> Context<Polygon<'b>, C> {
+    ) -> Context<shape::PolygonShape<'b>, C> {
         Context {
             view: self.view,
             transform: self.transform,
-            shape: polygon,
             color: self.color,
+            shape: shape::Shape {
+                    variant: shape::PolygonVariant { polygon: polygon },
+                    border_radius: (),
+                    corner: ()
+                },
         }
     }
 }
@@ -358,11 +363,11 @@ for Context<S, C> {
     }
 }
 
-impl<S: HasSourceRectangle<Rectangle>, C>
-HasSourceRectangle<Rectangle> 
+impl<S: HasSourceRectangle<SourceRectangle>, C>
+HasSourceRectangle<SourceRectangle> 
 for Context<S, C> {
     #[inline(always)]
-    fn get_source_rectangle(&self) -> Rectangle {
+    fn get_source_rectangle(&self) -> SourceRectangle {
         self.shape.get_source_rectangle()
     }
 }
@@ -460,13 +465,13 @@ for Context<S, C> {
     }
 }
 
-impl<S: Copy + CanSourceRectangle<S, Rectangle>, C: Copy>
-CanSourceRectangle<Context<S, C>, Rectangle> 
+impl<S: Copy + CanSourceRectangle<S, SourceRectangle>, C: Copy>
+CanSourceRectangle<Context<S, C>, SourceRectangle> 
 for Context<S, C> {
     #[inline(always)]
     fn source_rectangle(
         &self, 
-        rect: Rectangle
+        rect: SourceRectangle
     ) -> Context<S, C> {
         Context {
             view: self.view,
@@ -483,7 +488,7 @@ for PolygonColorContext<'b> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let polygon = self.shape;
+            let polygon = self.shape.variant.polygon;
             let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
