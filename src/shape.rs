@@ -7,6 +7,8 @@ use {
 use internal::{
     CanRectangle,
     CanSourceRectangle,
+    Color,
+    HasColor,
     HasRectangle,
     HasSourceRectangle,
     Line,
@@ -145,6 +147,26 @@ for Shape<EllipseVariant, B, C> {
     }
 }
 
+impl<'b, I, B: Copy, C: Copy> 
+CanRectangle<Shape<ImageVariant<'b, I, Rectangle>, B, C>, Rectangle> 
+for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
+    #[inline(always)]
+    fn rectangle(
+        &self, 
+        rect: Rectangle
+    ) -> Shape<ImageVariant<'b, I, Rectangle>, B, C> {
+        Shape {
+            variant: ImageVariant {
+                    rect: rect,
+                    image: self.variant.image,
+                    src_rect: self.variant.src_rect
+                },
+            border_radius: self.border_radius,
+            corner: self.corner,
+        }
+    }
+}
+
 
 /// Gets rectangle of rectangle shape.
 impl<B, C>
@@ -167,6 +189,16 @@ for Shape<EllipseVariant, B, C> {
         res
     }
 }
+
+impl<'b, I, B, C> 
+HasRectangle<Rectangle> 
+for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
+    #[inline(always)]
+    fn get_rectangle(&self) -> Rectangle {
+        self.variant.rect
+    }
+}
+
 
 impl<'b, I> 
 HasSourceRectangle<SourceRectangle> 
@@ -213,6 +245,18 @@ for LerpTweenShape {
             border_radius: self.border_radius,
             corner: self.corner,
         }
+    }
+}
+
+static WHITE: Color = [1.0, ..4];
+
+// Use white color per vertex.
+impl<'b, I, R, B, C> 
+HasColor<Color> 
+for Shape<ImageVariant<'b, I, R>, B, C> {
+    #[inline(always)]
+    fn get_color(&self) -> Color {
+        WHITE
     }
 }
 

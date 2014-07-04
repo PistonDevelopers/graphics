@@ -512,6 +512,15 @@ for Context<S, Color> {
     }
 }
 
+// If the context has no color, use the color of the shape.
+impl<S: HasColor<Color>>
+HasColor<Color>
+for Context<S, ()> {
+    #[inline(always)]
+    fn get_color(&self) -> Color {
+        self.shape.get_color()
+    }
+}
 
 impl<S: Copy> 
 CanColor<Context<S, Color>, Color> 
@@ -914,6 +923,126 @@ for LerpTweenPolygonsColorContext<'b> {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }
             );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<'b, B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for ImageColorContext<'b, I> {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_single_texture()
+        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
+            let color = self.color;
+            let shape::Shape {
+                    variant: shape::ImageVariant {
+                            image: texture,
+                            src_rect: source_rect,
+                            rect: ()
+                        },
+                    border_radius: (),
+                    corner: ()
+                } = self.shape;
+            let rect = [
+                0.0, 
+                0.0, 
+                source_rect[2] as f64, 
+                source_rect[3] as f64
+            ];
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely
+            // opaque or if the texture has alpha channel.
+            let needs_alpha = color[3] != 1.0 
+                || back_end.has_texture_alpha(texture);
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            back_end.enable_single_texture(texture);
+            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
+                triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                triangulation::rect_tri_list_rgba_f32(color),
+                triangulation::rect_tri_list_uv_f32(texture, source_rect)
+            );
+            back_end.disable_single_texture();
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<'b, B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for ImageRectangleContext<'b, I> {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_single_texture()
+        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
+            let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
+            let shape::Shape {
+                    variant: shape::ImageVariant {
+                            image: texture,
+                            src_rect: source_rect,
+                            rect: rect
+                        },
+                    border_radius: (),
+                    corner: ()
+                } = self.shape;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque 
+            // or if the texture has alpha channel.
+            let needs_alpha = color[3] != 1.0 
+                || back_end.has_texture_alpha(texture);
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            back_end.enable_single_texture(texture);
+            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
+                triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                triangulation::rect_tri_list_rgba_f32(color),
+                triangulation::rect_tri_list_uv_f32(texture, source_rect)
+            );
+            back_end.disable_single_texture();
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<'b, B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for ImageRectangleColorContext<'b, I> {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_single_texture()
+        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
+            let color = self.color;
+            let shape::Shape {
+                    variant: shape::ImageVariant {
+                            image: texture,
+                            src_rect: source_rect,
+                            rect: rect
+                        },
+                    border_radius: (),
+                    corner: ()
+                } = self.shape;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque 
+            // or if the texture has alpha channel.
+            let needs_alpha = color[3] != 1.0 
+                || back_end.has_texture_alpha(texture);
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            back_end.enable_single_texture(texture);
+            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
+                triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                triangulation::rect_tri_list_rgba_f32(color),
+                triangulation::rect_tri_list_uv_f32(texture, source_rect)
+            );
+            back_end.disable_single_texture();
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
