@@ -42,7 +42,6 @@ pub use relative_transform2d::RelativeTransform2d;
 pub use round_rectangle_border_color_context::RoundRectangleBorderColorContext;
 pub use round_rectangle_border_context::RoundRectangleBorderContext;
 pub use round_rectangle_color_context::RoundRectangleColorContext;
-pub use round_rectangle_context::RoundRectangleContext;
 pub use square_border_line_color_context::SquareBorderLineColorContext;
 pub use view::View;
 
@@ -80,7 +79,6 @@ mod relative_transform2d;
 mod round_rectangle_border_color_context;
 mod round_rectangle_border_context;
 mod round_rectangle_color_context;
-mod round_rectangle_context;
 mod square_border_line_color_context;
 mod lerp_tween_color_context;
 mod lerp_tween_context;
@@ -102,14 +100,6 @@ pub type Context
     = context::Context<(), ()>;
 pub type ColorContext 
     = context::Context<(), Color>;
-pub type RectangleContext 
-    = context::Context<shape::RectangleShape, ()>;
-pub type RectangleBorderContext 
-    = context::Context<shape::RectangleBorderShape, ()>;
-pub type RectangleColorContext
-    = context::Context<shape::RectangleShape, Color>;
-pub type RectangleBorderColorContext
-    = context::Context<shape::RectangleBorderShape, Color>;
 pub type EllipseContext 
     = context::Context<shape::EllipseShape, ()>;
 pub type EllipseBorderContext 
@@ -122,10 +112,6 @@ pub type LineContext
     = context::Context<shape::LineShape, ()>;
 pub type LineColorContext 
     = context::Context<shape::LineShape, Color>;
-pub type RoundBorderLineContext 
-    = context::Context<shape::RoundBorderLineShape, ()>;
-pub type RoundBorderLineColorContext 
-    = context::Context<shape::RoundBorderLineShape, Color>;
 pub type SquareBorderLineContext 
     = context::Context<shape::SquareBorderLineShape, ()>;
 pub type SquareBorderLineColorContext 
@@ -142,6 +128,22 @@ pub type PolygonContext<'a>
     = context::Context<Polygon<'a>, ()>;
 pub type PolygonColorContext<'a> 
     = context::Context<Polygon<'a>, Color>;
+pub type RectangleContext 
+    = context::Context<shape::RectangleShape, ()>;
+pub type RectangleBorderContext 
+    = context::Context<shape::RectangleBorderShape, ()>;
+pub type RectangleColorContext
+    = context::Context<shape::RectangleShape, Color>;
+pub type RectangleBorderColorContext
+    = context::Context<shape::RectangleBorderShape, Color>;
+pub type RoundBorderLineContext 
+    = context::Context<shape::RoundBorderLineShape, ()>;
+pub type RoundBorderLineColorContext 
+    = context::Context<shape::RoundBorderLineShape, Color>;
+pub type RoundRectangleContext
+    = context::Context<shape::RoundRectangleShape, ()>;
+pub type RoundRectangleColorContext
+    = context::Context<shape::RoundRectangleShape, Color>;
 
 /// Fake `Context` constructors.
 pub mod Context {

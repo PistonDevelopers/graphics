@@ -92,34 +92,18 @@ for Shape<S, B, ()> {
     }
 }
 
-impl
-AddBorder<EllipseBorderShape> 
-for EllipseShape {
+impl<S: Copy, C: Copy>
+AddBorder<Shape<S, Radius, C>> 
+for Shape<S, (), C> {
     #[inline(always)]
     fn border_radius(
         &self, 
-        radius: f64
-    ) -> EllipseBorderShape {
+        radius: Radius
+    ) -> Shape<S, Radius, C> {
         Shape {
-            border_radius: radius,
             variant: self.variant,
             corner: self.corner,
-        }
-    }
-}
-
-impl
-AddBorder<RectangleBorderShape> 
-for RectangleShape {
-    #[inline(always)]
-    fn border_radius(
-        &self, 
-        radius: f64
-    ) -> RectangleBorderShape {
-        Shape {
             border_radius: radius,
-            variant: self.variant,
-            corner: self.corner,
         }
     }
 }

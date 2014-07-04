@@ -405,6 +405,23 @@ for Context<S, C> {
     }
 }
 
+impl<S: add::AddBorder<S2>, S2: Copy, C: Copy>
+add::AddBorder<Context<S2, C>> 
+for Context<S, C> {
+    #[inline(always)]
+    fn border_radius(
+        &self, 
+        radius: Radius
+    ) -> Context<S2, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            shape: self.shape.border_radius(radius),
+            color: self.color,
+        }
+    }
+}
+
 impl<S: Copy + CanRectangle<S, Rectangle>, C: Copy>
 CanRectangle<Context<S, C>, Rectangle> 
 for Context<S, C> {
@@ -666,27 +683,6 @@ for Context<shape::LineShape, C> {
     }
 }
 
-impl
-add::AddBorder<EllipseBorderColorContext> 
-for EllipseColorContext {
-    #[inline(always)]
-    fn border_radius(
-        &self, 
-        radius: f64
-    ) -> EllipseBorderColorContext {
-        Context {
-            view: self.view,
-            transform: self.transform,
-            color: self.color,
-            shape: shape::Shape {
-                    border_radius: radius,
-                    variant: self.shape.variant,
-                    corner: self.shape.corner,
-                },
-        }
-    }
-}
-
 impl<B: BackEnd<I>, I: ImageSize> 
 Draw<B, I> 
 for EllipseColorContext {
@@ -740,27 +736,6 @@ for ImageContext<'b, I> {
                 border_radius: (),
                 corner: (),
             }
-        }
-    }
-}
-
-impl
-add::AddBorder<RectangleBorderColorContext> 
-for RectangleColorContext {
-    #[inline(always)]
-    fn border_radius(
-        &self, 
-        radius: f64
-    ) -> RectangleBorderColorContext {
-        Context {
-            view: self.view,
-            transform: self.transform,
-            color: self.color,
-            shape: shape::Shape {
-                    variant: self.shape.variant,
-                    corner: self.shape.corner,
-                    border_radius: radius,
-                },
         }
     }
 }
