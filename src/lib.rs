@@ -4,37 +4,38 @@
 
 //! A library for 2D graphics that works with multiple back-ends.
 
-pub use add::AddBevel;
-pub use add::AddBevelBorder;
-pub use add::AddBorder;
-pub use add::AddColor;
-pub use add::AddEllipse;
-pub use add::AddImage;
-pub use add::AddLine;
-pub use add::AddPolygon;
-pub use add::AddPolygons;
-pub use add::AddRectangle;
-pub use add::AddRound;
-pub use add::AddRoundBorder;
-pub use add::AddSquareBorder;
-pub use add::AddTween;
+pub use add::{
+    AddBevel,
+    AddBevelBorder,
+    AddBorder,
+    AddColor,
+    AddEllipse,
+    AddImage,
+    AddLine,
+    AddPolygon,
+    AddPolygons,
+    AddRectangle,
+    AddRound,
+    AddRoundBorder,
+    AddSquareBorder,
+    AddTween,
+};
 pub use back_end::BackEnd;
 pub use draw::Draw;
 pub use image_size::ImageSize;
-pub use relative_color::RelativeColor;
-pub use relative_rectangle::RelativeRectangle;
-pub use relative_source_rectangle::RelativeSourceRectangle;
-pub use relative_transform2d::RelativeTransform2d;
+pub use relative::{
+    RelativeColor,
+    RelativeRectangle,
+    RelativeSourceRectangle,
+    RelativeTransform2d,
+};
 pub use view::View;
 
 pub use Context = context::Context;
 
-use shape::Shape;
 use internal::{
     Color,
     Polygon,
-    Radius,
-    Rectangle,
 };
 
 mod add;
@@ -42,10 +43,7 @@ mod back_end;
 mod context;
 mod draw;
 mod image_size;
-mod relative_color;
-mod relative_rectangle;
-mod relative_source_rectangle;
-mod relative_transform2d;
+mod relative;
 mod view;
 
 pub mod internal;
