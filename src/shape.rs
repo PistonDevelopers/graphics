@@ -12,6 +12,7 @@ use internal::{
     HasRectangle,
     HasSourceRectangle,
     Line,
+    Polygon,
     Polygons,
     Radius,
     Rectangle,
@@ -37,6 +38,9 @@ pub struct LerpTweenVariant<TShapes=()> {
     pub lerp: Scalar,
     pub shapes: TShapes,
 }
+pub struct PolygonVariant<'a> {
+    pub polygon: Polygon<'a>
+}
 
 pub struct BevelCorner {
     pub bevel_radius: Radius
@@ -60,6 +64,7 @@ pub type LineShape = Shape<LineVariant>;
 pub type BevelBorderLineShape = Shape<LineVariant, (), BevelCorner>;
 pub type RoundBorderLineShape = Shape<LineVariant, (), RoundCorner>;
 pub type SquareBorderLineShape = Shape<LineVariant, (), SquareCorner>;
+pub type PolygonShape<'a> = Shape<PolygonVariant<'a>, (), ()>;
 pub type RectangleShape = Shape<RectangleVariant>;
 pub type RectangleBorderShape = Shape<RectangleVariant, Radius>;
 pub type RoundRectangleShape = Shape<RectangleVariant, (), RoundCorner>;
