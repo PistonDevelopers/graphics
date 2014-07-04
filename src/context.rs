@@ -159,17 +159,17 @@ fn test_context() {
     {
         let d = c.trans(20.0, 40.0);
         let d = d.trans(10.0, 10.0);
-        let transform = d.transform.get();
+        let transform = d.transform;
         assert_eq!(transform[2], 30.0);
         assert_eq!(transform[5], 50.0);
     }
     
-    let transform = c.transform.get();
+    let transform = c.transform;
     assert_eq!(transform[2], 0.0);
     assert_eq!(transform[5], 0.0);
 
     let c = c.rot_deg(90.0);
-    let transform = c.transform.get();
+    let transform = c.transform;
     assert!((transform[0] - 0.0).abs() < 0.00001);
     assert!((transform[1] + 1.0).abs() < 0.00001);
 }
