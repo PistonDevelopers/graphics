@@ -2,6 +2,7 @@ use {
     AddBevel,
     AddBorder,
     AddRound,
+    AddPolygons,
 };
 use internal::{
     CanRectangle,
@@ -9,6 +10,7 @@ use internal::{
     HasRectangle,
     HasSourceRectangle,
     Line,
+    Polygons,
     Radius,
     Rectangle,
     Scalar,
@@ -23,7 +25,10 @@ pub struct ImageVariant<'a, I, TRectangle> {
     pub src_rect: SourceRectangle,
     pub rect: TRectangle,
 }
-pub struct TweenVariant(pub Scalar);
+pub struct LerpTweenVariant<TShapes> {
+    pub lerp: Scalar,
+    pub shapes: TShapes,
+}
 
 pub struct BevelCorner(pub Radius);
 pub struct RoundCorner(pub Radius);
@@ -35,6 +40,8 @@ pub type BevelRectangleShape = Shape<RectangleVariant, (), BevelCorner>;
 pub type BevelRectangleBorderShape = Shape<RectangleVariant, Radius, BevelCorner>;
 pub type ImageShape<'a, I> = Shape<ImageVariant<'a, I, ()>, (), ()>;
 pub type ImageRectangleShape<'a, I> = Shape<ImageVariant<'a, I, Rectangle>, (), ()>;
+pub type LerpTweenShape = Shape<LerpTweenVariant<()>, (), ()>;
+pub type LerpTweenPolygonsShape<'a> = Shape<LerpTweenVariant<Polygons<'a>>, (), ()>;
 pub type LineShape = Shape<LineVariant, (), ()>;
 pub type BevelBorderLineShape = Shape<LineVariant, (), BevelCorner>;
 pub type RoundBorderLineShape = Shape<LineVariant, (), RoundCorner>;
@@ -43,7 +50,7 @@ pub type RectangleShape = Shape<RectangleVariant, (), ()>;
 pub type RectangleBorderShape = Shape<RectangleVariant, Radius, ()>;
 pub type RoundRectangleShape = Shape<RectangleVariant, (), RoundCorner>;
 pub type RoundRectangleBorderShape = Shape<RectangleVariant, Radius, RoundCorner>;
-pub type TweenShape = Shape<TweenVariant, (), ()>;
+
 
 /// A rectangle shape.
 #[deriving(Copy)]
@@ -189,3 +196,23 @@ for ImageRectangleShape<'b, I> {
         }
     }
 }
+
+impl<'b> 
+AddPolygons<'b, LerpTweenPolygonsShape<'b>> 
+for LerpTweenShape {
+    #[inline(always)]
+    fn polygons(
+        &self, 
+        polygons: Polygons<'b>
+    ) -> LerpTweenPolygonsShape<'b> {
+        Shape {
+            variant: LerpTweenVariant {
+                    lerp: self.variant.lerp,
+                    shapes: polygons,
+                },
+            border_radius: self.border_radius,
+            corner: self.corner,
+        }
+    }
+}
+

@@ -19,6 +19,7 @@ use {
     ImageRectangleColorContext,
     LineContext,
     LerpTweenContext,
+    LerpTweenPolygonsColorContext,
     PolygonColorContext,
     RectangleContext,
     RectangleColorContext,
@@ -47,6 +48,7 @@ use internal::{
     Radius,
     Rectangle,
     Polygon,
+    Polygons,
     Scalar,
 };
 use shape;
@@ -422,6 +424,23 @@ for Context<S, C> {
     }
 }
 
+impl<'a, S: add::AddPolygons<'a, S2>, S2: Copy, C: Copy>
+add::AddPolygons<'a, Context<S2, C>> 
+for Context<S, C> {
+    #[inline(always)]
+    fn polygons(
+        &self, 
+        polygons: Polygons<'a>
+    ) -> Context<S2, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            shape: self.shape.polygons(polygons),
+            color: self.color,
+        }
+    }
+}
+
 impl<S: Copy + CanRectangle<S, Rectangle>, C: Copy>
 CanRectangle<Context<S, C>, Rectangle> 
 for Context<S, C> {
@@ -599,19 +618,22 @@ for ColorContext {
 }
 
 impl<C: Copy>
-add::AddTween<Context<shape::TweenShape, C>> 
+add::AddTween<Context<shape::LerpTweenShape, C>> 
 for Context<(), C> {
     #[inline(always)]
     fn lerp(
         &self, 
         tween_factor: Scalar
-    ) -> Context<shape::TweenShape, C> {
+    ) -> Context<shape::LerpTweenShape, C> {
         Context {
             view: self.view,
             transform: self.transform,
             color: self.color,
             shape: shape::Shape {
-                    variant: shape::TweenVariant(tween_factor),
+                    variant: shape::LerpTweenVariant {
+                            lerp: tween_factor,
+                            shapes: (),
+                        },
                     border_radius: (),
                     corner: (),
                 },
@@ -851,6 +873,42 @@ for RoundBorderLineColorContext {
                 self.transform,
                 line,
                 round_border_radius,
+                color,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<'b, B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for LerpTweenPolygonsColorContext<'b> {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let shape::Shape {
+                    variant: shape::LerpTweenVariant {
+                            lerp: tween_factor,
+                            shapes: polygons,
+                        },
+                    border_radius: (),
+                    corner: (),
+                } = self.shape;
+            let color = self.color;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            triangulation::with_lerp_polygons_tri_list_xy_f32_rgba_f32(
+                self.transform,
+                polygons,
+                tween_factor,
                 color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
