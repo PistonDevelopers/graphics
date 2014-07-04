@@ -57,7 +57,7 @@ use shape;
 
 /// Drawing 2d context.
 #[deriving(Copy)]
-pub struct Context<S, C> {
+pub struct Context<S=(), C=()> {
     /// View transformation.
     pub view: Matrix2d,
     /// Current transformation.
@@ -114,9 +114,10 @@ for Context<S, C> {
     }
 }
 
+impl Context {
     /// Creates a new drawing context.
     #[inline(always)]
-    pub fn ctx_id() -> Context<(), ()> {
+    pub fn new() -> Context {
         Context {
             view:
                 [1.0, 0.0, 0.0,
@@ -142,7 +143,7 @@ for Context<S, C> {
     /// and x axis pointing to the right
     /// and y axis pointing down.
     #[inline(always)]
-    pub fn ctx_abs(w: f64, h: f64) -> Context<(), ()> {
+    pub fn abs(w: f64, h: f64) -> Context {
         let sx = 2.0 / w;
         let sy = -2.0 / h;
         let mat = [ sx, 0.0, -1.0,
@@ -154,12 +155,13 @@ for Context<S, C> {
             color: (),
         }
     }
+}
 
 #[test]
 fn test_context() {
     use RelativeTransform2d;
 
-    let c = ctx_id();
+    let c = Context::new();
     {
         let d = c.trans(20.0, 40.0);
         let d = d.trans(10.0, 10.0);
@@ -182,9 +184,9 @@ fn test_context() {
 fn test_scale() {
     use RelativeTransform2d;
 
-    let c = ctx_id();
+    let c = Context::new();
     let c = c.scale(2.0, 3.0);
-    let transform = c.transform.get();
+    let transform = c.transform;
     assert!((transform[0] - 2.0).abs() < 0.00001);
     assert!((transform[4] - 3.0).abs() < 0.00001);
 }
@@ -243,15 +245,17 @@ for ImageColorContext<'b, I> {
 
 #[test]
 fn test_rect() {
-    let c = ctx_id();
+    use add::AddRectangle;    
+
+    let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 50.0);
-    let rect = d.rect.get();
+    let shape::RectangleVariant(rect) = d.shape.variant;
     assert_eq!(rect[2], 100.0);
 }
 
 impl<S: Copy>
 add::AddColor<Context<S, Color>> 
-for Context<S, ()> {
+for Context<S> {
     #[inline(always)]
     fn rgba(
         &self, 
@@ -271,7 +275,9 @@ for Context<S, ()> {
 
 #[test]
 fn test_rgba() {
-    let c = ctx_id();
+    use add::AddColor;    
+
+    let c = Context::new();
     let d: ColorContext = c.rgba(1.0, 0.0, 0.0, 1.0);
     let color = d.color;
     assert_eq!(color[0], 1.0);
@@ -303,9 +309,11 @@ for Context<(), C> {
 
 #[test]
 fn test_ellipse() {
-    let c = ctx_id();
+    use add::AddEllipse;    
+
+    let c = Context::new();
     let d: EllipseContext = c.ellipse(0.0, 0.0, 100.0, 100.0);
-    let rect = d.rect;    
+    let shape::EllipseVariant(rect) = d.shape.variant;    
     assert_eq!(rect[2], 100.0);
 }
 
@@ -517,7 +525,7 @@ for Context<S, Color> {
 // If the context has no color, use the color of the shape.
 impl<S: HasColor<Color>>
 HasColor<Color>
-for Context<S, ()> {
+for Context<S> {
     #[inline(always)]
     fn get_color(&self) -> Color {
         self.shape.get_color()
@@ -540,7 +548,10 @@ for Context<S, Color> {
 
 #[test]
 fn test_rgba_1() {
-    let c = ctx_id();
+    use add::AddRectangle;
+    use add::AddColor;
+
+    let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 100.0);
     let e = d.rgba(1.0, 0.0, 0.0, 1.0);
     let color = e.color;
@@ -573,8 +584,11 @@ for Context<(), C> {
 
 #[test]
 fn test_line() {
-    let _c = ctx_id().line(0.0, 0.0, 1.0, 1.0).rgb(1.0, 0.0, 0.0);
-    let _c = ctx_id().rgb(1.0, 0.0, 0.0).line(0.0, 0.0, 1.0, 1.0);
+    use add::AddLine;
+    use add::AddColor;    
+
+    let _c = Context::new().line(0.0, 0.0, 1.0, 1.0).rgb(1.0, 0.0, 0.0);
+    let _c = Context::new().rgb(1.0, 0.0, 0.0).line(0.0, 0.0, 1.0, 1.0);
 }
 
 impl<'b, B: BackEnd<I>, I: ImageSize> 

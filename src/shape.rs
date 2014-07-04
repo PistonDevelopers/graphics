@@ -22,12 +22,12 @@ use internal::{
 pub struct RectangleVariant(pub Rectangle);
 pub struct EllipseVariant(pub Rectangle);
 pub struct LineVariant(pub Line);
-pub struct ImageVariant<'a, I, TRectangle> {
+pub struct ImageVariant<'a, I, TRectangle=()> {
     pub image: &'a I, 
     pub src_rect: SourceRectangle,
     pub rect: TRectangle,
 }
-pub struct LerpTweenVariant<TShapes> {
+pub struct LerpTweenVariant<TShapes=()> {
     pub lerp: Scalar,
     pub shapes: TShapes,
 }
@@ -36,20 +36,20 @@ pub struct BevelCorner(pub Radius);
 pub struct RoundCorner(pub Radius);
 pub struct SquareCorner(pub Radius);
 
-pub type EllipseShape = Shape<EllipseVariant, (), ()>;
-pub type EllipseBorderShape = Shape<EllipseVariant, Radius, ()>;
+pub type EllipseShape = Shape<EllipseVariant>;
+pub type EllipseBorderShape = Shape<EllipseVariant, Radius>;
 pub type BevelRectangleShape = Shape<RectangleVariant, (), BevelCorner>;
 pub type BevelRectangleBorderShape = Shape<RectangleVariant, Radius, BevelCorner>;
-pub type ImageShape<'a, I> = Shape<ImageVariant<'a, I, ()>, (), ()>;
-pub type ImageRectangleShape<'a, I> = Shape<ImageVariant<'a, I, Rectangle>, (), ()>;
-pub type LerpTweenShape = Shape<LerpTweenVariant<()>, (), ()>;
-pub type LerpTweenPolygonsShape<'a> = Shape<LerpTweenVariant<Polygons<'a>>, (), ()>;
-pub type LineShape = Shape<LineVariant, (), ()>;
+pub type ImageShape<'a, I> = Shape<ImageVariant<'a, I>>;
+pub type ImageRectangleShape<'a, I> = Shape<ImageVariant<'a, I, Rectangle>>;
+pub type LerpTweenShape = Shape<LerpTweenVariant>;
+pub type LerpTweenPolygonsShape<'a> = Shape<LerpTweenVariant<Polygons<'a>>>;
+pub type LineShape = Shape<LineVariant>;
 pub type BevelBorderLineShape = Shape<LineVariant, (), BevelCorner>;
 pub type RoundBorderLineShape = Shape<LineVariant, (), RoundCorner>;
 pub type SquareBorderLineShape = Shape<LineVariant, (), SquareCorner>;
-pub type RectangleShape = Shape<RectangleVariant, (), ()>;
-pub type RectangleBorderShape = Shape<RectangleVariant, Radius, ()>;
+pub type RectangleShape = Shape<RectangleVariant>;
+pub type RectangleBorderShape = Shape<RectangleVariant, Radius>;
 pub type RoundRectangleShape = Shape<RectangleVariant, (), RoundCorner>;
 pub type RoundRectangleBorderShape = Shape<RectangleVariant, Radius, RoundCorner>;
 
@@ -58,8 +58,8 @@ pub type RoundRectangleBorderShape = Shape<RectangleVariant, Radius, RoundCorner
 #[deriving(Copy)]
 pub struct Shape<
     TVariant, 
-    TBorderRadius,
-    TCorner
+    TBorderRadius=(),
+    TCorner=()
 > {
     /// Rectangle.
     pub variant: TVariant,
@@ -71,7 +71,7 @@ pub struct Shape<
 
 impl<S: Copy, B: Copy>
 AddBevel<Shape<S, B, BevelCorner>> 
-for Shape<S, B, ()> {
+for Shape<S, B> {
     #[inline(always)]
     fn bevel(
         &self, 
@@ -87,7 +87,7 @@ for Shape<S, B, ()> {
 
 impl<S: Copy, B: Copy>
 AddRound<Shape<S, B, RoundCorner>> 
-for Shape<S, B, ()> {
+for Shape<S, B> {
     #[inline(always)]
     fn round(
         &self, 
