@@ -19,9 +19,15 @@ use internal::{
     SourceRectangle,
 };
 
-pub struct RectangleVariant(pub Rectangle);
-pub struct EllipseVariant(pub Rectangle);
-pub struct LineVariant(pub Line);
+pub struct RectangleVariant {
+    pub rect: Rectangle
+}
+pub struct EllipseVariant {
+    pub rect: Rectangle
+}
+pub struct LineVariant {
+    pub line: Line
+}
 pub struct ImageVariant<'a, I, TRectangle=()> {
     pub image: &'a I, 
     pub src_rect: SourceRectangle,
@@ -32,9 +38,15 @@ pub struct LerpTweenVariant<TShapes=()> {
     pub shapes: TShapes,
 }
 
-pub struct BevelCorner(pub Radius);
-pub struct RoundCorner(pub Radius);
-pub struct SquareCorner(pub Radius);
+pub struct BevelCorner {
+    pub bevel_radius: Radius
+}
+pub struct RoundCorner {
+    pub round_radius: Radius
+}
+pub struct SquareCorner {
+    pub square_radius: Radius
+}
 
 pub type EllipseShape = Shape<EllipseVariant>;
 pub type EllipseBorderShape = Shape<EllipseVariant, Radius>;
@@ -79,7 +91,7 @@ for Shape<S, B> {
     ) -> Shape<S, B, BevelCorner> {
         Shape {
             variant: self.variant,
-            corner: BevelCorner(radius),
+            corner: BevelCorner { bevel_radius: radius },
             border_radius: self.border_radius,
         }
     }
@@ -95,7 +107,7 @@ for Shape<S, B> {
     ) -> Shape<S, B, RoundCorner> {
         Shape {
             variant: self.variant,
-            corner: RoundCorner(radius),
+            corner: RoundCorner { round_radius: radius },
             border_radius: self.border_radius,
         }
     }
@@ -126,7 +138,7 @@ for Shape<RectangleVariant, B, C> {
     #[inline(always)]
     fn rectangle(&self, rect: Rectangle) -> Shape<RectangleVariant, B, C> {
         Shape { 
-            variant: RectangleVariant(rect), 
+            variant: RectangleVariant { rect: rect }, 
             ..*self 
         }
     }
@@ -141,7 +153,7 @@ for Shape<EllipseVariant, B, C> {
     #[inline(always)]
     fn rectangle(&self, rect: Rectangle) -> Shape<EllipseVariant, B, C> {
         Shape { 
-            variant: EllipseVariant(rect), 
+            variant: EllipseVariant { rect: rect }, 
             ..*self 
         }
     }
@@ -174,8 +186,7 @@ HasRectangle<Rectangle>
 for Shape<RectangleVariant, B, C> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        let RectangleVariant(res) = self.variant;
-        res
+        self.variant.rect
     }
 }
 
@@ -185,8 +196,7 @@ HasRectangle<Rectangle>
 for Shape<EllipseVariant, B, C> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
-        let EllipseVariant(res) = self.variant;
-        res
+        self.variant.rect
     }
 }
 

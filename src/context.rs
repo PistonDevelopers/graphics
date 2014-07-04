@@ -199,7 +199,7 @@ for Context<(), C> {
             transform: self.transform,
             color: self.color,
             shape: shape::Shape { 
-                variant: shape::RectangleVariant([x, y, w, h]),
+                variant: shape::RectangleVariant { rect: [x, y, w, h] },
                 border_radius: (),
                 corner: (),
             },
@@ -291,7 +291,7 @@ for Context<(), C> {
             transform: self.transform,
             color: self.color,
             shape: shape::Shape { 
-                variant: shape::EllipseVariant([x, y, w, h]),
+                variant: shape::EllipseVariant { rect: [x, y, w, h] },
                 border_radius: (),
                 corner: (),
             },
@@ -565,7 +565,7 @@ for Context<(), C> {
             view: self.view,
             transform: self.transform,
             shape: shape::Shape {
-                    variant: shape::LineVariant([x1, y1, x2, y2]),
+                    variant: shape::LineVariant { line: [x1, y1, x2, y2] },
                     border_radius: (),
                     corner: (),
                 },
@@ -671,7 +671,7 @@ for Context<shape::LineShape, C> {
             transform: self.transform,
             color: self.color,
             shape: shape::Shape {
-                    corner: shape::SquareCorner(radius),
+                    corner: shape::SquareCorner { square_radius: radius },
                     variant: self.shape.variant,
                     border_radius: self.shape.border_radius,
                 },
@@ -693,7 +693,7 @@ for Context<shape::LineShape, C> {
             transform: self.transform,
             color: self.color,
             shape: shape::Shape {
-                    corner: shape::BevelCorner(radius),
+                    corner: shape::BevelCorner { bevel_radius: radius },
                     variant: self.shape.variant,
                     border_radius: self.shape.border_radius,
                 },
@@ -714,7 +714,7 @@ for Context<shape::LineShape, C> {
             transform: self.transform,
             color: self.color,
             shape: shape::Shape {
-                    corner: shape::RoundCorner(radius),
+                    corner: shape::RoundCorner { round_radius: radius },
                     variant: self.shape.variant,
                     border_radius: self.shape.border_radius,
                 },
@@ -877,8 +877,8 @@ for RoundBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let shape::LineVariant(line) = self.shape.variant;
-            let shape::RoundCorner(round_border_radius) = self.shape.corner;
+            let line = self.shape.variant.line;
+            let round_border_radius = self.shape.corner.round_radius;
             let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
@@ -1066,7 +1066,7 @@ for EllipseBorderColorContext {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let color = self.color;
             let shape::Shape {
-                    variant: shape::EllipseVariant(rect),
+                    variant: shape::EllipseVariant { rect: rect },
                     border_radius: border_radius,
                     corner: (),
                 } = self.shape;
@@ -1097,8 +1097,8 @@ for BevelRectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let shape::RectangleVariant(rect) = self.shape.variant;
-            let shape::BevelCorner(bevel_radius) = self.shape.corner;
+            let rect = self.get_rectangle();
+            let bevel_radius = self.shape.corner.bevel_radius;
             let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
@@ -1128,8 +1128,8 @@ for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let shape::RectangleVariant(rect) = self.shape.variant;
-            let shape::BevelCorner(bevel_radius) = self.shape.corner;
+            let rect = self.get_rectangle();
+            let bevel_radius = self.shape.corner.bevel_radius;
             let border_radius = self.shape.border_radius;
             let color = self.color;
             // Complete transparency does not need to be rendered.
@@ -1161,8 +1161,8 @@ for BevelBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let shape::LineVariant(line) = self.shape.variant;
-            let shape::BevelCorner(bevel_border_radius) = self.shape.corner;
+            let line = self.shape.variant.line;
+            let bevel_border_radius = self.shape.corner.bevel_radius;
             let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
@@ -1192,8 +1192,8 @@ for RoundRectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let shape::RectangleVariant(rect) = self.shape.variant;
-            let shape::RoundCorner(round_radius) = self.shape.corner;
+            let rect = self.get_rectangle();
+            let round_radius = self.shape.corner.round_radius;
             let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
@@ -1223,10 +1223,10 @@ for RoundRectangleBorderColorContext {
     #[inline(always)]
     fn draw( &self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let shape::RectangleVariant(rect) = self.shape.variant;
+            let rect = self.get_rectangle();
             let color = self.color;
             let border_radius = self.shape.border_radius;
-            let shape::RoundCorner(round_radius) = self.shape.corner;
+            let round_radius = self.shape.corner.round_radius;
             // Complete transparency does  not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not complete opaque.
@@ -1255,8 +1255,8 @@ for SquareBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let shape::LineVariant(line) = self.shape.variant;
-            let shape::SquareCorner(square_border_radius) = self.shape.corner;
+            let line = self.shape.variant.line;
+            let square_border_radius = self.shape.corner.square_radius;
             let color = self.color;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
