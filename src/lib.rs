@@ -143,3 +143,9 @@ pub type PolygonContext<'a>
 pub type PolygonColorContext<'a> 
     = context::Context<Polygon<'a>, Color>;
 
+/// Fake `Context` constructors.
+pub mod Context {
+    pub use new = super::context::ctx_id;
+    pub use abs = super::context::ctx_abs;
+}
+
