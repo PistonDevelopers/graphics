@@ -39,7 +39,6 @@ pub use relative_color::RelativeColor;
 pub use relative_rectangle::RelativeRectangle;
 pub use relative_source_rectangle::RelativeSourceRectangle;
 pub use relative_transform2d::RelativeTransform2d;
-pub use round_border_line_color_context::RoundBorderLineColorContext;
 pub use round_rectangle_border_color_context::RoundRectangleBorderColorContext;
 pub use round_rectangle_border_context::RoundRectangleBorderContext;
 pub use round_rectangle_color_context::RoundRectangleColorContext;
@@ -78,7 +77,6 @@ mod relative_color;
 mod relative_rectangle;
 mod relative_source_rectangle;
 mod relative_transform2d;
-mod round_border_line_color_context;
 mod round_rectangle_border_color_context;
 mod round_rectangle_border_context;
 mod round_rectangle_color_context;
@@ -127,7 +125,7 @@ pub type LineColorContext
 pub type RoundBorderLineContext 
     = context::Context<shape::RoundBorderLineShape, ()>;
 pub type RoundBorderLineColorContext 
-    = context::Context<shape::RoundBorderLineShape, ()>;
+    = context::Context<shape::RoundBorderLineShape, Color>;
 pub type SquareBorderLineContext 
     = context::Context<shape::SquareBorderLineShape, ()>;
 pub type SquareBorderLineColorContext 

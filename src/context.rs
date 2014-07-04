@@ -857,3 +857,34 @@ for RectangleColorContext {
     }
 }
 
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for RoundBorderLineColorContext {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let shape::LineVariant(line) = self.shape.variant;
+            let shape::RoundCorner(round_border_radius) = self.shape.corner;
+            let color = self.color;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+                64,
+                self.transform,
+                line,
+                round_border_radius,
+                color,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
