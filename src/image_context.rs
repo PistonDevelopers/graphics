@@ -143,24 +143,3 @@ for ImageContext<'b, I> {
     }
 }
 
-impl<'b, I> 
-AddRectangle<ImageRectangleContext<'b, I>> 
-for ImageContext<'b, I> {
-    #[inline(always)]
-    fn rect(
-        &self, 
-        x: Scalar, 
-        y: Scalar, 
-        w: Scalar, 
-        h: Scalar
-    ) -> ImageRectangleContext<'b, I> {
-        ImageRectangleContext {
-            view: self.view,
-            transform: self.transform,
-            rect: [x, y, w, h],
-            image: self.image,
-            source_rect: self.source_rect,
-        }
-    }
-}
-

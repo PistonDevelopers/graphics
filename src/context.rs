@@ -16,6 +16,7 @@ use {
     ImageContext,
     ImageColorContext,
     ImageRectangleContext,
+    ImageRectangleColorContext,
     LineContext,
     LerpTweenContext,
     PolygonColorContext,
@@ -32,12 +33,14 @@ use triangulation;
 use internal::{
     CanColor,
     CanRectangle,
+    CanSourceRectangle,
     CanTransform,
     CanViewTransform,
     Color,
     ColorComponent,
     HasColor,
     HasRectangle,
+    HasSourceRectangle,
     HasTransform,
     HasViewTransform,
     Matrix2d,
@@ -206,6 +209,34 @@ for Context<(), C> {
     }
 }
 
+impl<'b, I> 
+add::AddRectangle<ImageRectangleColorContext<'b, I>> 
+for ImageColorContext<'b, I> {
+    #[inline(always)]
+    fn rect(
+        &self, 
+        x: Scalar, 
+        y: Scalar, 
+        w: Scalar, 
+        h: Scalar
+    ) -> ImageRectangleColorContext<'b, I> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                    variant: shape::ImageVariant {
+                            image: self.shape.variant.image,
+                            src_rect: self.shape.variant.src_rect,
+                            rect: [x, y, w, h],
+                        },
+                    border_radius: self.shape.border_radius,
+                    corner: self.shape.corner,
+                },
+        }
+    }
+}
+
 #[test]
 fn test_rect() {
     let c = ctx_id();
@@ -304,7 +335,8 @@ for Context<(), C> {
             shape: shape::Shape {
                     variant: shape::ImageVariant {
                             image: image,
-                            src_rect: [0, 0, w as i32, h as i32]
+                            src_rect: [0, 0, w as i32, h as i32],
+                            rect: (),
                         },
                     border_radius: (),
                     corner: (),
@@ -322,6 +354,15 @@ for Context<S, C> {
     }
 }
 
+impl<S: HasSourceRectangle<Rectangle>, C>
+HasSourceRectangle<Rectangle> 
+for Context<S, C> {
+    #[inline(always)]
+    fn get_source_rectangle(&self) -> Rectangle {
+        self.shape.get_source_rectangle()
+    }
+}
+
 impl<'b, I: ImageSize> 
 add::AddImage<'b, ImageRectangleContext<'b, I>, I> 
 for RectangleContext {
@@ -330,12 +371,19 @@ for RectangleContext {
         image: &'b I
     ) -> ImageRectangleContext<'b, I> {
         let (w, h) = image.get_size();
-        ImageRectangleContext {
+        Context {
             view: self.view,
             transform: self.transform,
-            rect: self.shape.get_rectangle(),
-            image: image,
-            source_rect: [0, 0, w as i32, h as i32],
+            color: self.color,
+            shape: shape::Shape {
+                    variant: shape::ImageVariant {
+                            image: image,
+                            rect: self.shape.get_rectangle(),
+                            src_rect: [0, 0, w as i32, h as i32],
+                        },
+                    border_radius: self.shape.border_radius,
+                    corner: self.shape.corner,
+                },
         }
     }
 }
@@ -370,6 +418,23 @@ for Context<S, C> {
             transform: self.transform,
             color: self.color,
             shape: self.shape.rectangle(rect),
+        }
+    }
+}
+
+impl<S: Copy + CanSourceRectangle<S, Rectangle>, C: Copy>
+CanSourceRectangle<Context<S, C>, Rectangle> 
+for Context<S, C> {
+    #[inline(always)]
+    fn source_rectangle(
+        &self, 
+        rect: Rectangle
+    ) -> Context<S, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: self.shape.source_rectangle(rect),
         }
     }
 }
@@ -475,7 +540,8 @@ for ImageContext<'b, I> {
             let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
             let shape::ImageVariant { 
                     image: texture,
-                    src_rect: source_rect
+                    src_rect: source_rect,
+                    rect: (),
                 } = self.shape.variant;
             let rect = [
                 0.0, 
@@ -642,6 +708,147 @@ for EllipseColorContext {
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
                 }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<'b, I> 
+add::AddRectangle<ImageRectangleContext<'b, I>> 
+for ImageContext<'b, I> {
+    #[inline(always)]
+    fn rect(
+        &self, 
+        x: Scalar, 
+        y: Scalar, 
+        w: Scalar, 
+        h: Scalar
+    ) -> ImageRectangleContext<'b, I> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                variant: shape::ImageVariant {
+                    image: self.shape.variant.image,
+                    src_rect: self.shape.variant.src_rect,
+                    rect: [x, y, w, h],
+                },
+                border_radius: (),
+                corner: (),
+            }
+        }
+    }
+}
+
+impl
+add::AddBorder<RectangleBorderColorContext> 
+for RectangleColorContext {
+    #[inline(always)]
+    fn border_radius(
+        &self, 
+        radius: f64
+    ) -> RectangleBorderColorContext {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                    variant: self.shape.variant,
+                    corner: self.shape.corner,
+                    border_radius: radius,
+                },
+        }
+    }
+}
+
+impl<'b, I: ImageSize> 
+add::AddImage<'b, ImageRectangleColorContext<'b, I>, I> 
+for RectangleColorContext {
+    fn image(
+        &self, 
+        image: &'b I
+    ) -> ImageRectangleColorContext<'b, I> {
+        let (w, h) = image.get_size();
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                    variant: shape::ImageVariant {
+                            image: image,
+                            src_rect: [0, 0, w as i32, h as i32],
+                            rect: self.shape.get_rectangle(),
+                        },
+                    border_radius: self.shape.border_radius,
+                    corner: self.shape.corner,
+                },
+        }
+    }
+}
+
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for RectangleBorderColorContext {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let rect = self.shape.get_rectangle();
+            let color = self.color;
+            let border_radius = self.shape.border_radius;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            back_end.tri_list_xy_f32_rgba_f32(
+                triangulation::rect_border_tri_list_xy_f32(
+                    self.transform, rect, border_radius),
+                triangulation::rect_border_tri_list_rgba_f32(color)
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<S: Copy + add::AddBevel<T>, T, C: Copy>
+add::AddBevel<Context<T, C>> 
+for Context<S, C> {
+    #[inline(always)]
+    fn bevel(
+        &self, 
+        radius: f64
+    ) -> Context<T, C> {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: self.shape.bevel(radius),
+        }
+    }
+}
+
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for RectangleColorContext {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let rect = self.shape.get_rectangle();
+            let color = self.color;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            back_end.tri_list_xy_f32_rgba_f32(
+                triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                triangulation::rect_tri_list_rgba_f32(color)
             );
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {

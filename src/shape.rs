@@ -5,7 +5,9 @@ use {
 };
 use internal::{
     CanRectangle,
+    CanSourceRectangle,
     HasRectangle,
+    HasSourceRectangle,
     Line,
     Radius,
     Rectangle,
@@ -16,9 +18,10 @@ use internal::{
 pub struct RectangleVariant(pub Rectangle);
 pub struct EllipseVariant(pub Rectangle);
 pub struct LineVariant(pub Line);
-pub struct ImageVariant<'a, I> {
+pub struct ImageVariant<'a, I, TRectangle> {
     pub image: &'a I, 
-    pub src_rect: SourceRectangle
+    pub src_rect: SourceRectangle,
+    pub rect: TRectangle,
 }
 pub struct TweenVariant(pub Scalar);
 
@@ -30,7 +33,8 @@ pub type EllipseShape = Shape<EllipseVariant, (), ()>;
 pub type EllipseBorderShape = Shape<EllipseVariant, Radius, ()>;
 pub type BevelRectangleShape = Shape<RectangleVariant, (), BevelCorner>;
 pub type BevelRectangleBorderShape = Shape<RectangleVariant, Radius, BevelCorner>;
-pub type ImageShape<'a, I> = Shape<ImageVariant<'a, I>, (), ()>;
+pub type ImageShape<'a, I> = Shape<ImageVariant<'a, I, ()>, (), ()>;
+pub type ImageRectangleShape<'a, I> = Shape<ImageVariant<'a, I, Rectangle>, (), ()>;
 pub type LineShape = Shape<LineVariant, (), ()>;
 pub type BevelBorderLineShape = Shape<LineVariant, (), BevelCorner>;
 pub type RoundBorderLineShape = Shape<LineVariant, (), RoundCorner>;
@@ -56,44 +60,14 @@ pub struct Shape<
     pub corner: TCorner,
 }
 
-
-impl
-AddRound<RoundRectangleShape> 
-for RectangleShape {
-    #[inline(always)]
-    fn round(
-        &self, 
-        radius: Radius
-    ) -> RoundRectangleShape {
-        Shape {
-            variant: self.variant,
-            corner: RoundCorner(radius),
-            border_radius: self.border_radius,
-        }
-    }
-}
-
-impl
-AddRound<RoundRectangleBorderShape> 
-for RectangleBorderShape {
-    #[inline(always)]
-    fn round(&self, radius: Radius) -> RoundRectangleBorderShape {
-        Shape {
-            variant: self.variant,
-            border_radius: self.border_radius,
-            corner: RoundCorner(radius),
-        }
-    }
-}
-
-impl
-AddBevel<BevelRectangleShape> 
-for RectangleShape {
+impl<S: Copy, B: Copy>
+AddBevel<Shape<S, B, BevelCorner>> 
+for Shape<S, B, ()> {
     #[inline(always)]
     fn bevel(
         &self, 
         radius: Radius
-    ) -> BevelRectangleShape {
+    ) -> Shape<S, B, BevelCorner> {
         Shape {
             variant: self.variant,
             corner: BevelCorner(radius),
@@ -102,6 +76,21 @@ for RectangleShape {
     }
 }
 
+impl<S: Copy, B: Copy>
+AddRound<Shape<S, B, RoundCorner>> 
+for Shape<S, B, ()> {
+    #[inline(always)]
+    fn round(
+        &self, 
+        radius: Radius
+    ) -> Shape<S, B, RoundCorner> {
+        Shape {
+            variant: self.variant,
+            corner: RoundCorner(radius),
+            border_radius: self.border_radius,
+        }
+    }
+}
 
 impl
 AddBorder<EllipseBorderShape> 
@@ -131,22 +120,6 @@ for RectangleShape {
             border_radius: radius,
             variant: self.variant,
             corner: self.corner,
-        }
-    }
-}
-
-impl
-AddBevel<BevelRectangleBorderShape> 
-for RectangleBorderShape {
-    #[inline(always)]
-    fn bevel(
-        &self, 
-        radius: Radius
-    ) -> BevelRectangleBorderShape {
-        Shape {
-            corner: BevelCorner(radius),
-            variant: self.variant,
-            border_radius: self.border_radius,     
         }
     }
 }
@@ -204,3 +177,31 @@ for Shape<EllipseVariant, B, C> {
     }
 }
 
+impl<'b, I> 
+HasSourceRectangle<SourceRectangle> 
+for ImageRectangleShape<'b, I> {
+    #[inline(always)]
+    fn get_source_rectangle(&self) -> SourceRectangle {
+        self.variant.src_rect
+    }
+}
+
+impl<'b, I> 
+CanSourceRectangle<ImageRectangleShape<'b, I>, SourceRectangle> 
+for ImageRectangleShape<'b, I> {
+    #[inline(always)]
+    fn source_rectangle(
+        &self, 
+        source_rect: SourceRectangle
+    ) -> ImageRectangleShape<'b, I> {
+        Shape {
+            variant: ImageVariant {
+                    image: self.variant.image,
+                    rect: self.variant.rect,
+                    src_rect: source_rect,
+                },
+            border_radius: self.border_radius,
+            corner: self.corner,
+        }
+    }
+}

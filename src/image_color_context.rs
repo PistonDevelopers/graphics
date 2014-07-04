@@ -159,28 +159,6 @@ for ImageColorContext<'b, I> {
     }
 }
 
-impl<'b, I> 
-AddRectangle<ImageRectangleColorContext<'b, I>> 
-for ImageColorContext<'b, I> {
-    #[inline(always)]
-    fn rect(
-        &self, 
-        x: Scalar, 
-        y: Scalar, 
-        w: Scalar, 
-        h: Scalar
-    ) -> ImageRectangleColorContext<'b, I> {
-        ImageRectangleColorContext {
-            view: self.view,
-            transform: self.transform,
-            rect: [x, y, w, h],
-            image: self.image,
-            source_rect: self.source_rect,
-            color: self.color,
-        }
-    }
-}
-
 impl<'b, B: BackEnd<I>, I: ImageSize> 
 Draw<B, I> 
 for ImageColorContext<'b, I> {

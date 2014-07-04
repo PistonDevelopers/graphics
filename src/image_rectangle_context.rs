@@ -123,25 +123,6 @@ for ImageRectangleContext<'b, I> {
 }
 
 impl<'b, I> 
-CanColor<ImageRectangleColorContext<'b, I>, Color> 
-for ImageRectangleContext<'b, I> {
-    #[inline(always)]
-    fn color(
-        &self, 
-        value: Color
-    ) -> ImageRectangleColorContext<'b, I> {
-        ImageRectangleColorContext {
-            view: self.view,
-            transform: self.transform,
-            color: value,
-            rect: self.rect,
-            image: self.image,
-            source_rect: self.source_rect,
-        }
-    }
-}
-
-impl<'b, I> 
 HasRectangle<Rectangle> 
 for ImageRectangleContext<'b, I> {
     #[inline(always)]
@@ -164,33 +145,6 @@ for ImageRectangleContext<'b, I> {
             rect: rect,
             image: self.image,
             source_rect: self.source_rect,
-        }
-    }
-}
-
-impl<'b, I> 
-HasSourceRectangle<SourceRectangle> 
-for ImageRectangleContext<'b, I> {
-    #[inline(always)]
-    fn get_source_rectangle(&self) -> SourceRectangle {
-        self.source_rect
-    }
-}
-
-impl<'b, I> 
-CanSourceRectangle<ImageRectangleContext<'b, I>, SourceRectangle> 
-for ImageRectangleContext<'b, I> {
-    #[inline(always)]
-    fn source_rectangle(
-        &self, 
-        source_rect: SourceRectangle
-    ) -> ImageRectangleContext<'b, I> {
-        ImageRectangleContext {
-            view: self.view,
-            transform: self.transform,
-            rect: self.rect,
-            image: self.image,
-            source_rect: source_rect,
         }
     }
 }
@@ -223,28 +177,6 @@ for ImageRectangleContext<'b, I> {
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
             unimplemented!();
-        }
-    }
-}
-
-impl<'b, I> 
-AddColor<ImageRectangleColorContext<'b, I>> 
-for ImageRectangleContext<'b, I> {
-    #[inline(always)]
-    fn rgba(
-        &self,
-        r: ColorComponent,
-        g: ColorComponent,
-        b: ColorComponent,
-        a: ColorComponent
-    ) -> ImageRectangleColorContext<'b, I> {
-        ImageRectangleColorContext {
-            view: self.view,
-            transform: self.transform,
-            rect: self.rect,
-            image: self.image,
-            source_rect: self.source_rect,
-            color: [r, g, b, a],
         }
     }
 }

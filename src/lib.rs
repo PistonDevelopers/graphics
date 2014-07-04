@@ -36,7 +36,6 @@ pub use lerp_tween_color_context::LerpTweenColorContext;
 pub use lerp_tween_polygons_context::LerpTweenPolygonsContext;
 pub use lerp_tween_polygons_color_context::LerpTweenPolygonsColorContext;
 pub use rectangle_border_color_context::RectangleBorderColorContext;
-pub use rectangle_color_context::RectangleColorContext;
 pub use relative_color::RelativeColor;
 pub use relative_rectangle::RelativeRectangle;
 pub use relative_source_rectangle::RelativeSourceRectangle;
@@ -77,7 +76,6 @@ mod image_color_context;
 mod image_rectangle_color_context;
 mod image_rectangle_context;
 mod rectangle_border_color_context;
-mod rectangle_color_context;
 mod relative_color;
 mod relative_rectangle;
 mod relative_source_rectangle;
@@ -112,6 +110,10 @@ pub type RectangleContext
     = context::Context<shape::RectangleShape, ()>;
 pub type RectangleBorderContext 
     = context::Context<shape::RectangleBorderShape, ()>;
+pub type RectangleColorContext
+    = context::Context<shape::RectangleShape, Color>;
+pub type RectangleBorderColorContext
+    = context::Context<shape::RectangleBorderShape, Color>;
 pub type EllipseContext 
     = context::Context<shape::EllipseShape, ()>;
 pub type EllipseBorderContext 
@@ -136,6 +138,10 @@ pub type ImageContext<'a, I>
     = context::Context<shape::ImageShape<'a, I>, ()>;
 pub type ImageColorContext<'a, I> 
     = context::Context<shape::ImageShape<'a, I>, Color>;
+pub type ImageRectangleContext<'a, I>
+    = context::Context<shape::ImageRectangleShape<'a, I>, ()>;
+pub type ImageRectangleColorContext<'a, I>
+    = context::Context<shape::ImageRectangleShape<'a, I>, Color>;
 pub type PolygonContext<'a> 
     = context::Context<Polygon<'a>, ()>;
 pub type PolygonColorContext<'a> 
