@@ -18,14 +18,7 @@ pub use add::AddRoundBorder;
 pub use add::AddSquareBorder;
 pub use add::AddTween;
 pub use back_end::BackEnd;
-pub use bevel_border_line_color_context::BevelBorderLineColorContext;
-pub use bevel_border_line_context::BevelBorderLineContext;
-pub use bevel_rectangle_border_color_context::BevelRectangleBorderColorContext;
-pub use bevel_rectangle_border_context::BevelRectangleBorderContext;
-pub use bevel_rectangle_color_context::BevelRectangleColorContext;
-pub use bevel_rectangle_context::BevelRectangleContext;
 pub use draw::Draw;
-pub use ellipse_border_color_context::EllipseBorderColorContext;
 pub use image_size::ImageSize;
 pub use relative_color::RelativeColor;
 pub use relative_rectangle::RelativeRectangle;
@@ -50,15 +43,8 @@ use internal::{
 
 mod add;
 mod back_end;
-mod bevel_border_line_color_context;
-mod bevel_border_line_context;
-mod bevel_rectangle_border_color_context;
-mod bevel_rectangle_border_context;
-mod bevel_rectangle_color_context;
-mod bevel_rectangle_context;
 mod context;
 mod draw;
-mod ellipse_border_color_context;
 mod image_size;
 mod relative_color;
 mod relative_rectangle;
@@ -80,6 +66,16 @@ mod shape;
 
 pub type BevelBorderLineContext
     = context::Context<shape::BevelBorderLineShape, ()>;
+pub type BevelBorderLineColorContext
+    = context::Context<shape::BevelBorderLineShape, Color>;
+pub type BevelRectangleContext
+    = context::Context<shape::BevelRectangleShape, ()>;
+pub type BevelRectangleColorContext
+    = context::Context<shape::BevelRectangleShape, Color>;
+pub type BevelRectangleBorderContext
+    = context::Context<shape::BevelRectangleBorderShape, ()>;
+pub type BevelRectangleBorderColorContext
+    = context::Context<shape::BevelRectangleBorderShape, Color>;
 pub type Context 
     = context::Context<(), ()>;
 pub type ColorContext 
