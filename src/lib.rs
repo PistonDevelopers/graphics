@@ -25,7 +25,6 @@ pub use bevel_rectangle_border_context::BevelRectangleBorderContext;
 pub use bevel_rectangle_color_context::BevelRectangleColorContext;
 pub use bevel_rectangle_context::BevelRectangleContext;
 pub use draw::Draw;
-pub use ellipse_border_context::EllipseBorderContext;
 pub use ellipse_color_context::EllipseColorContext;
 pub use ellipse_border_color_context::EllipseBorderColorContext;
 pub use image_size::ImageSize;
@@ -72,7 +71,6 @@ mod bevel_rectangle_color_context;
 mod bevel_rectangle_context;
 mod context;
 mod draw;
-mod ellipse_border_context;
 mod ellipse_border_color_context;
 mod ellipse_color_context;
 mod image_size;
@@ -122,6 +120,8 @@ pub type EllipseBorderContext
     = context::Context<shape::EllipseBorderShape, ()>;
 pub type EllipseColorContext 
     = context::Context<shape::EllipseShape, Color>;
+pub type EllipseBorderColorContext
+    = context::Context<shape::EllipseBorderShape, Color>;
 pub type LineContext 
     = context::Context<shape::LineShape, ()>;
 pub type LineColorContext 

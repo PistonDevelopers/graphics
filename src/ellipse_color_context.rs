@@ -176,21 +176,3 @@ for EllipseColorContext {
     }
 }
 
-impl
-AddBorder<EllipseBorderColorContext> 
-for EllipseColorContext {
-    #[inline(always)]
-    fn border_radius(
-        &self, 
-        radius: f64
-    ) -> EllipseBorderColorContext {
-        EllipseBorderColorContext {
-            view: self.view,
-            transform: self.transform,
-            rect: self.rect,
-            color: self.color,
-            border: radius,
-        }
-    }
-}
-

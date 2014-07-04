@@ -9,7 +9,9 @@ use {
     ColorContext,
     Draw,
     EllipseContext,
+    EllipseColorContext,
     EllipseBorderContext,
+    EllipseBorderColorContext,
     ImageSize,
     ImageContext,
     ImageColorContext,
@@ -598,6 +600,27 @@ for Context<shape::LineShape, C> {
                     corner: shape::RoundCorner(radius),
                     variant: self.shape.variant,
                     border_radius: self.shape.border_radius,
+                },
+        }
+    }
+}
+
+impl
+add::AddBorder<EllipseBorderColorContext> 
+for EllipseColorContext {
+    #[inline(always)]
+    fn border_radius(
+        &self, 
+        radius: f64
+    ) -> EllipseBorderColorContext {
+        Context {
+            view: self.view,
+            transform: self.transform,
+            color: self.color,
+            shape: shape::Shape {
+                    border_radius: radius,
+                    variant: self.shape.variant,
+                    corner: self.shape.corner,
                 },
         }
     }
