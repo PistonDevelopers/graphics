@@ -29,10 +29,11 @@ use {
     RoundRectangleBorderContext,
 };
 use triangulation::{
-    with_polygon_tri_list_xy_f32_rgba_f32,
     rect_tri_list_xy_f32,
     rect_tri_list_rgba_f32,
     rect_tri_list_uv_f32,
+    with_ellipse_tri_list_xy_f32_rgba_f32,
+    with_polygon_tri_list_xy_f32_rgba_f32,
 };
 use internal::{
     CanColor,
@@ -622,6 +623,35 @@ for EllipseColorContext {
                     variant: self.shape.variant,
                     corner: self.shape.corner,
                 },
+        }
+    }
+}
+
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for EllipseColorContext {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let rect = self.shape.get_rectangle();
+            let color = self.color;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            with_ellipse_tri_list_xy_f32_rgba_f32(
+                128,
+                self.transform,
+                rect,
+                color,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
         }
     }
 }
