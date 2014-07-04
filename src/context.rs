@@ -30,7 +30,11 @@ use {
     RoundBorderLineContext,
     RoundBorderLineColorContext,
     RoundRectangleContext,
+    RoundRectangleColorContext,
     RoundRectangleBorderContext,
+    RoundRectangleBorderColorContext,
+    SquareBorderLineContext,
+    SquareBorderLineColorContext,
 };
 use triangulation;
 use internal::{
@@ -1182,6 +1186,100 @@ for BevelBorderLineColorContext {
                 self.transform,
                 line,
                 bevel_border_radius,
+                color,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for RoundRectangleColorContext {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let shape::RectangleVariant(rect) = self.shape.variant;
+            let shape::RoundCorner(round_radius) = self.shape.corner;
+            let color = self.color;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            triangulation::with_round_rectangle_tri_list_xy_f32_rgba_f32(
+                32,
+                self.transform,
+                rect,
+                round_radius,
+                color,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
+
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
+for RoundRectangleBorderColorContext {
+    #[inline(always)]
+    fn draw( &self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let shape::RectangleVariant(rect) = self.shape.variant;
+            let color = self.color;
+            let border_radius = self.shape.border_radius;
+            let shape::RoundCorner(round_radius) = self.shape.corner;
+            // Complete transparency does  not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not complete opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            triangulation::with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
+                128,
+                self.transform,
+                rect,
+                round_radius,
+                border_radius,
+                color,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        }
+    }
+}
+
+
+impl<B: BackEnd<I>, I: ImageSize> 
+Draw<B, I> 
+for SquareBorderLineColorContext {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let shape::LineVariant(line) = self.shape.variant;
+            let shape::SquareCorner(square_border_radius) = self.shape.corner;
+            let color = self.color;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+                2,
+                self.transform,
+                line,
+                square_border_radius,
                 color,
                 |vertices, colors| {
                     back_end.tri_list_xy_f32_rgba_f32(vertices, colors)

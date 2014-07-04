@@ -25,10 +25,6 @@ pub use relative_color::RelativeColor;
 pub use relative_rectangle::RelativeRectangle;
 pub use relative_source_rectangle::RelativeSourceRectangle;
 pub use relative_transform2d::RelativeTransform2d;
-pub use round_rectangle_border_color_context::RoundRectangleBorderColorContext;
-pub use round_rectangle_border_context::RoundRectangleBorderContext;
-pub use round_rectangle_color_context::RoundRectangleColorContext;
-pub use square_border_line_color_context::SquareBorderLineColorContext;
 pub use view::View;
 
 pub use Context = context::Context;
@@ -50,10 +46,6 @@ mod relative_color;
 mod relative_rectangle;
 mod relative_source_rectangle;
 mod relative_transform2d;
-mod round_rectangle_border_color_context;
-mod round_rectangle_border_context;
-mod round_rectangle_color_context;
-mod square_border_line_color_context;
 mod view;
 
 pub mod internal;
@@ -98,10 +90,6 @@ pub type LineContext
     = context::Context<shape::LineShape>;
 pub type LineColorContext 
     = context::Context<shape::LineShape, Color>;
-pub type SquareBorderLineContext 
-    = context::Context<shape::SquareBorderLineShape>;
-pub type SquareBorderLineColorContext 
-    = context::Context<shape::SquareBorderLineShape, Color>;
 pub type ImageContext<'a, I> 
     = context::Context<shape::ImageShape<'a, I>>;
 pub type ImageColorContext<'a, I> 
@@ -130,4 +118,12 @@ pub type RoundRectangleContext
     = context::Context<shape::RoundRectangleShape>;
 pub type RoundRectangleColorContext
     = context::Context<shape::RoundRectangleShape, Color>;
+pub type RoundRectangleBorderContext
+    = context::Context<shape::RoundRectangleBorderShape>;
+pub type RoundRectangleBorderColorContext
+    = context::Context<shape::RoundRectangleBorderShape, Color>;
+pub type SquareBorderLineContext
+    = context::Context<shape::SquareBorderLineShape>;
+pub type SquareBorderLineColorContext
+    = context::Context<shape::SquareBorderLineShape, Color>;
 
