@@ -241,7 +241,7 @@ fn test_rect() {
 
     let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 50.0);
-    let shape::RectangleVariant(rect) = d.shape.variant;
+    let rect = d.shape.variant.rect;
     assert_eq!(rect[2], 100.0);
 }
 
@@ -304,8 +304,8 @@ fn test_ellipse() {
     use add::AddEllipse;    
 
     let c = Context::new();
-    let d: EllipseContext = c.ellipse(0.0, 0.0, 100.0, 100.0);
-    let shape::EllipseVariant(rect) = d.shape.variant;    
+    let d = c.ellipse(0.0, 0.0, 100.0, 100.0);
+    let rect = d.shape.variant.rect;    
     assert_eq!(rect[2], 100.0);
 }
 
