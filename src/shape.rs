@@ -215,23 +215,23 @@ for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
 }
 
 
-impl<'b, I> 
+impl<'b, I, R, B, C> 
 HasSourceRectangle<SourceRectangle> 
-for ImageRectangleShape<'b, I> {
+for Shape<ImageVariant<'b, I, R>, B, C> {
     #[inline(always)]
     fn get_source_rectangle(&self) -> SourceRectangle {
         self.variant.src_rect
     }
 }
 
-impl<'b, I> 
-CanSourceRectangle<ImageRectangleShape<'b, I>, SourceRectangle> 
-for ImageRectangleShape<'b, I> {
+impl<'b, I, R: Copy, B: Copy, C: Copy> 
+CanSourceRectangle<Shape<ImageVariant<'b, I, R>, B, C>, SourceRectangle> 
+for Shape<ImageVariant<'b, I, R>, B, C> {
     #[inline(always)]
     fn source_rectangle(
         &self, 
         source_rect: SourceRectangle
-    ) -> ImageRectangleShape<'b, I> {
+    ) -> Shape<ImageVariant<'b, I, R>, B, C> {
         Shape {
             variant: ImageVariant {
                     image: self.variant.image,
