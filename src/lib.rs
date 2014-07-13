@@ -1,4 +1,4 @@
-#![crate_id = "graphics"]
+#![crate_name = "graphics"]
 #![deny(missing_doc)]
 #![feature(default_type_params)]
 
