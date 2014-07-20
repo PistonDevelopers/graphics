@@ -1,39 +1,36 @@
 
 //! Various methods for computing with vectors.
 
+use vecmath_lib;
+
+pub use multiply = vecmath_lib::row_mat2x3_mul;
+
 use internal::{
     Area,
     Color,
     Line,
-    Matrix2d,
     Polygon,
     Ray,
     Rectangle,
     SourceRectangle,
-    Vec2d,
     Triangle,
 };
 use modular_index::{previous};
 
-/// Multiplies two matrices.
-#[inline(always)]
-pub fn multiply(m: Matrix2d, b: Matrix2d) -> Matrix2d {
-    [
-        m[0]*b[0]+m[1]*b[3]+m[2]*0.0,  
-        m[0]*b[1]+m[1]*b[4]+m[2]*0.0,  
-        m[0]*b[2]+m[1]*b[5]+m[2]*1.0,
-        
-        m[3]*b[0]+m[4]*b[3]+m[5]*0.0,  
-        m[3]*b[1]+m[4]*b[4]+m[5]*0.0,  
-        m[3]*b[2]+m[4]*b[5]+m[5]*1.0
-    ]
-}
+/// The type used for scalars.
+pub type Scalar = f64;
+
+/// The type used for matrices.
+pub type Matrix2d = vecmath_lib::Matrix2x3<f64>;
+
+/// The type used for vectors.
+pub type Vec2d = vecmath_lib::Vector2<f64>;
 
 /// Creates a translation matrix.
 #[inline(always)]
 pub fn translate(x: f64, y: f64) -> Matrix2d {
-    [1.0, 0.0, x,
-     0.0, 1.0, y]
+    [[1.0, 0.0, x],
+     [0.0, 1.0, y]]
 }
 
 /// Creates a rotation matrix.
@@ -41,8 +38,8 @@ pub fn translate(x: f64, y: f64) -> Matrix2d {
 pub fn rotate_radians(angle: f64) -> Matrix2d {
     let c = angle.cos();
     let s = angle.sin();
-    [c, -s, 0.0,
-     s,  c, 0.0]
+    [[c, -s, 0.0],
+     [s,  c, 0.0]]
 }
 
 /// Orients x axis to look at point.
@@ -53,44 +50,43 @@ pub fn rotate_radians(angle: f64) -> Matrix2d {
 pub fn orient(x: f64, y: f64) -> Matrix2d {
     let len = x * x + y * y;
     if len == 0.0 {
-        return [1.0, 0.0, 0.0,
-                0.0, 1.0, 0.0]
+        return identity()
     }
 
     let len = len.sqrt();
     let c = x / len;
     let s = y / len;
-    [c, -s, 0.0,
-     s,  c, 0.0]
+    [[c, -s, 0.0],
+     [s,  c, 0.0]]
 }
 
 /// Create a scale matrix.
 #[inline(always)]
 pub fn scale(sx: f64, sy: f64) -> Matrix2d {
-    [sx, 0.0, 0.0,
-     0.0, sy, 0.0]
+    [[sx, 0.0, 0.0],
+     [0.0, sy, 0.0]]
 }
 
 /// Create a shear matrix.
 #[inline(always)]
 pub fn shear(sx: f64, sy: f64) -> Matrix2d {
-    [1.0, sx, 0.0,
-     sy, 1.0, 0.0]
+    [[1.0, sx, 0.0],
+     [sy, 1.0, 0.0]]
 }
 
 /// Create an identity matrix.
 #[inline(always)]
 pub fn identity() -> Matrix2d {
-    [1.0, 0.0, 0.0,
-     0.0, 1.0, 0.0]
+    [[1.0, 0.0, 0.0],
+     [0.0, 1.0, 0.0]]
 }
 
-/// Extract scale information from amtrix.
+/// Extract scale information from matrix.
 #[inline(always)]
 pub fn get_scale(m: Matrix2d) -> Vec2d {
     [
-        (m[0] * m[0] + m[3] * m[3]).sqrt(), 
-        (m[1] * m[1] + m[4] * m[4]).sqrt()
+        (m[0][0] * m[0][0] + m[1][0] * m[1][0]).sqrt(), 
+        (m[0][1] * m[0][1] + m[1][1] * m[1][1]).sqrt()
     ]
 }
 

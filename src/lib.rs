@@ -1,8 +1,11 @@
 #![crate_name = "graphics"]
 #![deny(missing_doc)]
 #![feature(default_type_params)]
+#![feature(globs)]
 
 //! A library for 2D graphics that works with multiple back-ends.
+
+extern crate vecmath_lib = "vecmath";
 
 pub use add::{
     AddBevel,
