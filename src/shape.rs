@@ -16,9 +16,9 @@ use internal::{
     Polygons,
     Radius,
     Rectangle,
-    Scalar,
     SourceRectangle,
 };
+use vecmath::Scalar;
 
 pub struct RectangleVariant {
     pub rect: Rectangle

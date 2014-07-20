@@ -5,6 +5,8 @@
 //! Using these might lead to breaking changes.
 //! Made public to clarify documentation.
 
+use vecmath::Scalar;
+
 /// The type used for area.
 pub type Area = Scalar;
 
@@ -45,9 +47,6 @@ pub type Ray = [Scalar, ..4];
 
 /// [x, y, w, h]
 pub type Rectangle = [Scalar, ..4];
-
-/// The type used for scalars.
-pub type Scalar = f64;
 
 /// [x1, y1, x2, y2, x3, y3]
 pub type Triangle = [Scalar, ..6];

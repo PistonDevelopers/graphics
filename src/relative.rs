@@ -9,9 +9,7 @@ use internal::{
     HasRectangle,
     HasSourceRectangle,
     HasTransform,
-    Matrix2d,
     Rectangle,
-    Scalar,
     SourceRectangle,
 };
 use vecmath::{
@@ -25,6 +23,8 @@ use vecmath::{
     scale,
     shear,
     translate,
+    Matrix2d,
+    Scalar,
 };
 
 /// Implemented by contexts that contains color.

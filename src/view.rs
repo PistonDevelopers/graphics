@@ -4,12 +4,12 @@ use internal::{
     CanViewTransform,
     HasTransform,
     HasViewTransform,
-    Matrix2d,
-    Scalar,
 };
 use vecmath::{
     identity,
     get_scale,
+    Matrix2d,
+    Scalar,
 };
 
 /// Should be implemented by contexts that

@@ -38,13 +38,16 @@ use internal::{
     HasSourceRectangle,
     HasTransform,
     HasViewTransform,
-    Matrix2d,
     Polygon,
     Polygons,
     Radius,
     Rectangle,
     SourceRectangle,
-    Scalar,
+};
+use vecmath::{
+    identity,
+    Matrix2d,
+    Scalar
 };
 use shape;
 
@@ -112,14 +115,8 @@ impl Context {
     #[inline(always)]
     pub fn new() -> Context {
         Context {
-            view:
-                [1.0, 0.0, 0.0,
-                 0.0, 1.0, 0.0]
-            ,
-            transform:
-                [1.0, 0.0, 0.0,
-                 0.0, 1.0, 0.0]
-            ,
+            view: identity(),
+            transform: identity(),
             shape: (),
             color: (),
         }
@@ -139,8 +136,8 @@ impl Context {
     pub fn abs(w: f64, h: f64) -> Context {
         let sx = 2.0 / w;
         let sy = -2.0 / h;
-        let mat = [ sx, 0.0, -1.0,
-                   0.0,  sy, 1.0 ];
+        let mat = [[ sx, 0.0, -1.0 ],
+                   [ 0.0,  sy, 1.0 ]];
         Context {
             view: mat,
             transform: mat,
