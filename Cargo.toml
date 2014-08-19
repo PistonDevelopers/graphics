@@ -10,7 +10,7 @@ authors = [
     "Potpourri",
     "TyOverby <ty@pre-alpha.com>"]
 
-[[lib]]
+[lib]
 
 name = "graphics"
 path = "./src/lib.rs"
