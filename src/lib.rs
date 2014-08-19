@@ -34,7 +34,7 @@ pub use relative::{
 };
 pub use view::View;
 
-pub use Context = context::Context;
+pub use context::Context as Context;
 
 use internal::{
     Color,

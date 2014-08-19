@@ -3,7 +3,7 @@
 
 use vecmath_lib;
 
-pub use multiply = vecmath_lib::row_mat2x3_mul;
+pub use vecmath_lib::row_mat2x3_mul as multiply;
 
 use internal::{
     Area,
