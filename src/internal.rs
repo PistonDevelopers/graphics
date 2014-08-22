@@ -24,7 +24,7 @@ pub type Line = [Scalar, ..4];
 /// The first 3 numbers transforms `x`,
 /// the last 3 numbers transforms `y`:
 ///
-/// ```
+/// ```ignore
 /// tx = m00 * x + m01 * y + m02;
 /// ty = m10 * x + m11 * y + m12;
 /// ```
