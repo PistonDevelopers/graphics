@@ -1,11 +1,8 @@
-Rust-Graphics
-=============
+# Rust-Graphics [![Build Status](https://travis-ci.org/PistonDevelopers/rust-graphics.svg)](https://travis-ci.org/PistonDevelopers/rust-graphics)
 
-A library for 2D graphics, written in Rust, that works with multiple back-ends
+A library for 2D graphics, written in Rust, that works with multiple back-ends.
 
 Maintainers: @bvssvni, @Coeuvre
-
-[![Build Status](https://travis-ci.org/PistonDevelopers/rust-graphics.svg)](https://travis-ci.org/PistonDevelopers/rust-graphics)
 
 [Rust-Graphics online docs](http://www.piston.rs/docs/rust-graphics/graphics/)
 
@@ -26,7 +23,7 @@ Experimental algorithms are developed in a separate repository: [Rust-Graphics-L
 
 Rust is programming language developed by Mozilla and the Rust community. It is fast, safe, concurrent and cross platform. Because of the many numbers of potential platforms (read: all kinds of computers), it would be nice to have a 2d graphics library that works with multiple back-ends, so you don't have to invent a new graphics engine for each platform you are working on.
 
-### Easy of use
+### Ease of use
 
 Inspired by the functional features in Rust standard library,
 it would be nice to be able to write something like this:
@@ -82,4 +79,3 @@ To write your own back-end `BackEnd` trait. The `BackEnd` trait implements defau
 * Node tree
 * One-to-one correspondence with standards
 * Integration with platform GUI
-
