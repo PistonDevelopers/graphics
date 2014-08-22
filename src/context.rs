@@ -156,18 +156,18 @@ fn test_context() {
         let d = c.trans(20.0, 40.0);
         let d = d.trans(10.0, 10.0);
         let transform = d.transform;
-        assert_eq!(transform[2], 30.0);
-        assert_eq!(transform[5], 50.0);
+        assert_eq!(transform[0][2], 30.0);
+        assert_eq!(transform[1][2], 50.0);
     }
     
     let transform = c.transform;
-    assert_eq!(transform[2], 0.0);
-    assert_eq!(transform[5], 0.0);
+    assert_eq!(transform[0][2], 0.0);
+    assert_eq!(transform[1][2], 0.0);
 
     let c = c.rot_deg(90.0);
     let transform = c.transform;
-    assert!((transform[0] - 0.0).abs() < 0.00001);
-    assert!((transform[1] + 1.0).abs() < 0.00001);
+    assert!((transform[0][0] - 0.0).abs() < 0.00001);
+    assert!((transform[0][1] + 1.0).abs() < 0.00001);
 }
 
 #[test]
@@ -177,8 +177,8 @@ fn test_scale() {
     let c = Context::new();
     let c = c.scale(2.0, 3.0);
     let transform = c.transform;
-    assert!((transform[0] - 2.0).abs() < 0.00001);
-    assert!((transform[4] - 3.0).abs() < 0.00001);
+    assert!((transform[0][0] - 2.0).abs() < 0.00001);
+    assert!((transform[1][1] - 3.0).abs() < 0.00001);
 }
 
 impl<C: Copy>
