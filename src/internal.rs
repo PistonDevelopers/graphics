@@ -19,17 +19,6 @@ pub type ColorComponent = f32;
 /// [x1, y1, x2, y2]
 pub type Line = [Scalar, ..4];
 
-/// [m00, m01, m02, m10, m11, m12]
-///
-/// The first 3 numbers transforms `x`,
-/// the last 3 numbers transforms `y`:
-///
-/// ```ignore
-/// tx = m00 * x + m01 * y + m02;
-/// ty = m10 * x + m11 * y + m12;
-/// ```
-pub type Matrix2d = [Scalar, ..6];
-
 /// [x, y, w, h]
 pub type SourceRectangle = [i32, ..4];
 
