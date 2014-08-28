@@ -1,4 +1,4 @@
-# Rust-Graphics [![Build Status](https://travis-ci.org/PistonDevelopers/rust-graphics.svg)](https://travis-ci.org/PistonDevelopers/rust-graphics)
+# Rust-Graphics [![Build Status](https://travis-ci.org/PistonDevelopers/rust-graphics.svg?branch=master)](https://travis-ci.org/PistonDevelopers/rust-graphics)
 
 A library for 2D graphics, written in Rust, that works with multiple back-ends.
 
