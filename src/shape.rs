@@ -29,7 +29,7 @@ pub struct EllipseVariant {
 pub struct LineVariant {
     pub line: Line
 }
-pub struct ImageVariant<'a, I, TRectangle=()> {
+pub struct ImageVariant<'a, I:'a, TRectangle=()> {
     pub image: &'a I, 
     pub src_rect: SourceRectangle,
     pub rect: TRectangle,
