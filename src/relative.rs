@@ -31,10 +31,10 @@ use vecmath::{
 pub trait RelativeColor<T> {
     /// Multiplies with red, green, blue and alpha values.
     fn mul_rgba(
-        &self, 
-        r: ColorComponent, 
-        g: ColorComponent, 
-        b: ColorComponent, 
+        &self,
+        r: ColorComponent,
+        g: ColorComponent,
+        b: ColorComponent,
         a: ColorComponent
     ) -> T;
 
@@ -54,7 +54,7 @@ pub trait RelativeColor<T> {
         let f = 1.0 - f;
         self.mul_rgba(f, f, f, 1.0)
     }
-    
+
     /// Rotates hue by degrees.
     #[inline(always)]
     fn hue_deg(&self, angle: ColorComponent) -> T {
@@ -72,16 +72,16 @@ impl<
 > RelativeColor<U> for T {
     #[inline(always)]
     fn mul_rgba(
-        &self, 
-        r: ColorComponent, 
-        g: ColorComponent, 
-        b: ColorComponent, 
+        &self,
+        r: ColorComponent,
+        g: ColorComponent,
+        b: ColorComponent,
         a: ColorComponent
     ) -> U {
         let color = self.get_color();
         self.color([color[0] * r, color[1] * g, color[2] * b, color[3] * a])
     }
-    
+
     #[inline(always)]
     fn hue_rad(&self, angle: ColorComponent) -> U {
         self.color(hsv(self.get_color(), angle, 1.0, 1.0))
@@ -118,13 +118,13 @@ impl<
     }
 }
 
-/// Should be implemented by contexts that 
+/// Should be implemented by contexts that
 /// have source rectangle information.
 pub trait RelativeSourceRectangle<T> {
     /// Adds a source rectangle.
     fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> T;
 
-    /// Moves to a relative source rectangle using 
+    /// Moves to a relative source rectangle using
     /// the current source rectangle as tile.
     fn src_rel(&self, x: i32, y: i32) -> T;
 
@@ -138,7 +138,7 @@ pub trait RelativeSourceRectangle<T> {
     fn src_flip_hv(&self) -> T;
 }
 
-impl<T: HasSourceRectangle<SourceRectangle> 
+impl<T: HasSourceRectangle<SourceRectangle>
         + CanSourceRectangle<U, SourceRectangle>,
     U
 > RelativeSourceRectangle<U> for T {
@@ -192,7 +192,7 @@ impl<T: HasSourceRectangle<SourceRectangle>
 pub trait RelativeTransform2d {
     /// Translate x an y in local coordinates.
     fn trans(&self, x: Scalar, y: Scalar) -> Self;
-    
+
     /// Rotates degrees in local coordinates.
     #[inline(always)]
     fn rot_deg(&self, angle: Scalar) -> Self {
@@ -205,7 +205,7 @@ pub trait RelativeTransform2d {
 
     /// Orients x axis to look at point locally.
     ///
-    /// Leaves x axis unchanged if the point to 
+    /// Leaves x axis unchanged if the point to
     /// look at is the origin.
     fn orient(&self, x: Scalar, y: Scalar) -> Self;
 
@@ -227,7 +227,7 @@ pub trait RelativeTransform2d {
     /// Flips horizontally in local coordinates.
     #[inline(always)]
     fn flip_h(&self) -> Self {
-        self.scale(-1.0, 0.0)
+        self.scale(-1.0, 1.0)
     }
 
     /// Flips horizontally and vertically in local coordinates.
