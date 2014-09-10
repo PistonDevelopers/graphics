@@ -5,7 +5,7 @@
 
 //! A library for 2D graphics that works with multiple back-ends.
 
-extern crate vecmath_lib = "vecmath";
+extern crate "vecmath" as vecmath_lib;
 
 pub use add::{
     AddBevel,
@@ -73,13 +73,13 @@ pub type BevelRectangleBorderContext
     = context::Context<shape::BevelRectangleBorderShape>;
 pub type BevelRectangleBorderColorContext
     = context::Context<shape::BevelRectangleBorderShape, Color>;
-pub type ColorContext 
+pub type ColorContext
     = context::Context<(), Color>;
-pub type EllipseContext 
+pub type EllipseContext
     = context::Context<shape::EllipseShape>;
-pub type EllipseBorderContext 
+pub type EllipseBorderContext
     = context::Context<shape::EllipseBorderShape>;
-pub type EllipseColorContext 
+pub type EllipseColorContext
     = context::Context<shape::EllipseShape, Color>;
 pub type EllipseBorderColorContext
     = context::Context<shape::EllipseBorderShape, Color>;
@@ -91,13 +91,13 @@ pub type LerpTweenPolygonsContext<'a>
     = context::Context<shape::LerpTweenPolygonsShape<'a>>;
 pub type LerpTweenPolygonsColorContext<'a>
     = context::Context<shape::LerpTweenPolygonsShape<'a>, Color>;
-pub type LineContext 
+pub type LineContext
     = context::Context<shape::LineShape>;
-pub type LineColorContext 
+pub type LineColorContext
     = context::Context<shape::LineShape, Color>;
-pub type ImageContext<'a, I> 
+pub type ImageContext<'a, I>
     = context::Context<shape::ImageShape<'a, I>>;
-pub type ImageColorContext<'a, I> 
+pub type ImageColorContext<'a, I>
     = context::Context<shape::ImageShape<'a, I>, Color>;
 pub type ImageRectangleContext<'a, I>
     = context::Context<shape::ImageRectangleShape<'a, I>>;
@@ -105,19 +105,19 @@ pub type ImageRectangleColorContext<'a, I>
     = context::Context<shape::ImageRectangleShape<'a, I>, Color>;
 pub type PolygonContext<'a>
     = context::Context<shape::PolygonShape<'a>>;
-pub type PolygonColorContext<'a> 
+pub type PolygonColorContext<'a>
     = context::Context<shape::PolygonShape<'a>, Color>;
-pub type RectangleContext 
+pub type RectangleContext
     = context::Context<shape::RectangleShape>;
-pub type RectangleBorderContext 
+pub type RectangleBorderContext
     = context::Context<shape::RectangleBorderShape>;
 pub type RectangleColorContext
     = context::Context<shape::RectangleShape, Color>;
 pub type RectangleBorderColorContext
     = context::Context<shape::RectangleBorderShape, Color>;
-pub type RoundBorderLineContext 
+pub type RoundBorderLineContext
     = context::Context<shape::RoundBorderLineShape>;
-pub type RoundBorderLineColorContext 
+pub type RoundBorderLineColorContext
     = context::Context<shape::RoundBorderLineShape, Color>;
 pub type RoundRectangleContext
     = context::Context<shape::RoundRectangleShape>;
