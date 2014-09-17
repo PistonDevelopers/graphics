@@ -1,7 +1,3 @@
-use {
-    ImageSize,
-};
-
 /// Implemented by all graphics back-ends.
 /// This trait uses default methods to simplify implementation.
 ///
@@ -12,7 +8,7 @@ use {
 /// Alpha blending is assumed to be expensive and turned off when not needed.
 /// For cases when alpha blending is explicitly not wanted there will be own methods,
 /// in case the back-end needs to restore to its own default afterwards.
-pub trait BackEnd<I: ImageSize> {
+pub trait BackEnd<I> {
     /// Returns true if feature is supported.
     #[inline(always)]
     fn supports_clear_rgba(&self) -> bool { false }
