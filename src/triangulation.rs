@@ -648,7 +648,7 @@ pub fn rect_border_tri_list_xy_f32(
 #[inline(always)]
 pub fn rect_tri_list_rgba_f32(
     color: Color
-) -> [f32, ..48] {
+) -> [f32, ..24] {
     let (r, g, b, a) = (color[0], color[1], color[2], color[3]);
     [
         r, g, b, a, // 0
@@ -657,12 +657,6 @@ pub fn rect_tri_list_rgba_f32(
         r, g, b, a, // 3
         r, g, b, a, // 4
         r, g, b, a, // 5
-        r, g, b, a, // 6
-        r, g, b, a, // 7
-        r, g, b, a, // 8
-        r, g, b, a, // 9
-        r, g, b, a, // 10
-        r, g, b, a
     ]
 }
 
