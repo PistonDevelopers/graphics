@@ -1,21 +1,21 @@
-# Rust-Graphics [![Build Status](https://travis-ci.org/PistonDevelopers/rust-graphics.svg?branch=master)](https://travis-ci.org/PistonDevelopers/rust-graphics)
+# Graphics [![Build Status](https://travis-ci.org/PistonDevelopers/graphics.svg?branch=master)](https://travis-ci.org/PistonDevelopers/graphics)
 
 A library for 2D graphics, written in Rust, that works with multiple back-ends.
 
 Maintainers: @bvssvni, @Coeuvre
 
-[Rust-Graphics online docs](http://www.rust-ci.org/PistonDevelopers/rust-graphics/doc/graphics/index.html)
+[Graphics online docs](http://www.rust-ci.org/PistonDevelopers/graphics/doc/graphics/index.html)
 
 *Notice: This is a very early stage of the project!*
 
-[How to contribute](https://github.com/PistonDevelopers/rust-graphics/issues/277)
+[How to contribute](https://github.com/PistonDevelopers/graphics/issues/277)
 
 *Last news: Bevel and square lines!*
 
-Rust-Graphics comes with an example OpenGL back-end.  
+Graphics comes with an example OpenGL back-end.  
 To compile with the OpenGL back-end, type `make COMPILER_FLAGS+="--cfg gl"`.
 
-Experimental algorithms are developed in a separate repository: [Rust-Graphics-Lab](https://github.com/PistonDevelopers/rust-graphics-lab)  
+Experimental algorithms are developed in a separate repository: [Rust-Graphics-Lab](https://github.com/PistonDevelopers/graphics-lab)  
 
 ## Motivation
 
@@ -42,7 +42,7 @@ let d = c.trans(20.0, 20.0);
 
 The `Context` is immutable and designed to "grow" into other contexts. Internally it uses a borrowed/value field mechanism with lots of inlining to take advantage of compiler optimizations. Usually the data sits on the stack and requires no heap allocations. When a context is "grown" into another through method calls, it copies borrowed pointers for all the unchanged data and allocates new data on the stack. If optimized properly, this only allocates new data on the stack without needing calls to "restore" the context like in other graphics API.
 
-This library is pure Rust, so it will not contain code for a specific back-end. However, it makes assumptions favoring GPU shader rendering. Rust-Graphics looks for supported methods in the order of expected best performance and memory usage.  
+This library is pure Rust, so it will not contain code for a specific back-end. However, it makes assumptions favoring GPU shader rendering. Graphics looks for supported methods in the order of expected best performance and memory usage.  
 
 ### Expressiveness
 
