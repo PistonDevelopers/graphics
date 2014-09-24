@@ -8,7 +8,7 @@ Maintainers: @bvssvni, @Coeuvre
 
 *Notice: This is a very early stage of the project!*
 
-[How to contribute](https://github.com/PistonDevelopers/graphics/issues/277)
+[How to contribute](https://github.com/PistonDevelopers/piston/blob/master/CONTRIBUTING.md)
 
 *Last news: Bevel and square lines!*
 
