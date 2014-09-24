@@ -15,7 +15,7 @@ Maintainers: @bvssvni, @Coeuvre
 Graphics comes with an example OpenGL back-end.  
 To compile with the OpenGL back-end, type `make COMPILER_FLAGS+="--cfg gl"`.
 
-Experimental algorithms are developed in a separate repository: [Rust-Graphics-Lab](https://github.com/PistonDevelopers/graphics-lab)  
+Experimental algorithms are developed in a separate repository: [Rust-Graphics-Lab](https://github.com/pistondevelopers/rust-graphics-lab)  
 
 ## Motivation
 
