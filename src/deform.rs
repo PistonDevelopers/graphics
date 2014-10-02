@@ -1,13 +1,30 @@
 //! Least square deforming of a 2D grid.
 
+use {
+    BackEnd,
+    ImageSize,
+    ColorContext,
+    Context,
+    AddLine,
+    AddSquareBorder,
+    Draw,
+};
+use triangulation::{tx, ty};
+
 /// Represents a deformed grid.
 pub struct DeformGrid {
+    /// The number of columns in the grid.
+    pub cols: uint,
+    /// The number of rows in the grid.
+    pub rows: uint,
     /// The grid undeformed, which is a plain rectangle.
     pub rect: [f64, ..4],
-    /// The units to perform deform resolution.
-    pub units: f64,
     /// The vertices, deformed.
     pub vertices: Vec<[f64, ..2]>,
+    /// The triangle indices.
+    pub indices: Vec<uint>,
+    /// The texture coordinates.
+    pub texture_coords: Vec<[f32, ..2]>,
     /// Initial position of control points.
     pub ps: Vec<[f64, ..2]>,
     /// The current position of control points.
@@ -17,15 +34,181 @@ pub struct DeformGrid {
 }
 
 impl DeformGrid {
+    /// Creates a new DeformGrid.
+    pub fn new(rect: [f64, ..4], cols: uint, rows: uint) -> DeformGrid {
+        let x = rect[0]; let y = rect[1];
+        let w = rect[2]; let h = rect[3];
+        let mut vertices = Vec::new();
+        let mut texture_coords: Vec<[f32, ..2]> = Vec::new();
+        let units_h = w / cols as f64;
+        let units_v = h / rows as f64;
+        let nx = cols + 1;
+        let ny = rows + 1;
+        for iy in range(0, ny) {
+            for ix in range(0, nx) {
+                vertices.push([
+                    x + ix as f64 * units_h, 
+                    y + iy as f64 * units_v
+                ]);
+                texture_coords.push([
+                    ix as f32 * units_h as f32 / w as f32, 
+                    iy as f32 * units_v as f32 / h as f32
+                ]);
+            }
+        }
+
+        let mut indices = Vec::new();
+        for iy in range(0, ny - 1) {
+            for ix in range(0, nx - 1) {
+                indices.push(ix + iy * nx);
+                indices.push((ix + 1) + iy * nx);
+                indices.push(ix + (iy + 1) * nx);
+
+                indices.push(ix + (iy + 1) * nx);
+                indices.push((ix + 1) + iy * nx);
+                indices.push((ix + 1) + (iy + 1) * nx);
+            }
+        }
+
+        DeformGrid {
+            cols: cols,
+            rows: rows,
+            rect: rect,
+            vertices: vertices,
+            indices: indices,
+            texture_coords: texture_coords,
+            ps: Vec::new(),
+            qs: Vec::new(),
+            wis: Vec::new(),
+        }
+    }
+
+    /// Draws deformed image.
+    pub fn draw_image<B: BackEnd<I>, I: ImageSize>(
+        &self,
+        c: &Context,
+        back_end: &mut B,
+        texture: &I
+    ) {
+        if !back_end.supports_single_texture() { return; }
+        if !back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() { return; }
+        let mat = c.transform;
+        let (r, g, b, a) = (1.0, 1.0, 1.0, 1.0);
+        let needs_alpha = a != 1.0
+            || back_end.has_texture_alpha(texture);
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.enable_single_texture(texture);
+        let buf_len = 360;
+        let mut vertices: [f32, ..720] = [0.0, ..720];
+        let mut colors: [f32, ..1440] = [0.0, ..1440];
+        let mut uvs: [f32, ..720] = [0.0, ..720];
+        let mut offset = 0;
+        let vertex_align = 2;
+        let color_align = 4;
+        let uv_align = 2;
+        for &ind in self.indices.iter() {
+            if offset >= buf_len {
+                back_end.tri_list_xy_f32_rgba_f32_uv_f32(
+                    vertices.as_slice(),
+                    colors.as_slice(),
+                    uvs.as_slice()
+                );
+                offset = 0;
+            }
+            let vert = self.vertices[ind];
+            let vert_ind = offset * vertex_align;
+            vertices[vert_ind + 0] = tx(mat, vert[0], vert[1]);
+            vertices[vert_ind + 1] = ty(mat, vert[0], vert[1]);
+            let color_ind = offset * color_align;
+            colors[color_ind + 0] = r;
+            colors[color_ind + 1] = g;
+            colors[color_ind + 2] = b;
+            colors[color_ind + 3] = a;
+            let uv_ind = offset * uv_align;
+            let uv = self.texture_coords[ind];
+            uvs[uv_ind + 0] = uv[0];
+            uvs[uv_ind + 1] = uv[1];
+            offset += 1;
+        }
+        if offset > 0 {
+            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
+                vertices.slice_to(offset * vertex_align),
+                colors.slice_to(offset * color_align),
+                uvs.slice_to(offset * uv_align)
+            );
+        }
+        back_end.disable_single_texture();
+        if needs_alpha { back_end.disable_alpha_blend(); }
+    }
+
+    /// Adds a control point, in original coordinates.
+    pub fn add_control_point(&mut self, pos: [f64, ..2]) {
+        self.ps.push(pos);
+        self.qs.push(pos);
+        self.wis.push(0.0);
+    }
+
+    /// Draw vertical grid lines.
+    pub fn draw_vertical_lines<B: BackEnd<I>, I: ImageSize>(
+        &self, 
+        c: &ColorContext,
+        back_end: &mut B,
+        border_width: f64,
+    ) {
+        let grid = self;
+        let nx = grid.cols + 1;
+        let ny = grid.rows + 1;
+        for i in range(0, nx) {
+            for j in range(0, ny - 1) {
+                let ip = i + j * nx;
+                let x1 = grid.vertices[ip][0];
+                let y1 = grid.vertices[ip][1];
+                let ip = i + (j + 1) * nx;
+                let x2 = grid.vertices[ip][0];
+                let y2 = grid.vertices[ip][1];
+                c.line(x1, y1, x2, y2)
+                .square_border_width(border_width)
+                .draw(back_end);
+            }
+        }
+    }
+    
+    /// Draw horizontal grid lines.
+    pub fn draw_horizontal_lines<B: BackEnd<I>, I: ImageSize>(
+        &self, 
+        c: &ColorContext,
+        back_end: &mut B,
+        border_width: f64,
+    ) {
+        let grid = self;
+        let nx = grid.cols + 1;
+        let ny = grid.rows + 1;
+        for i in range(0, nx - 1) {
+            for j in range(0, ny) {
+                let ip = i + j * nx;
+                let x1 = grid.vertices[ip][0];
+                let y1 = grid.vertices[ip][1];
+                let ip = (i + 1) + j * nx;
+                let x2 = grid.vertices[ip][0];
+                let y2 = grid.vertices[ip][1];
+                c.line(x1, y1, x2, y2)
+                .square_border_width(border_width)
+                .draw(back_end);
+            }
+        }
+    }
+
     /// Updates the grid, by deforming the vertices.
     pub fn update(&mut self) {
         let &DeformGrid {
+            cols,
+            rows,
             rect,
             ref mut ps,
             ref mut qs,
             ref mut vertices,
             ref mut wis,
-            units,
+            ..
         } = self;
         let ps = ps.as_mut_slice();
         let qs = qs.as_mut_slice();
@@ -33,16 +216,38 @@ impl DeformGrid {
         let fr = vertices.as_mut_slice();
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
-        let grid_width = (w / units + 1.0).ceil() as uint;
-        let grid_height = (h / units + 1.0).ceil() as uint;
+        let units_h = w / cols as f64;
+        let units_v = h / rows as f64;
         let num = ps.len();
         let eps = 0.00001; 
+        let nx = cols + 1;
+        let ny = rows + 1;
 
-        for m in range(0, grid_width) {
-            for n in range(0, grid_height) {
-                let ip = m + n * grid_width;
-                let vx = m as f64 * units + x;
-                let vy = n as f64 * units + y;
+        match ps.len() {
+            0 => { return; },
+            1 => {
+                // Move all vertices same distance.
+                let dx = qs[0][0] - ps[0][0];
+                let dy = qs[0][1] - ps[0][1];
+                for iy in range(0, ny) {
+                    for ix in range(0, nx) {
+                        let ip = ix + iy * nx;
+                        fr[ip] = [
+                            x + ix as f64 * units_h + dx, 
+                            y + iy as f64 * units_v + dy
+                        ];
+                    }
+                }
+                return;
+            }
+            _ => {}
+        }
+
+        for m in range(0, nx) {
+            for n in range(0, ny) {
+                let ip = m + n * nx;
+                let vx = m as f64 * units_h + x;
+                let vy = n as f64 * units_v + y;
                 let mut sum_wi = 0.0;
                 let mut p_star_x = 0.0; let mut p_star_y = 0.0;
                 let mut q_star_x = 0.0; let mut q_star_y = 0.0;
@@ -72,7 +277,7 @@ impl DeformGrid {
                     let ai12 = pix * (-vpx) + piy * (-vpy);
                     let ai22 = pi_hat_y * (-vpx) - pi_hat_x * (-vpy);
                     fr[ip][0] += wis[i] * (qi_hat_x * ai11 + qi_hat_y * ai21);
-                    fr[ip + 1][1] += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
+                    fr[ip][1] += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
                 }
 
                 let vl = (vx - p_star_x) * (vx - p_star_x) + (vy - p_star_y) * (vy - p_star_y);
