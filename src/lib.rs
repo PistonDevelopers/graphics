@@ -58,6 +58,7 @@ pub mod interpolation;
 pub mod modular_index;
 pub mod triangulation;
 pub mod vecmath;
+pub mod deform;
 
 mod shape;
 
