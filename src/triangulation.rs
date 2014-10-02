@@ -29,13 +29,13 @@ use vecmath::{
 
 /// Transformed x coordinate as f32.
 #[inline(always)]
-fn tx(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
+pub fn tx(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
     (m[0][0] * x + m[0][1] * y + m[0][2]) as f32
 }
 
 /// Transformed y coordinate as f32.
 #[inline(always)]
-fn ty(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
+pub fn ty(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
     (m[1][0] * x + m[1][1] * y + m[1][2]) as f32
 }
 
