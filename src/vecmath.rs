@@ -316,6 +316,44 @@ fn test_triangle() {
     assert_eq!(triangle_face(tri_2), true);
 }
 
+/// Transforms from cartesian coordinates to barycentric.
+#[inline(always)]
+pub fn to_barycentric(triangle: Triangle, pos: [f64, ..2]) -> [f64, ..3] {
+    let x = pos[0]; let y = pos[1];
+    let x1 = triangle[0]; let y1 = triangle[1];
+    let x2 = triangle[2]; let y2 = triangle[3];
+    let x3 = triangle[4]; let y3 = triangle[5];
+    let lambda1 = ((y2 - y3) * (x - x3) + (x3 - x2) * (y - y3))
+                / ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
+    let lambda2 = ((y3 - y1) * (x - x3) + (x1 - x3) * (y - y3))
+                / ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
+    let lambda3 = 1.0 - lambda1 - lambda2;
+    [lambda1, lambda2, lambda3]
+}
+
+/// Transforms from barycentric coordinates to cartesian.
+#[inline(always)]
+pub fn from_barycentric(triangle: Triangle, lambda: [f64, ..3]) -> [f64, ..2] {
+    let x1 = triangle[0]; let y1 = triangle[1];
+    let x2 = triangle[2]; let y2 = triangle[3];
+    let x3 = triangle[4]; let y3 = triangle[5];
+    [lambda[0] * x1 + lambda[1] * x2 + lambda[2] * x3,
+     lambda[0] * y1 + lambda[1] * y2 + lambda[2] * y3]
+}
+
+#[test]
+fn test_barycentric() {
+    let triangle = [
+        0.0, 0.0,  100.0, 0.0,  0.0, 50.0
+    ];
+    let old_pos = [10.0, 20.0];
+    let b = to_barycentric(triangle, old_pos);
+    let new_pos = from_barycentric(triangle, b);
+    let eps = 0.00001;
+    assert!((new_pos[0] - old_pos[0]).abs() < eps);
+    assert!((new_pos[1] - old_pos[1]).abs() < eps);
+}
+
 /// Transform color with hue saturation and value.
 ///
 /// Source: http://beesbuzz.biz/code/hsv_color_transforms.php

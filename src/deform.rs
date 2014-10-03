@@ -83,6 +83,117 @@ impl DeformGrid {
         }
     }
 
+    /// Sets current control position.
+    #[inline(always)]
+    pub fn set_current(&mut self, i: int, pos: [f64, ..2]) {
+        let i: uint = if i < 0 { self.qs.len() as int + i } else { i } as uint;
+        let ptr = self.qs.get_mut(i);
+        *ptr = pos;
+    }
+    
+    /// Sets original control position.
+    #[inline(always)]
+    pub fn set_original(&mut self, i: int, pos: [f64, ..2]) {
+        let i: uint = if i < 0 { self.ps.len() as int + i } else { i } as uint;
+        let ptr = self.ps.get_mut(i);
+        *ptr = pos;
+    }
+
+    /// Removes all control points.
+    pub fn reset_control_points(&mut self) {
+        // These values don't need drop, so we can set length directly.
+        unsafe {
+            self.ps.set_len(0);
+            self.qs.set_len(0);
+            self.wis.set_len(0);
+        }
+    }
+
+    /// Sets vertices and texture coords back to default.
+    pub fn reset_vertices_and_texture_coords(&mut self) { 
+        unsafe {
+            self.vertices.set_len(0);
+            self.texture_coords.set_len(0);
+        }
+
+        let cols = self.cols;
+        let rows = self.rows;
+        let (x, y, w, h) = self.get_rect();
+        let units_h = w / cols as f64;
+        let units_v = h / rows as f64;
+        let nx = cols + 1;
+        let ny = rows + 1;
+        for iy in range(0, ny) {
+            for ix in range(0, nx) {
+                self.vertices.push([
+                    x + ix as f64 * units_h, 
+                    y + iy as f64 * units_v
+                ]);
+                self.texture_coords.push([
+                    ix as f32 * units_h as f32 / w as f32, 
+                    iy as f32 * units_v as f32 / h as f32
+                ]);
+            }
+        }
+    }
+
+    /// Gets the original rectangle as a tuple.
+    #[inline(always)]
+    pub fn get_rect(&self) -> (f64, f64, f64, f64) {
+        (self.rect[0], self.rect[1], self.rect[2], self.rect[3])
+    }
+
+    /// Finds original coordinate.
+    /// If the deformed grid is overlapping itself, multiple hits might occur.
+    /// Returns the first hit it finds.
+    pub fn hit(&self, pos: [f64, ..2]) -> Option<[f64, ..2]> {
+        use vecmath::{ inside_triangle, to_barycentric, from_barycentric };
+        let nx = self.cols + 1;
+        let ny = self.rows + 1;
+        for i in range(0, nx - 1) {
+            for j in range(0, ny - 1) {
+                let ip = i + j * nx;
+                let p1 = self.vertices[ip];
+                let ip = (i + 1) + j * nx;
+                let p2 = self.vertices[ip];
+                let ip = i + (j + 1) * nx;
+                let p3 = self.vertices[ip];
+                let ip = (i + 1) + (j + 1) * nx;
+                let p4 = self.vertices[ip];
+                let tri1 = [p1[0], p1[1],  p2[0], p2[1],  p3[0], p3[1]];
+                let tri2 = [p3[0], p3[1],  p2[0], p2[1],  p4[0], p4[1]];
+                if inside_triangle(tri1, pos[0], pos[1]) {
+                    let b = to_barycentric(tri1, pos);
+                    // Upper left triangle.
+                    let tri = [
+                        i as f64, j as f64,
+                        (i + 1) as f64, j as f64,
+                        i as f64, (j + 1) as f64
+                    ];
+                    let tri_pos = from_barycentric(tri, b);
+                    let (rx, ry, w, h) = self.get_rect();
+                    let units_h = w / self.cols as f64;
+                    let units_v = h / self.rows as f64;
+                    return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
+                } else if inside_triangle(tri2, pos[0], pos[1]) {
+                    let b = to_barycentric(tri2, pos);
+                    // Lower right triangle.
+                    let tri = [
+                        i as f64, (j + 1) as f64,
+                        (i + 1) as f64, j as f64,
+                        (i + 1) as f64, (j + 1) as f64
+                    ];
+                    let tri_pos = from_barycentric(tri, b);
+                    let (rx, ry, w, h) = self.get_rect();
+                    let units_h = w / self.cols as f64;
+                    let units_v = h / self.rows as f64;
+                    return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
+                }
+            }
+        }
+        None
+    }
+
     /// Draws deformed image.
     pub fn draw_image<B: BackEnd<I>, I: ImageSize>(
         &self,
