@@ -85,16 +85,14 @@ impl DeformGrid {
 
     /// Sets current control position.
     #[inline(always)]
-    pub fn set_current(&mut self, i: int, pos: [f64, ..2]) {
-        let i: uint = if i < 0 { self.qs.len() as int + i } else { i } as uint;
+    pub fn set_current(&mut self, i: uint, pos: [f64, ..2]) {
         let ptr = self.qs.get_mut(i);
         *ptr = pos;
     }
     
     /// Sets original control position.
     #[inline(always)]
-    pub fn set_original(&mut self, i: int, pos: [f64, ..2]) {
-        let i: uint = if i < 0 { self.ps.len() as int + i } else { i } as uint;
+    pub fn set_original(&mut self, i: uint, pos: [f64, ..2]) {
         let ptr = self.ps.get_mut(i);
         *ptr = pos;
     }
