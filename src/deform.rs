@@ -374,7 +374,7 @@ impl DeformGrid {
 
                 p_star_x /= sum_wi; p_star_y /= sum_wi;
                 q_star_x /= sum_wi; q_star_y /= sum_wi;
-                fr[ip] = [0.0, 0.0];
+                let mut fr_x = 0.0; let mut fr_y = 0.0;
                 let vpx = -(vy - p_star_y); let vpy = vx - p_star_x;
                 for i in range(0, num) {
                     let pix = ps[i][0]; let piy = ps[i][1];
@@ -385,15 +385,15 @@ impl DeformGrid {
                     let ai21 = pi_hat_y * (vx - p_star_x) - pi_hat_x * (vy - p_star_y);
                     let ai12 = pix * (-vpx) + piy * (-vpy);
                     let ai22 = pi_hat_y * (-vpx) - pi_hat_x * (-vpy);
-                    fr[ip][0] += wis[i] * (qi_hat_x * ai11 + qi_hat_y * ai21);
-                    fr[ip][1] += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
+                    fr_x += wis[i] * (qi_hat_x * ai11 + qi_hat_y * ai21);
+                    fr_y += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
                 }
 
                 let vl = (vx - p_star_x) * (vx - p_star_x) + (vy - p_star_y) * (vy - p_star_y);
-                let fl = fr[ip][0] * fr[ip][0] + fr[ip][1] * fr[ip][1];
+                let fl = fr_x * fr_x + fr_y * fr_y;
                 let vl = if fl == 0.0 { 0.0 } else { (vl / fl).sqrt() };
-                fr[ip][0] = fr[ip][0] * vl + q_star_x;
-                fr[ip][1] = fr[ip][1] * vl + q_star_y;
+                fr[ip][0] = fr_x * vl + q_star_x;
+                fr[ip][1] = fr_y * vl + q_star_y;
             }
         }
     }
