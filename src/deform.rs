@@ -389,7 +389,7 @@ impl DeformGrid {
                     fr_y += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
                 }
 
-                let vl = (vx - p_star_x) * (vx - p_star_x) + (vy - p_star_y) * (vy - p_star_y);
+                let vl = vpy * vpy + vpx * vpx;
                 let fl = fr_x * fr_x + fr_y * fr_y;
                 let vl = if fl == 0.0 { 0.0 } else { (vl / fl).sqrt() };
                 fr[ip][0] = fr_x * vl + q_star_x;
