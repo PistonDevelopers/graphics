@@ -381,10 +381,10 @@ impl DeformGrid {
                     let qix = qs[i][0]; let qiy = qs[i][1];
                     let pi_hat_x = pix - p_star_x; let pi_hat_y = piy - p_star_y;
                     let qi_hat_x = qix - q_star_x; let qi_hat_y = qiy - q_star_y;
-                    let ai11 = pix * (vx - p_star_x) + piy * (vy - p_star_y);
-                    let ai21 = pi_hat_y * (vx - p_star_x) - pi_hat_x * (vy - p_star_y);
-                    let ai12 = pix * (-vpx) + piy * (-vpy);
-                    let ai22 = pi_hat_y * (-vpx) - pi_hat_x * (-vpy);
+                    let ai11 = pix * vpy - piy * vpx;
+                    let ai21 = pi_hat_y * vpy + pi_hat_x * vpx;
+                    let ai12 = pix * (-vpx) - piy * vpy;
+                    let ai22 = pi_hat_y * (-vpx) + pi_hat_x * vpy;
                     fr_x += wis[i] * (qi_hat_x * ai11 + qi_hat_y * ai21);
                     fr_y += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
                 }
