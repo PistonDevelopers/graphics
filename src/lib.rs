@@ -59,6 +59,7 @@ pub mod modular_index;
 pub mod triangulation;
 pub mod vecmath;
 pub mod deform;
+pub mod grid;
 
 mod shape;
 
