@@ -309,7 +309,7 @@ impl DeformGrid {
 
     /// Updates the grid, by deforming the vertices.
     pub fn update(&mut self) {
-        use vecmath::{ add, mul_scalar, perp, square_len, sub };
+        use vecmath::{ add, cross, dot, mul_scalar, perp, square_len, sub };
 
         let &DeformGrid {
             cols,
@@ -338,14 +338,13 @@ impl DeformGrid {
             0 => { return; },
             1 => {
                 // Move all vertices same distance.
-                let dx = qs[0][0] - ps[0][0];
-                let dy = qs[0][1] - ps[0][1];
+                let d = sub(qs[0], ps[0]);
                 for iy in range(0, ny) {
                     for ix in range(0, nx) {
                         let ip = ix + iy * nx;
                         vertices[ip] = [
-                            x + ix as f64 * units_h + dx, 
-                            y + iy as f64 * units_v + dy
+                            x + ix as f64 * units_h + d[0], 
+                            y + iy as f64 * units_v + d[1]
                         ];
                     }
                 }
@@ -354,14 +353,15 @@ impl DeformGrid {
             _ => {}
         }
 
+        let zero = [0.0, 0.0];
         for m in range(0, nx) {
             for n in range(0, ny) {
                 let ip = m + n * nx;
                 let v = [m as f64 * units_h + x,
                          n as f64 * units_v + y];
                 let mut sum_wi = 0.0;
-                let mut p_star = [0.0, 0.0];
-                let mut q_star = [0.0, 0.0];
+                let mut p_star = zero;
+                let mut q_star = zero;
                 for i in range(0, num) {
                     let pi = ps[i];
                     let vl = square_len(sub(pi, v));
@@ -375,17 +375,17 @@ impl DeformGrid {
                 let inv_sum_wi = 1.0 / sum_wi;
                 p_star = mul_scalar(p_star, inv_sum_wi);
                 q_star = mul_scalar(q_star, inv_sum_wi);
-                let mut fr = [0.0, 0.0];
+                let mut fr = zero;
                 let vp = perp(sub(v, p_star));
                 for i in range(0, num) {
                     let pi = ps[i];
                     let qi = qs[i];
                     let pi_hat = sub(pi, p_star);
                     let qi_hat = sub(qi, q_star);
-                    let ai11 = pi[0] * vp[1] - pi[1] * vp[0];
-                    let ai21 = pi_hat[1] * vp[1] + pi_hat[0] * vp[0];
-                    let ai12 = pi[0] * (-vp[0]) - pi[1] * vp[1];
-                    let ai22 = pi_hat[1] * (-vp[0]) + pi_hat[0] * vp[1];
+                    let ai11 = cross(pi, vp);
+                    let ai21 = dot(pi_hat, vp);
+                    let ai12 = -dot(pi, vp);
+                    let ai22 = cross(pi_hat, vp);
                     fr[0] += wis[i] * (qi_hat[0] * ai11 + qi_hat[1] * ai21);
                     fr[1] += wis[i] * (qi_hat[0] * ai12 + qi_hat[1] * ai22);
                 }
