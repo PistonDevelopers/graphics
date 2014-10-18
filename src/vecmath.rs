@@ -4,6 +4,7 @@
 use vecmath_lib;
 
 pub use vecmath_lib::row_mat2x3_mul as multiply;
+pub use vecmath_lib::vec2_dot as dot;
 
 use internal::{
     Area,
