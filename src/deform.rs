@@ -309,6 +309,8 @@ impl DeformGrid {
 
     /// Updates the grid, by deforming the vertices.
     pub fn update(&mut self) {
+        use vecmath::{ mul_scalar, square_len };
+
         let &DeformGrid {
             cols,
             rows,
@@ -358,29 +360,30 @@ impl DeformGrid {
                 let vx = m as f64 * units_h + x;
                 let vy = n as f64 * units_v + y;
                 let mut sum_wi = 0.0;
-                let mut p_star_x = 0.0; let mut p_star_y = 0.0;
-                let mut q_star_x = 0.0; let mut q_star_y = 0.0;
+                let mut p_star = [0.0, 0.0];
+                let mut q_star = [0.0, 0.0];
                 for i in range(0, num) {
                     let pix = ps[i][0]; let piy = ps[i][1];
                     let qix = qs[i][0]; let qiy = qs[i][1];
-                    let vl = (pix - vx) * (pix - vx) + (piy - vy) * (piy - vy);
+                    let vl = square_len([pix - vx, piy - vy]);
                
                     let w = if vl < eps && vl > -eps { 1.0 / eps } else { 1.0 / vl };
                     sum_wi += w;
-                    p_star_x += w * pix; p_star_y += w * piy;
-                    q_star_x += w * qix; q_star_y += w * qiy;
+                    p_star[0] += w * pix; p_star[1] += w * piy;
+                    q_star[0] += w * qix; q_star[1] += w * qiy;
                     wis[i] = w;
                 }
 
-                p_star_x /= sum_wi; p_star_y /= sum_wi;
-                q_star_x /= sum_wi; q_star_y /= sum_wi;
+                let inv_sum_wi = 1.0 / sum_wi;
+                p_star = mul_scalar(p_star, inv_sum_wi);
+                q_star = mul_scalar(q_star, inv_sum_wi);
                 let mut fr_x = 0.0; let mut fr_y = 0.0;
-                let vpx = -(vy - p_star_y); let vpy = vx - p_star_x;
+                let vpx = -(vy - p_star[1]); let vpy = vx - p_star[0];
                 for i in range(0, num) {
                     let pix = ps[i][0]; let piy = ps[i][1];
                     let qix = qs[i][0]; let qiy = qs[i][1];
-                    let pi_hat_x = pix - p_star_x; let pi_hat_y = piy - p_star_y;
-                    let qi_hat_x = qix - q_star_x; let qi_hat_y = qiy - q_star_y;
+                    let pi_hat_x = pix - p_star[0]; let pi_hat_y = piy - p_star[1];
+                    let qi_hat_x = qix - q_star[0]; let qi_hat_y = qiy - q_star[1];
                     let ai11 = pix * vpy - piy * vpx;
                     let ai21 = pi_hat_y * vpy + pi_hat_x * vpx;
                     let ai12 = pix * (-vpx) - piy * vpy;
@@ -389,11 +392,11 @@ impl DeformGrid {
                     fr_y += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
                 }
 
-                let vl = vpy * vpy + vpx * vpx;
-                let fl = fr_x * fr_x + fr_y * fr_y;
+                let vl = square_len([vpx, vpy]);
+                let fl = square_len([fr_x, fr_y]);
                 let vl = if fl == 0.0 { 0.0 } else { (vl / fl).sqrt() };
-                fr[ip][0] = fr_x * vl + q_star_x;
-                fr[ip][1] = fr_y * vl + q_star_y;
+                fr[ip][0] = fr_x * vl + q_star[0];
+                fr[ip][1] = fr_y * vl + q_star[1];
             }
         }
     }
