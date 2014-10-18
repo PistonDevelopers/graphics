@@ -380,14 +380,14 @@ impl DeformGrid {
                 for i in range(0, num) {
                     let pi = ps[i];
                     let qi = qs[i];
-                    let pi_hat_x = pi[0] - p_star[0]; let pi_hat_y = pi[1] - p_star[1];
-                    let qi_hat_x = qi[0] - q_star[0]; let qi_hat_y = qi[1] - q_star[1];
+                    let pi_hat = sub(pi, p_star);
+                    let qi_hat = sub(qi, q_star);
                     let ai11 = pi[0] * vp[1] - pi[1] * vp[0];
-                    let ai21 = pi_hat_y * vp[1] + pi_hat_x * vp[0];
+                    let ai21 = pi_hat[1] * vp[1] + pi_hat[0] * vp[0];
                     let ai12 = pi[0] * (-vp[0]) - pi[1] * vp[1];
-                    let ai22 = pi_hat_y * (-vp[0]) + pi_hat_x * vp[1];
-                    fr[0] += wis[i] * (qi_hat_x * ai11 + qi_hat_y * ai21);
-                    fr[1] += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
+                    let ai22 = pi_hat[1] * (-vp[0]) + pi_hat[0] * vp[1];
+                    fr[0] += wis[i] * (qi_hat[0] * ai11 + qi_hat[1] * ai21);
+                    fr[1] += wis[i] * (qi_hat[0] * ai12 + qi_hat[1] * ai22);
                 }
 
                 let vl = square_len(vp);
