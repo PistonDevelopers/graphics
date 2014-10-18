@@ -7,6 +7,8 @@ pub use vecmath_lib::row_mat2x3_mul as multiply;
 pub use vecmath_lib::vec2_dot as dot;
 pub use vecmath_lib::vec2_add as add;
 pub use vecmath_lib::vec2_sub as sub;
+pub use vecmath_lib::vec2_cast as cast;
+pub use vecmath_lib::vec2_mul as mul;
 
 use internal::{
     Area,
