@@ -5,11 +5,12 @@ use vecmath_lib;
 
 pub use vecmath_lib::row_mat2x3_mul as multiply;
 pub use vecmath_lib::vec2_dot as dot;
+pub use vecmath_lib::vec2_cross as cross;
 pub use vecmath_lib::vec2_add as add;
 pub use vecmath_lib::vec2_sub as sub;
 pub use vecmath_lib::vec2_cast as cast;
 pub use vecmath_lib::vec2_mul as mul;
-pub use vecmath_lib::vec2_mul_scalar as mul_scalar;
+pub use vecmath_lib::vec2_scale as mul_scalar;
 pub use vecmath_lib::vec2_square_len as square_len;
 
 use internal::{

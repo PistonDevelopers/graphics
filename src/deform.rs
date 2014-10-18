@@ -309,6 +309,8 @@ impl DeformGrid {
 
     /// Updates the grid, by deforming the vertices.
     pub fn update(&mut self) {
+        use vecmath::{ add, cross, dot, mul_scalar, perp, square_len, sub };
+
         let &DeformGrid {
             cols,
             rows,
@@ -322,7 +324,7 @@ impl DeformGrid {
         let ps = ps.as_mut_slice();
         let qs = qs.as_mut_slice();
         let wis = wis.as_mut_slice();
-        let fr = vertices.as_mut_slice();
+        let vertices = vertices.as_mut_slice();
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let units_h = w / cols as f64;
@@ -336,14 +338,13 @@ impl DeformGrid {
             0 => { return; },
             1 => {
                 // Move all vertices same distance.
-                let dx = qs[0][0] - ps[0][0];
-                let dy = qs[0][1] - ps[0][1];
+                let d = sub(qs[0], ps[0]);
                 for iy in range(0, ny) {
                     for ix in range(0, nx) {
                         let ip = ix + iy * nx;
-                        fr[ip] = [
-                            x + ix as f64 * units_h + dx, 
-                            y + iy as f64 * units_v + dy
+                        vertices[ip] = [
+                            x + ix as f64 * units_h + d[0], 
+                            y + iy as f64 * units_v + d[1]
                         ];
                     }
                 }
@@ -352,48 +353,47 @@ impl DeformGrid {
             _ => {}
         }
 
+        let zero = [0.0, 0.0];
         for m in range(0, nx) {
             for n in range(0, ny) {
                 let ip = m + n * nx;
-                let vx = m as f64 * units_h + x;
-                let vy = n as f64 * units_v + y;
+                let v = [m as f64 * units_h + x,
+                         n as f64 * units_v + y];
                 let mut sum_wi = 0.0;
-                let mut p_star_x = 0.0; let mut p_star_y = 0.0;
-                let mut q_star_x = 0.0; let mut q_star_y = 0.0;
+                let mut p_star = zero;
+                let mut q_star = zero;
                 for i in range(0, num) {
-                    let pix = ps[i][0]; let piy = ps[i][1];
-                    let qix = qs[i][0]; let qiy = qs[i][1];
-                    let vl = (pix - vx) * (pix - vx) + (piy - vy) * (piy - vy);
-               
+                    let pi = ps[i];
+                    let vl = square_len(sub(pi, v));
                     let w = if vl < eps && vl > -eps { 1.0 / eps } else { 1.0 / vl };
                     sum_wi += w;
-                    p_star_x += w * pix; p_star_y += w * piy;
-                    q_star_x += w * qix; q_star_y += w * qiy;
+                    p_star = add(p_star, mul_scalar(pi, w));
+                    q_star = add(q_star, mul_scalar(qs[i], w));
                     wis[i] = w;
                 }
 
-                p_star_x /= sum_wi; p_star_y /= sum_wi;
-                q_star_x /= sum_wi; q_star_y /= sum_wi;
-                let mut fr_x = 0.0; let mut fr_y = 0.0;
-                let vpx = -(vy - p_star_y); let vpy = vx - p_star_x;
+                let inv_sum_wi = 1.0 / sum_wi;
+                p_star = mul_scalar(p_star, inv_sum_wi);
+                q_star = mul_scalar(q_star, inv_sum_wi);
+                let mut fr = zero;
+                let vp = perp(sub(v, p_star));
                 for i in range(0, num) {
-                    let pix = ps[i][0]; let piy = ps[i][1];
-                    let qix = qs[i][0]; let qiy = qs[i][1];
-                    let pi_hat_x = pix - p_star_x; let pi_hat_y = piy - p_star_y;
-                    let qi_hat_x = qix - q_star_x; let qi_hat_y = qiy - q_star_y;
-                    let ai11 = pix * vpy - piy * vpx;
-                    let ai21 = pi_hat_y * vpy + pi_hat_x * vpx;
-                    let ai12 = pix * (-vpx) - piy * vpy;
-                    let ai22 = pi_hat_y * (-vpx) + pi_hat_x * vpy;
-                    fr_x += wis[i] * (qi_hat_x * ai11 + qi_hat_y * ai21);
-                    fr_y += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
+                    let pi = ps[i];
+                    let qi = qs[i];
+                    let pi_hat = sub(pi, p_star);
+                    let qi_hat = sub(qi, q_star);
+                    let ai11 = cross(pi, vp);
+                    let ai21 = dot(pi_hat, vp);
+                    let ai12 = -dot(pi, vp);
+                    let ai22 = cross(pi_hat, vp);
+                    fr[0] += wis[i] * (qi_hat[0] * ai11 + qi_hat[1] * ai21);
+                    fr[1] += wis[i] * (qi_hat[0] * ai12 + qi_hat[1] * ai22);
                 }
 
-                let vl = vpy * vpy + vpx * vpx;
-                let fl = fr_x * fr_x + fr_y * fr_y;
+                let vl = square_len(vp);
+                let fl = square_len(fr);
                 let vl = if fl == 0.0 { 0.0 } else { (vl / fl).sqrt() };
-                fr[ip][0] = fr_x * vl + q_star_x;
-                fr[ip][1] = fr_y * vl + q_star_y;
+                vertices[ip] = add(mul_scalar(fr, vl), q_star);
             }
         }
     }
