@@ -27,6 +27,12 @@ pub type Matrix2d = vecmath_lib::Matrix2x3<f64>;
 /// The type used for vectors.
 pub type Vec2d = vecmath_lib::Vector2<f64>;
 
+/// Creates a perpendicular vector.
+#[inline(always)]
+pub fn perp(v: [Scalar, ..2]) -> [Scalar, ..2] {
+    [-v[1], v[0]]
+}
+
 /// Creates a translation matrix.
 #[inline(always)]
 pub fn translate(x: f64, y: f64) -> Matrix2d {
