@@ -309,7 +309,7 @@ impl DeformGrid {
 
     /// Updates the grid, by deforming the vertices.
     pub fn update(&mut self) {
-        use vecmath::{ mul_scalar, perp, square_len, sub };
+        use vecmath::{ add, mul_scalar, perp, square_len, sub };
 
         let &DeformGrid {
             cols,
@@ -363,14 +363,12 @@ impl DeformGrid {
                 let mut p_star = [0.0, 0.0];
                 let mut q_star = [0.0, 0.0];
                 for i in range(0, num) {
-                    let pix = ps[i][0]; let piy = ps[i][1];
-                    let qix = qs[i][0]; let qiy = qs[i][1];
-                    let vl = square_len(sub([pix, piy], v));
-               
+                    let pi = ps[i];
+                    let vl = square_len(sub(pi, v));
                     let w = if vl < eps && vl > -eps { 1.0 / eps } else { 1.0 / vl };
                     sum_wi += w;
-                    p_star[0] += w * pix; p_star[1] += w * piy;
-                    q_star[0] += w * qix; q_star[1] += w * qiy;
+                    p_star = add(p_star, mul_scalar(pi, w));
+                    q_star = add(q_star, mul_scalar(qs[i], w));
                     wis[i] = w;
                 }
 
