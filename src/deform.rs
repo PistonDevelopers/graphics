@@ -324,7 +324,7 @@ impl DeformGrid {
         let ps = ps.as_mut_slice();
         let qs = qs.as_mut_slice();
         let wis = wis.as_mut_slice();
-        let fr = vertices.as_mut_slice();
+        let vertices = vertices.as_mut_slice();
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let units_h = w / cols as f64;
@@ -343,7 +343,7 @@ impl DeformGrid {
                 for iy in range(0, ny) {
                     for ix in range(0, nx) {
                         let ip = ix + iy * nx;
-                        fr[ip] = [
+                        vertices[ip] = [
                             x + ix as f64 * units_h + dx, 
                             y + iy as f64 * units_v + dy
                         ];
@@ -375,7 +375,7 @@ impl DeformGrid {
                 let inv_sum_wi = 1.0 / sum_wi;
                 p_star = mul_scalar(p_star, inv_sum_wi);
                 q_star = mul_scalar(q_star, inv_sum_wi);
-                let mut fr_x = 0.0; let mut fr_y = 0.0;
+                let mut fr = [0.0, 0.0];
                 let vp = perp(sub(v, p_star));
                 for i in range(0, num) {
                     let pix = ps[i][0]; let piy = ps[i][1];
@@ -386,15 +386,14 @@ impl DeformGrid {
                     let ai21 = pi_hat_y * vp[1] + pi_hat_x * vp[0];
                     let ai12 = pix * (-vp[0]) - piy * vp[1];
                     let ai22 = pi_hat_y * (-vp[0]) + pi_hat_x * vp[1];
-                    fr_x += wis[i] * (qi_hat_x * ai11 + qi_hat_y * ai21);
-                    fr_y += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
+                    fr[0] += wis[i] * (qi_hat_x * ai11 + qi_hat_y * ai21);
+                    fr[1] += wis[i] * (qi_hat_x * ai12 + qi_hat_y * ai22);
                 }
 
                 let vl = square_len(vp);
-                let fl = square_len([fr_x, fr_y]);
+                let fl = square_len(fr);
                 let vl = if fl == 0.0 { 0.0 } else { (vl / fl).sqrt() };
-                fr[ip][0] = fr_x * vl + q_star[0];
-                fr[ip][1] = fr_y * vl + q_star[1];
+                vertices[ip] = add(mul_scalar(fr, vl), q_star);
             }
         }
     }
