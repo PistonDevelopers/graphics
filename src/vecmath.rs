@@ -45,9 +45,9 @@ pub fn perp(v: [Scalar, ..2]) -> [Scalar, ..2] {
 
 /// Creates a translation matrix.
 #[inline(always)]
-pub fn translate(x: Scalar, y: Scalar) -> Matrix2d {
-    [[1.0, 0.0, x],
-     [0.0, 1.0, y]]
+pub fn translate(v: Vec2d) -> Matrix2d {
+    [[1.0, 0.0, v[0]],
+     [0.0, 1.0, v[1]]]
 }
 
 /// Creates a rotation matrix.
