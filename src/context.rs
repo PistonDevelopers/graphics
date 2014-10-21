@@ -137,7 +137,7 @@ impl Context {
     /// and x axis pointing to the right
     /// and y axis pointing down.
     #[inline(always)]
-    pub fn abs(w: f64, h: f64) -> Context {
+    pub fn abs(w: Scalar, h: Scalar) -> Context {
         let sx = 2.0 / w;
         let sy = -2.0 / h;
         let mat = [[ sx, 0.0, -1.0 ],
@@ -606,8 +606,8 @@ for ImageContext<'b, I> {
             let rect = [
                 0.0,
                 0.0,
-                source_rect[2] as f64,
-                source_rect[3] as f64
+                source_rect[2] as Scalar,
+                source_rect[3] as Scalar
             ];
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
@@ -843,7 +843,7 @@ for Context<S, C> {
     #[inline(always)]
     fn bevel(
         &self,
-        radius: f64
+        radius: Radius
     ) -> Context<T, C> {
         Context {
             view: self.view,
@@ -965,8 +965,8 @@ for ImageColorContext<'b, I> {
             let rect = [
                 0.0,
                 0.0,
-                source_rect[2] as f64,
-                source_rect[3] as f64
+                source_rect[2] as Scalar,
+                source_rect[3] as Scalar
             ];
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }

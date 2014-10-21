@@ -10,6 +10,8 @@ use {
     Draw,
 };
 use triangulation::{tx, ty};
+use vecmath::{ Scalar, Vec2d };
+use internal::{ Rectangle, Width };
 
 /// Represents a deformed grid.
 pub struct DeformGrid {
@@ -18,40 +20,40 @@ pub struct DeformGrid {
     /// The number of rows in the grid.
     pub rows: uint,
     /// The grid undeformed, which is a plain rectangle.
-    pub rect: [f64, ..4],
+    pub rect: [Scalar, ..4],
     /// The vertices, deformed.
-    pub vertices: Vec<[f64, ..2]>,
+    pub vertices: Vec<Vec2d>,
     /// The triangle indices.
     pub indices: Vec<uint>,
     /// The texture coordinates.
     pub texture_coords: Vec<[f32, ..2]>,
     /// Initial position of control points.
-    pub ps: Vec<[f64, ..2]>,
+    pub ps: Vec<[Scalar, ..2]>,
     /// The current position of control points.
-    pub qs: Vec<[f64, ..2]>,
+    pub qs: Vec<[Scalar, ..2]>,
     /// A weight computation buffer, one for each control point.
-    pub wis: Vec<f64>
+    pub wis: Vec<Scalar>
 }
 
 impl DeformGrid {
     /// Creates a new DeformGrid.
-    pub fn new(rect: [f64, ..4], cols: uint, rows: uint) -> DeformGrid {
+    pub fn new(rect: Rectangle, cols: uint, rows: uint) -> DeformGrid {
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let mut vertices = Vec::new();
         let mut texture_coords: Vec<[f32, ..2]> = Vec::new();
-        let units_h = w / cols as f64;
-        let units_v = h / rows as f64;
+        let units_h = w / cols as Scalar;
+        let units_v = h / rows as Scalar;
         let nx = cols + 1;
         let ny = rows + 1;
         for iy in range(0, ny) {
             for ix in range(0, nx) {
                 vertices.push([
-                    x + ix as f64 * units_h, 
-                    y + iy as f64 * units_v
+                    x + ix as Scalar * units_h,
+                    y + iy as Scalar * units_v
                 ]);
                 texture_coords.push([
-                    ix as f32 * units_h as f32 / w as f32, 
+                    ix as f32 * units_h as f32 / w as f32,
                     iy as f32 * units_v as f32 / h as f32
                 ]);
             }
@@ -85,14 +87,14 @@ impl DeformGrid {
 
     /// Sets current control position.
     #[inline(always)]
-    pub fn set_current(&mut self, i: uint, pos: [f64, ..2]) {
+    pub fn set_current(&mut self, i: uint, pos: Vec2d) {
         let ptr = self.qs.get_mut(i);
         *ptr = pos;
     }
-    
+
     /// Sets original control position.
     #[inline(always)]
-    pub fn set_original(&mut self, i: uint, pos: [f64, ..2]) {
+    pub fn set_original(&mut self, i: uint, pos: Vec2d) {
         let ptr = self.ps.get_mut(i);
         *ptr = pos;
     }
@@ -108,7 +110,7 @@ impl DeformGrid {
     }
 
     /// Sets vertices and texture coords back to default.
-    pub fn reset_vertices_and_texture_coords(&mut self) { 
+    pub fn reset_vertices_and_texture_coords(&mut self) {
         unsafe {
             self.vertices.set_len(0);
             self.texture_coords.set_len(0);
@@ -117,18 +119,18 @@ impl DeformGrid {
         let cols = self.cols;
         let rows = self.rows;
         let (x, y, w, h) = self.get_rect();
-        let units_h = w / cols as f64;
-        let units_v = h / rows as f64;
+        let units_h = w / cols as Scalar;
+        let units_v = h / rows as Scalar;
         let nx = cols + 1;
         let ny = rows + 1;
         for iy in range(0, ny) {
             for ix in range(0, nx) {
                 self.vertices.push([
-                    x + ix as f64 * units_h, 
-                    y + iy as f64 * units_v
+                    x + ix as Scalar * units_h,
+                    y + iy as Scalar * units_v
                 ]);
                 self.texture_coords.push([
-                    ix as f32 * units_h as f32 / w as f32, 
+                    ix as f32 * units_h as f32 / w as f32,
                     iy as f32 * units_v as f32 / h as f32
                 ]);
             }
@@ -137,14 +139,14 @@ impl DeformGrid {
 
     /// Gets the original rectangle as a tuple.
     #[inline(always)]
-    pub fn get_rect(&self) -> (f64, f64, f64, f64) {
+    pub fn get_rect(&self) -> (Scalar, Scalar, Scalar, Scalar) {
         (self.rect[0], self.rect[1], self.rect[2], self.rect[3])
     }
 
     /// Finds original coordinate.
     /// If the deformed grid is overlapping itself, multiple hits might occur.
     /// Returns the first hit it finds.
-    pub fn hit(&self, pos: [f64, ..2]) -> Option<[f64, ..2]> {
+    pub fn hit(&self, pos: Vec2d) -> Option<Vec2d> {
         use vecmath::{ inside_triangle, to_barycentric, from_barycentric };
         let nx = self.cols + 1;
         let ny = self.rows + 1;
@@ -164,27 +166,27 @@ impl DeformGrid {
                     let b = to_barycentric(tri1, pos);
                     // Upper left triangle.
                     let tri = [
-                        i as f64, j as f64,
-                        (i + 1) as f64, j as f64,
-                        i as f64, (j + 1) as f64
+                        i as Scalar, j as Scalar,
+                        (i + 1) as Scalar, j as Scalar,
+                        i as Scalar, (j + 1) as Scalar
                     ];
                     let tri_pos = from_barycentric(tri, b);
                     let (rx, ry, w, h) = self.get_rect();
-                    let units_h = w / self.cols as f64;
-                    let units_v = h / self.rows as f64;
+                    let units_h = w / self.cols as Scalar;
+                    let units_v = h / self.rows as Scalar;
                     return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
                 } else if inside_triangle(tri2, pos[0], pos[1]) {
                     let b = to_barycentric(tri2, pos);
                     // Lower right triangle.
                     let tri = [
-                        i as f64, (j + 1) as f64,
-                        (i + 1) as f64, j as f64,
-                        (i + 1) as f64, (j + 1) as f64
+                        i as Scalar, (j + 1) as Scalar,
+                        (i + 1) as Scalar, j as Scalar,
+                        (i + 1) as Scalar, (j + 1) as Scalar
                     ];
                     let tri_pos = from_barycentric(tri, b);
                     let (rx, ry, w, h) = self.get_rect();
-                    let units_h = w / self.cols as f64;
-                    let units_v = h / self.rows as f64;
+                    let units_h = w / self.cols as Scalar;
+                    let units_v = h / self.rows as Scalar;
                     return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
                 }
             }
@@ -251,7 +253,7 @@ impl DeformGrid {
     }
 
     /// Adds a control point, in original coordinates.
-    pub fn add_control_point(&mut self, pos: [f64, ..2]) {
+    pub fn add_control_point(&mut self, pos: Vec2d) {
         self.ps.push(pos);
         self.qs.push(pos);
         self.wis.push(0.0);
@@ -259,10 +261,10 @@ impl DeformGrid {
 
     /// Draw vertical grid lines.
     pub fn draw_vertical_lines<B: BackEnd<I>, I: ImageSize>(
-        &self, 
+        &self,
         c: &ColorContext,
         back_end: &mut B,
-        border_width: f64,
+        border_width: Width,
     ) {
         let grid = self;
         let nx = grid.cols + 1;
@@ -281,13 +283,13 @@ impl DeformGrid {
             }
         }
     }
-    
+
     /// Draw horizontal grid lines.
     pub fn draw_horizontal_lines<B: BackEnd<I>, I: ImageSize>(
-        &self, 
+        &self,
         c: &ColorContext,
         back_end: &mut B,
-        border_width: f64,
+        border_width: Width,
     ) {
         let grid = self;
         let nx = grid.cols + 1;
@@ -327,10 +329,10 @@ impl DeformGrid {
         let vertices = vertices.as_mut_slice();
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
-        let units_h = w / cols as f64;
-        let units_v = h / rows as f64;
+        let units_h = w / cols as Scalar;
+        let units_v = h / rows as Scalar;
         let num = ps.len();
-        let eps = 0.00001; 
+        let eps = 0.00001;
         let nx = cols + 1;
         let ny = rows + 1;
 
@@ -343,8 +345,8 @@ impl DeformGrid {
                     for ix in range(0, nx) {
                         let ip = ix + iy * nx;
                         vertices[ip] = [
-                            x + ix as f64 * units_h + d[0], 
-                            y + iy as f64 * units_v + d[1]
+                            x + ix as Scalar * units_h + d[0],
+                            y + iy as Scalar * units_v + d[1]
                         ];
                     }
                 }
@@ -357,8 +359,8 @@ impl DeformGrid {
         for m in range(0, nx) {
             for n in range(0, ny) {
                 let ip = m + n * nx;
-                let v = [m as f64 * units_h + x,
-                         n as f64 * units_v + y];
+                let v = [m as Scalar * units_h + x,
+                         n as Scalar * units_v + y];
                 let mut sum_wi = 0.0;
                 let mut p_star = zero;
                 let mut q_star = zero;
@@ -398,4 +400,3 @@ impl DeformGrid {
         }
     }
 }
-

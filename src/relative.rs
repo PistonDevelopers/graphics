@@ -95,16 +95,16 @@ impl<
 /// Should be implemented by contexts that have rectangle information.
 pub trait RelativeRectangle<T> {
     /// Shrinks the current rectangle equally by all sides.
-    fn margin(&self, m: f64) -> T;
+    fn margin(&self, m: Scalar) -> T;
 
     /// Expands the current rectangle equally by all sides.
     #[inline(always)]
-    fn expand(&self, m: f64) -> T {
+    fn expand(&self, m: Scalar) -> T {
         self.margin(-m)
     }
 
     /// Moves to a relative rectangle using the current rectangle as tile.
-    fn rel(&self, x: f64, y: f64) -> T;
+    fn rel(&self, x: Scalar, y: Scalar) -> T;
 }
 
 impl<
@@ -112,12 +112,12 @@ impl<
     U
 > RelativeRectangle<U> for T {
     #[inline(always)]
-    fn margin(&self, m: f64) -> U {
+    fn margin(&self, m: Scalar) -> U {
         self.rectangle(margin_rectangle(self.get_rectangle(), m))
     }
 
     #[inline(always)]
-    fn rel(&self, x: f64, y: f64) -> U {
+    fn rel(&self, x: Scalar, y: Scalar) -> U {
         self.rectangle(relative_rectangle(self.get_rectangle(), x, y))
     }
 }

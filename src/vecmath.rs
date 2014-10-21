@@ -29,10 +29,13 @@ use modular_index::{previous};
 pub type Scalar = f64;
 
 /// The type used for matrices.
-pub type Matrix2d = vecmath_lib::Matrix2x3<f64>;
+pub type Matrix2d = vecmath_lib::Matrix2x3<Scalar>;
 
-/// The type used for vectors.
-pub type Vec2d = vecmath_lib::Vector2<f64>;
+/// The type used for 2D vectors.
+pub type Vec2d = vecmath_lib::Vector2<Scalar>;
+
+/// The type used for 3D vectors.
+pub type Vec3d = vecmath_lib::Vector3<Scalar>;
 
 /// Creates a perpendicular vector.
 #[inline(always)]
@@ -42,14 +45,14 @@ pub fn perp(v: [Scalar, ..2]) -> [Scalar, ..2] {
 
 /// Creates a translation matrix.
 #[inline(always)]
-pub fn translate(x: f64, y: f64) -> Matrix2d {
+pub fn translate(x: Scalar, y: Scalar) -> Matrix2d {
     [[1.0, 0.0, x],
      [0.0, 1.0, y]]
 }
 
 /// Creates a rotation matrix.
 #[inline(always)]
-pub fn rotate_radians(angle: f64) -> Matrix2d {
+pub fn rotate_radians(angle: Scalar) -> Matrix2d {
     let c = angle.cos();
     let s = angle.sin();
     [[c, -s, 0.0],
@@ -61,7 +64,7 @@ pub fn rotate_radians(angle: f64) -> Matrix2d {
 /// Leaves x axis unchanged if the
 /// point to look at is the origin.
 #[inline(always)]
-pub fn orient(x: f64, y: f64) -> Matrix2d {
+pub fn orient(x: Scalar, y: Scalar) -> Matrix2d {
     let len = x * x + y * y;
     if len == 0.0 {
         return identity()
@@ -76,14 +79,14 @@ pub fn orient(x: f64, y: f64) -> Matrix2d {
 
 /// Create a scale matrix.
 #[inline(always)]
-pub fn scale(sx: f64, sy: f64) -> Matrix2d {
+pub fn scale(sx: Scalar, sy: Scalar) -> Matrix2d {
     [[sx, 0.0, 0.0],
      [0.0, sy, 0.0]]
 }
 
 /// Create a shear matrix.
 #[inline(always)]
-pub fn shear(sx: f64, sy: f64) -> Matrix2d {
+pub fn shear(sx: Scalar, sy: Scalar) -> Matrix2d {
     [[1.0, sx, 0.0],
      [sy, 1.0, 0.0]]
 }
@@ -99,7 +102,7 @@ pub fn identity() -> Matrix2d {
 #[inline(always)]
 pub fn get_scale(m: Matrix2d) -> Vec2d {
     [
-        (m[0][0] * m[0][0] + m[1][0] * m[1][0]).sqrt(), 
+        (m[0][0] * m[0][0] + m[1][0] * m[1][0]).sqrt(),
         (m[0][1] * m[0][1] + m[1][1] * m[1][1]).sqrt()
     ]
 }
@@ -107,7 +110,7 @@ pub fn get_scale(m: Matrix2d) -> Vec2d {
 /// Compute the shortest vector from point to ray.
 /// A ray stores starting point and directional vector.
 #[inline(always)]
-pub fn separation(ray: Ray, x: f64, y: f64) -> [f64, ..2] {
+pub fn separation(ray: Ray, x: Scalar, y: Scalar) -> Vec2d {
     // Get the directional vector.
     let (dir_x, dir_y) = (ray[2], ray[3]);
     // Get displacement vector from point.
@@ -155,20 +158,20 @@ pub fn least_separation_4(
 
 /// Shrinks a rectangle by a factor on all sides.
 #[inline(always)]
-pub fn margin_rectangle(rect: Rectangle, m: f64) -> Rectangle {
+pub fn margin_rectangle(rect: Rectangle, m: Scalar) -> Rectangle {
     let w = rect[2] - 2.0 * m;
     let h = rect[3] - 2.0 * m;
-    let (x, w) 
+    let (x, w)
         =   if w < 0.0 {
-                (rect[0] + 0.5 * rect[2], 0.0) 
-            } else { 
-                (rect[0] + m, w) 
+                (rect[0] + 0.5 * rect[2], 0.0)
+            } else {
+                (rect[0] + m, w)
             };
-    let (y, h) 
-        =   if h < 0.0 { 
-                (rect[1] + 0.5 * rect[3], 0.0) 
-            } else { 
-                (rect[1] + m, h) 
+    let (y, h)
+        =   if h < 0.0 {
+                (rect[1] + 0.5 * rect[3], 0.0)
+            } else {
+                (rect[1] + m, h)
             };
     [x, y, w, h]
 }
@@ -176,14 +179,14 @@ pub fn margin_rectangle(rect: Rectangle, m: f64) -> Rectangle {
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
 pub fn relative_rectangle(
-    rect: Rectangle, 
-    x: f64, 
-    y: f64
+    rect: Rectangle,
+    x: Scalar,
+    y: Scalar
 ) -> Rectangle {
     [
-        rect[0] + x * rect[2], 
-        rect[1] + y * rect[3], 
-        rect[2], 
+        rect[0] + x * rect[2],
+        rect[1] + y * rect[3],
+        rect[2],
         rect[3]
     ]
 }
@@ -192,8 +195,8 @@ pub fn relative_rectangle(
 /// the source rectangle as a tile.
 #[inline(always)]
 pub fn relative_source_rectangle(
-    rect: SourceRectangle, 
-    x: i32, 
+    rect: SourceRectangle,
+    x: i32,
     y: i32
 ) -> SourceRectangle {
     let (rx, ry, rw, rh) = (rect[0], rect[1], rect[2], rect[3]);
@@ -204,8 +207,8 @@ pub fn relative_source_rectangle(
 /// Computes modular offset safely for numbers.
 #[inline(always)]
 pub fn modular_offset<T: Add<T, T> + Rem<T, T>>(
-    n: &T, 
-    i: &T, 
+    n: &T,
+    i: &T,
     off: &T
 ) -> T {
     (*i + (*off % *n + *n)) % *n
@@ -230,8 +233,8 @@ fn test_modular_offset() {
 /// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
 pub fn area_centroid(polygon: Polygon) -> (Area, Vec2d) {
     let n = polygon.len() / 2;
-    let mut sum = 0.0_f64;
-    let (mut cx, mut cy) = (0.0_f64, 0.0_f64);
+    let mut sum = 0.0;
+    let (mut cx, mut cy) = (0.0, 0.0);
     for i in range(0, n) {
         let (qx, qy) = (polygon[i * 2], polygon[i * 2 + 1]);
         let p_i = previous(n, i);
@@ -252,7 +255,7 @@ pub fn area_centroid(polygon: Polygon) -> (Area, Vec2d) {
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn area(polygon: Polygon) -> f64 {
+pub fn area(polygon: Polygon) -> Scalar {
     let (res, _) = area_centroid(polygon);
     res
 }
@@ -272,7 +275,7 @@ pub fn centroid(polygon: Polygon) -> Vec2d {
 /// with the vector between point and starting point of line.
 /// One side of the line has opposite sign of the other.
 #[inline(always)]
-pub fn line_side(line: Line, x: f64, y: f64) -> f64 {
+pub fn line_side(line: Line, x: Scalar, y: Scalar) -> Scalar {
     let (ax, ay) = (line[0], line[1]);
     let (bx, by) = (line[2], line[3]);
     (bx - ax) * (y - ay) - (by - ay) * (x - ax)
@@ -283,7 +286,7 @@ pub fn line_side(line: Line, x: f64, y: f64) -> f64 {
 /// This is done by computing a `side` number for each edge.
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
-pub fn inside_triangle(triangle: Triangle, x: f64, y: f64) -> bool {
+pub fn inside_triangle(triangle: Triangle, x: Scalar, y: Scalar) -> bool {
     let (ax, ay) = (triangle[0], triangle[1]);
     let (bx, by) = (triangle[2], triangle[3]);
     let (cx, cy) = (triangle[4], triangle[5]);
@@ -332,7 +335,7 @@ fn test_triangle() {
 
 /// Transforms from cartesian coordinates to barycentric.
 #[inline(always)]
-pub fn to_barycentric(triangle: Triangle, pos: [f64, ..2]) -> [f64, ..3] {
+pub fn to_barycentric(triangle: Triangle, pos: Vec2d) -> Vec3d {
     let x = pos[0]; let y = pos[1];
     let x1 = triangle[0]; let y1 = triangle[1];
     let x2 = triangle[2]; let y2 = triangle[3];
@@ -347,7 +350,7 @@ pub fn to_barycentric(triangle: Triangle, pos: [f64, ..2]) -> [f64, ..3] {
 
 /// Transforms from barycentric coordinates to cartesian.
 #[inline(always)]
-pub fn from_barycentric(triangle: Triangle, lambda: [f64, ..3]) -> [f64, ..2] {
+pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
     let x1 = triangle[0]; let y1 = triangle[1];
     let x2 = triangle[2]; let y2 = triangle[3];
     let x3 = triangle[4]; let y3 = triangle[5];
@@ -388,4 +391,3 @@ pub fn hsv(color: Color, h_rad: f32, s: f32, v: f32) -> Color {
         color[3],
     ]
 }
-

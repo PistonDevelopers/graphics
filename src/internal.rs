@@ -5,7 +5,7 @@
 //! Using these might lead to breaking changes.
 //! Made public to clarify documentation.
 
-use vecmath::Scalar;
+pub use vecmath::{ Scalar, Vec2d };
 
 /// The type used for area.
 pub type Area = Scalar;
@@ -39,9 +39,6 @@ pub type Rectangle = [Scalar, ..4];
 
 /// [x1, y1, x2, y2, x3, y3]
 pub type Triangle = [Scalar, ..6];
-
-/// [x, y]
-pub type Vec2d = [Scalar, ..2];
 
 /// The type used for width.
 pub type Width = Scalar;
