@@ -53,6 +53,7 @@ mod image_size;
 mod relative;
 mod view;
 
+pub mod can;
 pub mod has;
 pub mod internal;
 pub mod interpolation;

@@ -5,8 +5,6 @@ use {
     AddPolygons,
 };
 use internal::{
-    CanRectangle,
-    CanSourceRectangle,
     Color,
     Line,
     Polygon,
@@ -14,6 +12,10 @@ use internal::{
     Radius,
     Rectangle,
     SourceRectangle,
+};
+use can::{
+    CanRectangle,
+    CanSourceRectangle,
 };
 use has::{
     HasColor,
