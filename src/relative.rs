@@ -5,12 +5,14 @@ use internal::{
     CanTransform,
     Color,
     ColorComponent,
+    Rectangle,
+    SourceRectangle,
+};
+use has::{
     HasColor,
     HasRectangle,
     HasSourceRectangle,
     HasTransform,
-    Rectangle,
-    SourceRectangle,
 };
 use vecmath::{
     hsv,
@@ -272,4 +274,3 @@ impl<T: HasTransform<Matrix2d> + CanTransform<T, Matrix2d>
         self.transform(multiply(self.get_transform(), shear))
     }
 }
-

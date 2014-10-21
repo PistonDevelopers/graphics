@@ -33,16 +33,18 @@ use internal::{
     CanViewTransform,
     Color,
     ColorComponent,
-    HasColor,
-    HasRectangle,
-    HasSourceRectangle,
-    HasTransform,
-    HasViewTransform,
     Polygon,
     Polygons,
     Radius,
     Rectangle,
     SourceRectangle,
+};
+use has::{
+    HasColor,
+    HasRectangle,
+    HasSourceRectangle,
+    HasTransform,
+    HasViewTransform,
 };
 use vecmath::{
     identity,
@@ -63,16 +65,16 @@ pub struct Context<S=(), C=()> {
 }
 
 impl<S: Copy, C: Copy>
-Clone 
+Clone
 for Context<S, C> {
     #[inline(always)]
     fn clone(&self) -> Context<S, C> {
-        *self 
+        *self
     }
 }
 
 impl<S, C>
-HasTransform<Matrix2d> 
+HasTransform<Matrix2d>
 for Context<S, C> {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
@@ -81,7 +83,7 @@ for Context<S, C> {
 }
 
 impl<S: Copy, C: Copy>
-CanTransform<Context<S, C>, Matrix2d> 
+CanTransform<Context<S, C>, Matrix2d>
 for Context<S, C> {
     #[inline(always)]
     fn transform(&self, value: Matrix2d) -> Context<S, C> {
@@ -93,7 +95,7 @@ for Context<S, C> {
 }
 
 impl<S, C>
-HasViewTransform<Matrix2d> 
+HasViewTransform<Matrix2d>
 for Context<S, C> {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
@@ -102,7 +104,7 @@ for Context<S, C> {
 }
 
 impl<S: Copy, C: Copy>
-CanViewTransform<Context<S, C>, Matrix2d> 
+CanViewTransform<Context<S, C>, Matrix2d>
 for Context<S, C> {
     #[inline(always)]
     fn view_transform(&self, value: Matrix2d) -> Context<S, C> {
@@ -159,7 +161,7 @@ fn test_context() {
         assert_eq!(transform[0][2], 30.0);
         assert_eq!(transform[1][2], 50.0);
     }
-    
+
     let transform = c.transform;
     assert_eq!(transform[0][2], 0.0);
     assert_eq!(transform[1][2], 0.0);
@@ -182,21 +184,21 @@ fn test_scale() {
 }
 
 impl<C: Copy>
-add::AddRectangle<Context<shape::RectangleShape, C>> 
+add::AddRectangle<Context<shape::RectangleShape, C>>
 for Context<(), C> {
     #[inline(always)]
     fn rect(
-        &self, 
-        x: Scalar, 
-        y: Scalar, 
-        w: Scalar, 
+        &self,
+        x: Scalar,
+        y: Scalar,
+        w: Scalar,
         h: Scalar
     ) -> Context<shape::RectangleShape, C> {
         Context {
             view: self.view,
             transform: self.transform,
             color: self.color,
-            shape: shape::Shape { 
+            shape: shape::Shape {
                 variant: shape::RectangleVariant { rect: [x, y, w, h] },
                 border_radius: (),
                 corner: (),
@@ -205,15 +207,15 @@ for Context<(), C> {
     }
 }
 
-impl<'b, I> 
-add::AddRectangle<ImageRectangleColorContext<'b, I>> 
+impl<'b, I>
+add::AddRectangle<ImageRectangleColorContext<'b, I>>
 for ImageColorContext<'b, I> {
     #[inline(always)]
     fn rect(
-        &self, 
-        x: Scalar, 
-        y: Scalar, 
-        w: Scalar, 
+        &self,
+        x: Scalar,
+        y: Scalar,
+        w: Scalar,
         h: Scalar
     ) -> ImageRectangleColorContext<'b, I> {
         Context {
@@ -235,7 +237,7 @@ for ImageColorContext<'b, I> {
 
 #[test]
 fn test_rect() {
-    use add::AddRectangle;    
+    use add::AddRectangle;
 
     let c = Context::new();
     let d = c.rect(0.0, 0.0, 100.0, 50.0);
@@ -245,14 +247,14 @@ fn test_rect() {
 }
 
 impl<S: Copy>
-add::AddColor<Context<S, Color>> 
+add::AddColor<Context<S, Color>>
 for Context<S> {
     #[inline(always)]
     fn rgba(
-        &self, 
-        r: ColorComponent, 
-        g: ColorComponent, 
-        b: ColorComponent, 
+        &self,
+        r: ColorComponent,
+        g: ColorComponent,
+        b: ColorComponent,
         a: ColorComponent
     ) -> Context<S, Color> {
         Context {
@@ -266,7 +268,7 @@ for Context<S> {
 
 #[test]
 fn test_rgba() {
-    use add::AddColor;    
+    use add::AddColor;
 
     let c = Context::new();
     let d: ColorContext = c.rgba(1.0, 0.0, 0.0, 1.0);
@@ -275,21 +277,21 @@ fn test_rgba() {
 }
 
 impl<C: Copy>
-add::AddEllipse<Context<shape::EllipseShape, C>> 
+add::AddEllipse<Context<shape::EllipseShape, C>>
 for Context<(), C> {
     #[inline(always)]
     fn ellipse(
-        &self, 
-        x: Scalar, 
-        y: Scalar, 
-        w: Scalar, 
+        &self,
+        x: Scalar,
+        y: Scalar,
+        w: Scalar,
         h: Scalar
     ) -> Context<shape::EllipseShape, C> {
         Context {
             view: self.view,
             transform: self.transform,
             color: self.color,
-            shape: shape::Shape { 
+            shape: shape::Shape {
                 variant: shape::EllipseVariant { rect: [x, y, w, h] },
                 border_radius: (),
                 corner: (),
@@ -300,20 +302,20 @@ for Context<(), C> {
 
 #[test]
 fn test_ellipse() {
-    use add::AddEllipse;    
+    use add::AddEllipse;
 
     let c = Context::new();
     let d = c.ellipse(0.0, 0.0, 100.0, 100.0);
-    let rect = d.shape.variant.rect;    
+    let rect = d.shape.variant.rect;
     assert_eq!(rect[2], 100.0);
 }
 
-impl<'b, C: Copy> 
-add::AddPolygon<'b, Context<shape::PolygonShape<'b>, C>> 
+impl<'b, C: Copy>
+add::AddPolygon<'b, Context<shape::PolygonShape<'b>, C>>
 for Context<(), C> {
     #[inline(always)]
     fn polygon<'b>(
-        &self, 
+        &self,
         polygon: Polygon<'b>
     ) -> Context<shape::PolygonShape<'b>, C> {
         Context {
@@ -329,8 +331,8 @@ for Context<(), C> {
     }
 }
 
-impl<'b, I: ImageSize, C: Copy> 
-add::AddImage<'b, Context<shape::ImageShape<'b, I>, C>, I> 
+impl<'b, I: ImageSize, C: Copy>
+add::AddImage<'b, Context<shape::ImageShape<'b, I>, C>, I>
 for Context<(), C> {
     #[inline(always)]
     fn image(&self, image: &'b I) -> Context<shape::ImageShape<'b, I>, C> {
@@ -353,7 +355,7 @@ for Context<(), C> {
 }
 
 impl<S: HasRectangle<Rectangle>, C>
-HasRectangle<Rectangle> 
+HasRectangle<Rectangle>
 for Context<S, C> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
@@ -362,7 +364,7 @@ for Context<S, C> {
 }
 
 impl<S: HasSourceRectangle<SourceRectangle>, C>
-HasSourceRectangle<SourceRectangle> 
+HasSourceRectangle<SourceRectangle>
 for Context<S, C> {
     #[inline(always)]
     fn get_source_rectangle(&self) -> SourceRectangle {
@@ -370,11 +372,11 @@ for Context<S, C> {
     }
 }
 
-impl<'b, I: ImageSize> 
-add::AddImage<'b, ImageRectangleContext<'b, I>, I> 
+impl<'b, I: ImageSize>
+add::AddImage<'b, ImageRectangleContext<'b, I>, I>
 for RectangleContext {
     fn image(
-        &self, 
+        &self,
         image: &'b I
     ) -> ImageRectangleContext<'b, I> {
         let (w, h) = image.get_size();
@@ -396,11 +398,11 @@ for RectangleContext {
 }
 
 impl<S: add::AddRound<S2>, S2: Copy, C: Copy>
-add::AddRound<Context<S2, C>> 
+add::AddRound<Context<S2, C>>
 for Context<S, C> {
     #[inline(always)]
     fn round(
-        &self, 
+        &self,
         radius: Radius
     ) -> Context<S2, C> {
         Context {
@@ -413,11 +415,11 @@ for Context<S, C> {
 }
 
 impl<S: add::AddBorder<S2>, S2: Copy, C: Copy>
-add::AddBorder<Context<S2, C>> 
+add::AddBorder<Context<S2, C>>
 for Context<S, C> {
     #[inline(always)]
     fn border_radius(
-        &self, 
+        &self,
         radius: Radius
     ) -> Context<S2, C> {
         Context {
@@ -430,11 +432,11 @@ for Context<S, C> {
 }
 
 impl<'a, S: add::AddPolygons<'a, S2>, S2: Copy, C: Copy>
-add::AddPolygons<'a, Context<S2, C>> 
+add::AddPolygons<'a, Context<S2, C>>
 for Context<S, C> {
     #[inline(always)]
     fn polygons(
-        &self, 
+        &self,
         polygons: Polygons<'a>
     ) -> Context<S2, C> {
         Context {
@@ -447,11 +449,11 @@ for Context<S, C> {
 }
 
 impl<S: Copy + CanRectangle<S, Rectangle>, C: Copy>
-CanRectangle<Context<S, C>, Rectangle> 
+CanRectangle<Context<S, C>, Rectangle>
 for Context<S, C> {
     #[inline(always)]
     fn rectangle(
-        &self, 
+        &self,
         rect: Rectangle
     ) -> Context<S, C> {
         Context {
@@ -464,11 +466,11 @@ for Context<S, C> {
 }
 
 impl<S: Copy + CanSourceRectangle<S, SourceRectangle>, C: Copy>
-CanSourceRectangle<Context<S, C>, SourceRectangle> 
+CanSourceRectangle<Context<S, C>, SourceRectangle>
 for Context<S, C> {
     #[inline(always)]
     fn source_rectangle(
-        &self, 
+        &self,
         rect: SourceRectangle
     ) -> Context<S, C> {
         Context {
@@ -480,8 +482,8 @@ for Context<S, C> {
     }
 }
 
-impl<'b, B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<'b, B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for PolygonColorContext<'b> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -508,8 +510,8 @@ for PolygonColorContext<'b> {
     }
 }
 
-impl<S> 
-HasColor<Color> 
+impl<S>
+HasColor<Color>
 for Context<S, Color> {
     #[inline(always)]
     fn get_color(&self) -> Color {
@@ -527,8 +529,8 @@ for Context<S> {
     }
 }
 
-impl<S: Copy> 
-CanColor<Context<S, Color>, Color> 
+impl<S: Copy>
+CanColor<Context<S, Color>, Color>
 for Context<S, Color> {
     #[inline(always)]
     fn color(&self, value: Color) -> Context<S, Color> {
@@ -554,14 +556,14 @@ fn test_rgba_1() {
 }
 
 impl<C: Copy>
-add::AddLine<Context<shape::LineShape, C>> 
+add::AddLine<Context<shape::LineShape, C>>
 for Context<(), C> {
     #[inline(always)]
     fn line(
-        &self, 
-        x1: Scalar, 
-        y1: Scalar, 
-        x2: Scalar, 
+        &self,
+        x1: Scalar,
+        y1: Scalar,
+        x2: Scalar,
         y2: Scalar
     ) -> Context<shape::LineShape, C> {
         Context {
@@ -580,36 +582,36 @@ for Context<(), C> {
 #[test]
 fn test_line() {
     use add::AddLine;
-    use add::AddColor;    
+    use add::AddColor;
 
     let _c = Context::new().line(0.0, 0.0, 1.0, 1.0).rgb(1.0, 0.0, 0.0);
     let _c = Context::new().rgb(1.0, 0.0, 0.0).line(0.0, 0.0, 1.0, 1.0);
 }
 
-impl<'b, B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<'b, B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for ImageContext<'b, I> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_single_texture()
         && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
             let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
-            let shape::ImageVariant { 
+            let shape::ImageVariant {
                     image: texture,
                     src_rect: source_rect,
                     rect: (),
                 } = self.shape.variant;
             let rect = [
-                0.0, 
-                0.0, 
-                source_rect[2] as f64, 
+                0.0,
+                0.0,
+                source_rect[2] as f64,
                 source_rect[3] as f64
             ];
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque 
+            // Turn on alpha blending if not completely opaque
             // or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0 
+            let needs_alpha = color[3] != 1.0
                 || back_end.has_texture_alpha(texture);
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
@@ -626,8 +628,8 @@ for ImageContext<'b, I> {
     }
 }
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for ColorContext {
     fn draw(&self, back_end: &mut B) {
         if back_end.supports_clear_rgba() {
@@ -638,11 +640,11 @@ for ColorContext {
 }
 
 impl<C: Copy>
-add::AddTween<Context<shape::LerpTweenShape, C>> 
+add::AddTween<Context<shape::LerpTweenShape, C>>
 for Context<(), C> {
     #[inline(always)]
     fn lerp(
-        &self, 
+        &self,
         tween_factor: Scalar
     ) -> Context<shape::LerpTweenShape, C> {
         Context {
@@ -662,11 +664,11 @@ for Context<(), C> {
 }
 
 impl<C: Copy>
-add::AddSquareBorder<Context<shape::SquareBorderLineShape, C>> 
+add::AddSquareBorder<Context<shape::SquareBorderLineShape, C>>
 for Context<shape::LineShape, C> {
     #[inline(always)]
     fn square_border_radius(
-        &self, 
+        &self,
         radius: Radius
     ) -> Context<shape::SquareBorderLineShape, C> {
         Context {
@@ -684,11 +686,11 @@ for Context<shape::LineShape, C> {
 
 
 impl<C: Copy>
-add::AddBevelBorder<Context<shape::BevelBorderLineShape, C>> 
+add::AddBevelBorder<Context<shape::BevelBorderLineShape, C>>
 for Context<shape::LineShape, C> {
     #[inline(always)]
     fn bevel_border_radius(
-        &self, 
+        &self,
         radius: Radius
     ) -> Context<shape::BevelBorderLineShape, C> {
         Context {
@@ -705,11 +707,11 @@ for Context<shape::LineShape, C> {
 }
 
 impl<C: Copy>
-add::AddRoundBorder<Context<shape::RoundBorderLineShape, C>> 
+add::AddRoundBorder<Context<shape::RoundBorderLineShape, C>>
 for Context<shape::LineShape, C> {
     #[inline(always)]
     fn round_border_radius(
-        &self, 
+        &self,
         radius: Radius
     ) -> Context<shape::RoundBorderLineShape, C> {
         Context {
@@ -725,8 +727,8 @@ for Context<shape::LineShape, C> {
     }
 }
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for EllipseColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -754,15 +756,15 @@ for EllipseColorContext {
     }
 }
 
-impl<'b, I> 
-add::AddRectangle<ImageRectangleContext<'b, I>> 
+impl<'b, I>
+add::AddRectangle<ImageRectangleContext<'b, I>>
 for ImageContext<'b, I> {
     #[inline(always)]
     fn rect(
-        &self, 
-        x: Scalar, 
-        y: Scalar, 
-        w: Scalar, 
+        &self,
+        x: Scalar,
+        y: Scalar,
+        w: Scalar,
         h: Scalar
     ) -> ImageRectangleContext<'b, I> {
         Context {
@@ -782,11 +784,11 @@ for ImageContext<'b, I> {
     }
 }
 
-impl<'b, I: ImageSize> 
-add::AddImage<'b, ImageRectangleColorContext<'b, I>, I> 
+impl<'b, I: ImageSize>
+add::AddImage<'b, ImageRectangleColorContext<'b, I>, I>
 for RectangleColorContext {
     fn image(
-        &self, 
+        &self,
         image: &'b I
     ) -> ImageRectangleColorContext<'b, I> {
         let (w, h) = image.get_size();
@@ -807,8 +809,8 @@ for RectangleColorContext {
     }
 }
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for RectangleBorderColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -834,11 +836,11 @@ for RectangleBorderColorContext {
 }
 
 impl<S: Copy + add::AddBevel<T>, T, C: Copy>
-add::AddBevel<Context<T, C>> 
+add::AddBevel<Context<T, C>>
 for Context<S, C> {
     #[inline(always)]
     fn bevel(
-        &self, 
+        &self,
         radius: f64
     ) -> Context<T, C> {
         Context {
@@ -850,8 +852,8 @@ for Context<S, C> {
     }
 }
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for RectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -874,8 +876,8 @@ for RectangleColorContext {
     }
 }
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for RoundBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -905,8 +907,8 @@ for RoundBorderLineColorContext {
     }
 }
 
-impl<'b, B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<'b, B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -941,8 +943,8 @@ for LerpTweenPolygonsColorContext<'b> {
     }
 }
 
-impl<'b, B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<'b, B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for ImageColorContext<'b, I> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -959,16 +961,16 @@ for ImageColorContext<'b, I> {
                     corner: ()
                 } = self.shape;
             let rect = [
-                0.0, 
-                0.0, 
-                source_rect[2] as f64, 
+                0.0,
+                0.0,
+                source_rect[2] as f64,
                 source_rect[3] as f64
             ];
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
             // Turn on alpha blending if not completely
             // opaque or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0 
+            let needs_alpha = color[3] != 1.0
                 || back_end.has_texture_alpha(texture);
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
@@ -985,8 +987,8 @@ for ImageColorContext<'b, I> {
     }
 }
 
-impl<'b, B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<'b, B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for ImageRectangleContext<'b, I> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -1004,9 +1006,9 @@ for ImageRectangleContext<'b, I> {
                 } = self.shape;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque 
+            // Turn on alpha blending if not completely opaque
             // or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0 
+            let needs_alpha = color[3] != 1.0
                 || back_end.has_texture_alpha(texture);
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
@@ -1023,8 +1025,8 @@ for ImageRectangleContext<'b, I> {
     }
 }
 
-impl<'b, B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<'b, B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for ImageRectangleColorContext<'b, I> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -1042,9 +1044,9 @@ for ImageRectangleColorContext<'b, I> {
                 } = self.shape;
             // Complete transparency does not need to be rendered.
             if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque 
+            // Turn on alpha blending if not completely opaque
             // or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0 
+            let needs_alpha = color[3] != 1.0
                 || back_end.has_texture_alpha(texture);
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
@@ -1094,8 +1096,8 @@ for EllipseBorderColorContext {
 }
 
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for BevelRectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -1125,8 +1127,8 @@ for BevelRectangleColorContext {
     }
 }
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -1158,8 +1160,8 @@ for BevelRectangleBorderColorContext {
     }
 }
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for BevelBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -1189,8 +1191,8 @@ for BevelBorderLineColorContext {
     }
 }
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for RoundRectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -1252,8 +1254,8 @@ for RoundRectangleBorderColorContext {
 }
 
 
-impl<B: BackEnd<I>, I: ImageSize> 
-Draw<B, I> 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
 for SquareBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
@@ -1282,4 +1284,3 @@ for SquareBorderLineColorContext {
         }
     }
 }
-

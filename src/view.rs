@@ -2,6 +2,8 @@
 use internal::{
     CanTransform,
     CanViewTransform,
+};
+use has::{
     HasTransform,
     HasViewTransform,
 };
@@ -37,7 +39,7 @@ pub trait View {
 }
 
 impl<
-    T: HasViewTransform<Matrix2d> 
+    T: HasViewTransform<Matrix2d>
         + HasTransform<Matrix2d>
         + CanViewTransform<T, Matrix2d>
         + CanTransform<T, Matrix2d>
@@ -63,4 +65,3 @@ impl<
         (2.0 / scale[0], 2.0 / scale[1])
     }
 }
-

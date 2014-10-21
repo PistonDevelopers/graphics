@@ -8,15 +8,17 @@ use internal::{
     CanRectangle,
     CanSourceRectangle,
     Color,
-    HasColor,
-    HasRectangle,
-    HasSourceRectangle,
     Line,
     Polygon,
     Polygons,
     Radius,
     Rectangle,
     SourceRectangle,
+};
+use has::{
+    HasColor,
+    HasRectangle,
+    HasSourceRectangle,
 };
 use vecmath::Scalar;
 
@@ -30,7 +32,7 @@ pub struct LineVariant {
     pub line: Line
 }
 pub struct ImageVariant<'a, I:'a, TRectangle=()> {
-    pub image: &'a I, 
+    pub image: &'a I,
     pub src_rect: SourceRectangle,
     pub rect: TRectangle,
 }
@@ -74,7 +76,7 @@ pub type RoundRectangleBorderShape = Shape<RectangleVariant, Radius, RoundCorner
 /// A rectangle shape.
 #[deriving(Copy)]
 pub struct Shape<
-    TVariant, 
+    TVariant,
     TBorderRadius=(),
     TCorner=()
 > {
@@ -87,11 +89,11 @@ pub struct Shape<
 }
 
 impl<S: Copy, B: Copy>
-AddBevel<Shape<S, B, BevelCorner>> 
+AddBevel<Shape<S, B, BevelCorner>>
 for Shape<S, B> {
     #[inline(always)]
     fn bevel(
-        &self, 
+        &self,
         radius: Radius
     ) -> Shape<S, B, BevelCorner> {
         Shape {
@@ -103,11 +105,11 @@ for Shape<S, B> {
 }
 
 impl<S: Copy, B: Copy>
-AddRound<Shape<S, B, RoundCorner>> 
+AddRound<Shape<S, B, RoundCorner>>
 for Shape<S, B> {
     #[inline(always)]
     fn round(
-        &self, 
+        &self,
         radius: Radius
     ) -> Shape<S, B, RoundCorner> {
         Shape {
@@ -119,11 +121,11 @@ for Shape<S, B> {
 }
 
 impl<S: Copy, C: Copy>
-AddBorder<Shape<S, Radius, C>> 
+AddBorder<Shape<S, Radius, C>>
 for Shape<S, (), C> {
     #[inline(always)]
     fn border_radius(
-        &self, 
+        &self,
         radius: Radius
     ) -> Shape<S, Radius, C> {
         Shape {
@@ -138,13 +140,13 @@ for Shape<S, (), C> {
 ///
 /// Can not contain an ellipse.
 impl<B: Copy, C: Copy>
-CanRectangle<Shape<RectangleVariant, B, C>, Rectangle> 
+CanRectangle<Shape<RectangleVariant, B, C>, Rectangle>
 for Shape<RectangleVariant, B, C> {
     #[inline(always)]
     fn rectangle(&self, rect: Rectangle) -> Shape<RectangleVariant, B, C> {
-        Shape { 
-            variant: RectangleVariant { rect: rect }, 
-            ..*self 
+        Shape {
+            variant: RectangleVariant { rect: rect },
+            ..*self
         }
     }
 }
@@ -153,23 +155,23 @@ for Shape<RectangleVariant, B, C> {
 ///
 /// Can not contain a rectangle.
 impl<B: Copy, C: Copy>
-CanRectangle<Shape<EllipseVariant, B, C>, Rectangle> 
+CanRectangle<Shape<EllipseVariant, B, C>, Rectangle>
 for Shape<EllipseVariant, B, C> {
     #[inline(always)]
     fn rectangle(&self, rect: Rectangle) -> Shape<EllipseVariant, B, C> {
-        Shape { 
-            variant: EllipseVariant { rect: rect }, 
-            ..*self 
+        Shape {
+            variant: EllipseVariant { rect: rect },
+            ..*self
         }
     }
 }
 
-impl<'b, I, B: Copy, C: Copy> 
-CanRectangle<Shape<ImageVariant<'b, I, Rectangle>, B, C>, Rectangle> 
+impl<'b, I, B: Copy, C: Copy>
+CanRectangle<Shape<ImageVariant<'b, I, Rectangle>, B, C>, Rectangle>
 for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
     #[inline(always)]
     fn rectangle(
-        &self, 
+        &self,
         rect: Rectangle
     ) -> Shape<ImageVariant<'b, I, Rectangle>, B, C> {
         Shape {
@@ -205,8 +207,8 @@ for Shape<EllipseVariant, B, C> {
     }
 }
 
-impl<'b, I, B, C> 
-HasRectangle<Rectangle> 
+impl<'b, I, B, C>
+HasRectangle<Rectangle>
 for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
@@ -215,8 +217,8 @@ for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
 }
 
 
-impl<'b, I, R, B, C> 
-HasSourceRectangle<SourceRectangle> 
+impl<'b, I, R, B, C>
+HasSourceRectangle<SourceRectangle>
 for Shape<ImageVariant<'b, I, R>, B, C> {
     #[inline(always)]
     fn get_source_rectangle(&self) -> SourceRectangle {
@@ -224,12 +226,12 @@ for Shape<ImageVariant<'b, I, R>, B, C> {
     }
 }
 
-impl<'b, I, R: Copy, B: Copy, C: Copy> 
-CanSourceRectangle<Shape<ImageVariant<'b, I, R>, B, C>, SourceRectangle> 
+impl<'b, I, R: Copy, B: Copy, C: Copy>
+CanSourceRectangle<Shape<ImageVariant<'b, I, R>, B, C>, SourceRectangle>
 for Shape<ImageVariant<'b, I, R>, B, C> {
     #[inline(always)]
     fn source_rectangle(
-        &self, 
+        &self,
         source_rect: SourceRectangle
     ) -> Shape<ImageVariant<'b, I, R>, B, C> {
         Shape {
@@ -244,12 +246,12 @@ for Shape<ImageVariant<'b, I, R>, B, C> {
     }
 }
 
-impl<'b> 
-AddPolygons<'b, LerpTweenPolygonsShape<'b>> 
+impl<'b>
+AddPolygons<'b, LerpTweenPolygonsShape<'b>>
 for LerpTweenShape {
     #[inline(always)]
     fn polygons(
-        &self, 
+        &self,
         polygons: Polygons<'b>
     ) -> LerpTweenPolygonsShape<'b> {
         Shape {
@@ -266,12 +268,11 @@ for LerpTweenShape {
 static WHITE: Color = [1.0, ..4];
 
 // Use white color per vertex.
-impl<'b, I, R, B, C> 
-HasColor<Color> 
+impl<'b, I, R, B, C>
+HasColor<Color>
 for Shape<ImageVariant<'b, I, R>, B, C> {
     #[inline(always)]
     fn get_color(&self) -> Color {
         WHITE
     }
 }
-
