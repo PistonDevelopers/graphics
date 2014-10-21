@@ -1,5 +1,5 @@
 
-use internal::{
+use can::{
     CanTransform,
     CanViewTransform,
 };

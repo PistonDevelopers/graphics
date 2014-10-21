@@ -1,12 +1,14 @@
 use internal::{
-    CanColor,
-    CanRectangle,
-    CanSourceRectangle,
-    CanTransform,
     Color,
     ColorComponent,
     Rectangle,
     SourceRectangle,
+};
+use can::{
+    CanColor,
+    CanRectangle,
+    CanSourceRectangle,
+    CanTransform,
 };
 use has::{
     HasColor,

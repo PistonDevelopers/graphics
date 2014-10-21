@@ -26,11 +26,6 @@ use {
 };
 use triangulation;
 use internal::{
-    CanColor,
-    CanRectangle,
-    CanSourceRectangle,
-    CanTransform,
-    CanViewTransform,
     Color,
     ColorComponent,
     Polygon,
@@ -38,6 +33,13 @@ use internal::{
     Radius,
     Rectangle,
     SourceRectangle,
+};
+use can::{
+    CanColor,
+    CanRectangle,
+    CanSourceRectangle,
+    CanTransform,
+    CanViewTransform,
 };
 use has::{
     HasColor,
