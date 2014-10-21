@@ -53,6 +53,7 @@ mod image_size;
 mod relative;
 mod view;
 
+pub mod has;
 pub mod internal;
 pub mod interpolation;
 pub mod modular_index;
@@ -133,4 +134,3 @@ pub type SquareBorderLineContext
     = context::Context<shape::SquareBorderLineShape>;
 pub type SquareBorderLineColorContext
     = context::Context<shape::SquareBorderLineShape, Color>;
-
