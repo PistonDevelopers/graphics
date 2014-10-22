@@ -248,7 +248,7 @@ impl<T: HasTransform<Matrix2d> + CanTransform<T, Matrix2d>
 > RelativeTransform2d for T {
     #[inline(always)]
     fn trans(&self, x: Scalar, y: Scalar) -> T {
-        let trans = translate(x, y);
+        let trans = translate([x, y]);
         self.transform(multiply(self.get_transform(), trans))
     }
 

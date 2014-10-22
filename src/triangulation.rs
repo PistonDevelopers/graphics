@@ -108,7 +108,7 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
     let (x1, y1, x2, y2) = (line[0], line[1], line[2], line[3]);
     let (dx, dy) = (x2 - x1, y2 - y1);
     let w = (dx * dx + dy * dy).sqrt();
-    let m = multiply(m, translate(x1, y1));
+    let m = multiply(m, translate([x1, y1]));
     let m = multiply(m, orient(dx, dy));
     let n = resolution_cap * 2;
     let mut i = 0u;
