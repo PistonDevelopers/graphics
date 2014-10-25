@@ -286,14 +286,14 @@ pub fn line_side(line: Line, v: Vec2d) -> Scalar {
 /// This is done by computing a `side` number for each edge.
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
-pub fn inside_triangle(triangle: Triangle, x: Scalar, y: Scalar) -> bool {
+pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
     let (ax, ay) = (triangle[0], triangle[1]);
     let (bx, by) = (triangle[2], triangle[3]);
     let (cx, cy) = (triangle[4], triangle[5]);
 
-    let ab_side = line_side([ax, ay, bx, by], [x, y]);
-    let bc_side = line_side([bx, by, cx, cy], [x, y]);
-    let ca_side = line_side([cx, cy, ax, ay], [x, y]);
+    let ab_side = line_side([ax, ay, bx, by], v);
+    let bc_side = line_side([bx, by, cx, cy], v);
+    let ca_side = line_side([cx, cy, ax, ay], v);
 
     let ab_positive = ab_side.is_positive();
     let bc_positive = bc_side.is_positive();
@@ -327,8 +327,8 @@ fn test_triangle() {
     // Triangle clock-wise.
     let tri_2 = [0.0, 0.0, 1.0, 1.0, 1.0, 0.0];
     let (x, y) = (0.5, 0.25);
-    assert_eq!(inside_triangle(tri_1, x, y), true);
-    assert_eq!(inside_triangle(tri_2, x, y), true);
+    assert_eq!(inside_triangle(tri_1, [x, y]), true);
+    assert_eq!(inside_triangle(tri_2, [x, y]), true);
     assert_eq!(triangle_face(tri_1), false);
     assert_eq!(triangle_face(tri_2), true);
 }

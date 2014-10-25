@@ -162,7 +162,7 @@ impl DeformGrid {
                 let p4 = self.vertices[ip];
                 let tri1 = [p1[0], p1[1],  p2[0], p2[1],  p3[0], p3[1]];
                 let tri2 = [p3[0], p3[1],  p2[0], p2[1],  p4[0], p4[1]];
-                if inside_triangle(tri1, pos[0], pos[1]) {
+                if inside_triangle(tri1, [pos[0], pos[1]]) {
                     let b = to_barycentric(tri1, pos);
                     // Upper left triangle.
                     let tri = [
@@ -175,7 +175,7 @@ impl DeformGrid {
                     let units_h = w / self.cols as Scalar;
                     let units_v = h / self.rows as Scalar;
                     return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
-                } else if inside_triangle(tri2, pos[0], pos[1]) {
+                } else if inside_triangle(tri2, [pos[0], pos[1]]) {
                     let b = to_barycentric(tri2, pos);
                     // Lower right triangle.
                     let tri = [
