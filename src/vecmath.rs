@@ -86,9 +86,9 @@ pub fn scale(sx: Scalar, sy: Scalar) -> Matrix2d {
 
 /// Create a shear matrix.
 #[inline(always)]
-pub fn shear(sx: Scalar, sy: Scalar) -> Matrix2d {
-    [[1.0, sx, 0.0],
-     [sy, 1.0, 0.0]]
+pub fn shear(v: Vec2d) -> Matrix2d {
+    [[1.0, v[0], 0.0],
+     [v[1], 1.0, 0.0]]
 }
 
 /// Create an identity matrix.
