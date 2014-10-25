@@ -178,14 +178,10 @@ pub fn margin_rectangle(rect: Rectangle, m: Scalar) -> Rectangle {
 
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
-pub fn relative_rectangle(
-    rect: Rectangle,
-    x: Scalar,
-    y: Scalar
-) -> Rectangle {
+pub fn relative_rectangle(rect: Rectangle, v: Vec2d) -> Rectangle {
     [
-        rect[0] + x * rect[2],
-        rect[1] + y * rect[3],
+        rect[0] + v[0] * rect[2],
+        rect[1] + v[1] * rect[3],
         rect[2],
         rect[3]
     ]

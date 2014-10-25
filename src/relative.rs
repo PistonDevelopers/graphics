@@ -118,7 +118,7 @@ impl<
 
     #[inline(always)]
     fn rel(&self, x: Scalar, y: Scalar) -> U {
-        self.rectangle(relative_rectangle(self.get_rectangle(), x, y))
+        self.rectangle(relative_rectangle(self.get_rectangle(), [x, y]))
     }
 }
 
