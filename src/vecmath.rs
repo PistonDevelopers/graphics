@@ -275,10 +275,10 @@ pub fn centroid(polygon: Polygon) -> Vec2d {
 /// with the vector between point and starting point of line.
 /// One side of the line has opposite sign of the other.
 #[inline(always)]
-pub fn line_side(line: Line, x: Scalar, y: Scalar) -> Scalar {
+pub fn line_side(line: Line, v: Vec2d) -> Scalar {
     let (ax, ay) = (line[0], line[1]);
     let (bx, by) = (line[2], line[3]);
-    (bx - ax) * (y - ay) - (by - ay) * (x - ax)
+    (bx - ax) * (v[1] - ay) - (by - ay) * (v[0] - ax)
 }
 
 /// Returns true if point is inside triangle.
@@ -291,9 +291,9 @@ pub fn inside_triangle(triangle: Triangle, x: Scalar, y: Scalar) -> bool {
     let (bx, by) = (triangle[2], triangle[3]);
     let (cx, cy) = (triangle[4], triangle[5]);
 
-    let ab_side = line_side([ax, ay, bx, by], x, y);
-    let bc_side = line_side([bx, by, cx, cy], x, y);
-    let ca_side = line_side([cx, cy, ax, ay], x, y);
+    let ab_side = line_side([ax, ay, bx, by], [x, y]);
+    let bc_side = line_side([bx, by, cx, cy], [x, y]);
+    let ca_side = line_side([cx, cy, ax, ay], [x, y]);
 
     let ab_positive = ab_side.is_positive();
     let bc_positive = bc_side.is_positive();
@@ -315,7 +315,7 @@ pub fn triangle_face(
     let (bx, by) = (triangle[2], triangle[3]);
     let (cx, cy) = (triangle[4], triangle[5]);
 
-    let ab_side = line_side([ax, ay, bx, by], cx, cy);
+    let ab_side = line_side([ax, ay, bx, by], [cx, cy]);
 
     ab_side.is_negative()
 }
