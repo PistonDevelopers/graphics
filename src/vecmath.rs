@@ -110,13 +110,13 @@ pub fn get_scale(m: Matrix2d) -> Vec2d {
 /// Compute the shortest vector from point to ray.
 /// A ray stores starting point and directional vector.
 #[inline(always)]
-pub fn separation(ray: Ray, x: Scalar, y: Scalar) -> Vec2d {
+pub fn separation(ray: Ray, v: Vec2d) -> Vec2d {
     // Get the directional vector.
     let (dir_x, dir_y) = (ray[2], ray[3]);
     // Get displacement vector from point.
-    let (dx, dy) = (ray[0] - x, ray[1] - y);
+    let (dx, dy) = (ray[0] - v[0], ray[1] - v[1]);
     // Compute the component of position in ray direction.
-    let dot = dir_x * x + dir_y * y;
+    let dot = dir_x * v[0] + dir_y * v[1];
     // The directional vector multiplied with
     // the dot gives us a parallel vector.
     // When we subtract this from the displacement
