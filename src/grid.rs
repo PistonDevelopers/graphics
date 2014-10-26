@@ -1,7 +1,7 @@
 //! A flat grid with square cells.
 
 use vecmath::Scalar;
-use { 
+use {
     AddLine,
     AddSquareBorder,
     BackEnd,
@@ -20,6 +20,13 @@ pub struct Grid {
     pub units: Scalar,
     /// The line radius.
     pub radius: Scalar,
+}
+
+/// Iterates through the cells of a grid as (uint, uint)
+pub struct GridIterator {
+    cols: u32,
+    rows: u32,
+    state: u64,
 }
 
 impl Grid {
@@ -47,5 +54,40 @@ impl Grid {
             c.line(x1, y1, x2, y2).square_border_radius(radius).draw(g);
         }
     }
+
+    /// Get a GridIterator for the grid
+    pub fn cells(&self) -> GridIterator {
+        GridIterator {
+            cols: self.cols,
+            rows: self.rows,
+            state: 0,
+        }
+    }
 }
 
+impl Iterator<(u32, u32)> for GridIterator {
+
+    fn next(&mut self) -> Option<(u32, u32)> {
+        let cols = self.cols as u64;
+        let rows = self.rows as u64;
+
+        if self.state == cols * rows {
+            return None
+        }
+        let ret = (
+            (self.state % cols) as u32,
+            (self.state / rows) as u32,
+        );
+        self.state += 1;
+
+        return Some(ret);
+    }
+
+}
+
+#[test]
+fn test_grid_iterator() {
+    let g = Grid {cols: 2, rows: 2, units: 2.0, radius: 1.0};
+    let expected : Vec<(u32, u32)> = vec![(0, 0), (1, 0), (0, 1), (1, 1)];
+    assert_eq!(expected, g.cells().collect());
+}
