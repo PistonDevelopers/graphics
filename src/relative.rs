@@ -29,6 +29,7 @@ use vecmath::{
     translate,
     Matrix2d,
     Scalar,
+    Vec2d,
 };
 
 /// Implemented by contexts that contains color.
@@ -118,7 +119,7 @@ impl<
 
     #[inline(always)]
     fn rel(&self, x: Scalar, y: Scalar) -> U {
-        self.rectangle(relative_rectangle(self.get_rectangle(), x, y))
+        self.rectangle(relative_rectangle(self.get_rectangle(), [x, y]))
     }
 }
 
@@ -241,7 +242,7 @@ pub trait RelativeTransform2d {
     }
 
     /// Shears in local coordinates.
-    fn shear(&self, sx: Scalar, sy: Scalar) -> Self;
+    fn shear(&self, v: Vec2d) -> Self;
 }
 
 impl<T: HasTransform<Matrix2d> + CanTransform<T, Matrix2d>
@@ -271,8 +272,8 @@ impl<T: HasTransform<Matrix2d> + CanTransform<T, Matrix2d>
     }
 
     #[inline(always)]
-    fn shear(&self, sx: Scalar, sy: Scalar) -> T {
-        let shear = shear(sx, sy);
+    fn shear(&self, v: Vec2d) -> T {
+        let shear = shear(v);
         self.transform(multiply(self.get_transform(), shear))
     }
 }

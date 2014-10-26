@@ -86,9 +86,9 @@ pub fn scale(sx: Scalar, sy: Scalar) -> Matrix2d {
 
 /// Create a shear matrix.
 #[inline(always)]
-pub fn shear(sx: Scalar, sy: Scalar) -> Matrix2d {
-    [[1.0, sx, 0.0],
-     [sy, 1.0, 0.0]]
+pub fn shear(v: Vec2d) -> Matrix2d {
+    [[1.0, v[0], 0.0],
+     [v[1], 1.0, 0.0]]
 }
 
 /// Create an identity matrix.
@@ -110,13 +110,13 @@ pub fn get_scale(m: Matrix2d) -> Vec2d {
 /// Compute the shortest vector from point to ray.
 /// A ray stores starting point and directional vector.
 #[inline(always)]
-pub fn separation(ray: Ray, x: Scalar, y: Scalar) -> Vec2d {
+pub fn separation(ray: Ray, v: Vec2d) -> Vec2d {
     // Get the directional vector.
     let (dir_x, dir_y) = (ray[2], ray[3]);
     // Get displacement vector from point.
-    let (dx, dy) = (ray[0] - x, ray[1] - y);
+    let (dx, dy) = (ray[0] - v[0], ray[1] - v[1]);
     // Compute the component of position in ray direction.
-    let dot = dir_x * x + dir_y * y;
+    let dot = dir_x * v[0] + dir_y * v[1];
     // The directional vector multiplied with
     // the dot gives us a parallel vector.
     // When we subtract this from the displacement
@@ -178,14 +178,10 @@ pub fn margin_rectangle(rect: Rectangle, m: Scalar) -> Rectangle {
 
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
-pub fn relative_rectangle(
-    rect: Rectangle,
-    x: Scalar,
-    y: Scalar
-) -> Rectangle {
+pub fn relative_rectangle(rect: Rectangle, v: Vec2d) -> Rectangle {
     [
-        rect[0] + x * rect[2],
-        rect[1] + y * rect[3],
+        rect[0] + v[0] * rect[2],
+        rect[1] + v[1] * rect[3],
         rect[2],
         rect[3]
     ]
@@ -275,10 +271,10 @@ pub fn centroid(polygon: Polygon) -> Vec2d {
 /// with the vector between point and starting point of line.
 /// One side of the line has opposite sign of the other.
 #[inline(always)]
-pub fn line_side(line: Line, x: Scalar, y: Scalar) -> Scalar {
+pub fn line_side(line: Line, v: Vec2d) -> Scalar {
     let (ax, ay) = (line[0], line[1]);
     let (bx, by) = (line[2], line[3]);
-    (bx - ax) * (y - ay) - (by - ay) * (x - ax)
+    (bx - ax) * (v[1] - ay) - (by - ay) * (v[0] - ax)
 }
 
 /// Returns true if point is inside triangle.
@@ -286,14 +282,14 @@ pub fn line_side(line: Line, x: Scalar, y: Scalar) -> Scalar {
 /// This is done by computing a `side` number for each edge.
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
-pub fn inside_triangle(triangle: Triangle, x: Scalar, y: Scalar) -> bool {
+pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
     let (ax, ay) = (triangle[0], triangle[1]);
     let (bx, by) = (triangle[2], triangle[3]);
     let (cx, cy) = (triangle[4], triangle[5]);
 
-    let ab_side = line_side([ax, ay, bx, by], x, y);
-    let bc_side = line_side([bx, by, cx, cy], x, y);
-    let ca_side = line_side([cx, cy, ax, ay], x, y);
+    let ab_side = line_side([ax, ay, bx, by], v);
+    let bc_side = line_side([bx, by, cx, cy], v);
+    let ca_side = line_side([cx, cy, ax, ay], v);
 
     let ab_positive = ab_side.is_positive();
     let bc_positive = bc_side.is_positive();
@@ -315,7 +311,7 @@ pub fn triangle_face(
     let (bx, by) = (triangle[2], triangle[3]);
     let (cx, cy) = (triangle[4], triangle[5]);
 
-    let ab_side = line_side([ax, ay, bx, by], cx, cy);
+    let ab_side = line_side([ax, ay, bx, by], [cx, cy]);
 
     ab_side.is_negative()
 }
@@ -327,8 +323,8 @@ fn test_triangle() {
     // Triangle clock-wise.
     let tri_2 = [0.0, 0.0, 1.0, 1.0, 1.0, 0.0];
     let (x, y) = (0.5, 0.25);
-    assert_eq!(inside_triangle(tri_1, x, y), true);
-    assert_eq!(inside_triangle(tri_2, x, y), true);
+    assert_eq!(inside_triangle(tri_1, [x, y]), true);
+    assert_eq!(inside_triangle(tri_2, [x, y]), true);
     assert_eq!(triangle_face(tri_1), false);
     assert_eq!(triangle_face(tri_2), true);
 }
