@@ -118,7 +118,7 @@ impl DeformGrid {
 
         let cols = self.cols;
         let rows = self.rows;
-        let (x, y, w, h) = self.get_rect();
+        let [x, y, w, h] = self.rect;
         let units_h = w / cols as Scalar;
         let units_v = h / rows as Scalar;
         let nx = cols + 1;
@@ -135,12 +135,6 @@ impl DeformGrid {
                 ]);
             }
         }
-    }
-
-    /// Gets the original rectangle as a tuple.
-    #[inline(always)]
-    pub fn get_rect(&self) -> (Scalar, Scalar, Scalar, Scalar) {
-        (self.rect[0], self.rect[1], self.rect[2], self.rect[3])
     }
 
     /// Finds original coordinate.
@@ -171,7 +165,7 @@ impl DeformGrid {
                         i as Scalar, (j + 1) as Scalar
                     ];
                     let tri_pos = from_barycentric(tri, b);
-                    let (rx, ry, w, h) = self.get_rect();
+                    let [rx, ry, w, h] = self.rect;
                     let units_h = w / self.cols as Scalar;
                     let units_v = h / self.rows as Scalar;
                     return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
@@ -184,7 +178,7 @@ impl DeformGrid {
                         (i + 1) as Scalar, (j + 1) as Scalar
                     ];
                     let tri_pos = from_barycentric(tri, b);
-                    let (rx, ry, w, h) = self.get_rect();
+                    let [rx, ry, w, h] = self.rect;
                     let units_h = w / self.cols as Scalar;
                     let units_v = h / self.rows as Scalar;
                     return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
