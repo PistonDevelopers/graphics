@@ -154,15 +154,15 @@ impl DeformGrid {
                 let p3 = self.vertices[ip];
                 let ip = (i + 1) + (j + 1) * nx;
                 let p4 = self.vertices[ip];
-                let tri1 = [p1[0], p1[1],  p2[0], p2[1],  p3[0], p3[1]];
-                let tri2 = [p3[0], p3[1],  p2[0], p2[1],  p4[0], p4[1]];
+                let tri1 = [p1, p2, p3];
+                let tri2 = [p3, p2, p4];
                 if inside_triangle(tri1, [pos[0], pos[1]]) {
                     let b = to_barycentric(tri1, pos);
                     // Upper left triangle.
                     let tri = [
-                        i as Scalar, j as Scalar,
-                        (i + 1) as Scalar, j as Scalar,
-                        i as Scalar, (j + 1) as Scalar
+                        [i as Scalar, j as Scalar],
+                        [(i + 1) as Scalar, j as Scalar],
+                        [i as Scalar, (j + 1) as Scalar]
                     ];
                     let tri_pos = from_barycentric(tri, b);
                     let [rx, ry, w, h] = self.rect;
@@ -173,9 +173,9 @@ impl DeformGrid {
                     let b = to_barycentric(tri2, pos);
                     // Lower right triangle.
                     let tri = [
-                        i as Scalar, (j + 1) as Scalar,
-                        (i + 1) as Scalar, j as Scalar,
-                        (i + 1) as Scalar, (j + 1) as Scalar
+                        [i as Scalar, (j + 1) as Scalar],
+                        [(i + 1) as Scalar, j as Scalar],
+                        [(i + 1) as Scalar, (j + 1) as Scalar]
                     ];
                     let tri_pos = from_barycentric(tri, b);
                     let [rx, ry, w, h] = self.rect;

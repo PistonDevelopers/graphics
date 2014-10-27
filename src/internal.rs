@@ -38,7 +38,7 @@ pub type Ray = [Scalar, ..4];
 pub type Rectangle = [Scalar, ..4];
 
 /// [x1, y1, x2, y2, x3, y3]
-pub type Triangle = [Scalar, ..6];
+pub type Triangle = [Vec2d, ..3];
 
 /// The type used for width.
 pub type Width = Scalar;

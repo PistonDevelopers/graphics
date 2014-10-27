@@ -283,9 +283,9 @@ pub fn line_side(line: Line, v: Vec2d) -> Scalar {
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
 pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
-    let (ax, ay) = (triangle[0], triangle[1]);
-    let (bx, by) = (triangle[2], triangle[3]);
-    let (cx, cy) = (triangle[4], triangle[5]);
+    let [ax, ay] = triangle[0];
+    let [bx, by] = triangle[1];
+    let [cx, cy] = triangle[2];
 
     let ab_side = line_side([ax, ay, bx, by], v);
     let bc_side = line_side([bx, by, cx, cy], v);
@@ -307,9 +307,9 @@ pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
 pub fn triangle_face(
     triangle: Triangle
 ) -> bool {
-    let (ax, ay) = (triangle[0], triangle[1]);
-    let (bx, by) = (triangle[2], triangle[3]);
-    let (cx, cy) = (triangle[4], triangle[5]);
+    let [ax, ay] = triangle[0];
+    let [bx, by] = triangle[1];
+    let [cx, cy] = triangle[2];
 
     let ab_side = line_side([ax, ay, bx, by], [cx, cy]);
 
@@ -319,9 +319,9 @@ pub fn triangle_face(
 #[test]
 fn test_triangle() {
     // Triangle counter clock-wise.
-    let tri_1 = [0.0, 0.0, 1.0, 0.0, 1.0, 1.0];
+    let tri_1 = [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]];
     // Triangle clock-wise.
-    let tri_2 = [0.0, 0.0, 1.0, 1.0, 1.0, 0.0];
+    let tri_2 = [[0.0, 0.0], [1.0, 1.0], [1.0, 0.0]];
     let (x, y) = (0.5, 0.25);
     assert_eq!(inside_triangle(tri_1, [x, y]), true);
     assert_eq!(inside_triangle(tri_2, [x, y]), true);
@@ -333,9 +333,9 @@ fn test_triangle() {
 #[inline(always)]
 pub fn to_barycentric(triangle: Triangle, pos: Vec2d) -> Vec3d {
     let x = pos[0]; let y = pos[1];
-    let x1 = triangle[0]; let y1 = triangle[1];
-    let x2 = triangle[2]; let y2 = triangle[3];
-    let x3 = triangle[4]; let y3 = triangle[5];
+    let [x1, y1] = triangle[0];
+    let [x2, y2] = triangle[1];
+    let [x3, y3] = triangle[2];
     let lambda1 = ((y2 - y3) * (x - x3) + (x3 - x2) * (y - y3))
                 / ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
     let lambda2 = ((y3 - y1) * (x - x3) + (x1 - x3) * (y - y3))
@@ -347,18 +347,16 @@ pub fn to_barycentric(triangle: Triangle, pos: Vec2d) -> Vec3d {
 /// Transforms from barycentric coordinates to cartesian.
 #[inline(always)]
 pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
-    let x1 = triangle[0]; let y1 = triangle[1];
-    let x2 = triangle[2]; let y2 = triangle[3];
-    let x3 = triangle[4]; let y3 = triangle[5];
+    let [x1, y1] = triangle[0];
+    let [x2, y2] = triangle[1];
+    let [x3, y3] = triangle[2];
     [lambda[0] * x1 + lambda[1] * x2 + lambda[2] * x3,
      lambda[0] * y1 + lambda[1] * y2 + lambda[2] * y3]
 }
 
 #[test]
 fn test_barycentric() {
-    let triangle = [
-        0.0, 0.0,  100.0, 0.0,  0.0, 50.0
-    ];
+    let triangle = [[0.0, 0.0], [100.0, 0.0], [0.0, 50.0]];
     let old_pos = [10.0, 20.0];
     let b = to_barycentric(triangle, old_pos);
     let new_pos = from_barycentric(triangle, b);
