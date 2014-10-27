@@ -22,7 +22,7 @@ pub struct Grid {
     pub radius: Scalar,
 }
 
-/// Iterates through the cells of a grid as (uint, uint)
+/// Iterates through the cells of a grid as (u32, u32).
 pub struct GridIterator {
     cols: u32,
     rows: u32,
