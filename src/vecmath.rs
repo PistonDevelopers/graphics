@@ -228,13 +228,13 @@ fn test_modular_offset() {
 /// A simple polygon is one that does not intersect itself.
 /// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
 pub fn area_centroid(polygon: Polygon) -> (Area, Vec2d) {
-    let n = polygon.len() / 2;
+    let n = polygon.len();
     let mut sum = 0.0;
     let (mut cx, mut cy) = (0.0, 0.0);
     for i in range(0, n) {
-        let (qx, qy) = (polygon[i * 2], polygon[i * 2 + 1]);
+        let [qx, qy] = polygon[i];
         let p_i = previous(n, i);
-        let (px, py) = (polygon[p_i * 2], polygon[p_i * 2 + 1]);
+        let [px, py] = polygon[p_i];
         let cross = px * qy - qx * py;
         cx += (px + qx) * cross;
         cy += (py + qy) * cross;
