@@ -22,8 +22,8 @@ pub type Line = [Scalar, ..4];
 /// [x, y, w, h]
 pub type SourceRectangle = [i32, ..4];
 
-/// [x0, y0, x1, y1, ...]
-pub type Polygon<'a> = &'a [Scalar];
+/// [p0, p1, ...]
+pub type Polygon<'a> = &'a [Vec2d];
 
 /// A slice of polygons.
 pub type Polygons<'a> = &'a [Polygon<'a>];
