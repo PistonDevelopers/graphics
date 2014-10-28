@@ -1001,7 +1001,7 @@ for ImageRectangleContext<'b, I> {
                     variant: shape::ImageVariant {
                             image: texture,
                             src_rect: source_rect,
-                            rect: rect
+                            rect
                         },
                     border_radius: (),
                     corner: ()
@@ -1039,7 +1039,7 @@ for ImageRectangleColorContext<'b, I> {
                     variant: shape::ImageVariant {
                             image: texture,
                             src_rect: source_rect,
-                            rect: rect
+                            rect
                         },
                     border_radius: (),
                     corner: ()
@@ -1073,8 +1073,8 @@ for EllipseBorderColorContext {
         if back_end.supports_tri_list_xy_f32_rgba_f32() {
             let color = self.color;
             let shape::Shape {
-                    variant: shape::EllipseVariant { rect: rect },
-                    border_radius: border_radius,
+                    variant: shape::EllipseVariant { rect },
+                    border_radius,
                     corner: (),
                 } = self.shape;
             // Complte transparency does  not need to be rendered.
