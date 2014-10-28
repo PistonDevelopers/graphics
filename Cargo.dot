@@ -1,0 +1,5 @@
+digraph example3 {
+    N0[label="graphics"];
+    N1[label="vecmath"];
+    N0 -> N1[label=""];
+}
