@@ -79,3 +79,8 @@ To write your own back-end `BackEnd` trait. The `BackEnd` trait implements defau
 * Node tree
 * One-to-one correspondence with standards
 * Integration with platform GUI
+
+## Dependencies
+
+![dependencies](./Cargo.png)
+
