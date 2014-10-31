@@ -1,5 +1,5 @@
 #![crate_name = "graphics"]
-#![deny(missing_doc)]
+#![deny(missing_docs)]
 #![feature(default_type_params)]
 #![feature(globs)]
 

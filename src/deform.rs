@@ -88,15 +88,13 @@ impl DeformGrid {
     /// Sets current control position.
     #[inline(always)]
     pub fn set_current(&mut self, i: uint, pos: Vec2d) {
-        let ptr = self.qs.get_mut(i);
-        *ptr = pos;
+        self.qs[i] = pos;
     }
 
     /// Sets original control position.
     #[inline(always)]
     pub fn set_original(&mut self, i: uint, pos: Vec2d) {
-        let ptr = self.ps.get_mut(i);
-        *ptr = pos;
+        self.ps[i] = pos;
     }
 
     /// Removes all control points.
