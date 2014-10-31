@@ -6,6 +6,9 @@
 //! A library for 2D graphics that works with multiple back-ends.
 
 extern crate "vecmath" as vecmath_lib;
+extern crate texture;
+
+pub use texture::ImageSize;
 
 pub use add::{
     AddBevel,
@@ -25,7 +28,6 @@ pub use add::{
 };
 pub use back_end::BackEnd;
 pub use draw::Draw;
-pub use image_size::ImageSize;
 pub use relative::{
     RelativeColor,
     RelativeRectangle,
@@ -49,7 +51,6 @@ mod add;
 mod back_end;
 mod context;
 mod draw;
-mod image_size;
 mod relative;
 mod view;
 

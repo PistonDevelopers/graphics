@@ -19,3 +19,7 @@ path = "./src/lib.rs"
 
 git = "https://github.com/PistonDevelopers/vecmath"
 
+[dependencies.texture]
+
+git = "https://github.com/PistonDevelopers/texture"
+
