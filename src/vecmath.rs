@@ -23,6 +23,10 @@ use internal::{
     SourceRectangle,
     Triangle,
 };
+use std::num::{
+    Float,
+    FloatMath
+};
 use modular_index::{previous};
 
 /// The type used for scalars.

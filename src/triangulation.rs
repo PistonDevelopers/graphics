@@ -13,6 +13,10 @@ use internal::{
     Radius,
     Rectangle,
 };
+use std::num::{
+    Float,
+    FloatMath
+};
 use vecmath::{
     multiply,
     orient,

@@ -24,6 +24,7 @@ use {
     RoundRectangleBorderColorContext,
     SquareBorderLineColorContext,
 };
+use std::num::Float;
 use triangulation;
 use internal::{
     Color,

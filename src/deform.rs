@@ -9,6 +9,7 @@ use {
     AddSquareBorder,
     Draw,
 };
+use std::num::Float;
 use triangulation::{tx, ty};
 use vecmath::{ Scalar, Vec2d };
 use internal::{ Rectangle, Width };
