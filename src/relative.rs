@@ -16,6 +16,7 @@ use has::{
     HasSourceRectangle,
     HasTransform,
 };
+use std::num::Float;
 use vecmath::{
     hsv,
     margin_rectangle,
