@@ -619,9 +619,9 @@ for ImageContext<'b, I> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                triangulation::rect_tri_list_rgba_f32(color),
-                triangulation::rect_tri_list_uv_f32(texture, source_rect)
+                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                &triangulation::rect_tri_list_rgba_f32(color),
+                &triangulation::rect_tri_list_uv_f32(texture, source_rect)
             );
             back_end.disable_single_texture();
             if needs_alpha { back_end.disable_alpha_blend(); }
@@ -827,9 +827,9 @@ for RectangleBorderColorContext {
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.tri_list_xy_f32_rgba_f32(
-                triangulation::rect_border_tri_list_xy_f32(
+                &triangulation::rect_border_tri_list_xy_f32(
                     self.transform, rect, border_radius),
-                triangulation::rect_border_tri_list_rgba_f32(color)
+                &triangulation::rect_border_tri_list_rgba_f32(color)
             );
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
@@ -869,8 +869,8 @@ for RectangleColorContext {
             let needs_alpha = color[3] != 1.0;
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.tri_list_xy_f32_rgba_f32(
-                triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                triangulation::rect_tri_list_rgba_f32(color)
+                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                &triangulation::rect_tri_list_rgba_f32(color)
             );
             if needs_alpha { back_end.disable_alpha_blend(); }
         } else {
@@ -978,9 +978,9 @@ for ImageColorContext<'b, I> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                triangulation::rect_tri_list_rgba_f32(color),
-                triangulation::rect_tri_list_uv_f32(texture, source_rect)
+                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                &triangulation::rect_tri_list_rgba_f32(color),
+                &triangulation::rect_tri_list_uv_f32(texture, source_rect)
             );
             back_end.disable_single_texture();
             if needs_alpha { back_end.disable_alpha_blend(); }
@@ -1016,9 +1016,9 @@ for ImageRectangleContext<'b, I> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                triangulation::rect_tri_list_rgba_f32(color),
-                triangulation::rect_tri_list_uv_f32(texture, source_rect)
+                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                &triangulation::rect_tri_list_rgba_f32(color),
+                &triangulation::rect_tri_list_uv_f32(texture, source_rect)
             );
             back_end.disable_single_texture();
             if needs_alpha { back_end.disable_alpha_blend(); }
@@ -1054,9 +1054,9 @@ for ImageRectangleColorContext<'b, I> {
             if needs_alpha { back_end.enable_alpha_blend(); }
             back_end.enable_single_texture(texture);
             back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                triangulation::rect_tri_list_rgba_f32(color),
-                triangulation::rect_tri_list_uv_f32(texture, source_rect)
+                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+                &triangulation::rect_tri_list_rgba_f32(color),
+                &triangulation::rect_tri_list_uv_f32(texture, source_rect)
             );
             back_end.disable_single_texture();
             if needs_alpha { back_end.disable_alpha_blend(); }
