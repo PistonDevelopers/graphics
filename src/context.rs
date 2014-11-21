@@ -76,9 +76,7 @@ for Context<S, C> {
     }
 }
 
-impl<S, C>
-HasTransform<Matrix2d>
-for Context<S, C> {
+impl<S, C> HasTransform for Context<S, C> {
     #[inline(always)]
     fn get_transform(&self) -> Matrix2d {
         self.transform
@@ -95,9 +93,7 @@ impl<S: Copy, C: Copy> CanTransform for Context<S, C> {
     }
 }
 
-impl<S, C>
-HasViewTransform<Matrix2d>
-for Context<S, C> {
+impl<S, C> HasViewTransform for Context<S, C> {
     #[inline(always)]
     fn get_view_transform(&self) -> Matrix2d {
         self.view
@@ -353,18 +349,14 @@ for Context<(), C> {
     }
 }
 
-impl<S: HasRectangle<Rectangle>, C>
-HasRectangle<Rectangle>
-for Context<S, C> {
+impl<S: HasRectangle, C> HasRectangle for Context<S, C> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
         self.shape.get_rectangle()
     }
 }
 
-impl<S: HasSourceRectangle<SourceRectangle>, C>
-HasSourceRectangle<SourceRectangle>
-for Context<S, C> {
+impl<S: HasSourceRectangle, C> HasSourceRectangle for Context<S, C> {
     #[inline(always)]
     fn get_source_rectangle(&self) -> SourceRectangle {
         self.shape.get_source_rectangle()
@@ -506,9 +498,7 @@ for PolygonColorContext<'b> {
     }
 }
 
-impl<S>
-HasColor<Color>
-for Context<S, Color> {
+impl<S> HasColor for Context<S, Color> {
     #[inline(always)]
     fn get_color(&self) -> Color {
         self.color
@@ -516,9 +506,7 @@ for Context<S, Color> {
 }
 
 // If the context has no color, use the color of the shape.
-impl<S: HasColor<Color>>
-HasColor<Color>
-for Context<S> {
+impl<S: HasColor> HasColor for Context<S> {
     #[inline(always)]
     fn get_color(&self) -> Color {
         self.shape.get_color()
