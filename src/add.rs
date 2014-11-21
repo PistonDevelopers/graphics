@@ -77,6 +77,26 @@ pub trait AddColor<T> {
     fn alpha(&self, f: f32) -> T {
         self.rgba(1.0, 1.0, 1.0, f)
     }
+
+    /// Adds a hexadecimal color.
+    /// Causes task panic if not valid format.
+    #[inline(always)]
+    fn hex(&self, hex: &str) -> T {
+        use read_color::rgb_maybe_a;
+
+        let (rgb, a) = rgb_maybe_a(&mut hex.chars()).unwrap();
+        let color = match a {
+            None => [rgb[0], rgb[1], rgb[2], 255],
+            Some(a) => [rgb[0], rgb[1], rgb[2], a]
+        };
+        let inv_255 = 1.0f32 / 255.0f32;
+        self.rgba(
+            color[0] as f32 * inv_255,
+            color[1] as f32 * inv_255,
+            color[2] as f32 * inv_255,
+            color[3] as f32 * inv_255
+        )
+    }
 }
 
 

@@ -23,3 +23,7 @@ git = "https://github.com/PistonDevelopers/vecmath"
 
 git = "https://github.com/PistonDevelopers/texture"
 
+[dependencies.read_color]
+
+git = "https://github.com/PistonDevelopers/read_color"
+
