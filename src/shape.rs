@@ -186,9 +186,7 @@ for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
 
 
 /// Gets rectangle of rectangle shape.
-impl<B, C>
-HasRectangle<Rectangle>
-for Shape<RectangleVariant, B, C> {
+impl<B, C> HasRectangle for Shape<RectangleVariant, B, C> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
         self.variant.rect
@@ -196,18 +194,14 @@ for Shape<RectangleVariant, B, C> {
 }
 
 /// Gets ellipse of ellipse shape.
-impl<B, C>
-HasRectangle<Rectangle>
-for Shape<EllipseVariant, B, C> {
+impl<B, C> HasRectangle for Shape<EllipseVariant, B, C> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
         self.variant.rect
     }
 }
 
-impl<'b, I, B, C>
-HasRectangle<Rectangle>
-for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
+impl<'b, I, B, C> HasRectangle for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
     #[inline(always)]
     fn get_rectangle(&self) -> Rectangle {
         self.variant.rect
@@ -216,7 +210,7 @@ for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
 
 
 impl<'b, I, R, B, C>
-HasSourceRectangle<SourceRectangle>
+HasSourceRectangle
 for Shape<ImageVariant<'b, I, R>, B, C> {
     #[inline(always)]
     fn get_source_rectangle(&self) -> SourceRectangle {
@@ -266,9 +260,7 @@ for LerpTweenShape {
 static WHITE: Color = [1.0, ..4];
 
 // Use white color per vertex.
-impl<'b, I, R, B, C>
-HasColor<Color>
-for Shape<ImageVariant<'b, I, R>, B, C> {
+impl<'b, I, R, B, C> HasColor for Shape<ImageVariant<'b, I, R>, B, C> {
     #[inline(always)]
     fn get_color(&self) -> Color {
         WHITE

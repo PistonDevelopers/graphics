@@ -1,9 +1,4 @@
-use internal::{
-    Color,
-    ColorComponent,
-    Rectangle,
-    SourceRectangle,
-};
+use internal::ColorComponent;
 use can::{
     CanColor,
     CanRectangle,
@@ -28,7 +23,6 @@ use vecmath::{
     scale,
     shear,
     translate,
-    Matrix2d,
     Scalar,
     Vec2d,
 };
@@ -72,7 +66,7 @@ pub trait RelativeColor {
     fn hue_rad(&self, angle: ColorComponent) -> Self;
 }
 
-impl<T: HasColor<Color> + CanColor> RelativeColor for T {
+impl<T: HasColor + CanColor> RelativeColor for T {
     #[inline(always)]
     fn mul_rgba(
         &self,
@@ -106,7 +100,7 @@ pub trait RelativeRectangle {
     fn rel(&self, x: Scalar, y: Scalar) -> Self;
 }
 
-impl<T: HasRectangle<Rectangle> + CanRectangle>
+impl<T: HasRectangle + CanRectangle>
 RelativeRectangle for T {
     #[inline(always)]
     fn margin(&self, m: Scalar) -> T {
@@ -139,7 +133,7 @@ pub trait RelativeSourceRectangle {
     fn src_flip_hv(&self) -> Self;
 }
 
-impl<T: HasSourceRectangle<SourceRectangle>
+impl<T: HasSourceRectangle
       + CanSourceRectangle,
 > RelativeSourceRectangle for T {
     #[inline(always)]
@@ -240,7 +234,7 @@ pub trait RelativeTransform2d {
     fn shear(&self, v: Vec2d) -> Self;
 }
 
-impl<T: HasTransform<Matrix2d> + CanTransform
+impl<T: HasTransform + CanTransform
 > RelativeTransform2d for T {
     #[inline(always)]
     fn trans(&self, x: Scalar, y: Scalar) -> T {

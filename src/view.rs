@@ -10,7 +10,6 @@ use has::{
 use vecmath::{
     identity,
     get_scale,
-    Matrix2d,
     Scalar,
 };
 
@@ -39,8 +38,8 @@ pub trait View {
 }
 
 impl<
-    T: HasViewTransform<Matrix2d>
-     + HasTransform<Matrix2d>
+    T: HasViewTransform
+     + HasTransform
      + CanViewTransform
      + CanTransform
 > View for T {
