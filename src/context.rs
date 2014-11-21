@@ -15,6 +15,7 @@ use {
     ImageRectangleContext,
     ImageRectangleColorContext,
     LerpTweenPolygonsColorContext,
+    LineColorContext,
     PolygonColorContext,
     RectangleContext,
     RectangleColorContext,
@@ -1235,6 +1236,35 @@ for RoundRectangleBorderColorContext {
     }
 }
 
+impl<B: BackEnd<I>, I: ImageSize>
+Draw<B, I>
+for LineColorContext {
+    #[inline(always)]
+    fn draw(&self, back_end: &mut B) {
+        if back_end.supports_tri_list_xy_f32_rgba_f32() {
+            let line = self.shape.variant.line;
+            let color = self.color;
+            // Complete transparency does not need to be rendered.
+            if color[3] == 0.0 { return; }
+            // Turn on alpha blending if not completely opaque.
+            let needs_alpha = color[3] != 1.0;
+            if needs_alpha { back_end.enable_alpha_blend(); }
+            triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+                2,
+                self.transform,
+                line,
+                1.0,
+                color,
+                |vertices, colors| {
+                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
+                }
+            );
+            if needs_alpha { back_end.disable_alpha_blend(); }
+        } else {
+            unimplemented!();
+        }
+    }
+}
 
 impl<B: BackEnd<I>, I: ImageSize>
 Draw<B, I>
