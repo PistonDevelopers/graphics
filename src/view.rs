@@ -40,9 +40,9 @@ pub trait View {
 
 impl<
     T: HasViewTransform<Matrix2d>
-        + HasTransform<Matrix2d>
-        + CanViewTransform<T, Matrix2d>
-        + CanTransform<T, Matrix2d>
+     + HasTransform<Matrix2d>
+     + CanViewTransform
+     + CanTransform
 > View for T {
     #[inline(always)]
     fn view(&self) -> T {

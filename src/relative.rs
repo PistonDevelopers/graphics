@@ -34,7 +34,7 @@ use vecmath::{
 };
 
 /// Implemented by contexts that contains color.
-pub trait RelativeColor<T> {
+pub trait RelativeColor {
     /// Multiplies with red, green, blue and alpha values.
     fn mul_rgba(
         &self,
@@ -42,13 +42,13 @@ pub trait RelativeColor<T> {
         g: ColorComponent,
         b: ColorComponent,
         a: ColorComponent
-    ) -> T;
+    ) -> Self;
 
     /// Mixes the current color with white.
     ///
     /// 0 is black and 1 is white.
     #[inline(always)]
-    fn tint(&self, f: ColorComponent) -> T {
+    fn tint(&self, f: ColorComponent) -> Self {
         self.mul_rgba(f, f, f, 1.0)
     }
 
@@ -56,26 +56,23 @@ pub trait RelativeColor<T> {
     ///
     /// 0 is white and 1 is black.
     #[inline(always)]
-    fn shade(&self, f: ColorComponent) -> T {
+    fn shade(&self, f: ColorComponent) -> Self {
         let f = 1.0 - f;
         self.mul_rgba(f, f, f, 1.0)
     }
 
     /// Rotates hue by degrees.
     #[inline(always)]
-    fn hue_deg(&self, angle: ColorComponent) -> T {
+    fn hue_deg(&self, angle: ColorComponent) -> Self {
         let pi: ColorComponent = Float::pi();
         self.hue_rad(angle * pi / 180.0)
     }
 
     /// Rotates hue by radians.
-    fn hue_rad(&self, angle: ColorComponent) -> T;
+    fn hue_rad(&self, angle: ColorComponent) -> Self;
 }
 
-impl<
-    T: HasColor<Color> + CanColor<U, Color>,
-    U
-> RelativeColor<U> for T {
+impl<T: HasColor<Color> + CanColor> RelativeColor for T {
     #[inline(always)]
     fn mul_rgba(
         &self,
@@ -83,85 +80,82 @@ impl<
         g: ColorComponent,
         b: ColorComponent,
         a: ColorComponent
-    ) -> U {
+    ) -> T {
         let color = self.get_color();
         self.color([color[0] * r, color[1] * g, color[2] * b, color[3] * a])
     }
 
     #[inline(always)]
-    fn hue_rad(&self, angle: ColorComponent) -> U {
+    fn hue_rad(&self, angle: ColorComponent) -> T {
         self.color(hsv(self.get_color(), angle, 1.0, 1.0))
     }
 }
 
 /// Should be implemented by contexts that have rectangle information.
-pub trait RelativeRectangle<T> {
+pub trait RelativeRectangle {
     /// Shrinks the current rectangle equally by all sides.
-    fn margin(&self, m: Scalar) -> T;
+    fn margin(&self, m: Scalar) -> Self;
 
     /// Expands the current rectangle equally by all sides.
     #[inline(always)]
-    fn expand(&self, m: Scalar) -> T {
+    fn expand(&self, m: Scalar) -> Self {
         self.margin(-m)
     }
 
     /// Moves to a relative rectangle using the current rectangle as tile.
-    fn rel(&self, x: Scalar, y: Scalar) -> T;
+    fn rel(&self, x: Scalar, y: Scalar) -> Self;
 }
 
-impl<
-    T: HasRectangle<Rectangle> + CanRectangle<U, Rectangle>,
-    U
-> RelativeRectangle<U> for T {
+impl<T: HasRectangle<Rectangle> + CanRectangle>
+RelativeRectangle for T {
     #[inline(always)]
-    fn margin(&self, m: Scalar) -> U {
+    fn margin(&self, m: Scalar) -> T {
         self.rectangle(margin_rectangle(self.get_rectangle(), m))
     }
 
     #[inline(always)]
-    fn rel(&self, x: Scalar, y: Scalar) -> U {
+    fn rel(&self, x: Scalar, y: Scalar) -> T {
         self.rectangle(relative_rectangle(self.get_rectangle(), [x, y]))
     }
 }
 
 /// Should be implemented by contexts that
 /// have source rectangle information.
-pub trait RelativeSourceRectangle<T> {
+pub trait RelativeSourceRectangle {
     /// Adds a source rectangle.
-    fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> T;
+    fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> Self;
 
     /// Moves to a relative source rectangle using
     /// the current source rectangle as tile.
-    fn src_rel(&self, x: i32, y: i32) -> T;
+    fn src_rel(&self, x: i32, y: i32) -> Self;
 
     /// Flips the source rectangle horizontally.
-    fn src_flip_h(&self) -> T;
+    fn src_flip_h(&self) -> Self;
 
     /// Flips the source rectangle vertically.
-    fn src_flip_v(&self) -> T;
+    fn src_flip_v(&self) -> Self;
 
     /// Flips the source rectangle horizontally and vertically.
-    fn src_flip_hv(&self) -> T;
+    fn src_flip_hv(&self) -> Self;
 }
 
 impl<T: HasSourceRectangle<SourceRectangle>
-        + CanSourceRectangle<U, SourceRectangle>,
-    U
-> RelativeSourceRectangle<U> for T {
+      + CanSourceRectangle,
+> RelativeSourceRectangle for T {
     #[inline(always)]
-    fn src_rel(&self, x: i32, y: i32) -> U {
+    fn src_rel(&self, x: i32, y: i32) -> T {
         self.source_rectangle(
             relative_source_rectangle(self.get_source_rectangle(), x, y)
         )
     }
 
     #[inline(always)]
-    fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> U {
+    fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> T {
         self.source_rectangle([x, y, w, h])
     }
 
     #[inline(always)]
-    fn src_flip_h(&self) -> U {
+    fn src_flip_h(&self) -> T {
         let source_rect = self.get_source_rectangle();
         self.source_rectangle([
             source_rect[0] + source_rect[2],
@@ -172,7 +166,7 @@ impl<T: HasSourceRectangle<SourceRectangle>
     }
 
     #[inline(always)]
-    fn src_flip_v(&self) -> U {
+    fn src_flip_v(&self) -> T {
         let source_rect = self.get_source_rectangle();
         self.source_rectangle([
             source_rect[0],
@@ -183,7 +177,7 @@ impl<T: HasSourceRectangle<SourceRectangle>
     }
 
     #[inline(always)]
-    fn src_flip_hv(&self) -> U {
+    fn src_flip_hv(&self) -> T {
         let source_rect = self.get_source_rectangle();
         self.source_rectangle([
             source_rect[0] + source_rect[2],
@@ -246,7 +240,7 @@ pub trait RelativeTransform2d {
     fn shear(&self, v: Vec2d) -> Self;
 }
 
-impl<T: HasTransform<Matrix2d> + CanTransform<T, Matrix2d>
+impl<T: HasTransform<Matrix2d> + CanTransform
 > RelativeTransform2d for T {
     #[inline(always)]
     fn trans(&self, x: Scalar, y: Scalar) -> T {

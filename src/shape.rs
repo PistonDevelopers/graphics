@@ -141,9 +141,7 @@ for Shape<S, (), C> {
 /// Shapes containing a rectangle can change rectangle.
 ///
 /// Can not contain an ellipse.
-impl<B: Copy, C: Copy>
-CanRectangle<Shape<RectangleVariant, B, C>, Rectangle>
-for Shape<RectangleVariant, B, C> {
+impl<B: Copy, C: Copy> CanRectangle for Shape<RectangleVariant, B, C> {
     #[inline(always)]
     fn rectangle(&self, rect: Rectangle) -> Shape<RectangleVariant, B, C> {
         Shape {
@@ -156,9 +154,7 @@ for Shape<RectangleVariant, B, C> {
 /// Shapes containing an ellipse can change rectangle.
 ///
 /// Can not contain a rectangle.
-impl<B: Copy, C: Copy>
-CanRectangle<Shape<EllipseVariant, B, C>, Rectangle>
-for Shape<EllipseVariant, B, C> {
+impl<B: Copy, C: Copy> CanRectangle for Shape<EllipseVariant, B, C> {
     #[inline(always)]
     fn rectangle(&self, rect: Rectangle) -> Shape<EllipseVariant, B, C> {
         Shape {
@@ -169,7 +165,7 @@ for Shape<EllipseVariant, B, C> {
 }
 
 impl<'b, I, B: Copy, C: Copy>
-CanRectangle<Shape<ImageVariant<'b, I, Rectangle>, B, C>, Rectangle>
+CanRectangle
 for Shape<ImageVariant<'b, I, Rectangle>, B, C> {
     #[inline(always)]
     fn rectangle(
@@ -229,7 +225,7 @@ for Shape<ImageVariant<'b, I, R>, B, C> {
 }
 
 impl<'b, I, R: Copy, B: Copy, C: Copy>
-CanSourceRectangle<Shape<ImageVariant<'b, I, R>, B, C>, SourceRectangle>
+CanSourceRectangle
 for Shape<ImageVariant<'b, I, R>, B, C> {
     #[inline(always)]
     fn source_rectangle(

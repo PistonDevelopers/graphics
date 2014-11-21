@@ -85,9 +85,7 @@ for Context<S, C> {
     }
 }
 
-impl<S: Copy, C: Copy>
-CanTransform<Context<S, C>, Matrix2d>
-for Context<S, C> {
+impl<S: Copy, C: Copy> CanTransform for Context<S, C> {
     #[inline(always)]
     fn transform(&self, value: Matrix2d) -> Context<S, C> {
         Context {
@@ -106,9 +104,7 @@ for Context<S, C> {
     }
 }
 
-impl<S: Copy, C: Copy>
-CanViewTransform<Context<S, C>, Matrix2d>
-for Context<S, C> {
+impl<S: Copy, C: Copy> CanViewTransform for Context<S, C> {
     #[inline(always)]
     fn view_transform(&self, value: Matrix2d) -> Context<S, C> {
         Context { view: value, ..*self }
@@ -451,9 +447,7 @@ for Context<S, C> {
     }
 }
 
-impl<S: Copy + CanRectangle<S, Rectangle>, C: Copy>
-CanRectangle<Context<S, C>, Rectangle>
-for Context<S, C> {
+impl<S: Copy + CanRectangle, C: Copy> CanRectangle for Context<S, C> {
     #[inline(always)]
     fn rectangle(
         &self,
@@ -468,9 +462,8 @@ for Context<S, C> {
     }
 }
 
-impl<S: Copy + CanSourceRectangle<S, SourceRectangle>, C: Copy>
-CanSourceRectangle<Context<S, C>, SourceRectangle>
-for Context<S, C> {
+impl<S: Copy + CanSourceRectangle, C: Copy>
+CanSourceRectangle for Context<S, C> {
     #[inline(always)]
     fn source_rectangle(
         &self,
@@ -532,9 +525,7 @@ for Context<S> {
     }
 }
 
-impl<S: Copy>
-CanColor<Context<S, Color>, Color>
-for Context<S, Color> {
+impl<S: Copy> CanColor for Context<S, Color> {
     #[inline(always)]
     fn color(&self, value: Color) -> Context<S, Color> {
         Context {
