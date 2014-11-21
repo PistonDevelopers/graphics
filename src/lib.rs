@@ -7,6 +7,7 @@
 
 extern crate "vecmath" as vecmath_lib;
 extern crate texture;
+extern crate read_color;
 
 pub use texture::ImageSize;
 
