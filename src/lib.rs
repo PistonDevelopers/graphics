@@ -33,7 +33,7 @@ pub use relative::{
     RelativeColor,
     RelativeRectangle,
     RelativeSourceRectangle,
-    RelativeTransform2d,
+    RelativeTransform,
 };
 pub use view::View;
 

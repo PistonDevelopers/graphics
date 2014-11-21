@@ -158,7 +158,7 @@ impl<T: HasSourceRectangle
 > RelativeSourceRectangle for T {}
 
 /// Implemented by contexts that can transform.
-pub trait RelativeTransform2d: HasTransform + CanTransform {
+pub trait RelativeTransform: HasTransform + CanTransform {
     /// Translate x an y in local coordinates.
     #[inline(always)]
     fn trans(&self, x: Scalar, y: Scalar) -> Self {
@@ -229,5 +229,5 @@ pub trait RelativeTransform2d: HasTransform + CanTransform {
     }
 }
 
-impl<T: HasTransform + CanTransform> RelativeTransform2d for T {}
+impl<T: HasTransform + CanTransform> RelativeTransform for T {}
 

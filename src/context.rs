@@ -147,7 +147,7 @@ impl Context {
 
 #[test]
 fn test_context() {
-    use RelativeTransform2d;
+    use RelativeTransform;
 
     let c = Context::new();
     {
@@ -170,7 +170,7 @@ fn test_context() {
 
 #[test]
 fn test_scale() {
-    use RelativeTransform2d;
+    use RelativeTransform;
 
     let c = Context::new();
     let c = c.scale(2.0, 3.0);
