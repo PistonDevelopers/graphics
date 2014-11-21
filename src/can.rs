@@ -1,37 +1,41 @@
 //! Traits implemented by contexts that can something.
 
+use internal::{
+    Color,
+    Rectangle,
+    SourceRectangle,
+};
+use vecmath::Matrix2d;
+
 /// Implemented by contexts that can color.
 ///
 /// The context can color to type `T` by adding value `U`.
-pub trait CanColor<T, U> {
+pub trait CanColor {
     /// Create a new context with color.
-    fn color(&self, value: U) -> T;
+    fn color(&self, value: Color) -> Self;
 }
 
 /// Implemented by contexts that can set rectangle information.
-pub trait CanRectangle<T, U> {
+pub trait CanRectangle {
     /// Create new context with rectangle information.
-    fn rectangle(&self, value: U) -> T;
+    fn rectangle(&self, value: Rectangle) -> Self;
 }
 
 /// Implemented by contexts that can set source rectangle information.
-pub trait CanSourceRectangle<T, U> {
+pub trait CanSourceRectangle {
     /// Create new context with source rectangle information.
-    fn source_rectangle(&self, value: U) -> T;
+    fn source_rectangle(&self, value: SourceRectangle) -> Self;
 }
 
 /// Implemented by contexts that can transform.
-///
-/// The context can transform to type `T` by adding value `U`.
-pub trait CanTransform<T, U> {
+pub trait CanTransform {
     /// Create a new context with transformation.
-    fn transform(&self, value: U) -> T;
+    fn transform(&self, value: Matrix2d) -> Self;
 }
 
 /// Implemented by contexts that can view transform.
-///
-/// The context can view transform to type `T` by adding value `U`.
-pub trait CanViewTransform<T, U> {
+pub trait CanViewTransform {
     /// Create a new context with view transformation.
-    fn view_transform(&self, value: U) -> T;
+    fn view_transform(&self, value: Matrix2d) -> Self;
 }
+
