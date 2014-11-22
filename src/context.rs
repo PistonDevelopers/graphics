@@ -476,26 +476,20 @@ Draw<B, I>
 for PolygonColorContext<'b> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let polygon = self.shape.variant.polygon;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_polygon_tri_list_xy_f32_rgba_f32(
-                self.transform,
-                polygon,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let polygon = self.shape.variant.polygon;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_polygon_tri_list_xy_f32_rgba_f32(
+            self.transform,
+            polygon,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -576,38 +570,33 @@ Draw<B, I>
 for ImageContext<'b, I> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_single_texture()
-        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
-            let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
-            let shape::ImageVariant {
-                    image: texture,
-                    src_rect: source_rect,
-                    rect: (),
-                } = self.shape.variant;
-            let rect = [
-                0.0,
-                0.0,
-                source_rect[2] as Scalar,
-                source_rect[3] as Scalar
-            ];
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque
-            // or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0
-                || back_end.has_texture_alpha(texture);
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            back_end.enable_single_texture(texture);
-            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                &triangulation::rect_tri_list_rgba_f32(color),
-                &triangulation::rect_tri_list_uv_f32(texture, source_rect)
-            );
-            back_end.disable_single_texture();
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
+        let shape::ImageVariant {
+                image: texture,
+                src_rect: source_rect,
+                rect: (),
+            } = self.shape.variant;
+        let rect = [
+            0.0,
+            0.0,
+            source_rect[2] as Scalar,
+            source_rect[3] as Scalar
+        ];
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque
+        // or if the texture has alpha channel.
+        let needs_alpha = color[3] != 1.0
+            || back_end.has_texture_alpha(texture);
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.enable_texture(texture);
+        back_end.color(color);
+        back_end.tri_list_uv(
+            &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+            &triangulation::rect_tri_list_uv_f32(texture, source_rect)
+        );
+        back_end.disable_texture();
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -615,10 +604,7 @@ impl<B: BackEnd<I>, I: ImageSize>
 Draw<B, I>
 for ColorContext {
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_clear_rgba() {
-            let color = self.color;
-            back_end.clear_rgba(color[0], color[1], color[2], color[3]);
-        }
+        back_end.clear(self.color);
     }
 }
 
@@ -715,27 +701,23 @@ Draw<B, I>
 for EllipseColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.shape.get_rectangle();
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_ellipse_tri_list_xy_f32_rgba_f32(
-                128,
-                self.transform,
-                rect,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let rect = self.shape.get_rectangle();
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_ellipse_tri_list_xy_f32_rgba_f32(
+            128,
+            self.transform,
+            rect,
+            |vertices| {
+                back_end.tri_list(vertices)
+            }
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -797,24 +779,20 @@ Draw<B, I>
 for RectangleBorderColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.shape.get_rectangle();
-            let color = self.color;
-            let border_radius = self.shape.border_radius;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            back_end.tri_list_xy_f32_rgba_f32(
-                &triangulation::rect_border_tri_list_xy_f32(
-                    self.transform, rect, border_radius),
-                &triangulation::rect_border_tri_list_rgba_f32(color)
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let rect = self.shape.get_rectangle();
+        let color = self.color;
+        let border_radius = self.shape.border_radius;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        back_end.tri_list(
+            &triangulation::rect_border_tri_list_xy_f32(
+                self.transform, rect, border_radius),
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -840,22 +818,18 @@ Draw<B, I>
 for RectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.shape.get_rectangle();
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            back_end.tri_list_xy_f32_rgba_f32(
-                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                &triangulation::rect_tri_list_rgba_f32(color)
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let rect = self.shape.get_rectangle();
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        back_end.tri_list(
+            &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -864,29 +838,23 @@ Draw<B, I>
 for RoundBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let line = self.shape.variant.line;
-            let round_border_radius = self.shape.corner.round_radius;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
-                64,
-                self.transform,
-                line,
-                round_border_radius,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let line = self.shape.variant.line;
+        let round_border_radius = self.shape.corner.round_radius;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+            64,
+            self.transform,
+            line,
+            round_border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -895,34 +863,28 @@ Draw<B, I>
 for LerpTweenPolygonsColorContext<'b> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let shape::Shape {
-                    variant: shape::LerpTweenVariant {
-                            lerp: tween_factor,
-                            shapes: polygons,
-                        },
-                    border_radius: (),
-                    corner: (),
-                } = self.shape;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_lerp_polygons_tri_list_xy_f32_rgba_f32(
-                self.transform,
-                polygons,
-                tween_factor,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let shape::Shape {
+                variant: shape::LerpTweenVariant {
+                        lerp: tween_factor,
+                        shapes: polygons,
+                    },
+                border_radius: (),
+                corner: (),
+            } = self.shape;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_lerp_polygons_tri_list_xy_f32_rgba_f32(
+            self.transform,
+            polygons,
+            tween_factor,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -931,42 +893,37 @@ Draw<B, I>
 for ImageColorContext<'b, I> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_single_texture()
-        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
-            let color = self.color;
-            let shape::Shape {
-                    variant: shape::ImageVariant {
-                            image: texture,
-                            src_rect: source_rect,
-                            rect: ()
-                        },
-                    border_radius: (),
-                    corner: ()
-                } = self.shape;
-            let rect = [
-                0.0,
-                0.0,
-                source_rect[2] as Scalar,
-                source_rect[3] as Scalar
-            ];
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely
-            // opaque or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0
-                || back_end.has_texture_alpha(texture);
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            back_end.enable_single_texture(texture);
-            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                &triangulation::rect_tri_list_rgba_f32(color),
-                &triangulation::rect_tri_list_uv_f32(texture, source_rect)
-            );
-            back_end.disable_single_texture();
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let color = self.color;
+        let shape::Shape {
+                variant: shape::ImageVariant {
+                        image: texture,
+                        src_rect: source_rect,
+                        rect: ()
+                    },
+                border_radius: (),
+                corner: ()
+            } = self.shape;
+        let rect = [
+            0.0,
+            0.0,
+            source_rect[2] as Scalar,
+            source_rect[3] as Scalar
+        ];
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely
+        // opaque or if the texture has alpha channel.
+        let needs_alpha = color[3] != 1.0
+            || back_end.has_texture_alpha(texture);
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.enable_texture(texture);
+        back_end.color(color);
+        back_end.tri_list_uv(
+            &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+            &triangulation::rect_tri_list_uv_f32(texture, source_rect)
+        );
+        back_end.disable_texture();
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -975,36 +932,31 @@ Draw<B, I>
 for ImageRectangleContext<'b, I> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_single_texture()
-        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
-            let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
-            let shape::Shape {
-                    variant: shape::ImageVariant {
-                            image: texture,
-                            src_rect: source_rect,
-                            rect
-                        },
-                    border_radius: (),
-                    corner: ()
-                } = self.shape;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque
-            // or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0
-                || back_end.has_texture_alpha(texture);
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            back_end.enable_single_texture(texture);
-            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                &triangulation::rect_tri_list_rgba_f32(color),
-                &triangulation::rect_tri_list_uv_f32(texture, source_rect)
-            );
-            back_end.disable_single_texture();
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let color: [f32, ..4] = [1.0, 1.0, 1.0, 1.0];
+        let shape::Shape {
+                variant: shape::ImageVariant {
+                        image: texture,
+                        src_rect: source_rect,
+                        rect
+                    },
+                border_radius: (),
+                corner: ()
+            } = self.shape;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque
+        // or if the texture has alpha channel.
+        let needs_alpha = color[3] != 1.0
+            || back_end.has_texture_alpha(texture);
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.enable_texture(texture);
+        back_end.color(color);
+        back_end.tri_list_uv(
+            &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+            &triangulation::rect_tri_list_uv_f32(texture, source_rect)
+        );
+        back_end.disable_texture();
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1013,36 +965,31 @@ Draw<B, I>
 for ImageRectangleColorContext<'b, I> {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_single_texture()
-        && back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() {
-            let color = self.color;
-            let shape::Shape {
-                    variant: shape::ImageVariant {
-                            image: texture,
-                            src_rect: source_rect,
-                            rect
-                        },
-                    border_radius: (),
-                    corner: ()
-                } = self.shape;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque
-            // or if the texture has alpha channel.
-            let needs_alpha = color[3] != 1.0
-                || back_end.has_texture_alpha(texture);
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            back_end.enable_single_texture(texture);
-            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
-                &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-                &triangulation::rect_tri_list_rgba_f32(color),
-                &triangulation::rect_tri_list_uv_f32(texture, source_rect)
-            );
-            back_end.disable_single_texture();
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let color = self.color;
+        let shape::Shape {
+            variant: shape::ImageVariant {
+                    image: texture,
+                    src_rect: source_rect,
+                    rect
+                },
+            border_radius: (),
+            corner: ()
+        } = self.shape;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque
+        // or if the texture has alpha channel.
+        let needs_alpha = color[3] != 1.0
+        || back_end.has_texture_alpha(texture);
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.enable_texture(texture);
+        back_end.color(color);
+        back_end.tri_list_uv(
+        &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+        &triangulation::rect_tri_list_uv_f32(texture, source_rect)
+        );
+        back_end.disable_texture();
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1051,30 +998,26 @@ Draw<B, I>
 for EllipseBorderColorContext {
     #[inline(always)]
     fn draw( &self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let color = self.color;
-            let shape::Shape {
-                    variant: shape::EllipseVariant { rect },
-                    border_radius,
-                    corner: (),
-                } = self.shape;
-            // Complte transparency does  not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not complete opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_ellipse_border_tri_list_xy_f32_rgba_f32(
-                128,
-                self.transform,
-                rect,
-                color,
+        let color = self.color;
+        let shape::Shape {
+                variant: shape::EllipseVariant { rect },
                 border_radius,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        }
+                corner: (),
+            } = self.shape;
+        // Complte transparency does  not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not complete opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_ellipse_border_tri_list_xy_f32_rgba_f32(
+            128,
+            self.transform,
+            rect,
+            border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1084,29 +1027,23 @@ Draw<B, I>
 for BevelRectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.get_rectangle();
-            let bevel_radius = self.shape.corner.bevel_radius;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_round_rectangle_tri_list_xy_f32_rgba_f32(
-                2,
-                self.transform,
-                rect,
-                bevel_radius,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let rect = self.get_rectangle();
+        let bevel_radius = self.shape.corner.bevel_radius;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_round_rectangle_tri_list_xy_f32_rgba_f32(
+            2,
+            self.transform,
+            rect,
+            bevel_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1115,31 +1052,25 @@ Draw<B, I>
 for BevelRectangleBorderColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.get_rectangle();
-            let bevel_radius = self.shape.corner.bevel_radius;
-            let border_radius = self.shape.border_radius;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
-                2,
-                self.transform,
-                rect,
-                bevel_radius,
-                border_radius,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let rect = self.get_rectangle();
+        let bevel_radius = self.shape.corner.bevel_radius;
+        let border_radius = self.shape.border_radius;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
+            2,
+            self.transform,
+            rect,
+            bevel_radius,
+            border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1148,29 +1079,23 @@ Draw<B, I>
 for BevelBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let line = self.shape.variant.line;
-            let bevel_border_radius = self.shape.corner.bevel_radius;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
-                3,
-                self.transform,
-                line,
-                bevel_border_radius,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let line = self.shape.variant.line;
+        let bevel_border_radius = self.shape.corner.bevel_radius;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+            3,
+            self.transform,
+            line,
+            bevel_border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1179,29 +1104,23 @@ Draw<B, I>
 for RoundRectangleColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.get_rectangle();
-            let round_radius = self.shape.corner.round_radius;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_round_rectangle_tri_list_xy_f32_rgba_f32(
-                32,
-                self.transform,
-                rect,
-                round_radius,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let rect = self.get_rectangle();
+        let round_radius = self.shape.corner.round_radius;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_round_rectangle_tri_list_xy_f32_rgba_f32(
+            32,
+            self.transform,
+            rect,
+            round_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1210,29 +1129,25 @@ Draw<B, I>
 for RoundRectangleBorderColorContext {
     #[inline(always)]
     fn draw( &self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let rect = self.get_rectangle();
-            let color = self.color;
-            let border_radius = self.shape.border_radius;
-            let round_radius = self.shape.corner.round_radius;
-            // Complete transparency does  not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not complete opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
-                128,
-                self.transform,
-                rect,
-                round_radius,
-                border_radius,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        }
+        let rect = self.get_rectangle();
+        let color = self.color;
+        let border_radius = self.shape.border_radius;
+        let round_radius = self.shape.corner.round_radius;
+        // Complete transparency does  not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not complete opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
+            128,
+            self.transform,
+            rect,
+            round_radius,
+            border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1241,28 +1156,22 @@ Draw<B, I>
 for LineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let line = self.shape.variant.line;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
-                2,
-                self.transform,
-                line,
-                1.0,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let line = self.shape.variant.line;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+            2,
+            self.transform,
+            line,
+            1.0,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
 
@@ -1271,28 +1180,22 @@ Draw<B, I>
 for SquareBorderLineColorContext {
     #[inline(always)]
     fn draw(&self, back_end: &mut B) {
-        if back_end.supports_tri_list_xy_f32_rgba_f32() {
-            let line = self.shape.variant.line;
-            let square_border_radius = self.shape.corner.square_radius;
-            let color = self.color;
-            // Complete transparency does not need to be rendered.
-            if color[3] == 0.0 { return; }
-            // Turn on alpha blending if not completely opaque.
-            let needs_alpha = color[3] != 1.0;
-            if needs_alpha { back_end.enable_alpha_blend(); }
-            triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
-                2,
-                self.transform,
-                line,
-                square_border_radius,
-                color,
-                |vertices, colors| {
-                    back_end.tri_list_xy_f32_rgba_f32(vertices, colors)
-                }
-            );
-            if needs_alpha { back_end.disable_alpha_blend(); }
-        } else {
-            unimplemented!();
-        }
+        let line = self.shape.variant.line;
+        let square_border_radius = self.shape.corner.square_radius;
+        let color = self.color;
+        // Complete transparency does not need to be rendered.
+        if color[3] == 0.0 { return; }
+        // Turn on alpha blending if not completely opaque.
+        let needs_alpha = color[3] != 1.0;
+        if needs_alpha { back_end.enable_alpha_blend(); }
+        back_end.color(color);
+        triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+            2,
+            self.transform,
+            line,
+            square_border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 }
