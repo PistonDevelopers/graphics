@@ -194,27 +194,24 @@ impl DeformGrid {
         back_end: &mut B,
         texture: &I
     ) {
-        if !back_end.supports_single_texture() { return; }
-        if !back_end.supports_tri_list_xy_f32_rgba_f32_uv_f32() { return; }
         let mat = c.transform;
-        let (r, g, b, a) = (1.0, 1.0, 1.0, 1.0);
+        let color = [1.0, ..4];
+        back_end.color(color);
+        let a = color[3];
         let needs_alpha = a != 1.0
             || back_end.has_texture_alpha(texture);
         if needs_alpha { back_end.enable_alpha_blend(); }
-        back_end.enable_single_texture(texture);
+        back_end.enable_texture(texture);
         let buf_len = 360;
         let mut vertices: [f32, ..720] = [0.0, ..720];
-        let mut colors: [f32, ..1440] = [0.0, ..1440];
         let mut uvs: [f32, ..720] = [0.0, ..720];
         let mut offset = 0;
         let vertex_align = 2;
-        let color_align = 4;
         let uv_align = 2;
         for &ind in self.indices.iter() {
             if offset >= buf_len {
-                back_end.tri_list_xy_f32_rgba_f32_uv_f32(
+                back_end.tri_list_uv(
                     vertices.as_slice(),
-                    colors.as_slice(),
                     uvs.as_slice()
                 );
                 offset = 0;
@@ -223,11 +220,6 @@ impl DeformGrid {
             let vert_ind = offset * vertex_align;
             vertices[vert_ind + 0] = tx(mat, vert[0], vert[1]);
             vertices[vert_ind + 1] = ty(mat, vert[0], vert[1]);
-            let color_ind = offset * color_align;
-            colors[color_ind + 0] = r;
-            colors[color_ind + 1] = g;
-            colors[color_ind + 2] = b;
-            colors[color_ind + 3] = a;
             let uv_ind = offset * uv_align;
             let uv = self.texture_coords[ind];
             uvs[uv_ind + 0] = uv[0];
@@ -235,13 +227,12 @@ impl DeformGrid {
             offset += 1;
         }
         if offset > 0 {
-            back_end.tri_list_xy_f32_rgba_f32_uv_f32(
+            back_end.tri_list_uv(
                 vertices.slice_to(offset * vertex_align),
-                colors.slice_to(offset * color_align),
                 uvs.slice_to(offset * uv_align)
             );
         }
-        back_end.disable_single_texture();
+        back_end.disable_texture();
         if needs_alpha { back_end.disable_alpha_blend(); }
     }
 

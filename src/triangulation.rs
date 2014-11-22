@@ -5,7 +5,6 @@ use {
 };
 use interpolation::{lerp};
 use internal::{
-    Color,
     Line,
     SourceRectangle,
     Polygon,
@@ -44,8 +43,7 @@ pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
     m: Matrix2d,
     polygons: Polygons,
     tween_factor: Scalar,
-    color: Color,
-    f: |vertices: &[f32], colors: &[f32]|) {
+    f: |vertices: &[f32]|) {
 
     let poly_len = polygons.len() as Scalar;
     // Map to interval between 0 and 1.
@@ -72,7 +70,7 @@ pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
         let [x0, y0] = p0[j];
         let [x1, y1] = p1[j];
         Some([lerp(&x0, &x1, &tw), lerp(&y0, &y1, &tw)])
-    }, color, f);
+    }, f);
 }
 
 /// Streams an ellipse specified by a resolution.
@@ -81,8 +79,7 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
     resolution: uint,
     m: Matrix2d,
     rect: Rectangle,
-    color: Color,
-    f: |vertices: &[f32], colors: &[f32]|) {
+    f: |vertices: &[f32]|) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (cw, ch) = (0.5 * w, 0.5 * h);
@@ -95,7 +92,7 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
         let angle = i as Scalar / n as Scalar * Float::two_pi();
         i += 1;
         Some([cx + angle.cos() * cw, cy + angle.sin() * ch])
-    }, color, f);
+    }, f);
 }
 
 /// Streams a round border line.
@@ -105,8 +102,7 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
     m: Matrix2d,
     line: Line,
     round_border_radius: Radius,
-    color: Color,
-    f: |vertices: &[f32], colors: &[f32]|) {
+    f: |vertices: &[f32]|) {
 
     let radius = round_border_radius;
     let (x1, y1, x2, y2) = (line[0], line[1], line[2], line[3]);
@@ -148,7 +144,7 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
                 Some([angle.cos() * radius, angle.sin() * radius])
             },
         }
-    }, color, f);
+    }, f);
 }
 
 /// Streams a round rectangle.
@@ -158,8 +154,7 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,
-    color: Color,
-    f: |vertices: &[f32], colors: &[f32]|) {
+    f: |vertices: &[f32]|) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
@@ -222,20 +217,18 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
                 Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
             },
         }
-    }, color, f);
+    }, f);
 }
 
-/// Streams a polygon into tri list with color per vertex.
+/// Streams a polygon into tri list.
 /// Uses buffers that fit inside L1 cache.
 pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     m: Matrix2d,
     polygon: || -> Option<Vec2d>,
-    color: Color,
-    f: |vertices: &[f32], colors: &[f32]|
+    f: |vertices: &[f32]|
 ) {
 
     let mut vertices: [f32, ..720] = [0.0, ..720];
-    let mut colors: [f32, ..1440] = [0.0, ..1440];
     // Get the first point which will be used a lot.
     let fp = match polygon() { None => return, Some(val) => val };
     let (fx, fy) = (tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1]));
@@ -246,22 +239,13 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
     let mut i = 0;
     let vertices_per_triangle = 3;
     let position_components_per_vertex = 2;
-    let color_components_per_vertex = 4;
     let align_vertices =
         vertices_per_triangle
         * position_components_per_vertex;
-    let align_colors =
-        vertices_per_triangle
-        * color_components_per_vertex;
     'read_vertices: loop {
         let ind_out = i * align_vertices;
         vertices[ind_out + 0] = fx;
         vertices[ind_out + 1] = fy;
-        let ind_out = i * align_colors;
-        colors[ind_out + 0] = color[0];
-        colors[ind_out + 1] = color[1];
-        colors[ind_out + 2] = color[2];
-        colors[ind_out + 3] = color[3];
 
         // Copy vertex.
         let ind_out = i * align_vertices + 2;
@@ -279,29 +263,18 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
         vertices[ind_out + 3] = y;
         gx = x;
         gy = y;
-        let ind_out = i * align_colors + 4;
-        colors[ind_out + 0] = color[0];
-        colors[ind_out + 1] = color[1];
-        colors[ind_out + 2] = color[2];
-        colors[ind_out + 3] = color[3];
-        colors[ind_out + 4] = color[0];
-        colors[ind_out + 5] = color[1];
-        colors[ind_out + 6] = color[2];
-        colors[ind_out + 7] = color[3];
 
         i += 1;
         // Buffer is full.
         if i * align_vertices + 2 >= vertices.len() {
             // Send chunk and start over.
-            f(vertices.slice(0, i * align_vertices),
-                colors.slice(0, i * align_colors));
+            f(vertices.slice(0, i * align_vertices));
             i = 0;
         }
     }
 
     if i > 0 {
-        f(vertices.slice(0, i * align_vertices),
-            colors.slice(0, i * align_colors));
+        f(vertices.slice(0, i * align_vertices));
     }
 }
 
@@ -311,9 +284,8 @@ pub fn with_ellipse_border_tri_list_xy_f32_rgba_f32(
     resolution: uint,
     m: Matrix2d,
     rect: Rectangle,
-    color: Color,
     border_radius: Radius,
-    f: |vertices: &[f32], colors: &[f32]|) {
+    f: |vertices: &[f32]|) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (cw, ch) = (0.5 * w, 0.5 * h);
@@ -331,7 +303,7 @@ pub fn with_ellipse_border_tri_list_xy_f32_rgba_f32(
         i += 1;
         Some(([cx + cos * cw1, cy + sin * ch1],
             [cx + cos * cw2, cy + sin * ch2]))
-    }, color, f);
+    }, f);
 }
 
 /// Streams a round rectangle border.
@@ -342,8 +314,7 @@ pub fn with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
     rect: Rectangle,
     round_radius: Radius,
     border_radius: Radius,
-    color: Color,
-    f: |vertices: &[f32], colors: &[f32]|) {
+    f: |vertices: &[f32]|) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
@@ -425,10 +396,10 @@ pub fn with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
                     [cx + cos * radius2, cy + sin * radius2]))
             },
         }
-    }, color, f);
+    }, f);
 }
 
-/// Streams a quad into tri list with color per vertex.
+/// Streams a quad into tri list.
 ///
 /// Uses buffers that fit inside L1 cache.
 /// The 'quad_edge' stream returns two points
@@ -436,12 +407,10 @@ pub fn with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
 pub fn stream_quad_tri_list_xy_f32_rgba_f32(
     m: Matrix2d,
     quad_edge: || -> Option<(Vec2d, Vec2d)>,
-    color: Color,
-    f: |vertices: &[f32], colors: &[f32]|
+    f: |vertices: &[f32]|
 ) {
 
     let mut vertices: [f32, ..720] = [0.0, ..720];
-    let mut colors: [f32, ..1440] = [0.0, ..1440];
     // Get the two points .
     let (fp1, fp2) = match quad_edge() {
             None => return,
@@ -461,15 +430,10 @@ pub fn stream_quad_tri_list_xy_f32_rgba_f32(
     let triangles_per_quad = 2;
     let vertices_per_triangle = 3;
     let position_components_per_vertex = 2;
-    let color_components_per_vertex = 4;
     let align_vertices =
         triangles_per_quad
         * vertices_per_triangle
         * position_components_per_vertex;
-    let align_colors =
-        triangles_per_quad
-        * vertices_per_triangle
-        * color_components_per_vertex;
     loop {
         // Read two more points.
         let (gp1, gp2) = match quad_edge() {
@@ -503,36 +467,6 @@ pub fn stream_quad_tri_list_xy_f32_rgba_f32(
         vertices[ind_out + 10] = gx2;
         vertices[ind_out + 11] = gy2;
 
-        let ind_out = i * align_colors;
-
-        // First triangle.
-        colors[ind_out + 0] = color[0];
-        colors[ind_out + 1] = color[1];
-        colors[ind_out + 2] = color[2];
-        colors[ind_out + 3] = color[3];
-        colors[ind_out + 4] = color[0];
-        colors[ind_out + 5] = color[1];
-        colors[ind_out + 6] = color[2];
-        colors[ind_out + 7] = color[3];
-        colors[ind_out + 8] = color[0];
-        colors[ind_out + 9] = color[1];
-        colors[ind_out + 10] = color[2];
-        colors[ind_out + 11] = color[3];
-
-        // Second triangle.
-        colors[ind_out + 12] = color[0];
-        colors[ind_out + 13] = color[1];
-        colors[ind_out + 14] = color[2];
-        colors[ind_out + 15] = color[3];
-        colors[ind_out + 16] = color[0];
-        colors[ind_out + 17] = color[1];
-        colors[ind_out + 18] = color[2];
-        colors[ind_out + 19] = color[3];
-        colors[ind_out + 20] = color[0];
-        colors[ind_out + 21] = color[1];
-        colors[ind_out + 22] = color[2];
-        colors[ind_out + 23] = color[3];
-
         // Next quad.
         i += 1;
 
@@ -545,25 +479,22 @@ pub fn stream_quad_tri_list_xy_f32_rgba_f32(
         // Buffer is full.
         if i * align_vertices >= vertices.len() {
             // Send chunk and start over.
-            f(vertices.slice(0, i * align_vertices),
-                colors.slice(0, i * align_colors));
+            f(vertices.slice(0, i * align_vertices));
             i = 0;
         }
     }
 
     if i > 0 {
-        f(vertices.slice(0, i * align_vertices),
-            colors.slice(0, i * align_colors));
+        f(vertices.slice(0, i * align_vertices));
     }
 }
 
-/// Splits polygon into convex segments with one color per vertex.
+/// Splits polygon into convex segments.
 /// Create a buffer that fits into L1 cache with 1KB overhead.
 pub fn with_polygon_tri_list_xy_f32_rgba_f32(
     m: Matrix2d,
     polygon: Polygon,
-    color: Color,
-    f: |vertices: &[f32], colors: &[f32]|) {
+    f: |vertices: &[f32]|) {
 
     let n = polygon.len();
     let mut i = 0;
@@ -574,7 +505,7 @@ pub fn with_polygon_tri_list_xy_f32_rgba_f32(
             let j = i;
             i += 1;
             Some(polygon[j])
-        }, color, f);
+        }, f);
 }
 
 /// Creates triangle list vertices from rectangle.
@@ -641,56 +572,6 @@ pub fn rect_border_tri_list_xy_f32(
         tx(m, x11, y12), ty(m, x11, y12),
         tx(m, x11, y11), ty(m, x11, y11),
         tx(m, x21, y21), ty(m, x21, y21),
-    ]
-}
-
-/// Creates triangle list colors from rectangle.
-#[inline(always)]
-pub fn rect_tri_list_rgba_f32(
-    color: Color
-) -> [f32, ..24] {
-    let (r, g, b, a) = (color[0], color[1], color[2], color[3]);
-    [
-        r, g, b, a, // 0
-        r, g, b, a, // 1
-        r, g, b, a, // 2
-        r, g, b, a, // 3
-        r, g, b, a, // 4
-        r, g, b, a, // 5
-    ]
-}
-
-/// Creates triangle list colors from rectangle border.
-#[inline(always)]
-pub fn rect_border_tri_list_rgba_f32(
-    color: Color
-) -> [f32, ..96] {
-    let (r, g, b, a) = (color[0], color[1], color[2], color[3]);
-    [
-        r, g, b, a, // 0
-        r, g, b, a, // 1
-        r, g, b, a, // 2
-        r, g, b, a, // 3
-        r, g, b, a, // 4
-        r, g, b, a, // 5
-        r, g, b, a, // 6
-        r, g, b, a, // 7
-        r, g, b, a, // 8
-        r, g, b, a, // 9
-        r, g, b, a, // 10
-        r, g, b, a, // 11
-        r, g, b, a, // 12
-        r, g, b, a, // 13
-        r, g, b, a, // 14
-        r, g, b, a, // 15
-        r, g, b, a, // 16
-        r, g, b, a, // 17
-        r, g, b, a, // 18
-        r, g, b, a, // 19
-        r, g, b, a, // 20
-        r, g, b, a, // 21
-        r, g, b, a, // 22
-        r, g, b, a
     ]
 }
 
