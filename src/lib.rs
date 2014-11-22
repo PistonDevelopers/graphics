@@ -64,6 +64,7 @@ pub mod triangulation;
 pub mod vecmath;
 pub mod deform;
 pub mod grid;
+pub mod radians;
 
 mod shape;
 

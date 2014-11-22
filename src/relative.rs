@@ -11,7 +11,6 @@ use has::{
     HasSourceRectangle,
     HasTransform,
 };
-use std::num::Float;
 use vecmath::{
     hsv,
     margin_rectangle,
@@ -26,6 +25,7 @@ use vecmath::{
     Scalar,
     Vec2d,
 };
+use radians::Radians;
 
 /// Implemented by contexts that contains color.
 pub trait RelativeColor: HasColor + CanColor {
@@ -62,7 +62,7 @@ pub trait RelativeColor: HasColor + CanColor {
     /// Rotates hue by degrees.
     #[inline(always)]
     fn hue_deg(&self, angle: ColorComponent) -> Self {
-        let pi: ColorComponent = Float::pi();
+        let pi: ColorComponent = Radians::_180();
         self.hue_rad(angle * pi / 180.0)
     }
 
@@ -169,7 +169,7 @@ pub trait RelativeTransform: HasTransform + CanTransform {
     /// Rotates degrees in local coordinates.
     #[inline(always)]
     fn rot_deg(&self, angle: Scalar) -> Self {
-        let pi: Scalar = Float::pi();
+        let pi: Scalar = Radians::_180();
         self.rot_rad(angle * pi / 180.0)
     }
 
