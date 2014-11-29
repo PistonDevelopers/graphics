@@ -198,9 +198,7 @@ impl DeformGrid {
         let color = [1.0, ..4];
         back_end.color(color);
         let a = color[3];
-        let needs_alpha = a != 1.0
-            || back_end.has_texture_alpha(texture);
-        if needs_alpha { back_end.enable_alpha_blend(); }
+        if a == 0.0 { return; }
         back_end.enable_texture(texture);
         let buf_len = 360;
         let mut vertices: [f32, ..720] = [0.0, ..720];
@@ -233,7 +231,6 @@ impl DeformGrid {
             );
         }
         back_end.disable_texture();
-        if needs_alpha { back_end.disable_alpha_blend(); }
     }
 
     /// Adds a control point, in original coordinates.
