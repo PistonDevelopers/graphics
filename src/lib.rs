@@ -45,6 +45,7 @@ pub use rectangle::{
     RoundRectangleBorder,
 };
 pub use line::{ Line, RoundLine, BevelLine, SquareLine };
+pub use ellipse::{ Ellipse };
 
 pub use context::Context as Context;
 
@@ -64,6 +65,7 @@ mod draw;
 mod relative;
 mod rectangle;
 mod line;
+mod ellipse;
 
 pub mod can;
 pub mod has;
