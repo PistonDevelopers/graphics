@@ -44,7 +44,7 @@ pub use rectangle::{
     RoundRectangle,
     RoundRectangleBorder,
 };
-pub use line::{ Line, RoundLine, BevelLine };
+pub use line::{ Line, RoundLine, BevelLine, SquareLine };
 
 pub use context::Context as Context;
 
