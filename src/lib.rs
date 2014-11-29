@@ -38,6 +38,7 @@ pub use relative::{
 };
 pub use rectangle::Rectangle;
 pub use rectangle_border::RectangleBorder;
+pub use line::Line;
 
 pub use context::Context as Context;
 
@@ -57,6 +58,7 @@ mod draw;
 mod relative;
 mod rectangle;
 mod rectangle_border;
+mod line;
 
 pub mod can;
 pub mod has;
