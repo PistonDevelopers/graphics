@@ -484,7 +484,7 @@ for PolygonColorContext<'b> {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_polygon_tri_list_xy_f32_rgba_f32(
+        triangulation::with_polygon_tri_list(
             self.transform,
             polygon,
             |vertices| back_end.tri_list(vertices)
@@ -592,8 +592,8 @@ for ImageContext<'b, I> {
         back_end.enable_texture(texture);
         back_end.color(color);
         back_end.tri_list_uv(
-            &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-            &triangulation::rect_tri_list_uv_f32(texture, source_rect)
+            &triangulation::rect_tri_list_xy(self.transform, rect),
+            &triangulation::rect_tri_list_uv(texture, source_rect)
         );
         back_end.disable_texture();
         if needs_alpha { back_end.disable_alpha_blend(); }
@@ -709,7 +709,7 @@ for EllipseColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_ellipse_tri_list_xy_f32_rgba_f32(
+        triangulation::with_ellipse_tri_list(
             128,
             self.transform,
             rect,
@@ -789,7 +789,7 @@ for RectangleBorderColorContext {
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
         back_end.tri_list(
-            &triangulation::rect_border_tri_list_xy_f32(
+            &triangulation::rect_border_tri_list_xy(
                 self.transform, rect, border_radius),
         );
         if needs_alpha { back_end.disable_alpha_blend(); }
@@ -827,7 +827,7 @@ for RectangleColorContext {
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
         back_end.tri_list(
-            &triangulation::rect_tri_list_xy_f32(self.transform, rect),
+            &triangulation::rect_tri_list_xy(self.transform, rect),
         );
         if needs_alpha { back_end.disable_alpha_blend(); }
     }
@@ -847,7 +847,7 @@ for RoundBorderLineColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+        triangulation::with_round_border_line_tri_list(
             64,
             self.transform,
             line,
@@ -878,7 +878,7 @@ for LerpTweenPolygonsColorContext<'b> {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_lerp_polygons_tri_list_xy_f32_rgba_f32(
+        triangulation::with_lerp_polygons_tri_list(
             self.transform,
             polygons,
             tween_factor,
@@ -919,8 +919,8 @@ for ImageColorContext<'b, I> {
         back_end.enable_texture(texture);
         back_end.color(color);
         back_end.tri_list_uv(
-            &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-            &triangulation::rect_tri_list_uv_f32(texture, source_rect)
+            &triangulation::rect_tri_list_xy(self.transform, rect),
+            &triangulation::rect_tri_list_uv(texture, source_rect)
         );
         back_end.disable_texture();
         if needs_alpha { back_end.disable_alpha_blend(); }
@@ -952,8 +952,8 @@ for ImageRectangleContext<'b, I> {
         back_end.enable_texture(texture);
         back_end.color(color);
         back_end.tri_list_uv(
-            &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-            &triangulation::rect_tri_list_uv_f32(texture, source_rect)
+            &triangulation::rect_tri_list_xy(self.transform, rect),
+            &triangulation::rect_tri_list_uv(texture, source_rect)
         );
         back_end.disable_texture();
         if needs_alpha { back_end.disable_alpha_blend(); }
@@ -985,8 +985,8 @@ for ImageRectangleColorContext<'b, I> {
         back_end.enable_texture(texture);
         back_end.color(color);
         back_end.tri_list_uv(
-        &triangulation::rect_tri_list_xy_f32(self.transform, rect),
-        &triangulation::rect_tri_list_uv_f32(texture, source_rect)
+            &triangulation::rect_tri_list_xy(self.transform, rect),
+            &triangulation::rect_tri_list_uv(texture, source_rect)
         );
         back_end.disable_texture();
         if needs_alpha { back_end.disable_alpha_blend(); }
@@ -1010,7 +1010,7 @@ for EllipseBorderColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_ellipse_border_tri_list_xy_f32_rgba_f32(
+        triangulation::with_ellipse_border_tri_list(
             128,
             self.transform,
             rect,
@@ -1036,7 +1036,7 @@ for BevelRectangleColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_round_rectangle_tri_list_xy_f32_rgba_f32(
+        triangulation::with_round_rectangle_tri_list(
             2,
             self.transform,
             rect,
@@ -1062,7 +1062,7 @@ for BevelRectangleBorderColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
+        triangulation::with_round_rectangle_border_tri_list(
             2,
             self.transform,
             rect,
@@ -1088,7 +1088,7 @@ for BevelBorderLineColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+        triangulation::with_round_border_line_tri_list(
             3,
             self.transform,
             line,
@@ -1113,7 +1113,7 @@ for RoundRectangleColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_round_rectangle_tri_list_xy_f32_rgba_f32(
+        triangulation::with_round_rectangle_tri_list(
             32,
             self.transform,
             rect,
@@ -1139,7 +1139,7 @@ for RoundRectangleBorderColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
+        triangulation::with_round_rectangle_border_tri_list(
             128,
             self.transform,
             rect,
@@ -1164,7 +1164,7 @@ for LineColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+        triangulation::with_round_border_line_tri_list(
             2,
             self.transform,
             line,
@@ -1189,7 +1189,7 @@ for SquareBorderLineColorContext {
         let needs_alpha = color[3] != 1.0;
         if needs_alpha { back_end.enable_alpha_blend(); }
         back_end.color(color);
-        triangulation::with_round_border_line_tri_list_xy_f32_rgba_f32(
+        triangulation::with_round_border_line_tri_list(
             2,
             self.transform,
             line,

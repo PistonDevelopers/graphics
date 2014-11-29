@@ -40,11 +40,12 @@ pub fn ty(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
 
 /// Streams tweened polygons using linear interpolation.
 #[inline(always)]
-pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
+pub fn with_lerp_polygons_tri_list(
     m: Matrix2d,
     polygons: Polygons,
     tween_factor: Scalar,
-    f: |vertices: &[f32]|) {
+    f: |vertices: &[f32]|
+) {
 
     let poly_len = polygons.len() as Scalar;
     // Map to interval between 0 and 1.
@@ -63,7 +64,7 @@ pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
     let tw = tw - frame as Scalar;
     let n = polygons[0].len();
     let mut i = 0u;
-    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
+    stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
         let j = i;
@@ -76,18 +77,19 @@ pub fn with_lerp_polygons_tri_list_xy_f32_rgba_f32(
 
 /// Streams an ellipse specified by a resolution.
 #[inline(always)]
-pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
+pub fn with_ellipse_tri_list(
     resolution: uint,
     m: Matrix2d,
     rect: Rectangle,
-    f: |vertices: &[f32]|) {
+    f: |vertices: &[f32]|
+) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (cw, ch) = (0.5 * w, 0.5 * h);
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
     let mut i = 0u;
-    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
+    stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
         let angle = i as Scalar / n as Scalar * Radians::_360();
@@ -98,12 +100,13 @@ pub fn with_ellipse_tri_list_xy_f32_rgba_f32(
 
 /// Streams a round border line.
 #[inline(always)]
-pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
+pub fn with_round_border_line_tri_list(
     resolution_cap: uint,
     m: Matrix2d,
     line: Line,
     round_border_radius: Radius,
-    f: |vertices: &[f32]|) {
+    f: |vertices: &[f32]|
+) {
 
     let radius = round_border_radius;
     let (x1, y1, x2, y2) = (line[0], line[1], line[2], line[3]);
@@ -113,7 +116,7 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
     let m = multiply(m, orient(dx, dy));
     let n = resolution_cap * 2;
     let mut i = 0u;
-    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
+    stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
         let j = i;
@@ -150,18 +153,19 @@ pub fn with_round_border_line_tri_list_xy_f32_rgba_f32(
 
 /// Streams a round rectangle.
 #[inline(always)]
-pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
+pub fn with_round_rectangle_tri_list(
     resolution_corner: uint,
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,
-    f: |vertices: &[f32]|) {
+    f: |vertices: &[f32]|
+) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
     let n = resolution_corner * 4;
     let mut i = 0u;
-    stream_polygon_tri_list_xy_f32_rgba_f32(m, || {
+    stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
         let j = i;
@@ -223,7 +227,7 @@ pub fn with_round_rectangle_tri_list_xy_f32_rgba_f32(
 
 /// Streams a polygon into tri list.
 /// Uses buffers that fit inside L1 cache.
-pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
+pub fn stream_polygon_tri_list(
     m: Matrix2d,
     polygon: || -> Option<Vec2d>,
     f: |vertices: &[f32]|
@@ -281,12 +285,13 @@ pub fn stream_polygon_tri_list_xy_f32_rgba_f32(
 
 /// Streams an ellipse border specified by a resolution.
 #[inline(always)]
-pub fn with_ellipse_border_tri_list_xy_f32_rgba_f32(
+pub fn with_ellipse_border_tri_list(
     resolution: uint,
     m: Matrix2d,
     rect: Rectangle,
     border_radius: Radius,
-    f: |vertices: &[f32]|) {
+    f: |vertices: &[f32]|
+) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (cw, ch) = (0.5 * w, 0.5 * h);
@@ -295,7 +300,7 @@ pub fn with_ellipse_border_tri_list_xy_f32_rgba_f32(
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
     let mut i = 0u;
-    stream_quad_tri_list_xy_f32_rgba_f32(m, || {
+    stream_quad_tri_list(m, || {
         if i > n { return None; }
 
         let angle = i as Scalar / n as Scalar * Radians::_360();
@@ -309,13 +314,14 @@ pub fn with_ellipse_border_tri_list_xy_f32_rgba_f32(
 
 /// Streams a round rectangle border.
 #[inline(always)]
-pub fn with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
+pub fn with_round_rectangle_border_tri_list(
     resolution_corner: uint,
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,
     border_radius: Radius,
-    f: |vertices: &[f32]|) {
+    f: |vertices: &[f32]|
+) {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
@@ -323,7 +329,7 @@ pub fn with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
     let radius2 = round_radius - border_radius;
     let n = resolution_corner * 4;
     let mut i = 0u;
-    stream_quad_tri_list_xy_f32_rgba_f32(m, || {
+    stream_quad_tri_list(m, || {
         if i > n { return None; }
 
         let j = i;
@@ -405,7 +411,7 @@ pub fn with_round_rectangle_border_tri_list_xy_f32_rgba_f32(
 /// Uses buffers that fit inside L1 cache.
 /// The 'quad_edge' stream returns two points
 /// defining the next edge.
-pub fn stream_quad_tri_list_xy_f32_rgba_f32(
+pub fn stream_quad_tri_list(
     m: Matrix2d,
     quad_edge: || -> Option<(Vec2d, Vec2d)>,
     f: |vertices: &[f32]|
@@ -492,26 +498,28 @@ pub fn stream_quad_tri_list_xy_f32_rgba_f32(
 
 /// Splits polygon into convex segments.
 /// Create a buffer that fits into L1 cache with 1KB overhead.
-pub fn with_polygon_tri_list_xy_f32_rgba_f32(
+pub fn with_polygon_tri_list(
     m: Matrix2d,
     polygon: Polygon,
-    f: |vertices: &[f32]|) {
+    f: |vertices: &[f32]|
+) {
 
     let n = polygon.len();
     let mut i = 0;
-    stream_polygon_tri_list_xy_f32_rgba_f32(
+    stream_polygon_tri_list(
         m, || {
             if i >= n { return None; }
 
             let j = i;
             i += 1;
             Some(polygon[j])
-        }, f);
+        }, f
+    );
 }
 
 /// Creates triangle list vertices from rectangle.
 #[inline(always)]
-pub fn rect_tri_list_xy_f32(
+pub fn rect_tri_list_xy(
     m: Matrix2d,
     rect: Rectangle
 ) -> [f32, ..12] {
@@ -529,7 +537,7 @@ pub fn rect_tri_list_xy_f32(
 
 /// Creates triangle list vertices from rectangle.
 #[inline(always)]
-pub fn rect_border_tri_list_xy_f32(
+pub fn rect_border_tri_list_xy(
     m: Matrix2d,
     rect: Rectangle,
     border_radius: Radius,
@@ -578,7 +586,7 @@ pub fn rect_border_tri_list_xy_f32(
 
 /// Creates triangle list texture coords from image.
 #[inline(always)]
-pub fn rect_tri_list_uv_f32<I: ImageSize>(
+pub fn rect_tri_list_uv<I: ImageSize>(
     image: &I, source_rect: SourceRectangle
 ) -> [f32, ..12] {
     let (w, h) = image.get_size();
@@ -595,3 +603,4 @@ pub fn rect_tri_list_uv_f32<I: ImageSize>(
         x2, y1, x2, y2, x1, y2
     ]
 }
+
