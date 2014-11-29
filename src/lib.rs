@@ -37,7 +37,11 @@ pub use relative::{
     RelativeViewTransform,
 };
 pub use rectangle::{
-    Rectangle, RoundRectangle, RectangleBorder, RoundRectangleBorder
+    Rectangle,
+    RectangleBorder,
+    BevelRectangle,
+    RoundRectangle,
+    RoundRectangleBorder,
 };
 pub use line::{ Line, RoundLine, BevelLine };
 
