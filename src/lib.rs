@@ -36,7 +36,9 @@ pub use relative::{
     RelativeTransform,
     RelativeViewTransform,
 };
-pub use rectangle::{ Rectangle, RoundRectangle, RectangleBorder };
+pub use rectangle::{
+    Rectangle, RoundRectangle, RectangleBorder, RoundRectangleBorder
+};
 pub use line::{ Line, RoundLine, BevelLine };
 
 pub use context::Context as Context;
