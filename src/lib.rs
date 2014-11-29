@@ -36,8 +36,7 @@ pub use relative::{
     RelativeTransform,
     RelativeViewTransform,
 };
-pub use rectangle::Rectangle;
-pub use rectangle_border::RectangleBorder;
+pub use rectangle::{ Rectangle, RoundRectangle, RectangleBorder };
 pub use line::{ Line, RoundLine, BevelLine };
 
 pub use context::Context as Context;
@@ -57,7 +56,6 @@ mod context;
 mod draw;
 mod relative;
 mod rectangle;
-mod rectangle_border;
 mod line;
 
 pub mod can;
