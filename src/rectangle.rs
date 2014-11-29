@@ -49,6 +49,31 @@ impl RoundRectangle {
     }
 }
 
+/// A bevel rectangle
+pub struct BevelRectangle {
+    /// The rectangle shape
+    pub rectangle: internal::Rectangle,
+    /// The rectangle color
+    pub color: internal::Color,
+    /// The bevel radius
+    pub bevel_radius: internal::Radius,
+}
+
+impl BevelRectangle {
+    /// Draws the bevel rectangle.
+    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
+        if self.color[3] == 0.0 { return; }
+        back_end.color(self.color);
+        triangulation::with_round_rectangle_tri_list(
+            2,
+            c.transform,
+            self.rectangle,
+            self.bevel_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+    }
+}
+
 /// A rectangle border.
 pub struct RectangleBorder {
     /// The rectangle shape.
