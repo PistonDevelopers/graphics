@@ -45,7 +45,7 @@ pub use rectangle::{
     RoundRectangleBorder,
 };
 pub use line::{ Line, RoundLine, BevelLine, SquareLine };
-pub use ellipse::{ Ellipse };
+pub use ellipse::{ Ellipse, EllipseBorder };
 
 pub use context::Context as Context;
 

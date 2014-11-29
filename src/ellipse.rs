@@ -28,3 +28,28 @@ impl Ellipse {
     }
 }
 
+/// An ellipse border with color
+pub struct EllipseBorder {
+    /// The ellipse rectangle
+    pub rectangle: internal::Rectangle,
+    /// The ellipse border color
+    pub color: internal::Color,
+    /// The border radius
+    pub border_radius: internal::Radius,
+}
+
+impl EllipseBorder {
+    /// Draws the ellipse border
+    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
+        if self.color[3] == 0.0 { return; }
+        back_end.color(self.color);
+        triangulation::with_ellipse_border_tri_list(
+            128,
+            c.transform,
+            self.rectangle,
+            self.border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+    }
+}
+
