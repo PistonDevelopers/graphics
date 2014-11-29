@@ -38,7 +38,7 @@ pub use relative::{
 };
 pub use rectangle::Rectangle;
 pub use rectangle_border::RectangleBorder;
-pub use line::Line;
+pub use line::{ Line, RoundBorderLine };
 
 pub use context::Context as Context;
 
