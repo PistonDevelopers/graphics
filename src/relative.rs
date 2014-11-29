@@ -166,6 +166,12 @@ pub trait RelativeTransform: HasTransform + CanTransform {
         self.transform(multiply(self.get_transform(), transform))
     }
 
+    /// Prepends transform to the current one.
+    #[inline(always)]
+    fn prepend_transform(&self, transform: Matrix2d) -> Self {
+        self.transform(multiply(transform, self.get_transform()))
+    }
+
     /// Translate x an y in local coordinates.
     #[inline(always)]
     fn trans(&self, x: Scalar, y: Scalar) -> Self {
