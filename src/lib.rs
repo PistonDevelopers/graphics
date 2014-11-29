@@ -40,6 +40,7 @@ pub use rectangle::{
     Rectangle,
     RectangleBorder,
     BevelRectangle,
+    BevelRectangleBorder,
     RoundRectangle,
     RoundRectangleBorder,
 };
