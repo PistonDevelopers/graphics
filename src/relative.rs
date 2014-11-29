@@ -22,6 +22,7 @@ use vecmath::{
     scale,
     shear,
     translate,
+    Matrix2d,
     Scalar,
     Vec2d,
 };
@@ -159,6 +160,12 @@ impl<T: HasSourceRectangle
 
 /// Implemented by contexts that can transform.
 pub trait RelativeTransform: HasTransform + CanTransform {
+    /// Appends transform to the current one.
+    #[inline(always)]
+    fn append_transform(&self, transform: Matrix2d) -> Self {
+        self.transform(multiply(self.get_transform(), transform))
+    }
+
     /// Translate x an y in local coordinates.
     #[inline(always)]
     fn trans(&self, x: Scalar, y: Scalar) -> Self {
