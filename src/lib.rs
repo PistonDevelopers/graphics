@@ -34,8 +34,8 @@ pub use relative::{
     RelativeRectangle,
     RelativeSourceRectangle,
     RelativeTransform,
+    RelativeViewTransform,
 };
-pub use view::View;
 
 pub use context::Context as Context;
 
@@ -53,7 +53,6 @@ mod back_end;
 mod context;
 mod draw;
 mod relative;
-mod view;
 
 pub mod can;
 pub mod has;
