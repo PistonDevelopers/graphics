@@ -124,3 +124,31 @@ impl RoundRectangleBorder {
     }
 }
 
+/// A bevel rectangle border
+pub struct BevelRectangleBorder {
+    /// The rectangle shape
+    pub rectangle: internal::Rectangle,
+    /// The rectangle color
+    pub color: internal::Color,
+    /// The border radius
+    pub border_radius: internal::Radius,
+    /// The bevel radius
+    pub bevel_radius: internal::Radius,
+}
+
+impl BevelRectangleBorder {
+    /// Draw the bevel rectangle border.
+    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
+        if self.color[3] == 0.0 { return; }
+        back_end.color(self.color);
+        triangulation::with_round_rectangle_border_tri_list(
+            2,
+            c.transform,
+            self.rectangle,
+            self.bevel_radius,
+            self.border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+    }
+}
+
