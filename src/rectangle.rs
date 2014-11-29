@@ -70,3 +70,32 @@ impl RectangleBorder {
         );
     }
 }
+
+/// A round rectangle border
+pub struct RoundRectangleBorder {
+    /// The rectangle shape
+    pub rectangle: internal::Rectangle,
+    /// The rectangle color
+    pub color: internal::Color,
+    /// The border radius
+    pub border_radius: internal::Radius,
+    /// The roundness radius
+    pub round_radius: internal::Radius,
+}
+
+impl RoundRectangleBorder {
+    /// Draw the round rectangle border.
+    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
+        if self.color[3] == 0.0 { return; }
+        back_end.color(self.color);
+        triangulation::with_round_rectangle_border_tri_list(
+            128,
+            c.transform,
+            self.rectangle,
+            self.round_radius,
+            self.border_radius,
+            |vertices| back_end.tri_list(vertices)
+        );
+    }
+}
+
