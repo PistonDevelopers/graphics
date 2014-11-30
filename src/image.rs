@@ -1,64 +1,102 @@
+//! Draw image
+
+use current::{ Modifier };
 use internal;
 use triangulation;
 use BackEnd;
+use Color;
 use Context;
 use ImageSize;
+use Rect;
+use SrcRect;
 
 /// An image
-pub struct Image<'a, I: 'a + ImageSize> {
-    /// The texture to draw with
-    pub texture: &'a I,
+#[deriving(Copy)]
+pub struct Image {
     /// The color
-    pub color: internal::Color,
+    pub color: Option<internal::Color>,
+    /// The rectangle to draw image inside
+    pub rectangle: Option<internal::Rectangle>,
     /// The image source rectangle
-    pub source_rectangle: internal::SourceRectangle,
+    pub source_rectangle: Option<internal::SourceRectangle>,
 }
 
-impl<'a, I: ImageSize> Image<'a, I> {
+impl Image {
+    /// Creates a new image
+    pub fn new() -> Image {
+        Image {
+            color: None,
+            source_rectangle: None,
+            rectangle: None,
+        }
+    }
+
     /// Draws the image.
-    pub fn draw<B: BackEnd<I>>(&self, c: &Context, back_end: &mut B) {
+    pub fn draw<B: BackEnd<I>, I: ImageSize>(
+        &self, 
+        texture: &I, 
+        c: &Context, 
+        back_end: &mut B
+    ) {
         use internal::Scalar;
 
-        if self.color[3] == 0.0 { return; }
-        let rect = [
+        let color = self.color.unwrap_or([1.0, ..4]);
+        if color[3] == 0.0 { return; }
+        let source_rectangle = self.source_rectangle.unwrap_or({
+            let (w, h) = texture.get_size();
+            [0, 0, w as i32, h as i32]
+        });
+        let rectangle = self.rectangle.unwrap_or([
             0.0,
             0.0,
-            self.source_rectangle[2] as Scalar,
-            self.source_rectangle[3] as Scalar
-        ];
-        back_end.enable_texture(self.texture);
-        back_end.color(self.color);
+            source_rectangle[2] as Scalar,
+            source_rectangle[3] as Scalar
+        ]);
+        back_end.enable_texture(texture);
+        back_end.color(color);
         back_end.tri_list_uv(
-            &triangulation::rect_tri_list_xy(c.transform, rect),
-            &triangulation::rect_tri_list_uv(self.texture, self.source_rectangle)
+            &triangulation::rect_tri_list_xy(c.transform, rectangle),
+            &triangulation::rect_tri_list_uv(texture, source_rectangle)
         );
         back_end.disable_texture();
     }
 }
 
-/// An image rectangle
-pub struct ImageRectangle<'a, I: 'a + ImageSize> {
-    /// The texture to draw with
-    pub texture: &'a I,
-    /// The rectangle to draw to
-    pub rectangle: internal::Rectangle,
-    /// The color
-    pub color: internal::Color,
-    /// The image source rectangle
-    pub source_rectangle: internal::SourceRectangle,
+impl Modifier<Image> for Color {
+    fn modify(self, img: &mut Image) {
+        let Color(val) = self;
+        img.color = Some(val);
+    }
 }
 
-impl<'a, I: ImageSize> ImageRectangle<'a, I> {
-    /// Draws the image.
-    pub fn draw<B: BackEnd<I>>(&self, c: &Context, back_end: &mut B) {
-        if self.color[3] == 0.0 { return; }
-        back_end.enable_texture(self.texture);
-        back_end.color(self.color);
-        back_end.tri_list_uv(
-            &triangulation::rect_tri_list_xy(c.transform, self.rectangle),
-            &triangulation::rect_tri_list_uv(self.texture, self.source_rectangle)
-        );
-        back_end.disable_texture();
+impl Modifier<Image> for Rect {
+    fn modify(self, img: &mut Image) {
+        let Rect(val) = self;
+        img.rectangle = Some(val);
+    }
+}
+
+impl Modifier<Image> for SrcRect {
+    fn modify(self, img: &mut Image) {
+        let SrcRect(val) = self;
+        img.source_rectangle = Some(val);
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::Image;
+    use Color;
+    use Rect;
+    use SrcRect;
+    use current::Set;
+
+    #[test]
+    fn test_image() {
+        let _img = Image::new()
+            .set(Color([1.0, ..4]))
+            .set(Rect([0.0, 0.0, 100.0, 100.0]))
+            .set(SrcRect([0, 0, 32, 32]));
     }
 }
 
