@@ -27,3 +27,7 @@ git = "https://github.com/PistonDevelopers/texture"
 
 git = "https://github.com/PistonDevelopers/read_color"
 
+[dependencies.current]
+
+git = "https://github.com/PistonDevelopers/current"
+

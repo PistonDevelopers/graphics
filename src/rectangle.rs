@@ -1,154 +1,156 @@
+//! Draw rectangle
+
+use current::Modifier;
 use internal;
 use triangulation;
 use Context;
 use BackEnd;
 use ImageSize;
+use Color;
+
+/// The shape of the rectangle
+pub enum Shape {
+    /// Square corners
+    Square,
+    /// Round corners
+    Round(internal::Radius),
+    /// Bevel corners
+    Bevel(internal::Radius),
+}
+
+/// The border of the rectangle
+pub struct Border {
+    /// The color of the border
+    pub color: internal::Color,
+    /// The radius of the border
+    pub radius: internal::Radius,
+}
 
 /// A filled rectangle
+#[deriving(Copy)]
 pub struct Rectangle {
-    /// The rectangle shape
-    pub rectangle: internal::Rectangle,
     /// The rectangle color
-    pub color: internal::Color
+    pub color: internal::Color,
+    /// The roundness of the rectangle
+    pub shape: Shape,
+    /// The border
+    pub border: Option<Border>,
 }
 
 impl Rectangle {
+    /// Creates a new rectangle.
+    pub fn new(color: internal::Color) -> Rectangle {
+        Rectangle {
+            color: color,
+            shape: Shape::Square,
+            border: None,
+        }
+    }
+
     /// Draws the rectangle
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
-        // Complete transparency does not need to be rendered.
-        if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
-        back_end.tri_list(
-            &triangulation::rect_tri_list_xy(c.transform, self.rectangle),
-        );
+    pub fn draw<B: BackEnd<I>, I: ImageSize>(
+        &self, 
+        rectangle: internal::Rectangle, 
+        c: &Context, 
+        back_end: &mut B
+    ) {
+        if self.color[3] != 0.0 {
+            back_end.color(self.color);
+            match self.shape {
+                Shape::Square => {
+                    back_end.tri_list(
+                        &triangulation::rect_tri_list_xy(c.transform, rectangle),
+                    );
+                }
+                Shape::Round(round_radius) => {
+                    triangulation::with_round_rectangle_tri_list(
+                        32,
+                        c.transform,
+                        rectangle,
+                        round_radius,
+                        |vertices| back_end.tri_list(vertices)
+                    );
+                }
+                Shape::Bevel(bevel_radius) => {
+                    triangulation::with_round_rectangle_tri_list(
+                        2,
+                        c.transform,
+                        rectangle,
+                        bevel_radius,
+                        |vertices| back_end.tri_list(vertices)
+                    );
+                }
+            }
+        }
+       
+        if let Some(Border { color, radius: border_radius }) = self.border {
+            if color[3] == 0.0 { return; }
+            back_end.color(color);
+            match self.shape {
+                Shape::Square => {
+                    back_end.tri_list(
+                        &triangulation::rect_border_tri_list_xy(
+                            c.transform, rectangle, border_radius),
+                    );
+                }
+                Shape::Round(round_radius) => {
+                    triangulation::with_round_rectangle_border_tri_list(
+                        128,
+                        c.transform,
+                        rectangle,
+                        round_radius,
+                        border_radius,
+                        |vertices| back_end.tri_list(vertices)
+                    );
+                }
+                Shape::Bevel(bevel_radius) => {
+                    triangulation::with_round_rectangle_border_tri_list(
+                        2,
+                        c.transform,
+                        rectangle,
+                        bevel_radius,
+                        border_radius,
+                        |vertices| back_end.tri_list(vertices)
+                    );
+                }
+            }
+        } 
     }
 }
 
-/// A round rectangle filled with a color
-pub struct RoundRectangle {
-    /// The rectangle shape
-    pub rectangle: internal::Rectangle,
-    /// The rectangle color
-    pub color: internal::Color,
-    /// The roundness radius
-    pub round_radius: internal::Radius,
-}
-
-impl RoundRectangle {
-    /// Draws the round rectangle
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
-        if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
-        triangulation::with_round_rectangle_tri_list(
-            32,
-            c.transform,
-            self.rectangle,
-            self.round_radius,
-            |vertices| back_end.tri_list(vertices)
-        );
+impl Modifier<Rectangle> for Color {
+    fn modify(self, r: &mut Rectangle) {
+        let Color(val) = self;
+        r.color = val;
     }
 }
 
-/// A bevel rectangle
-pub struct BevelRectangle {
-    /// The rectangle shape
-    pub rectangle: internal::Rectangle,
-    /// The rectangle color
-    pub color: internal::Color,
-    /// The bevel radius
-    pub bevel_radius: internal::Radius,
-}
-
-impl BevelRectangle {
-    /// Draws the bevel rectangle.
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
-        if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
-        triangulation::with_round_rectangle_tri_list(
-            2,
-            c.transform,
-            self.rectangle,
-            self.bevel_radius,
-            |vertices| back_end.tri_list(vertices)
-        );
+impl Modifier<Rectangle> for Shape {
+    fn modify(self, r: &mut Rectangle) {
+        r.shape = self;
     }
 }
 
-/// A rectangle border.
-pub struct RectangleBorder {
-    /// The rectangle shape.
-    pub rectangle: internal::Rectangle,
-    /// The rectangle color.
-    pub color: internal::Color,
-    /// The border radius.
-    pub border_radius: internal::Radius,
-}
-
-impl RectangleBorder {
-    /// Draw the rectangle border.
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
-        if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
-        back_end.tri_list(
-            &triangulation::rect_border_tri_list_xy(
-                c.transform, self.rectangle, self.border_radius),
-        );
+impl Modifier<Rectangle> for Border {
+    fn modify(self, r: &mut Rectangle) {
+        r.border = Some(self);
     }
 }
 
-/// A round rectangle border
-pub struct RoundRectangleBorder {
-    /// The rectangle shape
-    pub rectangle: internal::Rectangle,
-    /// The rectangle color
-    pub color: internal::Color,
-    /// The border radius
-    pub border_radius: internal::Radius,
-    /// The roundness radius
-    pub round_radius: internal::Radius,
-}
+#[cfg(test)]
+mod test {
+    use super::Rectangle;
+    use super::Shape;
+    use super::Border;
+    use Color;
+    use current::Set;
 
-impl RoundRectangleBorder {
-    /// Draw the round rectangle border.
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
-        if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
-        triangulation::with_round_rectangle_border_tri_list(
-            128,
-            c.transform,
-            self.rectangle,
-            self.round_radius,
-            self.border_radius,
-            |vertices| back_end.tri_list(vertices)
-        );
-    }
-}
-
-/// A bevel rectangle border
-pub struct BevelRectangleBorder {
-    /// The rectangle shape
-    pub rectangle: internal::Rectangle,
-    /// The rectangle color
-    pub color: internal::Color,
-    /// The border radius
-    pub border_radius: internal::Radius,
-    /// The bevel radius
-    pub bevel_radius: internal::Radius,
-}
-
-impl BevelRectangleBorder {
-    /// Draw the bevel rectangle border.
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(&self, c: &Context, back_end: &mut B) {
-        if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
-        triangulation::with_round_rectangle_border_tri_list(
-            2,
-            c.transform,
-            self.rectangle,
-            self.bevel_radius,
-            self.border_radius,
-            |vertices| back_end.tri_list(vertices)
-        );
+    #[test]
+    fn test_rectangle() {
+        let _rectangle = Rectangle::new([1.0, ..4])
+            .set(Color([0.0, ..4]))
+            .set(Shape::Round(10.0))
+            .set(Border { color: [0.0, ..4], radius: 4.0 });
     }
 }
 
