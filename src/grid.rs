@@ -19,8 +19,6 @@ pub struct Grid {
     pub rows: u32,
     /// The width and height of each grid cell.
     pub units: Scalar,
-    /// The line radius.
-    pub radius: Scalar,
 }
 
 /// Iterates through the cells of a grid as (u32, u32).
@@ -39,7 +37,7 @@ impl Grid {
         g: &mut B
     ) {
         let &Grid {
-            cols, rows, units, radius
+            cols, rows, units
         } = self;
         for x in range(0, cols + 1) {
             let x1 = x as Scalar * units;
@@ -89,7 +87,7 @@ impl Iterator<(u32, u32)> for GridIterator {
 
 #[test]
 fn test_grid_iterator() {
-    let g = Grid {cols: 2, rows: 2, units: 2.0, radius: 1.0};
+    let g = Grid {cols: 2, rows: 2, units: 2.0};
     let expected : Vec<(u32, u32)> = vec![(0, 0), (1, 0), (0, 1), (1, 1)];
     assert_eq!(expected, g.cells().collect());
 }
