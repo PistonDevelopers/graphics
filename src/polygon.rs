@@ -29,12 +29,29 @@ impl Polygon {
         c: &Context,
         back_end: &mut B
     ) {
-        // Complete transparency does not need to be rendered.
         if self.color[3] == 0.0 { return; }
         back_end.color(self.color);
         triangulation::with_polygon_tri_list(
             c.transform,
             polygon,
+            |vertices| back_end.tri_list(vertices)
+        );
+    }
+
+    /// Draws tweened polygon with linear interpolation
+    pub fn draw_tween_lerp<B: BackEnd<I>, I: ImageSize>(
+        &self,
+        polygons: internal::Polygons,
+        tween_factor: internal::Scalar,
+        c: &Context,
+        back_end: &mut B
+    ) {
+        if self.color[3] == 0.0 { return; }
+        back_end.color(self.color);
+        triangulation::with_lerp_polygons_tri_list(
+            c.transform,
+            polygons,
+            tween_factor,
             |vertices| back_end.tri_list(vertices)
         );
     }
