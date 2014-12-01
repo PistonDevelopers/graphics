@@ -1,9 +1,5 @@
 
-//! Contains internal type aliases and traits.
-//!
-//! These do not affect the normal usage of the library.
-//! Using these might lead to breaking changes.
-//! Made public to clarify documentation.
+//! Contains type aliases used in this library
 
 pub use vecmath::{ Scalar, Vec2d };
 
