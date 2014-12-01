@@ -34,7 +34,6 @@ pub use context::Context as Context;
 /// This can be used to initialize buffers that fit the chunk size.
 pub static BACK_END_MAX_VERTEX_COUNT: uint = 1024;
 
-mod add;
 mod back_end;
 mod context;
 mod draw;
