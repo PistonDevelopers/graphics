@@ -17,6 +17,7 @@ pub struct Border {
 }
 
 /// An ellipse with filled color
+#[deriving(Copy)]
 pub struct Ellipse {
     /// The ellipse color
     pub color: internal::Color,

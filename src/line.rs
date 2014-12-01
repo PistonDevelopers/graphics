@@ -22,6 +22,7 @@ pub enum Shape {
 pub struct Radius(pub internal::Radius);
 
 /// A colored line with a default border radius
+#[deriving(Copy)]
 pub struct Line {
     /// The line color
     pub color: internal::Color,
