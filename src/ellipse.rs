@@ -1,10 +1,12 @@
 //! Draw ellipse
 
+use current::Modifier;
 use internal;
 use triangulation;
 use BackEnd;
 use Context;
 use ImageSize;
+use Color;
 
 /// Ellipse border
 pub struct Border {
@@ -61,6 +63,34 @@ impl Ellipse {
                 |vertices| back_end.tri_list(vertices)
             );
         }
+    }
+}
+
+impl Modifier<Ellipse> for Color {
+    fn modify(self, e: &mut Ellipse) {
+        let Color(val) = self;
+        e.color = val;
+    }
+}
+
+impl Modifier<Ellipse> for Border {
+    fn modify(self, e: &mut Ellipse) {
+        e.border = Some(self);
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::Ellipse;
+    use super::Border;
+    use Color;
+    use current::Set;
+
+    #[test]
+    fn test_ellipse() {
+        let _ellipse = Ellipse::new([1.0, ..4])
+            .set(Color([0.0, ..4]))
+            .set(Border { color: [1.0, ..4], radius: 3.0 });
     }
 }
 
