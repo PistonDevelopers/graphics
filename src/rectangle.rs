@@ -94,6 +94,31 @@ pub trait SetBorder: Set<Border> {
 
 impl<T: Set<Border>> SetBorder for T {}
 
+/// Maybe border property
+pub struct MaybeBorder(pub Option<Border>);
+
+/// Wrapper trait for `Get<MaybeBorder>`
+pub trait GetMaybeBorder: Get<MaybeBorder> {
+    /// Get maybe border
+    #[inline(always)]
+    fn get_maybe_border(&self) -> MaybeBorder {
+        self.get()
+    }
+}
+
+impl<T: Get<MaybeBorder>> GetMaybeBorder for T {}
+
+/// Wrapper trait for `Set<MaybeBorder>`
+pub trait SetMaybeBorder: Set<MaybeBorder> {
+    /// Set maybe border
+    #[inline(always)]
+    fn set_maybe_border(&mut self, val: MaybeBorder) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<MaybeBorder>> SetMaybeBorder for T {}
+
 /// A filled rectangle
 #[deriving(Copy)]
 pub struct Rectangle {
@@ -187,21 +212,53 @@ impl Rectangle {
 }
 
 impl Modifier<Rectangle> for Color {
+    #[inline(always)]
     fn modify(self, r: &mut Rectangle) {
         let Color(val) = self;
         r.color = val;
     }
 }
 
+impl Get<Color> for Rectangle {
+    #[inline(always)]
+    fn get(&self) -> Color {
+        Color(self.color)
+    }
+}
+
 impl Modifier<Rectangle> for Shape {
+    #[inline(always)]
     fn modify(self, r: &mut Rectangle) {
         r.shape = self;
     }
 }
 
+impl Get<Shape> for Rectangle {
+    #[inline(always)]
+    fn get(&self) -> Shape {
+        self.shape
+    }
+}
+
 impl Modifier<Rectangle> for Border {
+    #[inline(always)]
     fn modify(self, r: &mut Rectangle) {
         r.border = Some(self);
+    }
+}
+
+impl Modifier<Rectangle> for MaybeBorder {
+    #[inline(always)]
+    fn modify(self, r: &mut Rectangle) {
+        let MaybeBorder(val) = self;
+        r.border = val;
+    }
+}
+
+impl Get<MaybeBorder> for Rectangle {
+    #[inline(always)]
+    fn get(&self) -> MaybeBorder {
+        MaybeBorder(self.border)
     }
 }
 
