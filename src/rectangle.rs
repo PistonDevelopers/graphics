@@ -1,6 +1,6 @@
 //! Draw rectangle
 
-use current::Modifier;
+use current::{ Get, Modifier, Set };
 use internal;
 use triangulation;
 use Context;
@@ -42,6 +42,28 @@ pub enum Shape {
     Bevel(internal::Radius),
 }
 
+/// Wrapper trait for `Get<Shape>`
+pub trait GetShape: Get<Shape> {
+    /// Get shape
+    #[inline(always)]
+    fn get_shape(&self) -> Shape {
+        self.get()
+    }
+}
+
+impl<T: Get<Shape>> GetShape for T {}
+
+/// Wrapper trait for `Set<Shape>`
+pub trait SetShape: Set<Shape> {
+    /// Set shape
+    #[inline(always)]
+    fn set_shape(&mut self, val: Shape) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<Shape>> SetShape for T {}
+
 /// The border of the rectangle
 pub struct Border {
     /// The color of the border
@@ -49,6 +71,28 @@ pub struct Border {
     /// The radius of the border
     pub radius: internal::Radius,
 }
+
+/// Wrapper trait for `Get<Border>`
+pub trait GetBorder: Get<Border> {
+    /// Get border
+    #[inline(always)]
+    fn get_border(&self) -> Border {
+        self.get()
+    }
+}
+
+impl<T: Get<Border>> GetBorder for T {}
+
+/// Wrapper trait for `Set<Border>`
+pub trait SetBorder: Set<Border> {
+    /// Set border
+    #[inline(always)]
+    fn set_border(&mut self, val: Border) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<Border>> SetBorder for T {}
 
 /// A filled rectangle
 #[deriving(Copy)]
