@@ -41,6 +41,31 @@ pub trait SetBorder: Set<Border> {
 
 impl<T: Set<Border>> SetBorder for T {}
 
+/// Maybe border property
+pub struct MaybeBorder(pub Option<Border>);
+
+/// Wrapper trait for `Get<MaybeBorder>`
+pub trait GetMaybeBorder: Get<MaybeBorder> {
+    /// Get maybe border
+    #[inline(always)]
+    fn get_maybe_border(&self) -> MaybeBorder {
+        self.get()
+    }
+}
+
+impl<T: Get<MaybeBorder>> GetMaybeBorder for T {}
+
+/// Wrapper trait for `Set<MaybeBorder>`
+pub trait SetMaybeBorder: Set<MaybeBorder> {
+    /// Set maybe border
+    #[inline(always)]
+    fn set_maybe_border(&mut self, val: MaybeBorder) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<MaybeBorder>> SetMaybeBorder for T {}
+
 /// An ellipse with filled color
 #[deriving(Copy)]
 pub struct Ellipse {
@@ -111,6 +136,21 @@ impl Modifier<Ellipse> for Border {
     #[inline(always)]
     fn modify(self, e: &mut Ellipse) {
         e.border = Some(self);
+    }
+}
+
+impl Modifier<Ellipse> for MaybeBorder {
+    #[inline(always)]
+    fn modify(self, e: &mut Ellipse) {
+        let MaybeBorder(val) = self;
+        e.border = val;
+    }
+}
+
+impl Get<MaybeBorder> for Ellipse {
+    #[inline(always)]
+    fn get(&self) -> MaybeBorder {
+        MaybeBorder(self.border)
     }
 }
 
