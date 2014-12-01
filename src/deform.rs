@@ -5,7 +5,6 @@ use {
     BackEnd,
     ImageSize,
     Context,
-    Draw,
 };
 use std::num::Float;
 use triangulation::{tx, ty};

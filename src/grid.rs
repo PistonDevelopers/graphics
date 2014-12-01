@@ -4,7 +4,6 @@ use vecmath::Scalar;
 use {
     BackEnd,
     Context,
-    Draw,
     ImageSize,
     Line,
 };

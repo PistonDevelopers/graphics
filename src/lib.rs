@@ -14,7 +14,6 @@ extern crate current;
 pub use texture::ImageSize;
 
 pub use back_end::BackEnd;
-pub use draw::Draw;
 pub use relative::{
     RelativeColor,
     RelativeRectangle,
@@ -38,7 +37,6 @@ use current::{ Get, Set };
 pub static BACK_END_MAX_VERTEX_COUNT: uint = 1024;
 
 mod back_end;
-mod draw;
 mod relative;
 
 pub mod context;
