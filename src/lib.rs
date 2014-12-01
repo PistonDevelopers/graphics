@@ -13,22 +13,6 @@ extern crate current;
 
 pub use texture::ImageSize;
 
-pub use add::{
-    AddBevel,
-    AddBevelBorder,
-    AddBorder,
-    AddColor,
-    AddEllipse,
-    AddImage,
-    AddLine,
-    AddPolygon,
-    AddPolygons,
-    AddRectangle,
-    AddRound,
-    AddRoundBorder,
-    AddSquareBorder,
-    AddTween,
-};
 pub use back_end::BackEnd;
 pub use draw::Draw;
 pub use relative::{
@@ -56,6 +40,7 @@ mod context;
 mod draw;
 mod relative;
 
+pub mod color;
 pub mod polygon;
 pub mod line;
 pub mod ellipse;
