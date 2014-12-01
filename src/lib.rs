@@ -39,7 +39,7 @@ pub use relative::{
     RelativeViewTransform,
 };
 pub use rectangle::Rectangle;
-pub use line::{ Line, RoundLine, BevelLine, SquareLine };
+pub use line::Line;
 pub use ellipse::Ellipse;
 pub use image::Image;
 
@@ -55,8 +55,8 @@ mod back_end;
 mod context;
 mod draw;
 mod relative;
-mod line;
 
+pub mod line;
 pub mod ellipse;
 pub mod rectangle;
 pub mod image;
