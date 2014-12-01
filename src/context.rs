@@ -1,17 +1,61 @@
+//! Transformation context
 
-use can::{
-    CanTransform,
-    CanViewTransform,
-};
-use has::{
-    HasTransform,
-    HasViewTransform,
-};
+use current::{ Get, Modifier, Set };
 use vecmath::{
     identity,
     Matrix2d,
     Scalar
 };
+
+/// Transform property
+pub struct Transform(pub Matrix2d);
+
+/// Wrapper trait for `Get<Transform>`
+pub trait GetTransform: Get<Transform> {
+    /// Gets view transform
+    #[inline(always)]
+    fn get_transform(&self) -> Transform {
+        self.get()
+    }
+}
+
+impl<T: Get<Transform>> GetTransform for T {}
+
+/// Wrapper trait for `Set<Transform>`
+pub trait SetTransform: Set<Transform> {
+    /// Sets view transform
+    #[inline(always)]
+    fn set_transform(&mut self, val: Transform) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<Transform>> SetTransform for T {}
+
+/// View transform property
+pub struct ViewTransform(pub Matrix2d);
+
+/// Wrapper trait for `Get<ViewTransform>`
+pub trait GetViewTransform: Get<ViewTransform> {
+    /// Gets view transform
+    #[inline(always)]
+    fn get_view_transform(&self) -> ViewTransform {
+        self.get()
+    }
+}
+
+impl<T: Get<ViewTransform>> GetViewTransform for T {}
+
+/// Wrapper trait for `Set<ViewTransform>`
+pub trait SetViewTransform: Set<ViewTransform> {
+    /// Sets view transform
+    #[inline(always)]
+    fn set_view_transform(&mut self, val: ViewTransform) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<ViewTransform>> SetViewTransform for T {}
 
 /// Drawing 2d context.
 #[deriving(Copy, Clone)]
@@ -22,34 +66,29 @@ pub struct Context {
     pub transform: Matrix2d,
 }
 
-impl HasTransform for Context {
-    #[inline(always)]
-    fn get_transform(&self) -> Matrix2d {
-        self.transform
+impl Modifier<Context> for Transform {
+    fn modify(self, c: &mut Context) {
+        let Transform(val) = self;
+        c.transform = val;
     }
 }
 
-impl CanTransform for Context {
-    #[inline(always)]
-    fn transform(&self, value: Matrix2d) -> Context {
-        Context {
-            transform: value,
-            ..*self
-        }
+impl Get<Transform> for Context {
+    fn get(&self) -> Transform {
+        Transform(self.transform)
     }
 }
 
-impl HasViewTransform for Context {
-    #[inline(always)]
-    fn get_view_transform(&self) -> Matrix2d {
-        self.view
+impl Modifier<Context> for ViewTransform {
+    fn modify(self, c: &mut Context) {
+        let ViewTransform(val) = self;
+        c.view = val;
     }
 }
 
-impl CanViewTransform for Context {
-    #[inline(always)]
-    fn view_transform(&self, value: Matrix2d) -> Context {
-        Context { view: value, ..*self }
+impl Get<ViewTransform> for Context {
+    fn get(&self) -> ViewTransform {
+        ViewTransform(self.view)
     }
 }
 
