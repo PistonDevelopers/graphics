@@ -35,7 +35,6 @@ use vecmath::{
     Matrix2d,
     Scalar
 };
-use shape;
 
 /// Drawing 2d context.
 #[deriving(Copy, Clone)]
@@ -110,70 +109,43 @@ impl Context {
     }
 }
 
-#[test]
-fn test_context() {
-    use RelativeTransform;
+#[cfg(test)]
+mod test {
+    use super::Context;
+    use std::num::Float;
 
-    let c = Context::new();
-    {
-        let d = c.trans(20.0, 40.0);
-        let d = d.trans(10.0, 10.0);
-        let transform = d.transform;
-        assert_eq!(transform[0][2], 30.0);
-        assert_eq!(transform[1][2], 50.0);
+    #[test]
+    fn test_context() {
+        use RelativeTransform;
+
+        let c = Context::new();
+        {
+            let d = c.trans(20.0, 40.0);
+            let d = d.trans(10.0, 10.0);
+            let transform = d.transform;
+            assert_eq!(transform[0][2], 30.0);
+            assert_eq!(transform[1][2], 50.0);
+        }
+
+        let transform = c.transform;
+        assert_eq!(transform[0][2], 0.0);
+        assert_eq!(transform[1][2], 0.0);
+
+        let c = c.rot_deg(90.0);
+        let transform = c.transform;
+        assert!((transform[0][0] - 0.0).abs() < 0.00001);
+        assert!((transform[0][1] + 1.0).abs() < 0.00001);
     }
 
-    let transform = c.transform;
-    assert_eq!(transform[0][2], 0.0);
-    assert_eq!(transform[1][2], 0.0);
+    #[test]
+    fn test_scale() {
+        use RelativeTransform;
 
-    let c = c.rot_deg(90.0);
-    let transform = c.transform;
-    assert!((transform[0][0] - 0.0).abs() < 0.00001);
-    assert!((transform[0][1] + 1.0).abs() < 0.00001);
-}
-
-#[test]
-fn test_scale() {
-    use RelativeTransform;
-
-    let c = Context::new();
-    let c = c.scale(2.0, 3.0);
-    let transform = c.transform;
-    assert!((transform[0][0] - 2.0).abs() < 0.00001);
-    assert!((transform[1][1] - 3.0).abs() < 0.00001);
-}
-
-#[test]
-fn test_rect() {
-    use add::AddRectangle;
-
-    let c = Context::new();
-    let d = c.rect(0.0, 0.0, 100.0, 50.0);
-    let rect = d.shape.variant.rect;
-    println!("{}", rect[2]);
-    assert_eq!(rect[2], 100.0);
-}
-
-#[test]
-fn test_ellipse() {
-    use add::AddEllipse;
-
-    let c = Context::new();
-    let d = c.ellipse(0.0, 0.0, 100.0, 100.0);
-    let rect = d.shape.variant.rect;
-    assert_eq!(rect[2], 100.0);
-}
-
-#[test]
-fn test_rgba_1() {
-    use add::AddRectangle;
-    use add::AddColor;
-
-    let c = Context::new();
-    let d = c.rect(0.0, 0.0, 100.0, 100.0);
-    let e = d.rgba(1.0, 0.0, 0.0, 1.0);
-    let color = e.color;
-    assert_eq!(color[0], 1.0);
+        let c = Context::new();
+        let c = c.scale(2.0, 3.0);
+        let transform = c.transform;
+        assert!((transform[0][0] - 2.0).abs() < 0.00001);
+        assert!((transform[1][1] - 3.0).abs() < 0.00001);
+    }
 }
 

@@ -72,8 +72,6 @@ pub mod deform;
 pub mod grid;
 pub mod radians;
 
-mod shape;
-
 /// A color property
 pub struct Color(pub internal::Color);
 
