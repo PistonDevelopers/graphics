@@ -8,6 +8,21 @@ use BackEnd;
 use ImageSize;
 use Color;
 
+/// Use x, y, half-width, half-height
+pub fn centered(rect: internal::Rectangle) -> internal::Rectangle {
+    let [cx, cy, rw, rh] = rect;
+    [cx - rw, cy - rh, 2.0 * rw, 2.0 * rh]
+}
+
+/// Use centered square
+pub fn centered_square(
+    x: internal::Scalar, 
+    y: internal::Scalar, 
+    radius: internal::Scalar
+) -> internal::Rectangle {
+    [x - radius, y - radius, 2.0 * radius, 2.0 * radius]
+}
+
 /// The shape of the rectangle
 pub enum Shape {
     /// Square corners

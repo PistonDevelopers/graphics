@@ -1,5 +1,8 @@
 //! Draw ellipse
 
+pub use rectangle::centered;
+pub use rectangle::centered_square as circle;
+
 use current::Modifier;
 use internal;
 use triangulation;
