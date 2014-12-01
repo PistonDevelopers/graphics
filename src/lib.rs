@@ -35,10 +35,10 @@ pub use context::Context as Context;
 pub static BACK_END_MAX_VERTEX_COUNT: uint = 1024;
 
 mod back_end;
-mod context;
 mod draw;
 mod relative;
 
+pub mod context;
 pub mod color;
 pub mod polygon;
 pub mod line;

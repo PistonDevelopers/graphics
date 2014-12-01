@@ -5,7 +5,6 @@ use internal::{
     Rectangle,
     SourceRectangle,
 };
-use vecmath::Matrix2d;
 
 /// Implemented by contexts that can color.
 ///
@@ -25,17 +24,5 @@ pub trait CanRectangle {
 pub trait CanSourceRectangle {
     /// Create new context with source rectangle information.
     fn source_rectangle(&self, value: SourceRectangle) -> Self;
-}
-
-/// Implemented by contexts that can transform.
-pub trait CanTransform {
-    /// Create a new context with transformation.
-    fn transform(&self, value: Matrix2d) -> Self;
-}
-
-/// Implemented by contexts that can view transform.
-pub trait CanViewTransform {
-    /// Create a new context with view transformation.
-    fn view_transform(&self, value: Matrix2d) -> Self;
 }
 
