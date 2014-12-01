@@ -13,43 +13,6 @@ use vecmath::{
     Scalar
 };
 
-/// Implemented by all contexts that can add ellipse.
-pub trait AddEllipse<T> {
-    /// Adds an ellipse.
-    fn ellipse(&self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> T;
-
-    /// Adds an ellipse with coordinates in the center.
-    #[inline(always)]
-    fn ellipse_centered(
-        &self,
-        center_x: Scalar,
-        center_y: Scalar,
-        radius_width: Radius,
-        radius_height: Radius
-    ) -> T {
-        self.ellipse(
-            center_x - radius_width,
-            center_y - radius_height,
-            2.0 * radius_width,
-            2.0 * radius_height
-       )
-    }
-
-    /// Adds a circle.
-    #[inline(always)]
-    fn circle(
-        &self,
-        center_x: Scalar,
-        center_y: Scalar,
-        radius: Radius
-    ) -> T {
-        self.ellipse(center_x - radius,
-                  center_y - radius,
-                  2.0 * radius,
-                  2.0 * radius)
-    }
-}
-
 /// Implemented by contexts that can add image.
 pub trait AddImage<'b, T, I: ImageSize> {
     /// Add image to context.
