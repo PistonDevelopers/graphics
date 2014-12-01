@@ -5,14 +5,12 @@ use {
     BackEnd,
     ImageSize,
     Context,
-    AddLine,
-    AddSquareBorder,
     Draw,
 };
 use std::num::Float;
 use triangulation::{tx, ty};
 use vecmath::{ Scalar, Vec2d };
-use internal::{ Rectangle, Width };
+use internal;
 
 /// Represents a deformed grid.
 pub struct DeformGrid {
@@ -38,7 +36,7 @@ pub struct DeformGrid {
 
 impl DeformGrid {
     /// Creates a new DeformGrid.
-    pub fn new(rect: Rectangle, cols: uint, rows: uint) -> DeformGrid {
+    pub fn new(rect: internal::Rectangle, cols: uint, rows: uint) -> DeformGrid {
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let mut vertices = Vec::new();

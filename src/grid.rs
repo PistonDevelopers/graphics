@@ -1,14 +1,12 @@
 //! A flat grid with square cells.
 
 use vecmath::Scalar;
-use Line;
 use {
-    AddLine,
-    AddSquareBorder,
     BackEnd,
     Context,
     Draw,
     ImageSize,
+    Line,
 };
 
 /// Represents a flat grid with square cells.
