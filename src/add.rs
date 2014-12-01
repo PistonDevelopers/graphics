@@ -1,8 +1,9 @@
+//! Add traits
+
 use {
     ImageSize,
 };
 use internal::{
-    Color,
     Polygon,
     Polygons,
     Radius,
@@ -11,94 +12,6 @@ use internal::{
 use vecmath::{
     Scalar
 };
-
-/// Implemented by contexts that can make a shape bevel.
-pub trait AddBevel<T> {
-    /// Bevels the shape of the current context.
-    fn bevel(&self, radius: Radius) -> T;
-}
-
-/// Implemented by contexts that can add round border.
-pub trait AddBevelBorder<T> {
-    /// Adds a bevel border radius.
-    fn bevel_border_radius(&self, radius: Radius) -> T;
-
-    /// Adds a bevel border width.
-    #[inline(always)]
-    fn bevel_border_width(&self, width: Width) -> T {
-        self.bevel_border_radius(0.5 * width)
-    }
-}
-
-/// Implemented by contexts that can add border.
-///
-/// This is used in cases where border style is implicit of the shape.
-/// For example, `RectangleContext` gives a `RectangleBorderContext `.
-pub trait AddBorder<T> {
-    /// Adds a border radius.
-    fn border_radius(&self, radius: Radius) -> T;
-
-    /// Adds a border width.
-    #[inline(always)]
-    fn border_width(&self, width: Width) -> T {
-        self.border_radius(0.5 * width)
-    }
-}
-
-/// Implemented by contexts who can add color.
-pub trait AddColor<T> {
-    /// Add color with alpha channel.
-    fn rgba(&self, r: f32, g: f32, b: f32, a: f32) -> T;
-
-    /// Adds color with alpha channel set to 1.0.
-    #[inline(always)]
-    fn rgb(&self, r: f32, g: f32, b: f32) -> T {
-        self.rgba(r, g, b, 1.0)
-    }
-
-    /// Add color [r, g, b, a].
-    #[inline(always)]
-    fn color(&self, color: Color) -> T {
-        self.rgba(color[0], color[1], color[2], color[3])
-    }
-
-    /// Adds a gray color.
-    ///
-    /// `0.0` is black and `1.0` is white.
-    #[inline(always)]
-    fn grey(&self, f: f32) -> T {
-        self.rgba(f, f, f, 1.0)
-    }
-
-    /// Adds a white semi-transparent color.
-    ///
-    /// `0.0` is fully transparent and `1.0` is fully opaque.
-    #[inline(always)]
-    fn alpha(&self, f: f32) -> T {
-        self.rgba(1.0, 1.0, 1.0, f)
-    }
-
-    /// Adds a hexadecimal color.
-    /// Causes task panic if not valid format.
-    #[inline(always)]
-    fn hex(&self, hex: &str) -> T {
-        use read_color::rgb_maybe_a;
-
-        let (rgb, a) = rgb_maybe_a(&mut hex.chars()).unwrap();
-        let color = match a {
-            None => [rgb[0], rgb[1], rgb[2], 255],
-            Some(a) => [rgb[0], rgb[1], rgb[2], a]
-        };
-        let inv_255 = 1.0f32 / 255.0f32;
-        self.rgba(
-            color[0] as f32 * inv_255,
-            color[1] as f32 * inv_255,
-            color[2] as f32 * inv_255,
-            color[3] as f32 * inv_255
-        )
-    }
-}
-
 
 /// Implemented by all contexts that can add ellipse.
 pub trait AddEllipse<T> {
