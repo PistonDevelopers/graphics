@@ -1,11 +1,12 @@
 //! A flat grid with square cells.
 
 use vecmath::Scalar;
+use Line;
 use {
     AddLine,
     AddSquareBorder,
     BackEnd,
-    ColorContext,
+    Context,
     Draw,
     ImageSize,
 };
@@ -33,7 +34,8 @@ impl Grid {
     /// Draws the grid.
     pub fn draw<B: BackEnd<I>, I: ImageSize>(
         &self,
-        c: &ColorContext,
+        line: &Line,
+        c: &Context,
         g: &mut B
     ) {
         let &Grid {
@@ -44,14 +46,14 @@ impl Grid {
             let y1 = 0.0;
             let x2 = x1;
             let y2 = rows as Scalar * units;
-            c.line(x1, y1, x2, y2).square_border_radius(radius).draw(g);
+            line.draw([x1, y1, x2, y2], c, g);
         }
         for y in range(0, rows + 1) {
             let x1 = 0.0;
             let y1 = y as Scalar * units;
             let x2 = cols as Scalar * units;
             let y2 = y1;
-            c.line(x1, y1, x2, y2).square_border_radius(radius).draw(g);
+            line.draw([x1, y1, x2, y2], c, g);
         }
     }
 
