@@ -1,6 +1,6 @@
 //! Draw Line
 
-use current::Modifier;
+use current::{ Get, Modifier, Set };
 use internal;
 use triangulation;
 use BackEnd;
@@ -18,8 +18,52 @@ pub enum Shape {
     Bevel,
 }
 
+/// Wrapper trait for `Get<Shape>`
+pub trait GetShape: Get<Shape> {
+    /// Get shape
+    #[inline(always)]
+    fn get_shape(&self) -> Shape {
+        self.get()
+    }
+}
+
+impl<T: Get<Shape>> GetShape for T {}
+
+/// Wrapper trait for `Set<Shape>`
+pub trait SetShape: Set<Shape> {
+    /// Set shape
+    #[inline(always)]
+    fn set_shape(&mut self, val: Shape) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<Shape>> SetShape for T {}
+
 /// The line border radius
 pub struct Radius(pub internal::Radius);
+
+/// Wrapper trait for `Get<Radius>`
+pub trait GetRadius: Get<Radius> {
+    /// Get radius
+    #[inline(always)]
+    fn get_radius(&self) -> Radius {
+        self.get()
+    }
+}
+
+impl<T: Get<Radius>> GetRadius for T {}
+
+/// Wrapper trait for `Set<Radius>`
+pub trait SetRadius: Set<Radius> {
+    /// Set radius
+    #[inline(always)]
+    fn set_radius(&mut self, val: Radius) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<Radius>> SetRadius for T {}
 
 /// A colored line with a default border radius
 #[deriving(Copy)]

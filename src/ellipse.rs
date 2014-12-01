@@ -3,7 +3,7 @@
 pub use rectangle::centered;
 pub use rectangle::centered_square as circle;
 
-use current::Modifier;
+use current::{ Get, Modifier, Set };
 use internal;
 use triangulation;
 use BackEnd;
@@ -18,6 +18,28 @@ pub struct Border {
     /// The border radius
     pub radius: internal::Radius,
 }
+
+/// Wrapper trait for `Get<Border>`
+pub trait GetBorder: Get<Border> {
+    /// Get border
+    #[inline(always)]
+    fn get_border(&self) -> Border {
+        self.get()
+    }
+}
+
+impl<T: Get<Border>> GetBorder for T {}
+
+/// Wrapper trait for `Set<Border>`
+pub trait SetBorder: Set<Border> {
+    /// Set border
+    #[inline(always)]
+    fn set_border(&mut self, val: Border) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<Border>> SetBorder for T {}
 
 /// An ellipse with filled color
 #[deriving(Copy)]
@@ -71,13 +93,22 @@ impl Ellipse {
 }
 
 impl Modifier<Ellipse> for Color {
+    #[inline(always)]
     fn modify(self, e: &mut Ellipse) {
         let Color(val) = self;
         e.color = val;
     }
 }
 
+impl Get<Color> for Ellipse {
+    #[inline(always)]
+    fn get(&self) -> Color {
+        Color(self.color)
+    }
+}
+
 impl Modifier<Ellipse> for Border {
+    #[inline(always)]
     fn modify(self, e: &mut Ellipse) {
         e.border = Some(self);
     }
