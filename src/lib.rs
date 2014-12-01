@@ -132,3 +132,10 @@ pub trait SetSrcRect: Set<SrcRect> {
 
 impl<T: Set<SrcRect>> SetSrcRect for T {}
 
+/// Clears the screen.
+pub fn clear<B: BackEnd<I>, I: ImageSize>(
+    color: internal::Color, back_end: &mut B
+) {
+    back_end.clear(color);
+}
+
