@@ -26,6 +26,7 @@ pub use rectangle::Rectangle;
 pub use line::Line;
 pub use ellipse::Ellipse;
 pub use image::Image;
+pub use polygon::Polygon;
 
 pub use context::Context as Context;
 
