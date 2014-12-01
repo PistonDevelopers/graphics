@@ -23,6 +23,15 @@ pub fn centered_square(
     [x - radius, y - radius, 2.0 * radius, 2.0 * radius]
 }
 
+/// Use square with x, y in upper left corner
+pub fn square(
+    x: internal::Scalar, 
+    y: internal::Scalar, 
+    size: internal::Scalar
+) -> internal::Rectangle {
+    [x, y, size, size]
+}
+
 /// The shape of the rectangle
 pub enum Shape {
     /// Square corners

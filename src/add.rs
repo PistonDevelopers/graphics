@@ -1,92 +1,14 @@
 //! Add traits
 
 use {
-    ImageSize,
 };
 use internal::{
-    Polygon,
-    Polygons,
     Radius,
     Width,
 };
 use vecmath::{
     Scalar
 };
-
-/// Implemented by contexts that can add image.
-pub trait AddImage<'b, T, I: ImageSize> {
-    /// Add image to context.
-    fn image(&self, image: &'b I) -> T;
-}
-
-
-/// Implemented by all contexts that can add rectangle.
-pub trait AddLine<T> {
-    /// Adds a line.
-    fn line(
-        &self,
-        x1: Scalar,
-        y1: Scalar,
-        x2: Scalar,
-        y2: Scalar
-    ) -> T;
-}
-
-/// Implemented by contexts who can add polygon.
-pub trait AddPolygon<'a, T> {
-    /// Add polygon.
-    fn polygon(&self, polygon: Polygon<'a>) -> T;
-}
-
-/// Implemented by tweening contexts that can add polygons.
-pub trait AddPolygons<'a, T> {
-    /// Add polygons.
-    fn polygons(&self, polygons: Polygons<'a>) -> T;
-}
-
-
-/// Implemented by all contexts that can add rectangle.
-pub trait AddRectangle<T> {
-    /// Adds a rectangle.
-    fn rect(&self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> T;
-
-    /// Adds a rectangle with coordinates in the center.
-    #[inline(always)]
-    fn rect_centered(
-        &self,
-        center_x: Scalar,
-        center_y: Scalar,
-        radius_width: Radius,
-        radius_height: Radius
-    ) -> T {
-        self.rect(
-            center_x - radius_width,
-            center_y - radius_height,
-            2.0 * radius_width,
-            2.0 * radius_height
-       )
-    }
-
-    /// Adds a square with coordinates of upper left corner.
-    #[inline(always)]
-    fn square(&self, x: Scalar, y: Scalar, w: Scalar) -> T {
-        self.rect(x, y, w, w)
-    }
-
-    /// Adds a square with coordinates in the center.
-    #[inline(always)]
-    fn square_centered(
-        &self,
-        center_x: Scalar,
-        center_y: Scalar,
-        radius: Radius
-    ) -> T {
-        self.rect(center_x - radius,
-                  center_y - radius,
-                  2.0 * radius,
-                  2.0 * radius)
-    }
-}
 
 /// Implemented by contexts that can add round border.
 pub trait AddRoundBorder<T> {
