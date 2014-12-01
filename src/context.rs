@@ -1,32 +1,9 @@
 
-use add;
-use {
-    BackEnd,
-    Draw,
-    ImageSize,
-};
-use std::num::Float;
-use triangulation;
-use internal::{
-    Color,
-    ColorComponent,
-    Polygon,
-    Polygons,
-    Radius,
-    Rectangle,
-    SourceRectangle,
-};
 use can::{
-    CanColor,
-    CanRectangle,
-    CanSourceRectangle,
     CanTransform,
     CanViewTransform,
 };
 use has::{
-    HasColor,
-    HasRectangle,
-    HasSourceRectangle,
     HasTransform,
     HasViewTransform,
 };
