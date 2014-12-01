@@ -56,6 +56,7 @@ mod context;
 mod draw;
 mod relative;
 
+pub mod polygon;
 pub mod line;
 pub mod ellipse;
 pub mod rectangle;
