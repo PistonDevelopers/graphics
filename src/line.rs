@@ -129,22 +129,46 @@ impl Line {
 }
 
 impl Modifier<Line> for Color {
+    #[inline(always)]
     fn modify(self, l: &mut Line) {
         let Color(val) = self;
         l.color = val;
     }
 }
 
+impl Get<Color> for Line {
+    #[inline(always)]
+    fn get(&self) -> Color {
+        Color(self.color)
+    }
+}
+
 impl Modifier<Line> for Radius {
+    #[inline(always)]
     fn modify(self, l: &mut Line) {
         let Radius(val) = self;
         l.radius = val;
     }
 }
 
+impl Get<Radius> for Line {
+    #[inline(always)]
+    fn get(&self) -> Radius {
+        Radius(self.radius)
+    }
+}
+
 impl Modifier<Line> for Shape {
+    #[inline(always)]
     fn modify(self, l: &mut Line) {
         l.shape = self;
+    }
+}
+
+impl Get<Shape> for Line {
+    #[inline(always)]
+    fn get(&self) -> Shape {
+        self.shape
     }
 }
 
