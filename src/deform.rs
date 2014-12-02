@@ -1,18 +1,15 @@
 //! Least square deforming of a 2D grid.
 
 use {
+    Line,
     BackEnd,
     ImageSize,
-    ColorContext,
     Context,
-    AddLine,
-    AddSquareBorder,
-    Draw,
 };
 use std::num::Float;
 use triangulation::{tx, ty};
 use vecmath::{ Scalar, Vec2d };
-use internal::{ Rectangle, Width };
+use internal;
 
 /// Represents a deformed grid.
 pub struct DeformGrid {
@@ -38,7 +35,7 @@ pub struct DeformGrid {
 
 impl DeformGrid {
     /// Creates a new DeformGrid.
-    pub fn new(rect: Rectangle, cols: uint, rows: uint) -> DeformGrid {
+    pub fn new(rect: internal::Rectangle, cols: uint, rows: uint) -> DeformGrid {
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let mut vertices = Vec::new();
@@ -190,9 +187,9 @@ impl DeformGrid {
     /// Draws deformed image.
     pub fn draw_image<B: BackEnd<I>, I: ImageSize>(
         &self,
+        texture: &I,
         c: &Context,
         back_end: &mut B,
-        texture: &I
     ) {
         let mat = c.transform;
         let color = [1.0, ..4];
@@ -243,9 +240,9 @@ impl DeformGrid {
     /// Draw vertical grid lines.
     pub fn draw_vertical_lines<B: BackEnd<I>, I: ImageSize>(
         &self,
-        c: &ColorContext,
+        line: &Line,
+        c: &Context,
         back_end: &mut B,
-        border_width: Width,
     ) {
         let grid = self;
         let nx = grid.cols + 1;
@@ -258,9 +255,7 @@ impl DeformGrid {
                 let ip = i + (j + 1) * nx;
                 let x2 = grid.vertices[ip][0];
                 let y2 = grid.vertices[ip][1];
-                c.line(x1, y1, x2, y2)
-                .square_border_width(border_width)
-                .draw(back_end);
+                line.draw([x1, y1, x2, y2], c, back_end);
             }
         }
     }
@@ -268,9 +263,9 @@ impl DeformGrid {
     /// Draw horizontal grid lines.
     pub fn draw_horizontal_lines<B: BackEnd<I>, I: ImageSize>(
         &self,
-        c: &ColorContext,
+        line: &Line,
+        c: &Context,
         back_end: &mut B,
-        border_width: Width,
     ) {
         let grid = self;
         let nx = grid.cols + 1;
@@ -283,9 +278,7 @@ impl DeformGrid {
                 let ip = (i + 1) + j * nx;
                 let x2 = grid.vertices[ip][0];
                 let y2 = grid.vertices[ip][1];
-                c.line(x1, y1, x2, y2)
-                .square_border_width(border_width)
-                .draw(back_end);
+                line.draw([x1, y1, x2, y2], c, back_end);
             }
         }
     }
@@ -381,3 +374,4 @@ impl DeformGrid {
         }
     }
 }
+

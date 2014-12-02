@@ -31,6 +31,15 @@ impl Image {
         }
     }
 
+    /// Creates a new colored image
+    pub fn colored(color: internal::Color) -> Image {
+        Image {
+            color: Some(color),
+            source_rectangle: None,
+            rectangle: None
+        }
+    }
+
     /// Draws the image.
     pub fn draw<B: BackEnd<I>, I: ImageSize>(
         &self, 
