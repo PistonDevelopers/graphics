@@ -140,6 +140,21 @@ impl Rectangle {
         }
     }
 
+    /// Creates a new rectangle border.
+    pub fn border(
+        color: internal::Color, 
+        radius: internal::Radius
+    ) -> Rectangle {
+        Rectangle {
+            color: [0.0, ..4],
+            shape: Shape::Square,
+            border: Some(Border {
+                    color: color,
+                    radius: radius
+                })
+        }
+    }
+
     /// Draws the rectangle
     pub fn draw<B: BackEnd<I>, I: ImageSize>(
         &self, 
