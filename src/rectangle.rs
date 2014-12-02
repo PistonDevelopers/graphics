@@ -142,6 +142,18 @@ impl Rectangle {
         }
     }
 
+    /// Creates a new round rectangle.
+    pub fn round(
+        color: internal::Color,
+        round_radius: internal::Radius
+    ) -> Rectangle {
+        Rectangle {
+            color: color,
+            shape: Shape::Round(round_radius),
+            border: None
+        }
+    }
+
     /// Creates a new rectangle border.
     pub fn border(
         color: internal::Color, 
@@ -153,6 +165,22 @@ impl Rectangle {
             border: Some(Border {
                     color: color,
                     radius: radius
+                })
+        }
+    }
+
+    /// Creates a new round rectangle border.
+    pub fn round_border(
+        color: internal::Color,
+        round_radius: internal::Radius,
+        border_radius: internal::Radius
+    ) -> Rectangle {
+        Rectangle {
+            color: [0.0, ..4],
+            shape: Shape::Round(round_radius),
+            border: Some(Border {
+                    color: color,
+                    radius: border_radius
                 })
         }
     }
