@@ -111,6 +111,15 @@ impl Line {
         }
     }
 
+    /// Creates a new line
+    pub fn round(color: internal::Color, radius: internal::Radius) -> Line {
+        Line {
+            color: color,
+            radius: radius,
+            shape: Shape::Round,
+        }
+    }
+
     /// Draw the line.
     pub fn draw<B: BackEnd<I>, I: ImageSize>(
         &self, 
