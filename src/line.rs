@@ -65,6 +65,31 @@ pub trait SetRadius: Set<Radius> {
 
 impl<T: Set<Radius>> SetRadius for T {}
 
+/// The line border width
+pub struct Width(pub internal::Width);
+
+/// Wrapper trait for `Get<Width>`
+pub trait GetWidth: Get<Width> {
+    /// Get width
+    #[inline(always)]
+    fn get_width(&self) -> Width {
+        self.get()
+    }
+}
+
+impl<T: Get<Width>> GetWidth for T {}
+
+/// Wrapper trait for `Set<Width>`
+pub trait SetWidth: Set<Width> {
+    /// Set width
+    #[inline(always)]
+    fn set_width(&mut self, val: Width) {
+        self.set_mut(val);
+    }
+}
+
+impl<T: Set<Width>> SetWidth for T {}
+
 /// A colored line with a default border radius
 #[deriving(Copy)]
 pub struct Line {
@@ -155,6 +180,21 @@ impl Get<Radius> for Line {
     #[inline(always)]
     fn get(&self) -> Radius {
         Radius(self.radius)
+    }
+}
+
+impl Modifier<Line> for Width {
+    #[inline(always)]
+    fn modify(self, l: &mut Line) {
+        let Width(val) = self;
+        l.radius = 0.5 * val;
+    }
+}
+
+impl Get<Width> for Line {
+    #[inline(always)]
+    fn get(&self) -> Width {
+        Width(2.0 * self.radius)
     }
 }
 
