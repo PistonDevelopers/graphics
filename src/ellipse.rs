@@ -84,6 +84,20 @@ impl Ellipse {
         }
     }
 
+    /// Creates a new ellipse border
+    pub fn border(
+        color: internal::Color, 
+        radius: internal::Radius
+    ) -> Ellipse {
+        Ellipse {
+            color: [0.0, ..4],
+            border: Some(Border {
+                    color: color,
+                    radius: radius,
+                })
+        }
+    }
+
     /// Draws the ellipse.
     pub fn draw<B: BackEnd<I>, I: ImageSize>(
         &self, 
