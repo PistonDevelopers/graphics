@@ -137,3 +137,10 @@ pub fn clear<B: BackEnd<I>, I: ImageSize>(
     back_end.clear(color);
 }
 
+/// Draws image.
+pub fn image<B: BackEnd<I>, I: ImageSize>(
+    image: &I, c: &Context, back_end: &mut B
+) {
+    Image::new().draw(image, c, back_end);
+}
+
