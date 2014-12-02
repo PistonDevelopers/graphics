@@ -160,33 +160,27 @@ impl<T: Get<SrcRect>
 > RelativeSourceRectangle for T {}
 
 /// Implemented by contexts that can transform.
-pub trait RelativeTransform: GetTransform + SetTransform + Clone {
+pub trait RelativeTransform: Get<Transform> + Set<Transform> + Clone {
     /// Appends transform to the current one.
     #[inline(always)]
     fn append_transform(&self, transform: Matrix2d) -> Self {
-        let mut res = self.clone();
         let Transform(mat) = self.get_transform();
-        res.set_transform(Transform(multiply(mat, transform)));
-        res
+        self.clone().set(Transform(multiply(mat, transform)))
     }
 
     /// Prepends transform to the current one.
     #[inline(always)]
     fn prepend_transform(&self, transform: Matrix2d) -> Self {
-        let mut res = self.clone();
         let Transform(mat) = self.get_transform();
-        res.set_transform(Transform(multiply(transform, mat)));
-        res
+        self.clone().set(Transform(multiply(transform, mat)))
     }
 
     /// Translate x an y in local coordinates.
     #[inline(always)]
     fn trans(&self, x: Scalar, y: Scalar) -> Self {
         let trans = translate([x, y]);
-        let mut res = self.clone();
         let Transform(mat) = self.get_transform();
-        res.set_transform(Transform(multiply(mat, trans)));
-        res
+        self.clone().set(Transform(multiply(mat, trans)))
     }
 
     /// Rotates degrees in local coordinates.
@@ -200,10 +194,8 @@ pub trait RelativeTransform: GetTransform + SetTransform + Clone {
     #[inline(always)]
     fn rot_rad(&self, angle: Scalar) -> Self {
         let rot = rotate_radians(angle);
-        let mut res = self.clone();
         let Transform(mat) = self.get_transform();
-        res.set_transform(Transform(multiply(mat, rot)));
-        res
+        self.clone().set(Transform(multiply(mat, rot)))
     }
 
     /// Orients x axis to look at point locally.
@@ -213,20 +205,16 @@ pub trait RelativeTransform: GetTransform + SetTransform + Clone {
     #[inline(always)]
     fn orient(&self, x: Scalar, y: Scalar) -> Self {
         let orient = orient(x, y);
-        let mut res = self.clone();
         let Transform(mat) = self.get_transform();
-        res.set_transform(Transform(multiply(mat, orient)));
-        res
+        self.clone().set(Transform(multiply(mat, orient)))
     }
 
     /// Scales in local coordinates.
     #[inline(always)]
     fn scale(&self, sx: Scalar, sy: Scalar) -> Self {
         let scale = scale(sx, sy);
-        let mut res = self.clone();
         let Transform(mat) = self.get_transform();
-        res.set_transform(Transform(multiply(mat, scale)));
-        res
+        self.clone().set(Transform(multiply(mat, scale)))
     }
 
     /// Scales in both directions in local coordinates.
@@ -257,14 +245,12 @@ pub trait RelativeTransform: GetTransform + SetTransform + Clone {
     #[inline(always)]
     fn shear(&self, v: Vec2d) -> Self {
         let shear = shear(v);
-        let mut res = self.clone();
         let Transform(mat) = self.get_transform();
-        res.set_transform(Transform(multiply(mat, shear)));
-        res
+        self.clone().set(Transform(multiply(mat, shear)))
     }
 }
 
-impl<T: GetTransform + SetTransform + Clone> RelativeTransform for T {}
+impl<T: Get<Transform> + Set<Transform> + Clone> RelativeTransform for T {}
 
 /// Should be implemented by contexts that
 /// draws something relative to view.
