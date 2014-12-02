@@ -8,6 +8,8 @@ use BackEnd;
 use ImageSize;
 use Color;
 
+pub use vecmath::margin_rectangle as margin;
+
 /// Use x, y, half-width, half-height
 pub fn centered(rect: internal::Rectangle) -> internal::Rectangle {
     let [cx, cy, rw, rh] = rect;
