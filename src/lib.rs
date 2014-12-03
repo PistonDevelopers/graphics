@@ -39,6 +39,7 @@ pub static BACK_END_MAX_VERTEX_COUNT: uint = 1024;
 mod back_end;
 mod relative;
 
+pub mod character;
 pub mod context;
 pub mod color;
 pub mod polygon;
