@@ -10,7 +10,7 @@ Maintainers: @bvssvni, @Coeuvre
 
 [How to contribute](https://github.com/PistonDevelopers/piston/blob/master/CONTRIBUTING.md)
 
-*Last news: Text!*
+*Latest news: Text!*
 
 | Back-ends |
 |--------------------|
