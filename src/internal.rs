@@ -38,3 +38,7 @@ pub type Triangle = [Vec2d, ..3];
 
 /// The type used for width.
 pub type Width = Scalar;
+
+/// The type used for font size.
+pub type FontSize = u32;
+
