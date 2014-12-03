@@ -50,6 +50,7 @@ pub mod image;
 pub mod internal;
 pub mod interpolation;
 pub mod modular_index;
+pub mod text;
 pub mod triangulation;
 pub mod vecmath;
 pub mod deform;
