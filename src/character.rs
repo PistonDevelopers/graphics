@@ -41,7 +41,7 @@ pub trait CharacterCache<T: ImageSize> {
     fn character(
         &mut self, 
         font_size: internal::FontSize, 
-        char: Char
+        ch: char
     ) -> &Character<T>;
 }
 
