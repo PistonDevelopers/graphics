@@ -55,7 +55,12 @@ pub mod triangulation;
 pub mod vecmath;
 pub mod deform;
 pub mod grid;
-pub mod radians;
+
+pub mod radians {
+    //! Reexport radians helper trait from vecmath
+
+    pub use vecmath_lib::consts::Radians;
+}
 
 /// A color property
 pub struct Color(pub internal::Color);
