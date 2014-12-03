@@ -1,5 +1,11 @@
-digraph example3 {
+digraph graphics {
     N0[label="graphics"];
-    N1[label="vecmath"];
+    N1[label="current"];
+    N2[label="read_color"];
+    N3[label="texture"];
+    N4[label="vecmath"];
+    N0 -> N2[label=""];
+    N0 -> N3[label=""];
     N0 -> N1[label=""];
+    N0 -> N4[label=""];
 }
