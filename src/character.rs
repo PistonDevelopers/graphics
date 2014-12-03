@@ -1,5 +1,6 @@
 //! A text character
 
+use internal;
 use ImageSize;
 
 /// Holds rendered character data.
@@ -32,5 +33,15 @@ impl<T: ImageSize> Character<T> {
     pub fn height(&self) -> f64 {
         self.size[1]
     }
+}
+
+/// Stores characters in a buffer and loads them by demand.
+pub trait CharacterCache<T: ImageSize> {
+    /// Get reference to character.
+    fn character(
+        &mut self, 
+        font_size: internal::FontSize, 
+        char: Char
+    ) -> &Character<T>;
 }
 
