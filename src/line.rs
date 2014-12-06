@@ -160,6 +160,26 @@ impl Line {
             }
         }
     }
+
+    /// Draws an arrow
+    ///
+    /// Head size is the sides of the triangle
+    /// between the arrow hooks and the line
+    pub fn draw_arrow<B: BackEnd<I>, I: ImageSize>(
+        &self,
+        line: internal::Line,
+        head_size: internal::Scalar,
+        c: &Context,
+        back_end: &mut B
+    ) {
+        use RelativeTransform;
+
+        self.draw(line, c, back_end);
+        let diff = [line[2] - line[0], line[3] - line[1]];
+        let arrow_head = c.trans(line[2], line[3]).orient(diff[0], diff[1]);
+        self.draw([-head_size, head_size, 0.0, 0.0], &arrow_head, back_end);
+        self.draw([-head_size, -head_size, 0.0, 0.0], &arrow_head, back_end);
+    }
 }
 
 impl Modifier<Line> for Color {
@@ -237,3 +257,4 @@ mod test {
             .set(Shape::Round);
     }
 }
+
