@@ -12,6 +12,7 @@ use ImageSize;
 use Color;
 
 /// Ellipse border
+#[deriving(Copy, Clone)]
 pub struct Border {
     /// The border color
     pub color: internal::Color,
@@ -67,7 +68,7 @@ pub trait SetMaybeBorder: Set<MaybeBorder> {
 impl<T: Set<MaybeBorder>> SetMaybeBorder for T {}
 
 /// An ellipse with filled color
-#[deriving(Copy)]
+#[deriving(Copy, Clone)]
 pub struct Ellipse {
     /// The ellipse color
     pub color: internal::Color,

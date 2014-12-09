@@ -9,6 +9,7 @@ use {
 };
 
 /// Represents a flat grid with square cells.
+#[deriving(Copy, Clone)]
 pub struct Grid {
     /// Number of columns.
     pub cols: u32,

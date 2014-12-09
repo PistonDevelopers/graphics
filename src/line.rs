@@ -9,6 +9,7 @@ use ImageSize;
 use Color;
 
 /// The shape of the line
+#[deriving(Copy, Clone)]
 pub enum Shape {
     /// Square edges
     Square,
@@ -91,7 +92,7 @@ pub trait SetWidth: Set<Width> {
 impl<T: Set<Width>> SetWidth for T {}
 
 /// A colored line with a default border radius
-#[deriving(Copy)]
+#[deriving(Copy, Clone)]
 pub struct Line {
     /// The line color
     pub color: internal::Color,
@@ -243,7 +244,7 @@ impl Get<Shape> for Line {
 
 #[cfg(test)]
 mod test {
-    use current::Set;
+    use current::{ Get, Set };
     use super::Line;
     use super::Shape;
     use super::Radius;
@@ -251,10 +252,14 @@ mod test {
 
     #[test]
     fn test_line() {
+        use RelativeColor;
+
         let _line = Line::new([0.0, ..4], 3.0)
             .set(Color([1.0, ..4]))
             .set(Radius(3.0))
-            .set(Shape::Round);
+            .set(Shape::Round)
+            .hue_deg(1.0);
+        let Color(_) = _line.get();
     }
 }
 

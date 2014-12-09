@@ -12,6 +12,7 @@ use vecmath::{ Scalar, Vec2d };
 use internal;
 
 /// Represents a deformed grid.
+#[deriving(Clone)]
 pub struct DeformGrid {
     /// The number of columns in the grid.
     pub cols: uint,
