@@ -35,6 +35,7 @@ pub fn square(
 }
 
 /// The shape of the rectangle
+#[deriving(Copy, Clone)]
 pub enum Shape {
     /// Square corners
     Square,
@@ -67,6 +68,7 @@ pub trait SetShape: Set<Shape> {
 impl<T: Set<Shape>> SetShape for T {}
 
 /// The border of the rectangle
+#[deriving(Copy, Clone)]
 pub struct Border {
     /// The color of the border
     pub color: internal::Color,
@@ -122,7 +124,7 @@ pub trait SetMaybeBorder: Set<MaybeBorder> {
 impl<T: Set<MaybeBorder>> SetMaybeBorder for T {}
 
 /// A filled rectangle
-#[deriving(Copy)]
+#[deriving(Copy, Clone)]
 pub struct Rectangle {
     /// The rectangle color
     pub color: internal::Color,

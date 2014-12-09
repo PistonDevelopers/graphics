@@ -9,6 +9,7 @@ use ImageSize;
 use Color;
 
 /// A polygon
+#[deriving(Copy, Clone)]
 pub struct Polygon {
     /// The color of the polygon
     pub color: internal::Color,

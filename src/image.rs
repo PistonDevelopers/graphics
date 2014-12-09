@@ -11,7 +11,7 @@ use Rect;
 use SrcRect;
 
 /// An image
-#[deriving(Copy)]
+#[deriving(Copy, Clone)]
 pub struct Image {
     /// The color
     pub color: Option<internal::Color>,
