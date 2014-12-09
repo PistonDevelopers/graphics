@@ -2,7 +2,6 @@
 #![deny(missing_docs)]
 #![feature(default_type_params)]
 #![feature(globs)]
-#![feature(if_let)]
 
 //! A library for 2D graphics that works with multiple back-ends.
 
