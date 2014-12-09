@@ -84,7 +84,9 @@ impl Iterator<(u32, u32)> for GridIterator {
 
 #[test]
 fn test_grid_iterator() {
-    let g = Grid {cols: 2, rows: 2, units: 2.0};
-    let expected : Vec<(u32, u32)> = vec![(0, 0), (1, 0), (0, 1), (1, 1)];
-    assert_eq!(expected, g.cells().collect());
+    let g: Grid = Grid {cols: 2, rows: 2, units: 2.0};
+    let expected: Vec<(u32, u32)> = vec![(0, 0), (1, 0), (0, 1), (1, 1)];
+    let cells: Vec<(u32, u32)> = g.cells().collect();
+    assert_eq!(expected, cells);
 }
+
