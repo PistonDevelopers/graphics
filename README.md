@@ -17,7 +17,7 @@ Maintainers: @bvssvni, @Coeuvre
 | [opengl_graphics](https://github.com/pistondevelopers/opengl_graphics) |
 | [gfx_graphics](https://github.com/pistondevelopers/gfx_graphics) |
 
-Experimental algorithms are developed in a separate repository: [Rust-Graphics-Lab](https://github.com/pistondevelopers/rust-graphics-lab)  
+Experimental algorithms are developed in a separate repository: [Graphics-Lab](https://github.com/pistondevelopers/graphics-lab)  
 
 ## Motivation
 
