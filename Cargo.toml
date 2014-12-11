@@ -21,19 +21,10 @@ homepage = "https://github.com/pistondevelopers/graphics"
 name = "graphics"
 path = "./src/lib.rs"
 
-[dependencies.vecmath]
+[dependencies]
 
-git = "https://github.com/PistonDevelopers/vecmath"
-
-[dependencies.piston-texture]
-
-git = "https://github.com/PistonDevelopers/texture"
-
-[dependencies.read_color]
-
-git = "https://github.com/PistonDevelopers/read_color"
-
-[dependencies.pistoncore-current]
-
-git = "https://github.com/PistonDevelopers/current"
+vecmath = "0.0.0"
+read_color = "0.0.1"
+piston-texture = "0.0.0"
+pistoncore-current = "0.0.0"
 
