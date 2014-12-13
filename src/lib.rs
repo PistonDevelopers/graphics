@@ -1,5 +1,6 @@
 #![crate_name = "graphics"]
 #![deny(missing_docs)]
+#![deny(missing_copy_implementations)]
 #![feature(default_type_params)]
 #![feature(globs)]
 
@@ -62,6 +63,7 @@ pub mod radians {
 }
 
 /// A color property
+#[deriving(Copy)]
 pub struct Color(pub internal::Color);
 
 /// Wrapper trait for `Get<Color>`
@@ -87,6 +89,7 @@ pub trait SetColor: Set<Color> {
 impl<T: Set<Color>> SetColor for T {}
 
 /// A rectangle property
+#[deriving(Copy)]
 pub struct Rect(pub internal::Rectangle);
 
 /// Wrapper trait for `Get<Rect>`
@@ -112,6 +115,7 @@ pub trait SetRect: Set<Rect> {
 impl<T: Set<Rect>> SetRect for T {}
 
 /// A source rectangle property
+#[deriving(Copy)]
 pub struct SrcRect(pub internal::SourceRectangle);
 
 /// Wrapper trait for `Get<SrcRect>`

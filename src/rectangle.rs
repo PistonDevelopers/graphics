@@ -99,6 +99,7 @@ pub trait SetBorder: Set<Border> {
 impl<T: Set<Border>> SetBorder for T {}
 
 /// Maybe border property
+#[deriving(Copy)]
 pub struct MaybeBorder(pub Option<Border>);
 
 /// Wrapper trait for `Get<MaybeBorder>`

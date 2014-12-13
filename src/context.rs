@@ -8,6 +8,7 @@ use vecmath::{
 };
 
 /// Transform property
+#[deriving(Copy)]
 pub struct Transform(pub Matrix2d);
 
 /// Wrapper trait for `Get<Transform>`
@@ -33,6 +34,7 @@ pub trait SetTransform: Set<Transform> {
 impl<T: Set<Transform>> SetTransform for T {}
 
 /// View transform property
+#[deriving(Copy)]
 pub struct ViewTransform(pub Matrix2d);
 
 /// Wrapper trait for `Get<ViewTransform>`

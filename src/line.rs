@@ -42,6 +42,7 @@ pub trait SetShape: Set<Shape> {
 impl<T: Set<Shape>> SetShape for T {}
 
 /// The line border radius
+#[deriving(Copy)]
 pub struct Radius(pub internal::Radius);
 
 /// Wrapper trait for `Get<Radius>`
@@ -67,6 +68,7 @@ pub trait SetRadius: Set<Radius> {
 impl<T: Set<Radius>> SetRadius for T {}
 
 /// The line border width
+#[deriving(Copy)]
 pub struct Width(pub internal::Width);
 
 /// Wrapper trait for `Get<Width>`
