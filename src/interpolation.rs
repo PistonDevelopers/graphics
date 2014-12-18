@@ -16,7 +16,7 @@
 /// When 't' is zero then 'a' has full weight.
 /// When 't' is one then 'b' has full weight.
 #[inline(always)]
-pub fn lerp<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
+pub fn lerp<T: Copy + Add<T, T> + Sub<T, T> + Mul<U, T>, U: Copy>(
     a: &T, 
     b: &T, 
     t: &U
@@ -26,7 +26,7 @@ pub fn lerp<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
 
 /// Performs linear interpolation on array of size 3.
 #[inline(always)]
-pub fn lerp_2<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
+pub fn lerp_2<T: Copy + Add<T, T> + Sub<T, T> + Mul<U, T>, U: Copy>(
     a: &[T, ..2], 
     b: &[T, ..2], 
     t: &U
@@ -37,7 +37,7 @@ pub fn lerp_2<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
 
 /// Performs linear interpolation on array of size 3.
 #[inline(always)]
-pub fn lerp_3<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
+pub fn lerp_3<T: Copy + Add<T, T> + Sub<T, T> + Mul<U, T>, U: Copy>(
     a: &[T, ..3], 
     b: &[T, ..3], 
     t: &U
@@ -49,7 +49,7 @@ pub fn lerp_3<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
 
 /// Performs linear interpolation on array of size 4.
 #[inline(always)]
-pub fn lerp_4<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
+pub fn lerp_4<T: Copy + Add<T, T> + Sub<T, T> + Mul<U, T>, U: Copy>(
     a: &[T, ..4], 
     b: &[T, ..4], 
     t: &U
@@ -62,7 +62,7 @@ pub fn lerp_4<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
 
 /// Performs linear interpolation on array of size 5.
 #[inline(always)]
-pub fn lerp_5<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
+pub fn lerp_5<T: Copy + Add<T, T> + Sub<T, T> + Mul<U, T>, U: Copy>(
     a: &[T, ..5], 
     b: &[T, ..5], 
     t: &U
@@ -80,7 +80,7 @@ pub fn lerp_5<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
 ///
 /// <a href="http://en.wikipedia.org/wiki/B%C3%A9zier_curve">Beziér Curve at Wikipedia</a>
 #[inline(always)]
-pub fn quad_bez<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
+pub fn quad_bez<T: Copy + Add<T, T> + Sub<T, T> + Mul<U, T>, U: Copy>(
     x0: &T, 
     x1: &T, 
     x2: &T, 
@@ -97,7 +97,7 @@ pub fn quad_bez<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
 ///
 /// <a href="http://en.wikipedia.org/wiki/B%C3%A9zier_curve">Beziér Curve at Wikipedia</a>
 #[inline(always)]
-pub fn cub_bez<T: Add<T, T> + Sub<T, T> + Mul<U, T>, U>(
+pub fn cub_bez<T: Copy + Add<T, T> + Sub<T, T> + Mul<U, T>, U: Copy>(
     x0: &T, 
     x1: &T, 
     x2: &T, 
