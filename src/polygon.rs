@@ -1,6 +1,6 @@
 //! Draw polygon
 
-use current::{ Get, Modifier };
+use current::{ GetFrom, SetAt };
 use internal;
 use triangulation;
 use BackEnd;
@@ -58,18 +58,18 @@ impl Polygon {
     }
 }
 
-impl Modifier<Polygon> for Color {
+impl SetAt<Polygon> for Color {
     #[inline(always)]
-    fn modify(self, p: &mut Polygon) {
+    fn set_at(self, p: &mut Polygon) {
         let Color(val) = self;
         p.color = val;
     }
 }
 
-impl Get<Color> for Polygon {
+impl GetFrom<Polygon> for Color {
     #[inline(always)]
-    fn get(&self) -> Color {
-        Color(self.color)
+    fn get_from(obj: &Polygon) -> Color {
+        Color(obj.color)
     }
 }
 

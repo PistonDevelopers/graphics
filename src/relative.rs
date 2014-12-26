@@ -1,7 +1,6 @@
 use internal::ColorComponent;
-use current::{ Get, Set };
-use context::{ Transform, GetTransform, SetTransform };
-use context::{ ViewTransform, GetViewTransform, SetViewTransform };
+use current::{ GetFrom, Get, SetAt, Set };
+use context::{ Transform, ViewTransform };
 use vecmath::{
     get_scale,
     hsv,
@@ -160,18 +159,21 @@ impl<T: Get<SrcRect>
 > RelativeSourceRectangle for T {}
 
 /// Implemented by contexts that can transform.
-pub trait RelativeTransform: Get<Transform> + Set<Transform> + Clone {
+pub trait RelativeTransform: Clone 
+    where
+        Transform: GetFrom<Self> + SetAt<Self>
+{
     /// Appends transform to the current one.
     #[inline(always)]
     fn append_transform(&self, transform: Matrix2d) -> Self {
-        let Transform(mat) = self.get_transform();
+        let Transform(mat) = self.get();
         self.clone().set(Transform(multiply(mat, transform)))
     }
 
     /// Prepends transform to the current one.
     #[inline(always)]
     fn prepend_transform(&self, transform: Matrix2d) -> Self {
-        let Transform(mat) = self.get_transform();
+        let Transform(mat) = self.get();
         self.clone().set(Transform(multiply(transform, mat)))
     }
 
@@ -179,7 +181,7 @@ pub trait RelativeTransform: Get<Transform> + Set<Transform> + Clone {
     #[inline(always)]
     fn trans(&self, x: Scalar, y: Scalar) -> Self {
         let trans = translate([x, y]);
-        let Transform(mat) = self.get_transform();
+        let Transform(mat) = self.get();
         self.clone().set(Transform(multiply(mat, trans)))
     }
 
@@ -194,7 +196,7 @@ pub trait RelativeTransform: Get<Transform> + Set<Transform> + Clone {
     #[inline(always)]
     fn rot_rad(&self, angle: Scalar) -> Self {
         let rot = rotate_radians(angle);
-        let Transform(mat) = self.get_transform();
+        let Transform(mat) = self.get();
         self.clone().set(Transform(multiply(mat, rot)))
     }
 
@@ -205,7 +207,7 @@ pub trait RelativeTransform: Get<Transform> + Set<Transform> + Clone {
     #[inline(always)]
     fn orient(&self, x: Scalar, y: Scalar) -> Self {
         let orient = orient(x, y);
-        let Transform(mat) = self.get_transform();
+        let Transform(mat) = self.get();
         self.clone().set(Transform(multiply(mat, orient)))
     }
 
@@ -213,7 +215,7 @@ pub trait RelativeTransform: Get<Transform> + Set<Transform> + Clone {
     #[inline(always)]
     fn scale(&self, sx: Scalar, sy: Scalar) -> Self {
         let scale = scale(sx, sy);
-        let Transform(mat) = self.get_transform();
+        let Transform(mat) = self.get();
         self.clone().set(Transform(multiply(mat, scale)))
     }
 
@@ -245,19 +247,22 @@ pub trait RelativeTransform: Get<Transform> + Set<Transform> + Clone {
     #[inline(always)]
     fn shear(&self, v: Vec2d) -> Self {
         let shear = shear(v);
-        let Transform(mat) = self.get_transform();
+        let Transform(mat) = self.get();
         self.clone().set(Transform(multiply(mat, shear)))
     }
 }
 
-impl<T: Get<Transform> + Set<Transform> + Clone> RelativeTransform for T {}
+impl<T: Clone> RelativeTransform for T
+    where
+        Transform: GetFrom<T> + SetAt<T>
+{}
 
 /// Should be implemented by contexts that
 /// draws something relative to view.
-pub trait RelativeViewTransform:
-    GetViewTransform + SetViewTransform
-  + GetTransform + SetTransform
-  + Clone
+pub trait RelativeViewTransform: Clone
+    where
+        ViewTransform: GetFrom<Self> + SetAt<Self>,
+        Transform: GetFrom<Self> + SetAt<Self>
 {
     /// Moves the current transform to the view coordinate system.
     ///
@@ -266,10 +271,8 @@ pub trait RelativeViewTransform:
     /// and the y axis pointing down.
     #[inline(always)]
     fn view(&self) -> Self {
-        let mut res = self.clone();
-        let ViewTransform(mat) = self.get_view_transform();
-        res.set_transform(Transform(mat));
-        res
+        let ViewTransform(mat) = self.get();
+        self.clone().set(Transform(mat))
     }
 
     /// Moves the current transform to the default coordinate system.
@@ -279,34 +282,30 @@ pub trait RelativeViewTransform:
     /// and the y axis pointing up.
     #[inline(always)]
     fn reset(&self) -> Self {
-        let mut res = self.clone();
-        res.set_transform(Transform(identity()));
-        res
+        self.clone().set(Transform(identity()))
     }
 
     /// Stores the current transform as new view.
     #[inline(always)]
     fn store_view(&self) -> Self {
-        let mut res = self.clone();
-        let Transform(mat) = self.get_transform();
-        res.set_view_transform(ViewTransform(mat));
-        res
+        let Transform(mat) = self.get();
+        self.clone().set(ViewTransform(mat))
     }
 
     /// Computes the current view size.
     #[inline(always)]
     fn get_view_size(&self) -> (Scalar, Scalar) {
-        let ViewTransform(mat) = self.get_view_transform();
+        let ViewTransform(mat) = self.get();
         let scale = get_scale(mat);
         (2.0 / scale[0], 2.0 / scale[1])
     }
 }
 
 impl<
-    T: GetViewTransform
-     + GetTransform
-     + SetViewTransform
-     + SetTransform
-     + Clone
-> RelativeViewTransform for T {}
+    T: Clone
+> RelativeViewTransform for T
+    where
+        ViewTransform: GetFrom<T> + SetAt<T>,
+        Transform: GetFrom<T> + SetAt<T>,
+{}
 

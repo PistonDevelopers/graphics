@@ -1,6 +1,6 @@
 //! Draw Line
 
-use current::{ Get, Modifier, Set };
+use current::{ GetFrom, SetAt };
 use internal;
 use triangulation;
 use BackEnd;
@@ -19,79 +19,13 @@ pub enum Shape {
     Bevel,
 }
 
-/// Wrapper trait for `Get<Shape>`
-pub trait GetShape: Get<Shape> {
-    /// Get shape
-    #[inline(always)]
-    fn get_shape(&self) -> Shape {
-        self.get()
-    }
-}
-
-impl<T: Get<Shape>> GetShape for T {}
-
-/// Wrapper trait for `Set<Shape>`
-pub trait SetShape: Set<Shape> {
-    /// Set shape
-    #[inline(always)]
-    fn set_shape(&mut self, val: Shape) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<Shape>> SetShape for T {}
-
 /// The line border radius
 #[deriving(Copy)]
 pub struct Radius(pub internal::Radius);
 
-/// Wrapper trait for `Get<Radius>`
-pub trait GetRadius: Get<Radius> {
-    /// Get radius
-    #[inline(always)]
-    fn get_radius(&self) -> Radius {
-        self.get()
-    }
-}
-
-impl<T: Get<Radius>> GetRadius for T {}
-
-/// Wrapper trait for `Set<Radius>`
-pub trait SetRadius: Set<Radius> {
-    /// Set radius
-    #[inline(always)]
-    fn set_radius(&mut self, val: Radius) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<Radius>> SetRadius for T {}
-
 /// The line border width
 #[deriving(Copy)]
 pub struct Width(pub internal::Width);
-
-/// Wrapper trait for `Get<Width>`
-pub trait GetWidth: Get<Width> {
-    /// Get width
-    #[inline(always)]
-    fn get_width(&self) -> Width {
-        self.get()
-    }
-}
-
-impl<T: Get<Width>> GetWidth for T {}
-
-/// Wrapper trait for `Set<Width>`
-pub trait SetWidth: Set<Width> {
-    /// Set width
-    #[inline(always)]
-    fn set_width(&mut self, val: Width) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<Width>> SetWidth for T {}
 
 /// A colored line with a default border radius
 #[deriving(Copy, Clone)]
@@ -185,62 +119,62 @@ impl Line {
     }
 }
 
-impl Modifier<Line> for Color {
+impl SetAt<Line> for Color {
     #[inline(always)]
-    fn modify(self, l: &mut Line) {
+    fn set_at(self, l: &mut Line) {
         let Color(val) = self;
         l.color = val;
     }
 }
 
-impl Get<Color> for Line {
+impl GetFrom<Line> for Color {
     #[inline(always)]
-    fn get(&self) -> Color {
-        Color(self.color)
+    fn get_from(obj: &Line) -> Color {
+        Color(obj.color)
     }
 }
 
-impl Modifier<Line> for Radius {
+impl SetAt<Line> for Radius {
     #[inline(always)]
-    fn modify(self, l: &mut Line) {
+    fn set_at(self, l: &mut Line) {
         let Radius(val) = self;
         l.radius = val;
     }
 }
 
-impl Get<Radius> for Line {
+impl GetFrom<Line> for Radius {
     #[inline(always)]
-    fn get(&self) -> Radius {
-        Radius(self.radius)
+    fn get_from(obj: &Line) -> Radius {
+        Radius(obj.radius)
     }
 }
 
-impl Modifier<Line> for Width {
+impl SetAt<Line> for Width {
     #[inline(always)]
-    fn modify(self, l: &mut Line) {
+    fn set_at(self, l: &mut Line) {
         let Width(val) = self;
         l.radius = 0.5 * val;
     }
 }
 
-impl Get<Width> for Line {
+impl GetFrom<Line> for Width {
     #[inline(always)]
-    fn get(&self) -> Width {
-        Width(2.0 * self.radius)
+    fn get_from(obj: &Line) -> Width {
+        Width(2.0 * obj.radius)
     }
 }
 
-impl Modifier<Line> for Shape {
+impl SetAt<Line> for Shape {
     #[inline(always)]
-    fn modify(self, l: &mut Line) {
+    fn set_at(self, l: &mut Line) {
         l.shape = self;
     }
 }
 
-impl Get<Shape> for Line {
+impl GetFrom<Line> for Shape {
     #[inline(always)]
-    fn get(&self) -> Shape {
-        self.shape
+    fn get_from(obj: &Line) -> Shape {
+        obj.shape
     }
 }
 
