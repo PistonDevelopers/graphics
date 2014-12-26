@@ -1,6 +1,6 @@
 //! Draw rectangle
 
-use current::{ Get, Modifier, Set };
+use current::{ GetFrom, SetAt };
 use internal;
 use triangulation;
 use Context;
@@ -45,28 +45,6 @@ pub enum Shape {
     Bevel(internal::Radius),
 }
 
-/// Wrapper trait for `Get<Shape>`
-pub trait GetShape: Get<Shape> {
-    /// Get shape
-    #[inline(always)]
-    fn get_shape(&self) -> Shape {
-        self.get()
-    }
-}
-
-impl<T: Get<Shape>> GetShape for T {}
-
-/// Wrapper trait for `Set<Shape>`
-pub trait SetShape: Set<Shape> {
-    /// Set shape
-    #[inline(always)]
-    fn set_shape(&mut self, val: Shape) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<Shape>> SetShape for T {}
-
 /// The border of the rectangle
 #[deriving(Copy, Clone)]
 pub struct Border {
@@ -76,53 +54,9 @@ pub struct Border {
     pub radius: internal::Radius,
 }
 
-/// Wrapper trait for `Get<Border>`
-pub trait GetBorder: Get<Border> {
-    /// Get border
-    #[inline(always)]
-    fn get_border(&self) -> Border {
-        self.get()
-    }
-}
-
-impl<T: Get<Border>> GetBorder for T {}
-
-/// Wrapper trait for `Set<Border>`
-pub trait SetBorder: Set<Border> {
-    /// Set border
-    #[inline(always)]
-    fn set_border(&mut self, val: Border) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<Border>> SetBorder for T {}
-
 /// Maybe border property
 #[deriving(Copy)]
 pub struct MaybeBorder(pub Option<Border>);
-
-/// Wrapper trait for `Get<MaybeBorder>`
-pub trait GetMaybeBorder: Get<MaybeBorder> {
-    /// Get maybe border
-    #[inline(always)]
-    fn get_maybe_border(&self) -> MaybeBorder {
-        self.get()
-    }
-}
-
-impl<T: Get<MaybeBorder>> GetMaybeBorder for T {}
-
-/// Wrapper trait for `Set<MaybeBorder>`
-pub trait SetMaybeBorder: Set<MaybeBorder> {
-    /// Set maybe border
-    #[inline(always)]
-    fn set_maybe_border(&mut self, val: MaybeBorder) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<MaybeBorder>> SetMaybeBorder for T {}
 
 /// A filled rectangle
 #[deriving(Copy, Clone)]
@@ -259,54 +193,54 @@ impl Rectangle {
     }
 }
 
-impl Modifier<Rectangle> for Color {
+impl SetAt<Rectangle> for Color {
     #[inline(always)]
-    fn modify(self, r: &mut Rectangle) {
+    fn set_at(self, r: &mut Rectangle) {
         let Color(val) = self;
         r.color = val;
     }
 }
 
-impl Get<Color> for Rectangle {
+impl GetFrom<Rectangle> for Color {
     #[inline(always)]
-    fn get(&self) -> Color {
-        Color(self.color)
+    fn get_from(obj: &Rectangle) -> Color {
+        Color(obj.color)
     }
 }
 
-impl Modifier<Rectangle> for Shape {
+impl SetAt<Rectangle> for Shape {
     #[inline(always)]
-    fn modify(self, r: &mut Rectangle) {
+    fn set_at(self, r: &mut Rectangle) {
         r.shape = self;
     }
 }
 
-impl Get<Shape> for Rectangle {
+impl GetFrom<Rectangle> for Shape {
     #[inline(always)]
-    fn get(&self) -> Shape {
-        self.shape
+    fn get_from(obj: &Rectangle) -> Shape {
+        obj.shape
     }
 }
 
-impl Modifier<Rectangle> for Border {
+impl SetAt<Rectangle> for Border {
     #[inline(always)]
-    fn modify(self, r: &mut Rectangle) {
+    fn set_at(self, r: &mut Rectangle) {
         r.border = Some(self);
     }
 }
 
-impl Modifier<Rectangle> for MaybeBorder {
+impl SetAt<Rectangle> for MaybeBorder {
     #[inline(always)]
-    fn modify(self, r: &mut Rectangle) {
+    fn set_at(self, r: &mut Rectangle) {
         let MaybeBorder(val) = self;
         r.border = val;
     }
 }
 
-impl Get<MaybeBorder> for Rectangle {
+impl GetFrom<Rectangle> for MaybeBorder {
     #[inline(always)]
-    fn get(&self) -> MaybeBorder {
-        MaybeBorder(self.border)
+    fn get_from(obj: &Rectangle) -> MaybeBorder {
+        MaybeBorder(obj.border)
     }
 }
 

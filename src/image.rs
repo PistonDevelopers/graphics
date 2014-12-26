@@ -1,6 +1,6 @@
 //! Draw image
 
-use current::{ Modifier };
+use current::{ SetAt };
 use internal;
 use triangulation;
 use BackEnd;
@@ -71,22 +71,22 @@ impl Image {
     }
 }
 
-impl Modifier<Image> for Color {
-    fn modify(self, img: &mut Image) {
+impl SetAt<Image> for Color {
+    fn set_at(self, img: &mut Image) {
         let Color(val) = self;
         img.color = Some(val);
     }
 }
 
-impl Modifier<Image> for Rect {
-    fn modify(self, img: &mut Image) {
+impl SetAt<Image> for Rect {
+    fn set_at(self, img: &mut Image) {
         let Rect(val) = self;
         img.rectangle = Some(val);
     }
 }
 
-impl Modifier<Image> for SrcRect {
-    fn modify(self, img: &mut Image) {
+impl SetAt<Image> for SrcRect {
+    fn set_at(self, img: &mut Image) {
         let SrcRect(val) = self;
         img.source_rectangle = Some(val);
     }
