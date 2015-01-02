@@ -131,7 +131,7 @@ mod test {
     use super::Ellipse;
     use super::Border;
     use Color;
-    use current::Set;
+    use quack::Set;
 
     #[test]
     fn test_ellipse() {

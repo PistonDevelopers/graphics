@@ -180,7 +180,7 @@ impl GetFrom<Line> for Shape {
 
 #[cfg(test)]
 mod test {
-    use current::{ Get, Set };
+    use quack::{ Get, Set };
     use super::Line;
     use super::Shape;
     use super::Radius;
