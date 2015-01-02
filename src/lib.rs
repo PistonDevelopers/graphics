@@ -10,6 +10,7 @@ extern crate "vecmath" as vecmath_lib;
 extern crate texture;
 extern crate read_color;
 extern crate quack;
+extern crate interpolation;
 
 pub use texture::ImageSize;
 
@@ -46,7 +47,6 @@ pub mod ellipse;
 pub mod rectangle;
 pub mod image;
 pub mod internal;
-pub mod interpolation;
 pub mod modular_index;
 pub mod text;
 pub mod triangulation;
