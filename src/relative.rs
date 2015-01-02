@@ -1,5 +1,5 @@
 use internal::ColorComponent;
-use current::{ GetFrom, Get, SetAt, Set };
+use quack::{ GetFrom, Get, SetAt, Set };
 use context::{ Transform, ViewTransform };
 use vecmath::{
     get_scale,

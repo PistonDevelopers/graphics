@@ -1,6 +1,6 @@
 //! Draw image
 
-use current::{ SetAt };
+use quack::{ SetAt };
 use internal;
 use triangulation;
 use BackEnd;

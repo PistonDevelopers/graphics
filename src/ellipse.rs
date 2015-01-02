@@ -3,7 +3,7 @@
 pub use rectangle::centered;
 pub use rectangle::centered_square as circle;
 
-use current::{ GetFrom, SetAt };
+use quack::{ GetFrom, SetAt };
 use internal;
 use triangulation;
 use BackEnd;

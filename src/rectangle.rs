@@ -1,6 +1,6 @@
 //! Draw rectangle
 
-use current::{ GetFrom, SetAt };
+use quack::{ GetFrom, SetAt };
 use internal;
 use triangulation;
 use Context;
