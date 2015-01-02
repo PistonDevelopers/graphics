@@ -37,3 +37,7 @@ git = "https://github.com/PistonDevelopers/read_color"
 
 git = "https://github.com/PistonDevelopers/quack"
 
+[dependencies.interpolation]
+
+git = "https://github.com/PistonDevelopers/interpolation"
+
