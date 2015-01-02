@@ -33,7 +33,7 @@ git = "https://github.com/PistonDevelopers/texture"
 
 git = "https://github.com/PistonDevelopers/read_color"
 
-[dependencies.pistoncore-current]
+[dependencies.quack]
 
-git = "https://github.com/PistonDevelopers/current"
+git = "https://github.com/PistonDevelopers/quack"
 

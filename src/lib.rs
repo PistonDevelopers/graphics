@@ -9,7 +9,7 @@
 extern crate "vecmath" as vecmath_lib;
 extern crate texture;
 extern crate read_color;
-extern crate current;
+extern crate quack;
 
 pub use texture::ImageSize;
 
@@ -29,7 +29,7 @@ pub use polygon::Polygon;
 
 pub use context::Context as Context;
 
-use current::{ Get, Set };
+use quack::{ Get, Set };
 
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
