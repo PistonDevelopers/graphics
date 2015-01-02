@@ -29,8 +29,6 @@ pub use polygon::Polygon;
 
 pub use context::Context as Context;
 
-use quack::{ Get, Set };
-
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
 /// This can be used to initialize buffers that fit the chunk size.
@@ -66,79 +64,13 @@ pub mod radians {
 #[deriving(Copy)]
 pub struct Color(pub internal::Color);
 
-/// Wrapper trait for `Get<Color>`
-pub trait GetColor: Get<Color> {
-    /// Get color
-    #[inline(always)]
-    fn get_color(&self) -> Color {
-        self.get()
-    }
-}
-
-impl<T: Get<Color>> GetColor for T {}
-
-/// Wrapper trait for `Set<Color>`
-pub trait SetColor: Set<Color> {
-    /// Set color
-    #[inline(always)]
-    fn set_color(&mut self, val: Color) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<Color>> SetColor for T {}
-
 /// A rectangle property
 #[deriving(Copy)]
 pub struct Rect(pub internal::Rectangle);
 
-/// Wrapper trait for `Get<Rect>`
-pub trait GetRect: Get<Rect> {
-    /// Get rectangle
-    #[inline(always)]
-    fn get_rect(&self) -> Rect {
-        self.get()
-    }
-}
-
-impl<T: Get<Rect>> GetRect for T {}
-
-/// Wrapper trait for `Set<Rect>`
-pub trait SetRect: Set<Rect> {
-    /// Set rectangle
-    #[inline(always)]
-    fn set_rect(&mut self, val: Rect) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<Rect>> SetRect for T {}
-
 /// A source rectangle property
 #[deriving(Copy)]
 pub struct SrcRect(pub internal::SourceRectangle);
-
-/// Wrapper trait for `Get<SrcRect>`
-pub trait GetSrcRect: Get<SrcRect> {
-    /// Get source rectangle
-    #[inline(always)]
-    fn get_src_rect(&self) -> SrcRect {
-        self.get()
-    }
-}
-
-impl<T: Get<SrcRect>> GetSrcRect for T {}
-
-/// Wrapper trait for `Set<SrcRect>`
-pub trait SetSrcRect: Set<SrcRect> {
-    /// Set source rectangle
-    #[inline(always)]
-    fn set_src_rect(&mut self, val: SrcRect) {
-        self.set_mut(val);
-    }
-}
-
-impl<T: Set<SrcRect>> SetSrcRect for T {}
 
 /// Clears the screen.
 pub fn clear<B: BackEnd<I>, I: ImageSize>(
