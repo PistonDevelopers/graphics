@@ -75,7 +75,7 @@ impl GetFrom<Polygon> for Color {
 
 #[cfg(test)]
 mod test {
-    use current::Set;
+    use quack::Set;
     use super::Polygon;
     use Color;
 

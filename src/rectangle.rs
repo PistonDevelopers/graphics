@@ -250,7 +250,7 @@ mod test {
     use super::Shape;
     use super::Border;
     use Color;
-    use current::Set;
+    use quack::Set;
 
     #[test]
     fn test_rectangle() {
