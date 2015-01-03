@@ -61,15 +61,15 @@ pub mod radians {
 }
 
 /// A color property
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct Color(pub internal::Color);
 
 /// A rectangle property
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct Rect(pub internal::Rectangle);
 
 /// A source rectangle property
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct SrcRect(pub internal::SourceRectangle);
 
 /// Clears the screen.

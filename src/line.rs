@@ -9,7 +9,7 @@ use ImageSize;
 use Color;
 
 /// The shape of the line
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub enum Shape {
     /// Square edges
     Square,
@@ -20,15 +20,15 @@ pub enum Shape {
 }
 
 /// The line border radius
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct Radius(pub internal::Radius);
 
 /// The line border width
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct Width(pub internal::Width);
 
 /// A colored line with a default border radius
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Line {
     /// The line color
     pub color: internal::Color,
@@ -190,8 +190,8 @@ mod test {
     fn test_line() {
         use RelativeColor;
 
-        let _line = Line::new([0.0, ..4], 3.0)
-            .set(Color([1.0, ..4]))
+        let _line = Line::new([0.0; 4], 3.0)
+            .set(Color([1.0; 4]))
             .set(Radius(3.0))
             .set(Shape::Round)
             .hue_deg(1.0);

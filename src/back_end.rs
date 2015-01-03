@@ -1,7 +1,7 @@
 /// Implemented by all graphics back-ends.
 pub trait BackEnd<I> {
     /// Clears background with a color.
-    fn clear(&mut self, color: [f32, ..4]);
+    fn clear(&mut self, color: [f32; 4]);
 
     /// Sets the texture.
     fn enable_texture(&mut self, _texture: &I) {}
@@ -10,7 +10,7 @@ pub trait BackEnd<I> {
     fn disable_texture(&mut self) {}
 
     /// Sets the current color.
-    fn color(&mut self, color: [f32, ..4]);
+    fn color(&mut self, color: [f32; 4]);
 
     /// Renders list of 2d triangles.
     fn tri_list(&mut self, vertices: &[f32]);

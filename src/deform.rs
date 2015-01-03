@@ -12,24 +12,24 @@ use vecmath::{ Scalar, Vec2d };
 use internal;
 
 /// Represents a deformed grid.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct DeformGrid {
     /// The number of columns in the grid.
     pub cols: uint,
     /// The number of rows in the grid.
     pub rows: uint,
     /// The grid undeformed, which is a plain rectangle.
-    pub rect: [Scalar, ..4],
+    pub rect: [Scalar; 4],
     /// The vertices, deformed.
     pub vertices: Vec<Vec2d>,
     /// The triangle indices.
     pub indices: Vec<uint>,
     /// The texture coordinates.
-    pub texture_coords: Vec<[f32, ..2]>,
+    pub texture_coords: Vec<[f32; 2]>,
     /// Initial position of control points.
-    pub ps: Vec<[Scalar, ..2]>,
+    pub ps: Vec<[Scalar; 2]>,
     /// The current position of control points.
-    pub qs: Vec<[Scalar, ..2]>,
+    pub qs: Vec<[Scalar; 2]>,
     /// A weight computation buffer, one for each control point.
     pub wis: Vec<Scalar>
 }
@@ -40,7 +40,7 @@ impl DeformGrid {
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let mut vertices = Vec::new();
-        let mut texture_coords: Vec<[f32, ..2]> = Vec::new();
+        let mut texture_coords: Vec<[f32; 2]> = Vec::new();
         let units_h = w / cols as Scalar;
         let units_v = h / rows as Scalar;
         let nx = cols + 1;
@@ -193,14 +193,14 @@ impl DeformGrid {
         back_end: &mut B,
     ) {
         let mat = c.transform;
-        let color = [1.0, ..4];
+        let color = [1.0; 4];
         back_end.color(color);
         let a = color[3];
         if a == 0.0 { return; }
         back_end.enable_texture(texture);
         let buf_len = 360;
-        let mut vertices: [f32, ..720] = [0.0, ..720];
-        let mut uvs: [f32, ..720] = [0.0, ..720];
+        let mut vertices: [f32; 720] = [0.0; 720];
+        let mut uvs: [f32; 720] = [0.0; 720];
         let mut offset = 0;
         let vertex_align = 2;
         let uv_align = 2;

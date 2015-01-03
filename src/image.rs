@@ -11,7 +11,7 @@ use Rect;
 use SrcRect;
 
 /// An image
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Image {
     /// The color
     pub color: Option<internal::Color>,
@@ -49,7 +49,7 @@ impl Image {
     ) {
         use internal::Scalar;
 
-        let color = self.color.unwrap_or([1.0, ..4]);
+        let color = self.color.unwrap_or([1.0; 4]);
         if color[3] == 0.0 { return; }
         let source_rectangle = self.source_rectangle.unwrap_or({
             let (w, h) = texture.get_size();
@@ -103,7 +103,7 @@ mod test {
     #[test]
     fn test_image() {
         let _img = Image::new()
-            .set(Color([1.0, ..4]))
+            .set(Color([1.0; 4]))
             .set(Rect([0.0, 0.0, 100.0, 100.0]))
             .set(SrcRect([0, 0, 32, 32]));
     }

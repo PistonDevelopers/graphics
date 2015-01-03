@@ -8,15 +8,15 @@ use vecmath::{
 };
 
 /// Transform property
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct Transform(pub Matrix2d);
 
 /// View transform property
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct ViewTransform(pub Matrix2d);
 
 /// Drawing 2d context.
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Context {
     /// View transformation.
     pub view: Matrix2d,

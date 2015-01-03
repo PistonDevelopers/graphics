@@ -233,7 +233,7 @@ pub fn stream_polygon_tri_list(
     f: |vertices: &[f32]|
 ) {
 
-    let mut vertices: [f32, ..720] = [0.0, ..720];
+    let mut vertices: [f32; 720] = [0.0; 720];
     // Get the first point which will be used a lot.
     let fp = match polygon() { None => return, Some(val) => val };
     let (fx, fy) = (tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1]));
@@ -417,7 +417,7 @@ pub fn stream_quad_tri_list(
     f: |vertices: &[f32]|
 ) {
 
-    let mut vertices: [f32, ..720] = [0.0, ..720];
+    let mut vertices: [f32; 720] = [0.0; 720];
     // Get the two points .
     let (fp1, fp2) = match quad_edge() {
             None => return,
@@ -522,7 +522,7 @@ pub fn with_polygon_tri_list(
 pub fn rect_tri_list_xy(
     m: Matrix2d,
     rect: Rectangle
-) -> [f32, ..12] {
+) -> [f32; 12] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (x2, y2) = (x + w, y + h);
     [
@@ -541,7 +541,7 @@ pub fn rect_border_tri_list_xy(
     m: Matrix2d,
     rect: Rectangle,
     border_radius: Radius,
-) -> [f32, ..48] {
+) -> [f32; 48] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (w1, h1) = (w + border_radius, h + border_radius);
     let (w2, h2) = (w - border_radius, h - border_radius);
@@ -588,7 +588,7 @@ pub fn rect_border_tri_list_xy(
 #[inline(always)]
 pub fn rect_tri_list_uv<I: ImageSize>(
     image: &I, source_rect: SourceRectangle
-) -> [f32, ..12] {
+) -> [f32; 12] {
     let (w, h) = image.get_size();
     let x1 = source_rect[0] as f32
         / w as f32;

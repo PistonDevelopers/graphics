@@ -9,7 +9,7 @@ use {
 };
 
 /// Represents a flat grid with square cells.
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Grid {
     /// Number of columns.
     pub cols: u32,
@@ -20,7 +20,7 @@ pub struct Grid {
 }
 
 /// Iterates through the cells of a grid as (u32, u32).
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct GridIterator {
     cols: u32,
     rows: u32,

@@ -9,7 +9,7 @@ use ImageSize;
 use Color;
 
 /// A polygon
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Polygon {
     /// The color of the polygon
     pub color: internal::Color,
@@ -81,7 +81,7 @@ mod test {
 
     #[test]
     fn test_polygon() {
-        let _polygon = Polygon::new([1.0, ..4])
-            .set(Color([0.0, ..4]));
+        let _polygon = Polygon::new([1.0; 4])
+            .set(Color([0.0; 4]));
     }
 }
