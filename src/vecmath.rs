@@ -13,6 +13,8 @@ pub use vecmath_lib::vec2_mul as mul;
 pub use vecmath_lib::vec2_scale as mul_scalar;
 pub use vecmath_lib::vec2_square_len as square_len;
 
+use std::ops::{ Add, Rem };
+
 use internal::{
     Area,
     Color,
@@ -43,7 +45,7 @@ pub type Vec3d = vecmath_lib::Vector3<Scalar>;
 
 /// Creates a perpendicular vector.
 #[inline(always)]
-pub fn perp(v: [Scalar, ..2]) -> [Scalar, ..2] {
+pub fn perp(v: [Scalar; 2]) -> [Scalar; 2] {
     [-v[1], v[0]]
 }
 

@@ -35,7 +35,7 @@ pub fn square(
 }
 
 /// The shape of the rectangle
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub enum Shape {
     /// Square corners
     Square,
@@ -46,7 +46,7 @@ pub enum Shape {
 }
 
 /// The border of the rectangle
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Border {
     /// The color of the border
     pub color: internal::Color,
@@ -55,11 +55,11 @@ pub struct Border {
 }
 
 /// Maybe border property
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct MaybeBorder(pub Option<Border>);
 
 /// A filled rectangle
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Rectangle {
     /// The rectangle color
     pub color: internal::Color,
@@ -97,7 +97,7 @@ impl Rectangle {
         radius: internal::Radius
     ) -> Rectangle {
         Rectangle {
-            color: [0.0, ..4],
+            color: [0.0; 4],
             shape: Shape::Square,
             border: Some(Border {
                     color: color,
@@ -113,7 +113,7 @@ impl Rectangle {
         border_radius: internal::Radius
     ) -> Rectangle {
         Rectangle {
-            color: [0.0, ..4],
+            color: [0.0; 4],
             shape: Shape::Round(round_radius),
             border: Some(Border {
                     color: color,
@@ -254,10 +254,10 @@ mod test {
 
     #[test]
     fn test_rectangle() {
-        let _rectangle = Rectangle::new([1.0, ..4])
-            .set(Color([0.0, ..4]))
+        let _rectangle = Rectangle::new([1.0; 4])
+            .set(Color([0.0; 4]))
             .set(Shape::Round(10.0))
-            .set(Border { color: [0.0, ..4], radius: 4.0 });
+            .set(Border { color: [0.0; 4], radius: 4.0 });
     }
 }
 

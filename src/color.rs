@@ -2,9 +2,9 @@
 
 use internal;
 
-pub const WHITE: internal::Color = [1.0, ..4];
+pub const WHITE: internal::Color = [1.0; 4];
 pub const BLACK: internal::Color = [0.0, 0.0, 0.0, 1.0];
-pub const TRANSPARENT: internal::Color = [0.0, ..4];
+pub const TRANSPARENT: internal::Color = [0.0; 4];
 
 /// Returns a grey color
 pub fn grey(f: internal::ColorComponent) -> internal::Color {

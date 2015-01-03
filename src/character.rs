@@ -6,9 +6,9 @@ use ImageSize;
 /// Holds rendered character data.
 pub struct Character<T: ImageSize> {
     /// The offset of character.
-    pub offset: [f64, ..2],
+    pub offset: [f64; 2],
     /// The size of character, including space.
-    pub size: [f64, ..2],
+    pub size: [f64; 2],
     /// The texture of the character.
     pub texture: T,
 }

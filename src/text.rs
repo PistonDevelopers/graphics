@@ -10,7 +10,7 @@ use character::CharacterCache;
 use RelativeTransform;
 
 /// Renders text
-#[deriving(Copy, Clone)]
+#[derive(Copy, Clone)]
 pub struct Text {
     /// The color
     pub color: internal::Color,
