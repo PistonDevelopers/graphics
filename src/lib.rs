@@ -3,6 +3,7 @@
 #![deny(missing_copy_implementations)]
 #![feature(default_type_params)]
 #![feature(globs)]
+#![feature(associated_types)]
 
 //! A library for 2D graphics that works with multiple back-ends.
 

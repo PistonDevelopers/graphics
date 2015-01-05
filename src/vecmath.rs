@@ -208,7 +208,7 @@ pub fn relative_source_rectangle(
 
 /// Computes modular offset safely for numbers.
 #[inline(always)]
-pub fn modular_offset<T: Add<T, T> + Rem<T, T> + Copy>(
+pub fn modular_offset<T: Add<Output = T> + Rem<Output = T> + Copy>(
     n: &T,
     i: &T,
     off: &T

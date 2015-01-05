@@ -64,7 +64,8 @@ impl Grid {
     }
 }
 
-impl Iterator<(u32, u32)> for GridIterator {
+impl Iterator for GridIterator {
+    type Item = (u32, u32);
 
     fn next(&mut self) -> Option<(u32, u32)> {
         let cols = self.cols as u64;
