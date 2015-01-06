@@ -40,12 +40,15 @@ pub fn ty(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
 
 /// Streams tweened polygons using linear interpolation.
 #[inline(always)]
-pub fn with_lerp_polygons_tri_list(
+pub fn with_lerp_polygons_tri_list<F>(
     m: Matrix2d,
     polygons: Polygons,
     tween_factor: Scalar,
-    f: |vertices: &[f32]|
-) {
+    f: F
+)
+    where
+        F: FnMut(&[f32])
+{
 
     let poly_len = polygons.len() as Scalar;
     // Map to interval between 0 and 1.
@@ -77,12 +80,15 @@ pub fn with_lerp_polygons_tri_list(
 
 /// Streams an ellipse specified by a resolution.
 #[inline(always)]
-pub fn with_ellipse_tri_list(
+pub fn with_ellipse_tri_list<F>(
     resolution: uint,
     m: Matrix2d,
     rect: Rectangle,
-    f: |vertices: &[f32]|
-) {
+    f: F
+)
+    where
+        F: FnMut(&[f32])
+{
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (cw, ch) = (0.5 * w, 0.5 * h);
@@ -100,13 +106,16 @@ pub fn with_ellipse_tri_list(
 
 /// Streams a round border line.
 #[inline(always)]
-pub fn with_round_border_line_tri_list(
+pub fn with_round_border_line_tri_list<F>(
     resolution_cap: uint,
     m: Matrix2d,
     line: Line,
     round_border_radius: Radius,
-    f: |vertices: &[f32]|
-) {
+    f: F
+)
+    where
+        F: FnMut(&[f32])
+{
 
     let radius = round_border_radius;
     let (x1, y1, x2, y2) = (line[0], line[1], line[2], line[3]);
@@ -116,7 +125,7 @@ pub fn with_round_border_line_tri_list(
     let m = multiply(m, orient(dx, dy));
     let n = resolution_cap * 2;
     let mut i = 0u;
-    stream_polygon_tri_list(m, || {
+    stream_polygon_tri_list(m, |&mut:| {
         if i >= n { return None; }
 
         let j = i;
@@ -153,13 +162,16 @@ pub fn with_round_border_line_tri_list(
 
 /// Streams a round rectangle.
 #[inline(always)]
-pub fn with_round_rectangle_tri_list(
+pub fn with_round_rectangle_tri_list<F>(
     resolution_corner: uint,
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,
-    f: |vertices: &[f32]|
-) {
+    f: F
+)
+    where
+        F: FnMut(&[f32])
+{
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
@@ -227,11 +239,15 @@ pub fn with_round_rectangle_tri_list(
 
 /// Streams a polygon into tri list.
 /// Uses buffers that fit inside L1 cache.
-pub fn stream_polygon_tri_list(
+pub fn stream_polygon_tri_list<E, F>(
     m: Matrix2d,
-    polygon: || -> Option<Vec2d>,
-    f: |vertices: &[f32]|
-) {
+    mut polygon: E,
+    mut f: F
+)
+    where
+        E: FnMut() -> Option<Vec2d>,
+        F: FnMut(&[f32])
+{
 
     let mut vertices: [f32; 720] = [0.0; 720];
     // Get the first point which will be used a lot.
@@ -285,13 +301,16 @@ pub fn stream_polygon_tri_list(
 
 /// Streams an ellipse border specified by a resolution.
 #[inline(always)]
-pub fn with_ellipse_border_tri_list(
+pub fn with_ellipse_border_tri_list<F>(
     resolution: uint,
     m: Matrix2d,
     rect: Rectangle,
     border_radius: Radius,
-    f: |vertices: &[f32]|
-) {
+    f: F
+)
+    where
+        F: FnMut(&[f32])
+{
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (cw, ch) = (0.5 * w, 0.5 * h);
@@ -314,14 +333,17 @@ pub fn with_ellipse_border_tri_list(
 
 /// Streams a round rectangle border.
 #[inline(always)]
-pub fn with_round_rectangle_border_tri_list(
+pub fn with_round_rectangle_border_tri_list<F>(
     resolution_corner: uint,
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,
     border_radius: Radius,
-    f: |vertices: &[f32]|
-) {
+    f: F
+)
+    where
+        F: FnMut(&[f32])
+{
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
@@ -329,7 +351,7 @@ pub fn with_round_rectangle_border_tri_list(
     let radius2 = round_radius - border_radius;
     let n = resolution_corner * 4;
     let mut i = 0u;
-    stream_quad_tri_list(m, || {
+    stream_quad_tri_list(m, |&mut:| {
         if i > n { return None; }
 
         let j = i;
@@ -411,11 +433,15 @@ pub fn with_round_rectangle_border_tri_list(
 /// Uses buffers that fit inside L1 cache.
 /// The 'quad_edge' stream returns two points
 /// defining the next edge.
-pub fn stream_quad_tri_list(
+pub fn stream_quad_tri_list<E, F>(
     m: Matrix2d,
-    quad_edge: || -> Option<(Vec2d, Vec2d)>,
-    f: |vertices: &[f32]|
-) {
+    mut quad_edge: E,
+    mut f: F
+)
+    where
+        E: FnMut() -> Option<(Vec2d, Vec2d)>,
+        F: FnMut(&[f32])
+{
 
     let mut vertices: [f32; 720] = [0.0; 720];
     // Get the two points .
@@ -498,16 +524,19 @@ pub fn stream_quad_tri_list(
 
 /// Splits polygon into convex segments.
 /// Create a buffer that fits into L1 cache with 1KB overhead.
-pub fn with_polygon_tri_list(
+pub fn with_polygon_tri_list<F>(
     m: Matrix2d,
     polygon: Polygon,
-    f: |vertices: &[f32]|
-) {
+    f: F
+)
+    where
+        F: FnMut(&[f32])
+{
 
     let n = polygon.len();
     let mut i = 0;
     stream_polygon_tri_list(
-        m, || {
+        m, |&mut:| {
             if i >= n { return None; }
 
             let j = i;
