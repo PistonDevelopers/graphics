@@ -25,10 +25,7 @@ use internal::{
     SourceRectangle,
     Triangle,
 };
-use std::num::{
-    Float,
-    FloatMath
-};
+use std::num::{Float};
 use modular_index::{previous};
 
 /// The type used for scalars.
