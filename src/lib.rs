@@ -1,9 +1,7 @@
 #![crate_name = "graphics"]
 #![deny(missing_docs)]
 #![deny(missing_copy_implementations)]
-#![feature(default_type_params)]
-#![feature(globs)]
-#![feature(associated_types)]
+#![allow(unstable)]
 
 //! A library for 2D graphics that works with multiple back-ends.
 
@@ -34,7 +32,7 @@ pub use context::Context as Context;
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
 /// This can be used to initialize buffers that fit the chunk size.
-pub static BACK_END_MAX_VERTEX_COUNT: uint = 1024;
+pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 
 mod back_end;
 mod relative;

@@ -3,19 +3,19 @@
 
 /// Computes modular offset safely for indices.
 #[inline(always)]
-pub fn offset(n: uint, i: uint, off: int) -> uint {
-    (i + (off % n as int + n as int) as uint) % n
+pub fn offset(n: usize, i: usize, off: isize) -> usize {
+    (i + (off % n as isize + n as isize) as usize) % n
 }
 
 /// Computes previous modular index safely.
 #[inline(always)]
-pub fn previous(n: uint, i: uint) -> uint {
+pub fn previous(n: usize, i: usize) -> usize {
     offset(n, i, -1)
 }
 
 /// Computes next modular index safely.
 #[inline(always)]
-pub fn next(n: uint, i: uint) -> uint {
+pub fn next(n: usize, i: usize) -> usize {
     offset(n, i, 1)
 }
 
