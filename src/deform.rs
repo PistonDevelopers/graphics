@@ -15,15 +15,15 @@ use internal;
 #[derive(Clone)]
 pub struct DeformGrid {
     /// The number of columns in the grid.
-    pub cols: uint,
+    pub cols: usize,
     /// The number of rows in the grid.
-    pub rows: uint,
+    pub rows: usize,
     /// The grid undeformed, which is a plain rectangle.
     pub rect: [Scalar; 4],
     /// The vertices, deformed.
     pub vertices: Vec<Vec2d>,
     /// The triangle indices.
-    pub indices: Vec<uint>,
+    pub indices: Vec<usize>,
     /// The texture coordinates.
     pub texture_coords: Vec<[f32; 2]>,
     /// Initial position of control points.
@@ -36,7 +36,7 @@ pub struct DeformGrid {
 
 impl DeformGrid {
     /// Creates a new DeformGrid.
-    pub fn new(rect: internal::Rectangle, cols: uint, rows: uint) -> DeformGrid {
+    pub fn new(rect: internal::Rectangle, cols: usize, rows: usize) -> DeformGrid {
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let mut vertices = Vec::new();
@@ -86,13 +86,13 @@ impl DeformGrid {
 
     /// Sets current control position.
     #[inline(always)]
-    pub fn set_current(&mut self, i: uint, pos: Vec2d) {
+    pub fn set_current(&mut self, i: usize, pos: Vec2d) {
         self.qs[i] = pos;
     }
 
     /// Sets original control position.
     #[inline(always)]
-    pub fn set_original(&mut self, i: uint, pos: Vec2d) {
+    pub fn set_original(&mut self, i: usize, pos: Vec2d) {
         self.ps[i] = pos;
     }
 
@@ -288,7 +288,7 @@ impl DeformGrid {
     pub fn update(&mut self) {
         use vecmath::{ add, cross, dot, mul_scalar, perp, square_len, sub };
 
-        let &DeformGrid {
+        let &mut DeformGrid {
             cols,
             rows,
             rect,
