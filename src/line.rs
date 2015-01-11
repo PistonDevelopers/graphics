@@ -1,6 +1,6 @@
 //! Draw Line
 
-use quack::{ GetFrom, SetAt };
+use quack::{ GetFrom, SetAt, Me };
 use internal;
 use triangulation;
 use BackEnd;
@@ -119,61 +119,82 @@ impl Line {
     }
 }
 
-impl SetAt<Line> for Color {
+impl SetAt for (Color, Line) {
+    type Property = Color;
+    type Object = Line;
+
     #[inline(always)]
-    fn set_at(self, l: &mut Line) {
-        let Color(val) = self;
+    fn set_at(_: Me<Self>, Color(val): Color, l: &mut Line) {
         l.color = val;
     }
 }
 
-impl GetFrom<Line> for Color {
+impl GetFrom for (Color, Line) {
+    type Property = Color;
+    type Object = Line;
+
     #[inline(always)]
-    fn get_from(obj: &Line) -> Color {
+    fn get_from(_: Me<Self>, obj: &Line) -> Color {
         Color(obj.color)
     }
 }
 
-impl SetAt<Line> for Radius {
+impl SetAt for (Radius, Line) {
+    type Property = Radius;
+    type Object = Line;
+
     #[inline(always)]
-    fn set_at(self, l: &mut Line) {
-        let Radius(val) = self;
+    fn set_at(_: Me<Self>, Radius(val): Radius, l: &mut Line) {
         l.radius = val;
     }
 }
 
-impl GetFrom<Line> for Radius {
+impl GetFrom for (Radius, Line) {
+    type Property = Radius;
+    type Object = Line;
+
     #[inline(always)]
-    fn get_from(obj: &Line) -> Radius {
+    fn get_from(_: Me<Self>, obj: &Line) -> Radius {
         Radius(obj.radius)
     }
 }
 
-impl SetAt<Line> for Width {
+impl SetAt for (Width, Line) {
+    type Property = Width;
+    type Object = Line;
+
     #[inline(always)]
-    fn set_at(self, l: &mut Line) {
-        let Width(val) = self;
+    fn set_at(_: Me<Self>, Width(val): Width, l: &mut Line) {
         l.radius = 0.5 * val;
     }
 }
 
-impl GetFrom<Line> for Width {
+impl GetFrom for (Width, Line) {
+    type Property = Width;
+    type Object = Line;
+
     #[inline(always)]
-    fn get_from(obj: &Line) -> Width {
+    fn get_from(_: Me<Self>, obj: &Line) -> Width {
         Width(2.0 * obj.radius)
     }
 }
 
-impl SetAt<Line> for Shape {
+impl SetAt for (Shape, Line) {
+    type Property = Shape;
+    type Object = Line;
+
     #[inline(always)]
-    fn set_at(self, l: &mut Line) {
-        l.shape = self;
+    fn set_at(_: Me<Self>, val: Shape, l: &mut Line) {
+        l.shape = val;
     }
 }
 
-impl GetFrom<Line> for Shape {
+impl GetFrom for (Shape, Line) {
+    type Property = Shape;
+    type Object = Line;
+
     #[inline(always)]
-    fn get_from(obj: &Line) -> Shape {
+    fn get_from(_: Me<Self>, obj: &Line) -> Shape {
         obj.shape
     }
 }

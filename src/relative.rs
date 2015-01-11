@@ -161,7 +161,8 @@ impl<T: Get<SrcRect>
 /// Implemented by contexts that can transform.
 pub trait RelativeTransform: Clone 
     where
-        Transform: GetFrom<Self> + SetAt<Self>
+        (Transform, Self): GetFrom<Property = Transform, Object = Self>
+                         + SetAt<Property = Transform, Object = Self>
 {
     /// Appends transform to the current one.
     #[inline(always)]
@@ -254,15 +255,18 @@ pub trait RelativeTransform: Clone
 
 impl<T: Clone> RelativeTransform for T
     where
-        Transform: GetFrom<T> + SetAt<T>
+        (Transform, Self): GetFrom<Property = Transform, Object = T>
+                         + SetAt<Property = Transform, Object = T>
 {}
 
 /// Should be implemented by contexts that
 /// draws something relative to view.
 pub trait RelativeViewTransform: Clone
     where
-        ViewTransform: GetFrom<Self> + SetAt<Self>,
-        Transform: GetFrom<Self> + SetAt<Self>
+        (ViewTransform, Self): GetFrom<Property = ViewTransform, Object = Self>
+                             + SetAt<Property = ViewTransform, Object = Self>,
+        (Transform, Self): GetFrom<Property = Transform, Object = Self>
+                         + SetAt<Property = Transform, Object = Self>
 {
     /// Moves the current transform to the view coordinate system.
     ///
@@ -305,7 +309,9 @@ impl<
     T: Clone
 > RelativeViewTransform for T
     where
-        ViewTransform: GetFrom<T> + SetAt<T>,
-        Transform: GetFrom<T> + SetAt<T>,
+        (ViewTransform, Self): GetFrom<Property = ViewTransform, Object = Self>
+                             + SetAt<Property = ViewTransform, Object = Self>,
+        (Transform, Self): GetFrom<Property = Transform, Object = Self>
+                         + SetAt<Property = Transform, Object = Self>,
 {}
 

@@ -1,6 +1,6 @@
 //! Draw polygon
 
-use quack::{ GetFrom, SetAt };
+use quack::{ GetFrom, SetAt, Me };
 use internal;
 use triangulation;
 use BackEnd;
@@ -58,17 +58,22 @@ impl Polygon {
     }
 }
 
-impl SetAt<Polygon> for Color {
+impl SetAt for (Color, Polygon) {
+    type Property = Color;
+    type Object = Polygon;
+
     #[inline(always)]
-    fn set_at(self, p: &mut Polygon) {
-        let Color(val) = self;
+    fn set_at(_: Me<Self>, Color(val): Color, p: &mut Polygon) {
         p.color = val;
     }
 }
 
-impl GetFrom<Polygon> for Color {
+impl GetFrom for (Color, Polygon) {
+    type Property = Color;
+    type Object = Polygon;
+
     #[inline(always)]
-    fn get_from(obj: &Polygon) -> Color {
+    fn get_from(_: Me<Self>, obj: &Polygon) -> Color {
         Color(obj.color)
     }
 }
