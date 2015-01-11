@@ -1,6 +1,6 @@
 //! Draw rectangle
 
-use quack::{ GetFrom, SetAt };
+use quack::{ GetFrom, SetAt, Me };
 use internal;
 use triangulation;
 use Context;
@@ -193,53 +193,72 @@ impl Rectangle {
     }
 }
 
-impl SetAt<Rectangle> for Color {
+impl SetAt for (Color, Rectangle) {
+    type Property = Color;
+    type Object = Rectangle;
+
     #[inline(always)]
-    fn set_at(self, r: &mut Rectangle) {
-        let Color(val) = self;
+    fn set_at(_: Me<Self>, Color(val): Color, r: &mut Rectangle) {
         r.color = val;
     }
 }
 
-impl GetFrom<Rectangle> for Color {
+impl GetFrom for (Color, Rectangle) {
+    type Property = Color;
+    type Object = Rectangle;
+
     #[inline(always)]
-    fn get_from(obj: &Rectangle) -> Color {
+    fn get_from(_: Me<Self>, obj: &Rectangle) -> Color {
         Color(obj.color)
     }
 }
 
-impl SetAt<Rectangle> for Shape {
+impl SetAt for (Shape, Rectangle) {
+    type Property = Shape;
+    type Object = Rectangle;
+
     #[inline(always)]
-    fn set_at(self, r: &mut Rectangle) {
-        r.shape = self;
+    fn set_at(_: Me<Self>, val: Shape, r: &mut Rectangle) {
+        r.shape = val;
     }
 }
 
-impl GetFrom<Rectangle> for Shape {
+impl GetFrom for (Shape, Rectangle) {
+    type Property = Shape;
+    type Object = Rectangle;
+
     #[inline(always)]
-    fn get_from(obj: &Rectangle) -> Shape {
+    fn get_from(_: Me<Self>, obj: &Rectangle) -> Shape {
         obj.shape
     }
 }
 
-impl SetAt<Rectangle> for Border {
+impl SetAt for (Border, Rectangle) {
+    type Property = Border;
+    type Object = Rectangle;
+
     #[inline(always)]
-    fn set_at(self, r: &mut Rectangle) {
-        r.border = Some(self);
+    fn set_at(_: Me<Self>, val: Border, r: &mut Rectangle) {
+        r.border = Some(val);
     }
 }
 
-impl SetAt<Rectangle> for MaybeBorder {
+impl SetAt for (MaybeBorder, Rectangle) {
+    type Property = MaybeBorder;
+    type Object = Rectangle;
+
     #[inline(always)]
-    fn set_at(self, r: &mut Rectangle) {
-        let MaybeBorder(val) = self;
+    fn set_at(_: Me<Self>, MaybeBorder(val): MaybeBorder, r: &mut Rectangle) {
         r.border = val;
     }
 }
 
-impl GetFrom<Rectangle> for MaybeBorder {
+impl GetFrom for (MaybeBorder, Rectangle) {
+    type Property = MaybeBorder;
+    type Object = Rectangle;
+
     #[inline(always)]
-    fn get_from(obj: &Rectangle) -> MaybeBorder {
+    fn get_from(_: Me<Self>, obj: &Rectangle) -> MaybeBorder {
         MaybeBorder(obj.border)
     }
 }

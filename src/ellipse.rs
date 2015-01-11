@@ -3,7 +3,7 @@
 pub use rectangle::centered;
 pub use rectangle::centered_square as circle;
 
-use quack::{ GetFrom, SetAt };
+use quack::{ GetFrom, SetAt, Me };
 use internal;
 use triangulation;
 use BackEnd;
@@ -89,39 +89,52 @@ impl Ellipse {
     }
 }
 
-impl SetAt<Ellipse> for Color {
+impl SetAt for (Color, Ellipse) {
+    type Property = Color;
+    type Object = Ellipse;
+
     #[inline(always)]
-    fn set_at(self, e: &mut Ellipse) {
-        let Color(val) = self;
+    fn set_at(_: Me<Self>, Color(val): Color, e: &mut Ellipse) {
         e.color = val;
     }
 }
 
-impl GetFrom<Ellipse> for Color {
+impl GetFrom for (Color, Ellipse) {
+    type Property = Color;
+    type Object = Ellipse;
+
     #[inline(always)]
-    fn get_from(obj: &Ellipse) -> Color {
+    fn get_from(_: Me<Self>, obj: &Ellipse) -> Color {
         Color(obj.color)
     }
 }
 
-impl SetAt<Ellipse> for Border {
+impl SetAt for (Border, Ellipse) {
+    type Property = Border;
+    type Object = Ellipse;
+
     #[inline(always)]
-    fn set_at(self, e: &mut Ellipse) {
-        e.border = Some(self);
+    fn set_at(_: Me<Self>, val: Border, e: &mut Ellipse) {
+        e.border = Some(val);
     }
 }
 
-impl SetAt<Ellipse> for MaybeBorder {
+impl SetAt for (MaybeBorder, Ellipse) {
+    type Property = MaybeBorder;
+    type Object = Ellipse;
+
     #[inline(always)]
-    fn set_at(self, e: &mut Ellipse) {
-        let MaybeBorder(val) = self;
+    fn set_at(_: Me<Self>, MaybeBorder(val): MaybeBorder, e: &mut Ellipse) {
         e.border = val;
     }
 }
 
-impl GetFrom<Ellipse> for MaybeBorder {
+impl GetFrom for (MaybeBorder, Ellipse) {
+    type Property = MaybeBorder;
+    type Object = Ellipse;
+
     #[inline(always)]
-    fn get_from(obj: &Ellipse) -> MaybeBorder {
+    fn get_from(_: Me<Self>, obj: &Ellipse) -> MaybeBorder {
         MaybeBorder(obj.border)
     }
 }
