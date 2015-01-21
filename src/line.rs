@@ -1,6 +1,6 @@
 //! Draw Line
 
-use quack::{ GetFrom, SetAt, Me };
+use quack::{ GetFrom, SetAt };
 use internal;
 use triangulation;
 use BackEnd;
@@ -127,7 +127,7 @@ impl SetAt for (Color, Line) {
     type Object = Line;
 
     #[inline(always)]
-    fn set_at(_: Me<Self>, Color(val): Color, l: &mut Line) {
+    fn set_at(Color(val): Color, l: &mut Line) {
         l.color = val;
     }
 }
@@ -137,7 +137,7 @@ impl GetFrom for (Color, Line) {
     type Object = Line;
 
     #[inline(always)]
-    fn get_from(_: Me<Self>, obj: &Line) -> Color {
+    fn get_from(obj: &Line) -> Color {
         Color(obj.color)
     }
 }
@@ -147,7 +147,7 @@ impl SetAt for (Radius, Line) {
     type Object = Line;
 
     #[inline(always)]
-    fn set_at(_: Me<Self>, Radius(val): Radius, l: &mut Line) {
+    fn set_at(Radius(val): Radius, l: &mut Line) {
         l.radius = val;
     }
 }
@@ -157,7 +157,7 @@ impl GetFrom for (Radius, Line) {
     type Object = Line;
 
     #[inline(always)]
-    fn get_from(_: Me<Self>, obj: &Line) -> Radius {
+    fn get_from(obj: &Line) -> Radius {
         Radius(obj.radius)
     }
 }
@@ -167,7 +167,7 @@ impl SetAt for (Width, Line) {
     type Object = Line;
 
     #[inline(always)]
-    fn set_at(_: Me<Self>, Width(val): Width, l: &mut Line) {
+    fn set_at(Width(val): Width, l: &mut Line) {
         l.radius = 0.5 * val;
     }
 }
@@ -177,7 +177,7 @@ impl GetFrom for (Width, Line) {
     type Object = Line;
 
     #[inline(always)]
-    fn get_from(_: Me<Self>, obj: &Line) -> Width {
+    fn get_from(obj: &Line) -> Width {
         Width(2.0 * obj.radius)
     }
 }
@@ -187,7 +187,7 @@ impl SetAt for (Shape, Line) {
     type Object = Line;
 
     #[inline(always)]
-    fn set_at(_: Me<Self>, val: Shape, l: &mut Line) {
+    fn set_at(val: Shape, l: &mut Line) {
         l.shape = val;
     }
 }
@@ -197,7 +197,7 @@ impl GetFrom for (Shape, Line) {
     type Object = Line;
 
     #[inline(always)]
-    fn get_from(_: Me<Self>, obj: &Line) -> Shape {
+    fn get_from(obj: &Line) -> Shape {
         obj.shape
     }
 }

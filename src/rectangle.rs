@@ -1,6 +1,6 @@
 //! Draw rectangle
 
-use quack::{ GetFrom, SetAt, Me };
+use quack::{ GetFrom, SetAt };
 use internal;
 use triangulation;
 use Context;
@@ -199,7 +199,7 @@ impl SetAt for (Color, Rectangle) {
     type Object = Rectangle;
 
     #[inline(always)]
-    fn set_at(_: Me<Self>, Color(val): Color, r: &mut Rectangle) {
+    fn set_at(Color(val): Color, r: &mut Rectangle) {
         r.color = val;
     }
 }
@@ -209,7 +209,7 @@ impl GetFrom for (Color, Rectangle) {
     type Object = Rectangle;
 
     #[inline(always)]
-    fn get_from(_: Me<Self>, obj: &Rectangle) -> Color {
+    fn get_from(obj: &Rectangle) -> Color {
         Color(obj.color)
     }
 }
@@ -219,7 +219,7 @@ impl SetAt for (Shape, Rectangle) {
     type Object = Rectangle;
 
     #[inline(always)]
-    fn set_at(_: Me<Self>, val: Shape, r: &mut Rectangle) {
+    fn set_at(val: Shape, r: &mut Rectangle) {
         r.shape = val;
     }
 }
@@ -229,7 +229,7 @@ impl GetFrom for (Shape, Rectangle) {
     type Object = Rectangle;
 
     #[inline(always)]
-    fn get_from(_: Me<Self>, obj: &Rectangle) -> Shape {
+    fn get_from(obj: &Rectangle) -> Shape {
         obj.shape
     }
 }
@@ -239,7 +239,7 @@ impl SetAt for (Border, Rectangle) {
     type Object = Rectangle;
 
     #[inline(always)]
-    fn set_at(_: Me<Self>, val: Border, r: &mut Rectangle) {
+    fn set_at(val: Border, r: &mut Rectangle) {
         r.border = Some(val);
     }
 }
@@ -249,7 +249,7 @@ impl SetAt for (MaybeBorder, Rectangle) {
     type Object = Rectangle;
 
     #[inline(always)]
-    fn set_at(_: Me<Self>, MaybeBorder(val): MaybeBorder, r: &mut Rectangle) {
+    fn set_at(MaybeBorder(val): MaybeBorder, r: &mut Rectangle) {
         r.border = val;
     }
 }
@@ -259,7 +259,7 @@ impl GetFrom for (MaybeBorder, Rectangle) {
     type Object = Rectangle;
 
     #[inline(always)]
-    fn get_from(_: Me<Self>, obj: &Rectangle) -> MaybeBorder {
+    fn get_from(obj: &Rectangle) -> MaybeBorder {
         MaybeBorder(obj.border)
     }
 }
