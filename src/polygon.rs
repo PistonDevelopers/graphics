@@ -5,7 +5,6 @@ use internal;
 use triangulation;
 use BackEnd;
 use Context;
-use ImageSize;
 use Color;
 
 /// A polygon
@@ -24,12 +23,14 @@ impl Polygon {
     }
 
     /// Draws polygon
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw<B>(
         &self,
         polygon: internal::Polygon,
         c: &Context,
         back_end: &mut B
-    ) {
+    )
+        where B: BackEnd
+    {
         if self.color[3] == 0.0 { return; }
         back_end.color(self.color);
         triangulation::with_polygon_tri_list(
@@ -40,13 +41,15 @@ impl Polygon {
     }
 
     /// Draws tweened polygon with linear interpolation
-    pub fn draw_tween_lerp<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw_tween_lerp<B>(
         &self,
         polygons: internal::Polygons,
         tween_factor: internal::Scalar,
         c: &Context,
         back_end: &mut B
-    ) {
+    )
+        where B: BackEnd
+    {
         if self.color[3] == 0.0 { return; }
         back_end.color(self.color);
         triangulation::with_lerp_polygons_tri_list(

@@ -3,7 +3,6 @@
 use {
     Line,
     BackEnd,
-    ImageSize,
     Context,
 };
 use std::num::Float;
@@ -186,12 +185,14 @@ impl DeformGrid {
     }
 
     /// Draws deformed image.
-    pub fn draw_image<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw_image<B>(
         &self,
-        texture: &I,
+        texture: &<B as BackEnd>::Texture,
         c: &Context,
         back_end: &mut B,
-    ) {
+    )
+        where B: BackEnd
+    {
         let mat = c.transform;
         let color = [1.0; 4];
         back_end.color(color);
@@ -239,12 +240,14 @@ impl DeformGrid {
     }
 
     /// Draw vertical grid lines.
-    pub fn draw_vertical_lines<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw_vertical_lines<B>(
         &self,
         line: &Line,
         c: &Context,
         back_end: &mut B,
-    ) {
+    )
+        where B: BackEnd
+    {
         let grid = self;
         let nx = grid.cols + 1;
         let ny = grid.rows + 1;
@@ -262,12 +265,14 @@ impl DeformGrid {
     }
 
     /// Draw horizontal grid lines.
-    pub fn draw_horizontal_lines<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw_horizontal_lines<B>(
         &self,
         line: &Line,
         c: &Context,
         back_end: &mut B,
-    ) {
+    )
+        where B: BackEnd
+    {
         let grid = self;
         let nx = grid.cols + 1;
         let ny = grid.rows + 1;

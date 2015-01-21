@@ -4,7 +4,6 @@ use vecmath::Scalar;
 use {
     BackEnd,
     Context,
-    ImageSize,
     Line,
 };
 
@@ -29,12 +28,14 @@ pub struct GridIterator {
 
 impl Grid {
     /// Draws the grid.
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw<B>(
         &self,
         line: &Line,
         c: &Context,
         g: &mut B
-    ) {
+    )
+        where B: BackEnd
+    {
         let &Grid {
             cols, rows, units
         } = self;

@@ -4,7 +4,6 @@ use color;
 use internal;
 use Image;
 use Context;
-use ImageSize;
 use BackEnd;
 use character::CharacterCache;
 use RelativeTransform;
@@ -39,11 +38,17 @@ impl Text {
     }
 
     /// Draws text with a character cache
-    pub fn draw<
-        C: CharacterCache<I>,
-        B: BackEnd<I>,
-        I: ImageSize
-    >(&self, text: &str, cache: &mut C, c: &Context, back_end: &mut B) {
+    pub fn draw<C, B>(
+        &self, 
+        text: &str, 
+        cache: &mut C, 
+        c: &Context, 
+        back_end: &mut B
+    )
+        where
+            C: CharacterCache<<B as BackEnd>::Texture>,
+            B: BackEnd
+    {
         let image = Image::colored(self.color);
         let mut x = 0;
         let mut y = 0;

@@ -5,7 +5,6 @@ use internal;
 use triangulation;
 use Context;
 use BackEnd;
-use ImageSize;
 use Color;
 
 pub use vecmath::margin_rectangle as margin;
@@ -123,12 +122,14 @@ impl Rectangle {
     }
 
     /// Draws the rectangle
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw<B>(
         &self, 
         rectangle: internal::Rectangle, 
         c: &Context, 
         back_end: &mut B
-    ) {
+    )
+        where B: BackEnd
+    {
         if self.color[3] != 0.0 {
             back_end.color(self.color);
             match self.shape {

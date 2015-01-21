@@ -1,10 +1,14 @@
+use ImageSize;
+
 /// Implemented by all graphics back-ends.
-pub trait BackEnd<I> {
+pub trait BackEnd {
+    type Texture: ImageSize;
+
     /// Clears background with a color.
     fn clear(&mut self, color: [f32; 4]);
 
     /// Sets the texture.
-    fn enable_texture(&mut self, _texture: &I) {}
+    fn enable_texture(&mut self, _texture: &<Self as BackEnd>::Texture) {}
 
     /// Disables texture.
     fn disable_texture(&mut self) {}

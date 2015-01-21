@@ -5,7 +5,6 @@ use internal;
 use triangulation;
 use BackEnd;
 use Context;
-use ImageSize;
 use Color;
 
 /// The shape of the line
@@ -58,12 +57,14 @@ impl Line {
     }
 
     /// Draw the line.
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw<B>(
         &self, 
         line: internal::Line,
         c: &Context, 
         back_end: &mut B
-    ) {
+    )
+        where B: BackEnd
+    {
         // Complete transparency does not need to be rendered.
         if self.color[3] == 0.0 { return; }
         back_end.color(self.color);
@@ -102,13 +103,15 @@ impl Line {
     ///
     /// Head size is the sides of the triangle
     /// between the arrow hooks and the line
-    pub fn draw_arrow<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw_arrow<B>(
         &self,
         line: internal::Line,
         head_size: internal::Scalar,
         c: &Context,
         back_end: &mut B
-    ) {
+    )
+        where B: BackEnd
+    {
         use RelativeTransform;
 
         self.draw(line, c, back_end);
