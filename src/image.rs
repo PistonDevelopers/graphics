@@ -41,12 +41,14 @@ impl Image {
     }
 
     /// Draws the image.
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw<B>(
         &self, 
-        texture: &I, 
+        texture: &<B as BackEnd>::Texture, 
         c: &Context, 
         back_end: &mut B
-    ) {
+    )
+        where B: BackEnd
+    {
         use internal::Scalar;
 
         let color = self.color.unwrap_or([1.0; 4]);

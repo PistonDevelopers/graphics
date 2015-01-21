@@ -8,7 +8,6 @@ use internal;
 use triangulation;
 use BackEnd;
 use Context;
-use ImageSize;
 use Color;
 
 /// Ellipse border
@@ -57,12 +56,14 @@ impl Ellipse {
     }
 
     /// Draws the ellipse.
-    pub fn draw<B: BackEnd<I>, I: ImageSize>(
+    pub fn draw<B>(
         &self, 
         rectangle: internal::Rectangle,
         c: &Context,
         back_end: &mut B
-    ) {
+    )
+        where B: BackEnd
+    {
         if self.color[3] != 0.0 {
             back_end.color(self.color);
             triangulation::with_ellipse_tri_list(

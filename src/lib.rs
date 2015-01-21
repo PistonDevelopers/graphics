@@ -72,16 +72,22 @@ pub struct Rect(pub internal::Rectangle);
 pub struct SrcRect(pub internal::SourceRectangle);
 
 /// Clears the screen.
-pub fn clear<B: BackEnd<I>, I: ImageSize>(
+pub fn clear<B>(
     color: internal::Color, back_end: &mut B
-) {
+)
+    where B: BackEnd
+{
     back_end.clear(color);
 }
 
 /// Draws image.
-pub fn image<B: BackEnd<I>, I: ImageSize>(
-    image: &I, c: &Context, back_end: &mut B
-) {
+pub fn image<B>(
+    image: &<B as BackEnd>::Texture,
+    c: &Context,
+    back_end: &mut B
+)
+    where B: BackEnd
+{
     Image::new().draw(image, c, back_end);
 }
 
