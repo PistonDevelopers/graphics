@@ -22,22 +22,22 @@ name = "graphics"
 path = "./src/lib.rs"
 
 [dependencies.vecmath]
-
 git = "https://github.com/PistonDevelopers/vecmath"
+#version = "0.0.2"
 
 [dependencies.piston-texture]
-
 git = "https://github.com/PistonDevelopers/texture"
+#version = "0.0.1"
 
 [dependencies.read_color]
-
 git = "https://github.com/PistonDevelopers/read_color"
+#version = "0.0.2"
 
 [dependencies.quack]
-
 git = "https://github.com/PistonDevelopers/quack"
+#version = "0.0.1"
 
 [dependencies.interpolation]
-
 git = "https://github.com/PistonDevelopers/interpolation"
+#version = "0.0.1"
 
