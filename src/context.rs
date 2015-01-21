@@ -1,6 +1,6 @@
 //! Transformation context
 
-use quack::{ GetFrom, SetAt, Me };
+use quack::{ GetFrom, SetAt };
 use vecmath::{
     identity,
     Matrix2d,
@@ -28,7 +28,7 @@ impl SetAt for (Transform, Context) {
     type Property = Transform;
     type Object = Context;
 
-    fn set_at(_: Me<Self>, Transform(val): Transform, c: &mut Context) {
+    fn set_at(Transform(val): Transform, c: &mut Context) {
         c.transform = val;
     }
 }
@@ -37,7 +37,7 @@ impl GetFrom for (Transform, Context) {
     type Property = Transform;
     type Object = Context;
 
-    fn get_from(_: Me<Self>, obj: &Context) -> Transform {
+    fn get_from(obj: &Context) -> Transform {
         Transform(obj.transform)
     }
 }
@@ -46,7 +46,7 @@ impl SetAt for (ViewTransform, Context) {
     type Property = ViewTransform;
     type Object = Context;
 
-    fn set_at(_: Me<Self>, ViewTransform(val): ViewTransform, c: &mut Context) {
+    fn set_at(ViewTransform(val): ViewTransform, c: &mut Context) {
         c.view = val;
     }
 }
@@ -55,7 +55,7 @@ impl GetFrom for (ViewTransform, Context) {
     type Property = ViewTransform;
     type Object = Context;
 
-    fn get_from(_: Me<Self>, obj: &Context) -> ViewTransform {
+    fn get_from(obj: &Context) -> ViewTransform {
         ViewTransform(obj.view)
     }
 }
