@@ -91,3 +91,39 @@ pub fn image<B>(
     Image::new().draw(image, c, back_end);
 }
 
+/// Draws ellipse.
+pub fn ellipse<B>(
+    color: internal::Color,
+    rect: internal::Rectangle,
+    c: &Context,
+    back_end: &mut B
+)
+    where B: BackEnd
+{
+    Ellipse::new(color).draw(rect, c, back_end);
+}
+
+/// Draws rectangle.
+pub fn rectangle<B>(
+    color: internal::Color,
+    rect: internal::Rectangle,
+    c: &Context,
+    back_end: &mut B
+)
+    where B: BackEnd
+{
+    Rectangle::new(color).draw(rect, c, back_end);
+}
+
+/// Draws polygon.
+pub fn polygon<B>(
+    color: internal::Color,
+    polygon: internal::Polygon,
+    c: &Context,
+    back_end: &mut B
+)
+    where B: BackEnd
+{
+    Polygon::new(color).draw(polygon, c, back_end);
+}
+
