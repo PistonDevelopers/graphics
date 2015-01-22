@@ -46,8 +46,8 @@ impl Text {
         back_end: &mut B
     )
         where
-            C: CharacterCache<<B as BackEnd>::Texture>,
-            B: BackEnd
+            C: CharacterCache,
+            B: BackEnd<Texture = <C as CharacterCache>::Texture>
     {
         let image = Image::colored(self.color);
         let mut x = 0;
