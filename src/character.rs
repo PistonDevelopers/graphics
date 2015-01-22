@@ -36,12 +36,14 @@ impl<T: ImageSize> Character<T> {
 }
 
 /// Stores characters in a buffer and loads them by demand.
-pub trait CharacterCache<T: ImageSize> {
+pub trait CharacterCache {
+    type Texture: ImageSize;
+
     /// Get reference to character.
     fn character(
         &mut self, 
         font_size: internal::FontSize, 
         ch: char
-    ) -> &Character<T>;
+    ) -> &Character<<Self as CharacterCache>::Texture>;
 }
 
