@@ -23,7 +23,7 @@ path = "./src/lib.rs"
 
 [dependencies.vecmath]
 git = "https://github.com/PistonDevelopers/vecmath"
-#version = "0.0.2"
+#version = "0.0.3"
 
 [dependencies.piston-texture]
 git = "https://github.com/PistonDevelopers/texture"
@@ -35,7 +35,7 @@ git = "https://github.com/PistonDevelopers/read_color"
 
 [dependencies.quack]
 git = "https://github.com/PistonDevelopers/quack"
-#version = "0.0.2"
+#version = "0.0.3"
 
 [dependencies.interpolation]
 git = "https://github.com/PistonDevelopers/interpolation"
