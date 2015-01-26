@@ -225,8 +225,8 @@ impl DeformGrid {
         }
         if offset > 0 {
             back_end.tri_list_uv(
-                vertices.slice_to(offset * vertex_align),
-                uvs.slice_to(offset * uv_align)
+                &vertices[..offset * vertex_align],
+                &uvs[..offset * uv_align]
             );
         }
         back_end.disable_texture();
