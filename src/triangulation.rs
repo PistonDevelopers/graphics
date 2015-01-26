@@ -286,13 +286,13 @@ pub fn stream_polygon_tri_list<E, F>(
         // Buffer is full.
         if i * align_vertices + 2 >= vertices.len() {
             // Send chunk and start over.
-            f(vertices.slice(0, i * align_vertices));
+            f(&vertices[0..i * align_vertices]);
             i = 0;
         }
     }
 
     if i > 0 {
-        f(vertices.slice(0, i * align_vertices));
+        f(&vertices[0..i * align_vertices]);
     }
 }
 
@@ -509,13 +509,13 @@ pub fn stream_quad_tri_list<E, F>(
         // Buffer is full.
         if i * align_vertices >= vertices.len() {
             // Send chunk and start over.
-            f(vertices.slice(0, i * align_vertices));
+            f(&vertices[0..i * align_vertices]);
             i = 0;
         }
     }
 
     if i > 0 {
-        f(vertices.slice(0, i * align_vertices));
+        f(&vertices[0..i * align_vertices]);
     }
 }
 
