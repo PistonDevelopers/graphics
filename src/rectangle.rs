@@ -195,9 +195,6 @@ impl Rectangle {
 }
 
 impl SetAt for (Color, Rectangle) {
-    type Property = Color;
-    type Object = Rectangle;
-
     #[inline(always)]
     fn set_at(Color(val): Color, r: &mut Rectangle) {
         r.color = val;
@@ -205,9 +202,6 @@ impl SetAt for (Color, Rectangle) {
 }
 
 impl GetFrom for (Color, Rectangle) {
-    type Property = Color;
-    type Object = Rectangle;
-
     #[inline(always)]
     fn get_from(obj: &Rectangle) -> Color {
         Color(obj.color)
@@ -215,9 +209,6 @@ impl GetFrom for (Color, Rectangle) {
 }
 
 impl SetAt for (Shape, Rectangle) {
-    type Property = Shape;
-    type Object = Rectangle;
-
     #[inline(always)]
     fn set_at(val: Shape, r: &mut Rectangle) {
         r.shape = val;
@@ -225,9 +216,6 @@ impl SetAt for (Shape, Rectangle) {
 }
 
 impl GetFrom for (Shape, Rectangle) {
-    type Property = Shape;
-    type Object = Rectangle;
-
     #[inline(always)]
     fn get_from(obj: &Rectangle) -> Shape {
         obj.shape
@@ -235,9 +223,6 @@ impl GetFrom for (Shape, Rectangle) {
 }
 
 impl SetAt for (Border, Rectangle) {
-    type Property = Border;
-    type Object = Rectangle;
-
     #[inline(always)]
     fn set_at(val: Border, r: &mut Rectangle) {
         r.border = Some(val);
@@ -245,9 +230,6 @@ impl SetAt for (Border, Rectangle) {
 }
 
 impl SetAt for (MaybeBorder, Rectangle) {
-    type Property = MaybeBorder;
-    type Object = Rectangle;
-
     #[inline(always)]
     fn set_at(MaybeBorder(val): MaybeBorder, r: &mut Rectangle) {
         r.border = val;
@@ -255,9 +237,6 @@ impl SetAt for (MaybeBorder, Rectangle) {
 }
 
 impl GetFrom for (MaybeBorder, Rectangle) {
-    type Property = MaybeBorder;
-    type Object = Rectangle;
-
     #[inline(always)]
     fn get_from(obj: &Rectangle) -> MaybeBorder {
         MaybeBorder(obj.border)

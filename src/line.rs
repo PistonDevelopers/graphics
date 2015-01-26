@@ -123,9 +123,6 @@ impl Line {
 }
 
 impl SetAt for (Color, Line) {
-    type Property = Color;
-    type Object = Line;
-
     #[inline(always)]
     fn set_at(Color(val): Color, l: &mut Line) {
         l.color = val;
@@ -133,9 +130,6 @@ impl SetAt for (Color, Line) {
 }
 
 impl GetFrom for (Color, Line) {
-    type Property = Color;
-    type Object = Line;
-
     #[inline(always)]
     fn get_from(obj: &Line) -> Color {
         Color(obj.color)
@@ -143,9 +137,6 @@ impl GetFrom for (Color, Line) {
 }
 
 impl SetAt for (Radius, Line) {
-    type Property = Radius;
-    type Object = Line;
-
     #[inline(always)]
     fn set_at(Radius(val): Radius, l: &mut Line) {
         l.radius = val;
@@ -153,9 +144,6 @@ impl SetAt for (Radius, Line) {
 }
 
 impl GetFrom for (Radius, Line) {
-    type Property = Radius;
-    type Object = Line;
-
     #[inline(always)]
     fn get_from(obj: &Line) -> Radius {
         Radius(obj.radius)
@@ -163,9 +151,6 @@ impl GetFrom for (Radius, Line) {
 }
 
 impl SetAt for (Width, Line) {
-    type Property = Width;
-    type Object = Line;
-
     #[inline(always)]
     fn set_at(Width(val): Width, l: &mut Line) {
         l.radius = 0.5 * val;
@@ -173,9 +158,6 @@ impl SetAt for (Width, Line) {
 }
 
 impl GetFrom for (Width, Line) {
-    type Property = Width;
-    type Object = Line;
-
     #[inline(always)]
     fn get_from(obj: &Line) -> Width {
         Width(2.0 * obj.radius)
@@ -183,9 +165,6 @@ impl GetFrom for (Width, Line) {
 }
 
 impl SetAt for (Shape, Line) {
-    type Property = Shape;
-    type Object = Line;
-
     #[inline(always)]
     fn set_at(val: Shape, l: &mut Line) {
         l.shape = val;
@@ -193,9 +172,6 @@ impl SetAt for (Shape, Line) {
 }
 
 impl GetFrom for (Shape, Line) {
-    type Property = Shape;
-    type Object = Line;
-
     #[inline(always)]
     fn get_from(obj: &Line) -> Shape {
         obj.shape

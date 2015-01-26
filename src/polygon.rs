@@ -62,9 +62,6 @@ impl Polygon {
 }
 
 impl SetAt for (Color, Polygon) {
-    type Property = Color;
-    type Object = Polygon;
-
     #[inline(always)]
     fn set_at(Color(val): Color, p: &mut Polygon) {
         p.color = val;
@@ -72,9 +69,6 @@ impl SetAt for (Color, Polygon) {
 }
 
 impl GetFrom for (Color, Polygon) {
-    type Property = Color;
-    type Object = Polygon;
-
     #[inline(always)]
     fn get_from(obj: &Polygon) -> Color {
         Color(obj.color)

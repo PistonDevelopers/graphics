@@ -1,5 +1,5 @@
 use internal::ColorComponent;
-use quack::{ GetFrom, Get, SetAt, Set };
+use quack::{ GetFrom, Get, SetAt, Set, Pair };
 use context::{ Transform, ViewTransform };
 use vecmath::{
     get_scale,
@@ -161,8 +161,8 @@ impl<T: Get<SrcRect>
 /// Implemented by contexts that can transform.
 pub trait RelativeTransform: Clone 
     where
-        (Transform, Self): GetFrom<Property = Transform, Object = Self>
-                         + SetAt<Property = Transform, Object = Self>
+        (Transform, Self): Pair<Data = Transform, Object = Self>
+            + GetFrom + SetAt
 {
     /// Appends transform to the current one.
     #[inline(always)]
@@ -255,18 +255,18 @@ pub trait RelativeTransform: Clone
 
 impl<T: Clone> RelativeTransform for T
     where
-        (Transform, Self): GetFrom<Property = Transform, Object = T>
-                         + SetAt<Property = Transform, Object = T>
+        (Transform, Self): Pair<Data = Transform, Object = Self> 
+            + GetFrom + SetAt
 {}
 
 /// Should be implemented by contexts that
 /// draws something relative to view.
 pub trait RelativeViewTransform: Clone
     where
-        (ViewTransform, Self): GetFrom<Property = ViewTransform, Object = Self>
-                             + SetAt<Property = ViewTransform, Object = Self>,
-        (Transform, Self): GetFrom<Property = Transform, Object = Self>
-                         + SetAt<Property = Transform, Object = Self>
+        (ViewTransform, Self): Pair<Data = ViewTransform, Object = Self> 
+            + GetFrom + SetAt,
+        (Transform, Self): Pair<Data = Transform, Object = Self> 
+            + GetFrom + SetAt
 {
     /// Moves the current transform to the view coordinate system.
     ///
@@ -309,9 +309,9 @@ impl<
     T: Clone
 > RelativeViewTransform for T
     where
-        (ViewTransform, Self): GetFrom<Property = ViewTransform, Object = Self>
-                             + SetAt<Property = ViewTransform, Object = Self>,
-        (Transform, Self): GetFrom<Property = Transform, Object = Self>
-                         + SetAt<Property = Transform, Object = Self>,
+        (ViewTransform, Self): Pair<Data = ViewTransform, Object = Self>
+            + GetFrom + SetAt,
+        (Transform, Self): Pair<Data = Transform, Object = Self>
+            + GetFrom + SetAt,
 {}
 
