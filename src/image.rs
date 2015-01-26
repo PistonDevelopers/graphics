@@ -74,27 +74,18 @@ impl Image {
 }
 
 impl SetAt for (Color, Image) {
-    type Property = Color;
-    type Object = Image;
-
     fn set_at(Color(val): Color, img: &mut Image) {
         img.color = Some(val);
     }
 }
 
 impl SetAt for (Rect, Image) {
-    type Property = Rect;
-    type Object = Image;
-
     fn set_at(Rect(val): Rect, img: &mut Image) {
         img.rectangle = Some(val);
     }
 }
 
 impl SetAt for (SrcRect, Image) {
-    type Property = SrcRect;
-    type Object = Image;
-
     fn set_at(SrcRect(val): SrcRect, img: &mut Image) {
         img.source_rectangle = Some(val);
     }

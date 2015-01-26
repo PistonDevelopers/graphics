@@ -91,9 +91,6 @@ impl Ellipse {
 }
 
 impl SetAt for (Color, Ellipse) {
-    type Property = Color;
-    type Object = Ellipse;
-
     #[inline(always)]
     fn set_at(Color(val): Color, e: &mut Ellipse) {
         e.color = val;
@@ -101,9 +98,6 @@ impl SetAt for (Color, Ellipse) {
 }
 
 impl GetFrom for (Color, Ellipse) {
-    type Property = Color;
-    type Object = Ellipse;
-
     #[inline(always)]
     fn get_from(obj: &Ellipse) -> Color {
         Color(obj.color)
@@ -111,9 +105,6 @@ impl GetFrom for (Color, Ellipse) {
 }
 
 impl SetAt for (Border, Ellipse) {
-    type Property = Border;
-    type Object = Ellipse;
-
     #[inline(always)]
     fn set_at(val: Border, e: &mut Ellipse) {
         e.border = Some(val);
@@ -121,9 +112,6 @@ impl SetAt for (Border, Ellipse) {
 }
 
 impl SetAt for (MaybeBorder, Ellipse) {
-    type Property = MaybeBorder;
-    type Object = Ellipse;
-
     #[inline(always)]
     fn set_at(MaybeBorder(val): MaybeBorder, e: &mut Ellipse) {
         e.border = val;
@@ -131,9 +119,6 @@ impl SetAt for (MaybeBorder, Ellipse) {
 }
 
 impl GetFrom for (MaybeBorder, Ellipse) {
-    type Property = MaybeBorder;
-    type Object = Ellipse;
-
     #[inline(always)]
     fn get_from(obj: &Ellipse) -> MaybeBorder {
         MaybeBorder(obj.border)
