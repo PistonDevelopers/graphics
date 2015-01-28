@@ -305,9 +305,7 @@ pub trait RelativeViewTransform: Clone
     }
 }
 
-impl<
-    T: Clone
-> RelativeViewTransform for T
+impl<T: Clone> RelativeViewTransform for T
     where
         (ViewTransform, Self): Pair<Data = ViewTransform, Object = Self>
             + GetFrom + SetAt,

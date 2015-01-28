@@ -90,39 +90,16 @@ impl Ellipse {
     }
 }
 
-impl SetAt for (Color, Ellipse) {
-    #[inline(always)]
-    fn set_at(Color(val): Color, e: &mut Ellipse) {
-        e.color = val;
-    }
-}
-
-impl GetFrom for (Color, Ellipse) {
-    #[inline(always)]
-    fn get_from(obj: &Ellipse) -> Color {
-        Color(obj.color)
-    }
-}
-
-impl SetAt for (Border, Ellipse) {
-    #[inline(always)]
-    fn set_at(val: Border, e: &mut Ellipse) {
-        e.border = Some(val);
-    }
-}
-
-impl SetAt for (MaybeBorder, Ellipse) {
-    #[inline(always)]
-    fn set_at(MaybeBorder(val): MaybeBorder, e: &mut Ellipse) {
-        e.border = val;
-    }
-}
-
-impl GetFrom for (MaybeBorder, Ellipse) {
-    #[inline(always)]
-    fn get_from(obj: &Ellipse) -> MaybeBorder {
-        MaybeBorder(obj.border)
-    }
+quack! {
+    e: Ellipse[]
+    get:
+        fn () -> Color { Color(e.color) }
+        fn () -> MaybeBorder { MaybeBorder(e.border) }
+    set:
+        fn (val: Color) { e.color = val.0 }
+        fn (val: Border) { e.border = Some(val) }
+        fn (val: MaybeBorder) { e.border = val.0 }
+    action:
 }
 
 #[cfg(test)]

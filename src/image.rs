@@ -1,6 +1,5 @@
 //! Draw image
 
-use quack::{ SetAt };
 use internal;
 use triangulation;
 use BackEnd;
@@ -73,22 +72,14 @@ impl Image {
     }
 }
 
-impl SetAt for (Color, Image) {
-    fn set_at(Color(val): Color, img: &mut Image) {
-        img.color = Some(val);
-    }
-}
-
-impl SetAt for (Rect, Image) {
-    fn set_at(Rect(val): Rect, img: &mut Image) {
-        img.rectangle = Some(val);
-    }
-}
-
-impl SetAt for (SrcRect, Image) {
-    fn set_at(SrcRect(val): SrcRect, img: &mut Image) {
-        img.source_rectangle = Some(val);
-    }
+quack! {
+    img: Image[]
+    get:
+    set:
+        fn (val: Color) { img.color = Some(val.0) }
+        fn (val: Rect) { img.rectangle = Some(val.0) }
+        fn (val: SrcRect) { img.source_rectangle = Some(val.0) }
+    action:
 }
 
 #[cfg(test)]
