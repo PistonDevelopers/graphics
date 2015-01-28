@@ -1,6 +1,5 @@
 //! Draw rectangle
 
-use quack::{ GetFrom, SetAt };
 use internal;
 use triangulation;
 use Context;
@@ -194,53 +193,18 @@ impl Rectangle {
     }
 }
 
-impl SetAt for (Color, Rectangle) {
-    #[inline(always)]
-    fn set_at(Color(val): Color, r: &mut Rectangle) {
-        r.color = val;
-    }
-}
-
-impl GetFrom for (Color, Rectangle) {
-    #[inline(always)]
-    fn get_from(obj: &Rectangle) -> Color {
-        Color(obj.color)
-    }
-}
-
-impl SetAt for (Shape, Rectangle) {
-    #[inline(always)]
-    fn set_at(val: Shape, r: &mut Rectangle) {
-        r.shape = val;
-    }
-}
-
-impl GetFrom for (Shape, Rectangle) {
-    #[inline(always)]
-    fn get_from(obj: &Rectangle) -> Shape {
-        obj.shape
-    }
-}
-
-impl SetAt for (Border, Rectangle) {
-    #[inline(always)]
-    fn set_at(val: Border, r: &mut Rectangle) {
-        r.border = Some(val);
-    }
-}
-
-impl SetAt for (MaybeBorder, Rectangle) {
-    #[inline(always)]
-    fn set_at(MaybeBorder(val): MaybeBorder, r: &mut Rectangle) {
-        r.border = val;
-    }
-}
-
-impl GetFrom for (MaybeBorder, Rectangle) {
-    #[inline(always)]
-    fn get_from(obj: &Rectangle) -> MaybeBorder {
-        MaybeBorder(obj.border)
-    }
+quack! {
+    r: Rectangle[]
+    get:
+        fn () -> Color { Color(r.color) }
+        fn () -> Shape { r.shape }
+        fn () -> MaybeBorder { MaybeBorder(r.border) }
+    set:
+        fn (val: Color) { r.color = val.0 }
+        fn (val: Shape) { r.shape = val }
+        fn (val: Border) { r.border = Some(val) }
+        fn (val: MaybeBorder) { r.border = val.0 }
+    action:
 }
 
 #[cfg(test)]

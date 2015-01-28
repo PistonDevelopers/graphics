@@ -8,6 +8,7 @@
 extern crate "vecmath" as vecmath_lib;
 extern crate texture;
 extern crate read_color;
+#[macro_use]
 extern crate quack;
 extern crate interpolation;
 

@@ -1,6 +1,5 @@
 //! Transformation context
 
-use quack::{ GetFrom, SetAt };
 use vecmath::{
     identity,
     Matrix2d,
@@ -24,28 +23,15 @@ pub struct Context {
     pub transform: Matrix2d,
 }
 
-impl SetAt for (Transform, Context) {
-    fn set_at(Transform(val): Transform, c: &mut Context) {
-        c.transform = val;
-    }
-}
-
-impl GetFrom for (Transform, Context) {
-    fn get_from(obj: &Context) -> Transform {
-        Transform(obj.transform)
-    }
-}
-
-impl SetAt for (ViewTransform, Context) {
-    fn set_at(ViewTransform(val): ViewTransform, c: &mut Context) {
-        c.view = val;
-    }
-}
-
-impl GetFrom for (ViewTransform, Context) {
-    fn get_from(obj: &Context) -> ViewTransform {
-        ViewTransform(obj.view)
-    }
+quack! {
+    c: Context[]
+    get:
+        fn () -> Transform { Transform(c.transform) }
+        fn () -> ViewTransform { ViewTransform(c.view) }
+    set:
+        fn (val: Transform) { c.transform = val.0 }
+        fn (val: ViewTransform) { c.view = val.0 }
+    action:
 }
 
 impl Context {
