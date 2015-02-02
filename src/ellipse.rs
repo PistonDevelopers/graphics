@@ -93,12 +93,12 @@ impl Ellipse {
 quack! {
     e: Ellipse[]
     get:
-        fn () -> Color { Color(e.color) }
-        fn () -> MaybeBorder { MaybeBorder(e.border) }
+        fn () -> Color [] { Color(e.color) }
+        fn () -> MaybeBorder [] { MaybeBorder(e.border) }
     set:
-        fn (val: Color) { e.color = val.0 }
-        fn (val: Border) { e.border = Some(val) }
-        fn (val: MaybeBorder) { e.border = val.0 }
+        fn (val: Color) [] { e.color = val.0 }
+        fn (val: Border) [] { e.border = Some(val) }
+        fn (val: MaybeBorder) [] { e.border = val.0 }
     action:
 }
 

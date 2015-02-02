@@ -196,14 +196,14 @@ impl Rectangle {
 quack! {
     r: Rectangle[]
     get:
-        fn () -> Color { Color(r.color) }
-        fn () -> Shape { r.shape }
-        fn () -> MaybeBorder { MaybeBorder(r.border) }
+        fn () -> Color [] { Color(r.color) }
+        fn () -> Shape [] { r.shape }
+        fn () -> MaybeBorder [] { MaybeBorder(r.border) }
     set:
-        fn (val: Color) { r.color = val.0 }
-        fn (val: Shape) { r.shape = val }
-        fn (val: Border) { r.border = Some(val) }
-        fn (val: MaybeBorder) { r.border = val.0 }
+        fn (val: Color) [] { r.color = val.0 }
+        fn (val: Shape) [] { r.shape = val }
+        fn (val: Border) [] { r.border = Some(val) }
+        fn (val: MaybeBorder) [] { r.border = val.0 }
     action:
 }
 

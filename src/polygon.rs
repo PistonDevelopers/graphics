@@ -63,9 +63,9 @@ impl Polygon {
 quack! {
     p: Polygon[]
     get:
-        fn () -> Color { Color(p.color) }
+        fn () -> Color [] { Color(p.color) }
     set:
-        fn (val: Color) { p.color = val.0 }
+        fn (val: Color) [] { p.color = val.0 }
     action:
 }
 

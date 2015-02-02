@@ -26,11 +26,11 @@ pub struct Context {
 quack! {
     c: Context[]
     get:
-        fn () -> Transform { Transform(c.transform) }
-        fn () -> ViewTransform { ViewTransform(c.view) }
+        fn () -> Transform [] { Transform(c.transform) }
+        fn () -> ViewTransform [] { ViewTransform(c.view) }
     set:
-        fn (val: Transform) { c.transform = val.0 }
-        fn (val: ViewTransform) { c.view = val.0 }
+        fn (val: Transform) [] { c.transform = val.0 }
+        fn (val: ViewTransform) [] { c.view = val.0 }
     action:
 }
 
