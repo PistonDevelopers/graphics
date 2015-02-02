@@ -76,9 +76,9 @@ quack! {
     img: Image[]
     get:
     set:
-        fn (val: Color) { img.color = Some(val.0) }
-        fn (val: Rect) { img.rectangle = Some(val.0) }
-        fn (val: SrcRect) { img.source_rectangle = Some(val.0) }
+        fn (val: Color) [] { img.color = Some(val.0) }
+        fn (val: Rect) [] { img.rectangle = Some(val.0) }
+        fn (val: SrcRect) [] { img.source_rectangle = Some(val.0) }
     action:
 }
 
