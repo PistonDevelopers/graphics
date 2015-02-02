@@ -39,14 +39,14 @@ impl Grid {
         let &Grid {
             cols, rows, units
         } = self;
-        for x in range(0, cols + 1) {
+        for x in 0..cols + 1 {
             let x1 = x as Scalar * units;
             let y1 = 0.0;
             let x2 = x1;
             let y2 = rows as Scalar * units;
             line.draw([x1, y1, x2, y2], c, g);
         }
-        for y in range(0, rows + 1) {
+        for y in 0..rows + 1 {
             let x1 = 0.0;
             let y1 = y as Scalar * units;
             let x2 = cols as Scalar * units;
