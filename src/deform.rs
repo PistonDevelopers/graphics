@@ -44,8 +44,8 @@ impl DeformGrid {
         let units_v = h / rows as Scalar;
         let nx = cols + 1;
         let ny = rows + 1;
-        for iy in range(0, ny) {
-            for ix in range(0, nx) {
+        for iy in 0..ny {
+            for ix in 0..nx {
                 vertices.push([
                     x + ix as Scalar * units_h,
                     y + iy as Scalar * units_v
@@ -58,8 +58,8 @@ impl DeformGrid {
         }
 
         let mut indices = Vec::new();
-        for iy in range(0, ny - 1) {
-            for ix in range(0, nx - 1) {
+        for iy in 0..ny - 1 {
+            for ix in 0..nx - 1 {
                 indices.push(ix + iy * nx);
                 indices.push((ix + 1) + iy * nx);
                 indices.push(ix + (iy + 1) * nx);
@@ -119,8 +119,8 @@ impl DeformGrid {
         let units_v = h / rows as Scalar;
         let nx = cols + 1;
         let ny = rows + 1;
-        for iy in range(0, ny) {
-            for ix in range(0, nx) {
+        for iy in 0..ny {
+            for ix in 0..nx {
                 self.vertices.push([
                     x + ix as Scalar * units_h,
                     y + iy as Scalar * units_v
@@ -140,8 +140,8 @@ impl DeformGrid {
         use vecmath::{ inside_triangle, to_barycentric, from_barycentric };
         let nx = self.cols + 1;
         let ny = self.rows + 1;
-        for i in range(0, nx - 1) {
-            for j in range(0, ny - 1) {
+        for i in 0..nx - 1 {
+            for j in 0..ny - 1 {
                 let ip = i + j * nx;
                 let p1 = self.vertices[ip];
                 let ip = (i + 1) + j * nx;
@@ -208,8 +208,8 @@ impl DeformGrid {
         for &ind in self.indices.iter() {
             if offset >= buf_len {
                 back_end.tri_list_uv(
-                    vertices.as_slice(),
-                    uvs.as_slice()
+                    &vertices[],
+                    &uvs[]
                 );
                 offset = 0;
             }
@@ -251,8 +251,8 @@ impl DeformGrid {
         let grid = self;
         let nx = grid.cols + 1;
         let ny = grid.rows + 1;
-        for i in range(0, nx) {
-            for j in range(0, ny - 1) {
+        for i in 0..nx {
+            for j in 0..ny - 1 {
                 let ip = i + j * nx;
                 let x1 = grid.vertices[ip][0];
                 let y1 = grid.vertices[ip][1];
@@ -276,8 +276,8 @@ impl DeformGrid {
         let grid = self;
         let nx = grid.cols + 1;
         let ny = grid.rows + 1;
-        for i in range(0, nx - 1) {
-            for j in range(0, ny) {
+        for i in 0..nx - 1 {
+            for j in 0..ny {
                 let ip = i + j * nx;
                 let x1 = grid.vertices[ip][0];
                 let y1 = grid.vertices[ip][1];
@@ -321,8 +321,8 @@ impl DeformGrid {
             1 => {
                 // Move all vertices same distance.
                 let d = sub(qs[0], ps[0]);
-                for iy in range(0, ny) {
-                    for ix in range(0, nx) {
+                for iy in 0..ny {
+                    for ix in 0..nx {
                         let ip = ix + iy * nx;
                         vertices[ip] = [
                             x + ix as Scalar * units_h + d[0],
@@ -336,15 +336,15 @@ impl DeformGrid {
         }
 
         let zero = [0.0, 0.0];
-        for m in range(0, nx) {
-            for n in range(0, ny) {
+        for m in 0..nx {
+            for n in 0..ny {
                 let ip = m + n * nx;
                 let v = [m as Scalar * units_h + x,
                          n as Scalar * units_v + y];
                 let mut sum_wi = 0.0;
                 let mut p_star = zero;
                 let mut q_star = zero;
-                for i in range(0, num) {
+                for i in 0..num {
                     let pi = ps[i];
                     let vl = square_len(sub(pi, v));
                     let w = if vl < eps && vl > -eps { 1.0 / eps } else { 1.0 / vl };
@@ -359,7 +359,7 @@ impl DeformGrid {
                 q_star = mul_scalar(q_star, inv_sum_wi);
                 let mut fr = zero;
                 let vp = perp(sub(v, p_star));
-                for i in range(0, num) {
+                for i in 0..num {
                     let pi = ps[i];
                     let qi = qs[i];
                     let pi_hat = sub(pi, p_star);

@@ -234,7 +234,7 @@ pub fn area_centroid(polygon: Polygon) -> (Area, Vec2d) {
     let n = polygon.len();
     let mut sum = 0.0;
     let (mut cx, mut cy) = (0.0, 0.0);
-    for i in range(0, n) {
+    for i in 0..n {
         let [qx, qy] = polygon[i];
         let p_i = previous(n, i);
         let [px, py] = polygon[p_i];
