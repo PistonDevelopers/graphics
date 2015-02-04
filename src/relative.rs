@@ -24,19 +24,15 @@ use Rect;
 use SrcRect;
 
 /// Implemented by contexts that contains color.
-pub trait RelativeColor: Get<Color> + Set<Color> + Clone {
+pub trait RelativeColor: Sized {
     /// Multiplies with red, green, blue and alpha values.
-    #[inline(always)]
     fn mul_rgba(
         &self,
         r: ColorComponent,
         g: ColorComponent,
         b: ColorComponent,
         a: ColorComponent
-    ) -> Self {
-        let Color(col) = self.get();
-        self.clone().set(Color([col[0] * r, col[1] * g, col[2] * b, col[3] * a]))
-    }
+    ) -> Self;
 
     /// Mixes the current color with white.
     ///
@@ -63,6 +59,22 @@ pub trait RelativeColor: Get<Color> + Set<Color> + Clone {
     }
 
     /// Rotates hue by radians.
+    fn hue_rad(&self, angle: ColorComponent) -> Self;
+}
+
+impl<T: Get<Color> + Set<Color> + Clone> RelativeColor for T {
+    #[inline(always)]
+    fn mul_rgba(
+        &self,
+        r: ColorComponent,
+        g: ColorComponent,
+        b: ColorComponent,
+        a: ColorComponent
+    ) -> Self {
+        let Color(col) = self.get();
+        self.clone().set(Color([col[0] * r, col[1] * g, col[2] * b, col[3] * a]))
+    }
+
     #[inline(always)]
     fn hue_rad(&self, angle: ColorComponent) -> Self {
         let Color(val) = self.get();
@@ -70,16 +82,10 @@ pub trait RelativeColor: Get<Color> + Set<Color> + Clone {
     }
 }
 
-impl<T: Get<Color> + Set<Color> + Clone> RelativeColor for T {}
-
 /// Should be implemented by contexts that have rectangle information.
-pub trait RelativeRectangle: Get<Rect> + Set<Rect> + Clone {
+pub trait RelativeRectangle: Sized {
     /// Shrinks the current rectangle equally by all sides.
-    #[inline(always)]
-    fn margin(&self, m: Scalar) -> Self {
-        let Rect(val) = self.get();
-        self.clone().set(Rect(margin_rectangle(val, m)))
-    }
+    fn margin(&self, m: Scalar) -> Self;
 
     /// Expands the current rectangle equally by all sides.
     #[inline(always)]
@@ -88,6 +94,16 @@ pub trait RelativeRectangle: Get<Rect> + Set<Rect> + Clone {
     }
 
     /// Moves to a relative rectangle using the current rectangle as tile.
+    fn rel(&self, x: Scalar, y: Scalar) -> Self;
+}
+
+impl<T: Get<Rect> + Set<Rect> + Clone> RelativeRectangle for T {
+    #[inline(always)]
+    fn margin(&self, m: Scalar) -> Self {
+        let Rect(val) = self.get();
+        self.clone().set(Rect(margin_rectangle(val, m)))
+    }
+
     #[inline(always)]
     fn rel(&self, x: Scalar, y: Scalar) -> Self {
         let Rect(val) = self.get();
@@ -95,19 +111,35 @@ pub trait RelativeRectangle: Get<Rect> + Set<Rect> + Clone {
     }
 }
 
-impl<T: Get<Rect> + Set<Rect> + Clone> RelativeRectangle for T {}
-
 /// Should be implemented by contexts that
 /// have source rectangle information.
-pub trait RelativeSourceRectangle: Get<SrcRect> + Set<SrcRect> + Clone {
+pub trait RelativeSourceRectangle {
     /// Adds a source rectangle.
+    fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> Self;
+
+    /// Moves to a relative source rectangle using
+    /// the current source rectangle as tile.
+    fn src_rel(&self, x: i32, y: i32) -> Self;
+
+    /// Flips the source rectangle horizontally.
+    fn src_flip_h(&self) -> Self;
+
+    /// Flips the source rectangle vertically.
+    fn src_flip_v(&self) -> Self;
+
+    /// Flips the source rectangle horizontally and vertically.
+    fn src_flip_hv(&self) -> Self;
+}
+
+impl<T: Get<SrcRect>
+      + Set<SrcRect>
+      + Clone
+> RelativeSourceRectangle for T {
     #[inline(always)]
     fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> Self {
         self.clone().set(SrcRect([x, y, w, h]))
     }
 
-    /// Moves to a relative source rectangle using
-    /// the current source rectangle as tile.
     #[inline(always)]
     fn src_rel(&self, x: i32, y: i32) -> Self {
         let SrcRect(val) = self.get();
@@ -116,7 +148,6 @@ pub trait RelativeSourceRectangle: Get<SrcRect> + Set<SrcRect> + Clone {
         ))
     }
 
-    /// Flips the source rectangle horizontally.
     #[inline(always)]
     fn src_flip_h(&self) -> Self {
         let SrcRect(source_rect) = self.get();
@@ -128,7 +159,6 @@ pub trait RelativeSourceRectangle: Get<SrcRect> + Set<SrcRect> + Clone {
         ]))
     }
 
-    /// Flips the source rectangle vertically.
     #[inline(always)]
     fn src_flip_v(&self) -> Self {
         let SrcRect(source_rect) = self.get();
@@ -140,7 +170,6 @@ pub trait RelativeSourceRectangle: Get<SrcRect> + Set<SrcRect> + Clone {
         ]))
     }
 
-    /// Flips the source rectangle horizontally and vertically.
     #[inline(always)]
     fn src_flip_hv(&self) -> Self {
         let SrcRect(source_rect) = self.get();
@@ -153,38 +182,16 @@ pub trait RelativeSourceRectangle: Get<SrcRect> + Set<SrcRect> + Clone {
     }
 }
 
-impl<T: Get<SrcRect>
-      + Set<SrcRect>
-      + Clone
-> RelativeSourceRectangle for T {}
-
 /// Implemented by contexts that can transform.
-pub trait RelativeTransform: Clone 
-    where
-        (Transform, Self): Pair<Data = Transform, Object = Self>
-            + GetFrom + SetAt
-{
+pub trait RelativeTransform: Sized {
     /// Appends transform to the current one.
-    #[inline(always)]
-    fn append_transform(&self, transform: Matrix2d) -> Self {
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, transform)))
-    }
+    fn append_transform(&self, transform: Matrix2d) -> Self;
 
     /// Prepends transform to the current one.
-    #[inline(always)]
-    fn prepend_transform(&self, transform: Matrix2d) -> Self {
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(transform, mat)))
-    }
+    fn prepend_transform(&self, transform: Matrix2d) -> Self;
 
     /// Translate x an y in local coordinates.
-    #[inline(always)]
-    fn trans(&self, x: Scalar, y: Scalar) -> Self {
-        let trans = translate([x, y]);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, trans)))
-    }
+    fn trans(&self, x: Scalar, y: Scalar) -> Self;
 
     /// Rotates degrees in local coordinates.
     #[inline(always)]
@@ -194,31 +201,16 @@ pub trait RelativeTransform: Clone
     }
 
     /// Rotate radians in local coordinates.
-    #[inline(always)]
-    fn rot_rad(&self, angle: Scalar) -> Self {
-        let rot = rotate_radians(angle);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, rot)))
-    }
+    fn rot_rad(&self, angle: Scalar) -> Self;
 
     /// Orients x axis to look at point locally.
     ///
     /// Leaves x axis unchanged if the point to
     /// look at is the origin.
-    #[inline(always)]
-    fn orient(&self, x: Scalar, y: Scalar) -> Self {
-        let orient = orient(x, y);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, orient)))
-    }
+    fn orient(&self, x: Scalar, y: Scalar) -> Self;
 
     /// Scales in local coordinates.
-    #[inline(always)]
-    fn scale(&self, sx: Scalar, sy: Scalar) -> Self {
-        let scale = scale(sx, sy);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, scale)))
-    }
+    fn scale(&self, sx: Scalar, sy: Scalar) -> Self;
 
     /// Scales in both directions in local coordinates.
     #[inline(always)]
@@ -245,6 +237,54 @@ pub trait RelativeTransform: Clone
     }
 
     /// Shears in local coordinates.
+    fn shear(&self, v: Vec2d) -> Self;
+}
+
+impl<T: Clone> RelativeTransform for T
+    where
+        (Transform, Self): Pair<Data = Transform, Object = Self> 
+            + GetFrom + SetAt
+{
+    #[inline(always)]
+    fn append_transform(&self, transform: Matrix2d) -> Self {
+        let Transform(mat) = self.get();
+        self.clone().set(Transform(multiply(mat, transform)))
+    }
+
+    #[inline(always)]
+    fn prepend_transform(&self, transform: Matrix2d) -> Self {
+        let Transform(mat) = self.get();
+        self.clone().set(Transform(multiply(transform, mat)))
+    }
+
+    #[inline(always)]
+    fn trans(&self, x: Scalar, y: Scalar) -> Self {
+        let trans = translate([x, y]);
+        let Transform(mat) = self.get();
+        self.clone().set(Transform(multiply(mat, trans)))
+    }
+
+    #[inline(always)]
+    fn rot_rad(&self, angle: Scalar) -> Self {
+        let rot = rotate_radians(angle);
+        let Transform(mat) = self.get();
+        self.clone().set(Transform(multiply(mat, rot)))
+    }
+
+    #[inline(always)]
+    fn orient(&self, x: Scalar, y: Scalar) -> Self {
+        let orient = orient(x, y);
+        let Transform(mat) = self.get();
+        self.clone().set(Transform(multiply(mat, orient)))
+    }
+
+    #[inline(always)]
+    fn scale(&self, sx: Scalar, sy: Scalar) -> Self {
+        let scale = scale(sx, sy);
+        let Transform(mat) = self.get();
+        self.clone().set(Transform(multiply(mat, scale)))
+    }
+
     #[inline(always)]
     fn shear(&self, v: Vec2d) -> Self {
         let shear = shear(v);
@@ -253,56 +293,29 @@ pub trait RelativeTransform: Clone
     }
 }
 
-impl<T: Clone> RelativeTransform for T
-    where
-        (Transform, Self): Pair<Data = Transform, Object = Self> 
-            + GetFrom + SetAt
-{}
-
 /// Should be implemented by contexts that
 /// draws something relative to view.
-pub trait RelativeViewTransform: Clone
-    where
-        (ViewTransform, Self): Pair<Data = ViewTransform, Object = Self> 
-            + GetFrom + SetAt,
-        (Transform, Self): Pair<Data = Transform, Object = Self> 
-            + GetFrom + SetAt
-{
+pub trait RelativeViewTransform {
     /// Moves the current transform to the view coordinate system.
     ///
     /// This is usually [0.0, 0.0] in the upper left corner
     /// with the x axis pointing to the right
     /// and the y axis pointing down.
     #[inline(always)]
-    fn view(&self) -> Self {
-        let ViewTransform(mat) = self.get();
-        self.clone().set(Transform(mat))
-    }
+    fn view(&self) -> Self;
 
     /// Moves the current transform to the default coordinate system.
     ///
     /// This is usually [0.0, 0.0] in the center
     /// with the x axis pointing to the right
     /// and the y axis pointing up.
-    #[inline(always)]
-    fn reset(&self) -> Self {
-        self.clone().set(Transform(identity()))
-    }
+    fn reset(&self) -> Self;
 
     /// Stores the current transform as new view.
-    #[inline(always)]
-    fn store_view(&self) -> Self {
-        let Transform(mat) = self.get();
-        self.clone().set(ViewTransform(mat))
-    }
+    fn store_view(&self) -> Self;
 
     /// Computes the current view size.
-    #[inline(always)]
-    fn get_view_size(&self) -> (Scalar, Scalar) {
-        let ViewTransform(mat) = self.get();
-        let scale = get_scale(mat);
-        (2.0 / scale[0], 2.0 / scale[1])
-    }
+    fn get_view_size(&self) -> (Scalar, Scalar);
 }
 
 impl<T: Clone> RelativeViewTransform for T
@@ -311,5 +324,29 @@ impl<T: Clone> RelativeViewTransform for T
             + GetFrom + SetAt,
         (Transform, Self): Pair<Data = Transform, Object = Self>
             + GetFrom + SetAt,
-{}
+{
+    #[inline(always)]
+    fn view(&self) -> Self {
+        let ViewTransform(mat) = self.get();
+        self.clone().set(Transform(mat))
+    }
+    
+    #[inline(always)]
+    fn reset(&self) -> Self {
+        self.clone().set(Transform(identity()))
+    }
+    
+    #[inline(always)]
+    fn store_view(&self) -> Self {
+        let Transform(mat) = self.get();
+        self.clone().set(ViewTransform(mat))
+    }
+    
+    #[inline(always)]
+    fn get_view_size(&self) -> (Scalar, Scalar) {
+        let ViewTransform(mat) = self.get();
+        let scale = get_scale(mat);
+        (2.0 / scale[0], 2.0 / scale[1])
+    }
+}
 
