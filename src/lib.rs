@@ -1,6 +1,7 @@
 #![crate_name = "graphics"]
 #![deny(missing_docs)]
 #![deny(missing_copy_implementations)]
+#![feature(core)]
 
 //! A library for 2D graphics that works with multiple back-ends.
 
