@@ -213,17 +213,22 @@ pub fn modular_offset<T: Add<Output = T> + Rem<Output = T> + Copy>(
     (*i + (*off % *n + *n)) % *n
 }
 
-#[test]
-fn test_modular_offset() {
-    assert_eq!(modular_offset(&3.0_f64, &0.0_f64, &-1.0_f64), 2.0_f64);
-    assert_eq!(modular_offset(&3.0_f64, &1.0_f64, &-1.0_f64), 0.0_f64);
-    assert_eq!(modular_offset(&3.0_f64, &2.0_f64, &-1.0_f64), 1.0_f64);
-    assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &-1.0_f64), 2.0_f64);
+#[cfg(test)]
+mod test_modular_offset {
+    use super::*;
 
-    assert_eq!(modular_offset(&3.0_f64, &0.0_f64, &1.0_f64), 1.0_f64);
-    assert_eq!(modular_offset(&3.0_f64, &1.0_f64, &1.0_f64), 2.0_f64);
-    assert_eq!(modular_offset(&3.0_f64, &2.0_f64, &1.0_f64), 0.0_f64);
-    assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &1.0_f64), 1.0_f64);
+    #[test]
+    fn test_modular_offset() {
+        assert_eq!(modular_offset(&3.0_f64, &0.0_f64, &-1.0_f64), 2.0_f64);
+        assert_eq!(modular_offset(&3.0_f64, &1.0_f64, &-1.0_f64), 0.0_f64);
+        assert_eq!(modular_offset(&3.0_f64, &2.0_f64, &-1.0_f64), 1.0_f64);
+        assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &-1.0_f64), 2.0_f64);
+
+        assert_eq!(modular_offset(&3.0_f64, &0.0_f64, &1.0_f64), 1.0_f64);
+        assert_eq!(modular_offset(&3.0_f64, &1.0_f64, &1.0_f64), 2.0_f64);
+        assert_eq!(modular_offset(&3.0_f64, &2.0_f64, &1.0_f64), 0.0_f64);
+        assert_eq!(modular_offset(&3.0_f64, &3.0_f64, &1.0_f64), 1.0_f64);
+    }
 }
 
 /// Computes the area and centroid of a simple polygon.
@@ -319,17 +324,22 @@ pub fn triangle_face(
     ab_side.is_negative()
 }
 
-#[test]
-fn test_triangle() {
-    // Triangle counter clock-wise.
-    let tri_1 = [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]];
-    // Triangle clock-wise.
-    let tri_2 = [[0.0, 0.0], [1.0, 1.0], [1.0, 0.0]];
-    let (x, y) = (0.5, 0.25);
-    assert_eq!(inside_triangle(tri_1, [x, y]), true);
-    assert_eq!(inside_triangle(tri_2, [x, y]), true);
-    assert_eq!(triangle_face(tri_1), false);
-    assert_eq!(triangle_face(tri_2), true);
+#[cfg(test)]
+mod test_triangle {
+    use super::*;
+
+    #[test]
+    fn test_triangle() {
+        // Triangle counter clock-wise.
+        let tri_1 = [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]];
+        // Triangle clock-wise.
+        let tri_2 = [[0.0, 0.0], [1.0, 1.0], [1.0, 0.0]];
+        let (x, y) = (0.5, 0.25);
+        assert_eq!(inside_triangle(tri_1, [x, y]), true);
+        assert_eq!(inside_triangle(tri_2, [x, y]), true);
+        assert_eq!(triangle_face(tri_1), false);
+        assert_eq!(triangle_face(tri_2), true);
+    }
 }
 
 /// Transforms from cartesian coordinates to barycentric.
@@ -357,18 +367,24 @@ pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
      lambda[0] * y1 + lambda[1] * y2 + lambda[2] * y3]
 }
 
-#[test]
-fn test_barycentric() {
-    let triangle = [[0.0, 0.0], [100.0, 0.0], [0.0, 50.0]];
-    let old_pos = [10.0, 20.0];
-    let b = to_barycentric(triangle, old_pos);
-    let new_pos = from_barycentric(triangle, b);
-    let eps = 0.00001;
-    assert!((new_pos[0] - old_pos[0]).abs() < eps);
-    assert!((new_pos[1] - old_pos[1]).abs() < eps);
+#[cfg(test)]
+mod test_barycentric {
+    use std::num::Float;
+    use super::*;
+    
+    #[test]
+    fn test_barycentric() {
+        let triangle = [[0.0, 0.0], [100.0, 0.0], [0.0, 50.0]];
+        let old_pos = [10.0, 20.0];
+        let b = to_barycentric(triangle, old_pos);
+        let new_pos = from_barycentric(triangle, b);
+        let eps = 0.00001;
+        assert!((new_pos[0] - old_pos[0]).abs() < eps);
+        assert!((new_pos[1] - old_pos[1]).abs() < eps);
+    }
 }
 
-/// Transform color with hue saturation and value.
+/// Transform color with hue, saturation and value.
 ///
 /// Source: http://beesbuzz.biz/code/hsv_color_transforms.php
 #[inline(always)]
