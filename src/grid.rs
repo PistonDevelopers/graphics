@@ -86,11 +86,16 @@ impl Iterator for GridIterator {
 
 }
 
-#[test]
-fn test_grid_iterator() {
-    let g: Grid = Grid {cols: 2, rows: 2, units: 2.0};
-    let expected: Vec<(u32, u32)> = vec![(0, 0), (1, 0), (0, 1), (1, 1)];
-    let cells: Vec<(u32, u32)> = g.cells().collect();
-    assert_eq!(expected, cells);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_grid_iterator() {
+        let g: Grid = Grid {cols: 2, rows: 2, units: 2.0};
+        let expected: Vec<(u32, u32)> = vec![(0, 0), (1, 0), (0, 1), (1, 1)];
+        let cells: Vec<(u32, u32)> = g.cells().collect();
+        assert_eq!(expected, cells);
+    }
 }
 

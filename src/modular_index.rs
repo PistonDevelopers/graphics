@@ -19,16 +19,21 @@ pub fn next(n: usize, i: usize) -> usize {
     offset(n, i, 1)
 }
 
-#[test]
-fn test_offset() {
-    assert_eq!(offset(3, 0, -1), 2);
-    assert_eq!(offset(3, 1, -1), 0);
-    assert_eq!(offset(3, 2, -1), 1);
-    assert_eq!(offset(3, 3, -1), 2);
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    assert_eq!(offset(3, 0, 1), 1);
-    assert_eq!(offset(3, 1, 1), 2);
-    assert_eq!(offset(3, 2, 1), 0);
-    assert_eq!(offset(3, 3, 1), 1);
+    #[test]
+    fn test_offset() {
+        assert_eq!(offset(3, 0, -1), 2);
+        assert_eq!(offset(3, 1, -1), 0);
+        assert_eq!(offset(3, 2, -1), 1);
+        assert_eq!(offset(3, 3, -1), 2);
+
+        assert_eq!(offset(3, 0, 1), 1);
+        assert_eq!(offset(3, 1, 1), 2);
+        assert_eq!(offset(3, 2, 1), 0);
+        assert_eq!(offset(3, 3, 1), 1);
+    }
 }
 
