@@ -122,7 +122,7 @@ pub fn with_round_border_line_tri_list<F>(
     let m = multiply(m, orient(dx, dy));
     let n = resolution_cap * 2;
     let mut i = 0us;
-    stream_polygon_tri_list(m, |&mut:| {
+    stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
         let j = i;
@@ -348,7 +348,7 @@ pub fn with_round_rectangle_border_tri_list<F>(
     let radius2 = round_radius - border_radius;
     let n = resolution_corner * 4;
     let mut i = 0us;
-    stream_quad_tri_list(m, |&mut:| {
+    stream_quad_tri_list(m, || {
         if i > n { return None; }
 
         let j = i;
@@ -533,7 +533,7 @@ pub fn with_polygon_tri_list<F>(
     let n = polygon.len();
     let mut i = 0;
     stream_polygon_tri_list(
-        m, |&mut:| {
+        m, || {
             if i >= n { return None; }
 
             let j = i;
