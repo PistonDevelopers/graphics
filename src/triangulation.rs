@@ -69,9 +69,7 @@ pub fn with_lerp_polygons_tri_list<F>(
 
         let j = i;
         i += 1;
-        let [x0, y0] = p0[j];
-        let [x1, y1] = p1[j];
-        Some([lerp(x0, x1, tw), lerp(y0, y1, tw)])
+        Some(lerp(&p0[j], &p1[j], &tw))
     }, f);
 }
 
