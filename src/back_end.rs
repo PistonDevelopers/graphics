@@ -8,10 +8,10 @@ pub trait BackEnd {
     fn clear(&mut self, color: [f32; 4]);
 
     /// Sets the texture.
-    fn enable_texture(&mut self, _texture: &<Self as BackEnd>::Texture) {}
+    fn enable_texture(&mut self, _texture: &<Self as BackEnd>::Texture);
 
     /// Disables texture.
-    fn disable_texture(&mut self) {}
+    fn disable_texture(&mut self);
 
     /// Sets the current color.
     fn color(&mut self, color: [f32; 4]);
