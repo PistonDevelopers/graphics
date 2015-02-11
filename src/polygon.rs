@@ -31,12 +31,14 @@ impl Polygon {
         where B: BackEnd
     {
         if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
+        back_end.tri_list(
+            &self.color,
+            |f|
         triangulation::with_polygon_tri_list(
             c.transform,
             polygon,
-            |vertices| back_end.tri_list(vertices)
-        );
+            |vertices| f(vertices)
+        ));
     }
 
     /// Draws tweened polygon with linear interpolation
@@ -50,13 +52,15 @@ impl Polygon {
         where B: BackEnd
     {
         if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
+        back_end.tri_list(
+            &self.color,
+            |f|
         triangulation::with_lerp_polygons_tri_list(
             c.transform,
             polygons,
             tween_factor,
-            |vertices| back_end.tri_list(vertices)
-        );
+            |vertices| f(vertices)
+        ));
     }
 }
 

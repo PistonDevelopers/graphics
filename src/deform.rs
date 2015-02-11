@@ -195,10 +195,8 @@ impl DeformGrid {
     {
         let mat = c.transform;
         let color = [1.0; 4];
-        back_end.color(color);
         let a = color[3];
         if a == 0.0 { return; }
-        back_end.enable_texture(texture);
         let buf_len = 360;
         let mut vertices: [f32; 720] = [0.0; 720];
         let mut uvs: [f32; 720] = [0.0; 720];
@@ -208,8 +206,9 @@ impl DeformGrid {
         for &ind in self.indices.iter() {
             if offset >= buf_len {
                 back_end.tri_list_uv(
-                    &vertices[],
-                    &uvs[]
+                    &color,
+                    texture,
+                    |f| f(&vertices[], &uvs[])
                 );
                 offset = 0;
             }
@@ -225,11 +224,14 @@ impl DeformGrid {
         }
         if offset > 0 {
             back_end.tri_list_uv(
-                &vertices[..offset * vertex_align],
-                &uvs[..offset * uv_align]
+                &color,
+                texture,
+                |f| f(
+                    &vertices[..offset * vertex_align],
+                    &uvs[..offset * uv_align]
+                )
             );
         }
-        back_end.disable_texture();
     }
 
     /// Adds a control point, in original coordinates.

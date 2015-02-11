@@ -64,27 +64,29 @@ impl Ellipse {
         where B: BackEnd
     {
         if self.color[3] != 0.0 {
-            back_end.color(self.color);
+            back_end.tri_list(
+                &self.color,
+                |f|
             triangulation::with_ellipse_tri_list(
                 128,
                 c.transform,
                 rectangle,
-                |vertices| {
-                    back_end.tri_list(vertices)
-                }
-            );
+                |vertices| f(vertices)
+            ));
         }
 
         if let Some(Border { color, radius: border_radius }) = self.border {
             if color[3] == 0.0 { return; }
-            back_end.color(self.color);
+            back_end.tri_list(
+                &color,
+                |f|
             triangulation::with_ellipse_border_tri_list(
                 128,
                 c.transform,
                 rectangle,
                 border_radius,
-                |vertices| back_end.tri_list(vertices)
-            );
+                |vertices| f(vertices)
+            ));
         }
     }
 }
