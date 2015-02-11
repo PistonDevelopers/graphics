@@ -66,34 +66,42 @@ impl Line {
     {
         // Complete transparency does not need to be rendered.
         if self.color[3] == 0.0 { return; }
-        back_end.color(self.color);
         match self.shape {
             Shape::Square => {
+                back_end.tri_list(
+                    &self.color,
+                    |f|
                 triangulation::with_round_border_line_tri_list(
                     2,
                     c.transform,
                     line,
                     self.radius,
-                    |vertices| back_end.tri_list(vertices)
-                );
+                    |vertices| f(vertices)
+                ));
             }
             Shape::Round => {
+                back_end.tri_list(
+                    &self.color,
+                    |f|
                 triangulation::with_round_border_line_tri_list(
                     64,
                     c.transform,
                     line,
                     self.radius,
-                    |vertices| back_end.tri_list(vertices)
-                );
+                    |vertices| f(vertices)
+                ));
             }
             Shape::Bevel => {
+                back_end.tri_list(
+                    &self.color,
+                    |f|
                 triangulation::with_round_border_line_tri_list(
                     3,
                     c.transform,
                     line,
                     self.radius,
-                    |vertices| back_end.tri_list(vertices)
-                );
+                    |vertices| f(vertices)
+                ));
             }
         }
     }

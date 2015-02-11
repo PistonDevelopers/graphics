@@ -130,63 +130,77 @@ impl Rectangle {
         where B: BackEnd
     {
         if self.color[3] != 0.0 {
-            back_end.color(self.color);
             match self.shape {
                 Shape::Square => {
                     back_end.tri_list(
-                        &triangulation::rect_tri_list_xy(c.transform, rectangle),
+                        &self.color,
+                        |f| f(&triangulation::rect_tri_list_xy(c.transform, rectangle)),
                     );
                 }
                 Shape::Round(round_radius) => {
+                    back_end.tri_list(
+                        &self.color,
+                        |f|
                     triangulation::with_round_rectangle_tri_list(
                         32,
                         c.transform,
                         rectangle,
                         round_radius,
-                        |vertices| back_end.tri_list(vertices)
-                    );
+                        |vertices| f(vertices)
+                    ));
                 }
                 Shape::Bevel(bevel_radius) => {
+                    back_end.tri_list(
+                        &self.color,
+                        |f|
                     triangulation::with_round_rectangle_tri_list(
                         2,
                         c.transform,
                         rectangle,
                         bevel_radius,
-                        |vertices| back_end.tri_list(vertices)
-                    );
+                        |vertices| f(vertices)
+                    ));
                 }
             }
         }
        
         if let Some(Border { color, radius: border_radius }) = self.border {
             if color[3] == 0.0 { return; }
-            back_end.color(color);
             match self.shape {
                 Shape::Square => {
                     back_end.tri_list(
-                        &triangulation::rect_border_tri_list_xy(
-                            c.transform, rectangle, border_radius),
+                        &color,
+                        |f| f(
+                            &triangulation::rect_border_tri_list_xy(
+                                c.transform, rectangle, border_radius),
+                        )
                     );
                 }
                 Shape::Round(round_radius) => {
+                    back_end.tri_list(
+                        &color,
+                        |f|
                     triangulation::with_round_rectangle_border_tri_list(
                         128,
                         c.transform,
                         rectangle,
                         round_radius,
                         border_radius,
-                        |vertices| back_end.tri_list(vertices)
-                    );
+                        |vertices| f(vertices)
+                    ));
                 }
                 Shape::Bevel(bevel_radius) => {
+                    back_end.tri_list(
+                        &color,
+                        |f|
                     triangulation::with_round_rectangle_border_tri_list(
                         2,
                         c.transform,
                         rectangle,
                         bevel_radius,
                         border_radius,
-                        |vertices| back_end.tri_list(vertices)
-                    );
+                        |vertices| f(vertices)
+                    ));
                 }
             }
         } 

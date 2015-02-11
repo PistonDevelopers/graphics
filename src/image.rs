@@ -62,13 +62,14 @@ impl Image {
             source_rectangle[2] as Scalar,
             source_rectangle[3] as Scalar
         ]);
-        back_end.enable_texture(texture);
-        back_end.color(color);
         back_end.tri_list_uv(
-            &triangulation::rect_tri_list_xy(c.transform, rectangle),
-            &triangulation::rect_tri_list_uv(texture, source_rectangle)
+            &color,
+            texture,
+            |f| f(
+                &triangulation::rect_tri_list_xy(c.transform, rectangle),
+                &triangulation::rect_tri_list_uv(texture, source_rectangle)
+            )
         );
-        back_end.disable_texture();
     }
 }
 
