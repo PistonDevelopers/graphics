@@ -35,9 +35,9 @@ git = "https://github.com/PistonDevelopers/read_color"
 
 [dependencies.quack]
 git = "https://github.com/PistonDevelopers/quack"
-#version = "0.0.3"
+#version = "0.0.10"
 
 [dependencies.interpolation]
 git = "https://github.com/PistonDevelopers/interpolation"
-#version = "0.0.1"
+#version = "0.0.2"
 
