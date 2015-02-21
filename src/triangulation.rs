@@ -63,7 +63,7 @@ pub fn with_lerp_polygons_tri_list<F>(
     // Get factor between frames.
     let tw = tw - frame as Scalar;
     let n = polygons[0].len();
-    let mut i = 0us;
+    let mut i: usize = 0;
     stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
@@ -89,7 +89,7 @@ pub fn with_ellipse_tri_list<F>(
     let (cw, ch) = (0.5 * w, 0.5 * h);
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
-    let mut i = 0us;
+    let mut i: usize = 0;
     stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
@@ -119,7 +119,7 @@ pub fn with_round_border_line_tri_list<F>(
     let m = multiply(m, translate([x1, y1]));
     let m = multiply(m, orient(dx, dy));
     let n = resolution_cap * 2;
-    let mut i = 0us;
+    let mut i: usize = 0;
     stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
@@ -171,7 +171,7 @@ pub fn with_round_rectangle_tri_list<F>(
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
     let n = resolution_corner * 4;
-    let mut i = 0us;
+    let mut i: usize = 0;
     stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
@@ -313,7 +313,7 @@ pub fn with_ellipse_border_tri_list<F>(
     let (cw2, ch2) = (cw - border_radius, ch - border_radius);
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
-    let mut i = 0us;
+    let mut i: usize = 0;
     stream_quad_tri_list(m, || {
         if i > n { return None; }
 
@@ -345,7 +345,7 @@ pub fn with_round_rectangle_border_tri_list<F>(
     let radius1 = round_radius + border_radius;
     let radius2 = round_radius - border_radius;
     let n = resolution_corner * 4;
-    let mut i = 0us;
+    let mut i: usize = 0;
     stream_quad_tri_list(m, || {
         if i > n { return None; }
 
