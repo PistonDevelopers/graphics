@@ -41,9 +41,9 @@ impl Image {
 
     /// Draws the image.
     pub fn draw<B>(
-        &self, 
-        texture: &<B as BackEnd>::Texture, 
-        c: &Context, 
+        &self,
+        texture: &<B as BackEnd>::Texture,
+        c: &Context,
         back_end: &mut B
     )
         where B: BackEnd
@@ -51,7 +51,6 @@ impl Image {
         use internal::Scalar;
 
         let color = self.color.unwrap_or([1.0; 4]);
-        if color[3] == 0.0 { return; }
         let source_rectangle = self.source_rectangle.unwrap_or({
             let (w, h) = texture.get_size();
             [0, 0, w as i32, h as i32]
@@ -99,4 +98,3 @@ mod test {
             .set(SrcRect([0, 0, 32, 32]));
     }
 }
-

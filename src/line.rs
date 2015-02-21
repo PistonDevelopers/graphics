@@ -57,15 +57,13 @@ impl Line {
 
     /// Draw the line.
     pub fn draw<B>(
-        &self, 
+        &self,
         line: internal::Line,
-        c: &Context, 
+        c: &Context,
         back_end: &mut B
     )
         where B: BackEnd
     {
-        // Complete transparency does not need to be rendered.
-        if self.color[3] == 0.0 { return; }
         match self.shape {
             Shape::Square => {
                 back_end.tri_list(
@@ -164,4 +162,3 @@ mod test {
         let Color(_) = _line.get();
     }
 }
-
