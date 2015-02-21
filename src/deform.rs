@@ -208,7 +208,7 @@ impl DeformGrid {
                 back_end.tri_list_uv(
                     &color,
                     texture,
-                    |f| f(&vertices[], &uvs[])
+                    |f| f(&vertices, &uvs)
                 );
                 offset = 0;
             }
