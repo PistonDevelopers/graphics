@@ -30,7 +30,6 @@ impl Polygon {
     )
         where B: BackEnd
     {
-        if self.color[3] == 0.0 { return; }
         back_end.tri_list(
             &self.color,
             |f|

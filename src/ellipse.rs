@@ -42,7 +42,7 @@ impl Ellipse {
 
     /// Creates a new ellipse border
     pub fn border(
-        color: internal::Color, 
+        color: internal::Color,
         radius: internal::Radius
     ) -> Ellipse {
         Ellipse {
@@ -56,27 +56,24 @@ impl Ellipse {
 
     /// Draws the ellipse.
     pub fn draw<B>(
-        &self, 
+        &self,
         rectangle: internal::Rectangle,
         c: &Context,
         back_end: &mut B
     )
         where B: BackEnd
     {
-        if self.color[3] != 0.0 {
-            back_end.tri_list(
-                &self.color,
-                |f|
-            triangulation::with_ellipse_tri_list(
-                128,
-                c.transform,
-                rectangle,
-                |vertices| f(vertices)
-            ));
-        }
+        back_end.tri_list(
+            &self.color,
+            |f|
+        triangulation::with_ellipse_tri_list(
+            128,
+            c.transform,
+            rectangle,
+            |vertices| f(vertices)
+        ));
 
         if let Some(Border { color, radius: border_radius }) = self.border {
-            if color[3] == 0.0 { return; }
             back_end.tri_list(
                 &color,
                 |f|
@@ -117,4 +114,3 @@ mod test {
             .set(Border { color: [1.0; 4], radius: 3.0 });
     }
 }
-
