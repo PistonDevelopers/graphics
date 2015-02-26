@@ -2,6 +2,7 @@ use ImageSize;
 
 /// Implemented by all graphics back-ends.
 pub trait BackEnd {
+    /// The texture type associated with the back-end.
     type Texture: ImageSize;
 
     /// Clears background with a color.
