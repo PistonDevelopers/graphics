@@ -16,8 +16,8 @@ pub fn centered(rect: internal::Rectangle) -> internal::Rectangle {
 
 /// Use centered square
 pub fn centered_square(
-    x: internal::Scalar, 
-    y: internal::Scalar, 
+    x: internal::Scalar,
+    y: internal::Scalar,
     radius: internal::Scalar
 ) -> internal::Rectangle {
     [x - radius, y - radius, 2.0 * radius, 2.0 * radius]
@@ -25,8 +25,8 @@ pub fn centered_square(
 
 /// Use square with x, y in upper left corner
 pub fn square(
-    x: internal::Scalar, 
-    y: internal::Scalar, 
+    x: internal::Scalar,
+    y: internal::Scalar,
     size: internal::Scalar
 ) -> internal::Rectangle {
     [x, y, size, size]
@@ -91,7 +91,7 @@ impl Rectangle {
 
     /// Creates a new rectangle border.
     pub fn border(
-        color: internal::Color, 
+        color: internal::Color,
         radius: internal::Radius
     ) -> Rectangle {
         Rectangle {
@@ -122,9 +122,9 @@ impl Rectangle {
 
     /// Draws the rectangle
     pub fn draw<B>(
-        &self, 
-        rectangle: internal::Rectangle, 
-        c: &Context, 
+        &self,
+        rectangle: internal::Rectangle,
+        c: &Context,
         back_end: &mut B
     )
         where B: Graphics
@@ -133,12 +133,14 @@ impl Rectangle {
             match self.shape {
                 Shape::Square => {
                     back_end.tri_list(
+                        &c.draw_state,
                         &self.color,
                         |f| f(&triangulation::rect_tri_list_xy(c.transform, rectangle)),
                     );
                 }
                 Shape::Round(round_radius) => {
                     back_end.tri_list(
+                        &c.draw_state,
                         &self.color,
                         |f|
                     triangulation::with_round_rectangle_tri_list(
@@ -151,6 +153,7 @@ impl Rectangle {
                 }
                 Shape::Bevel(bevel_radius) => {
                     back_end.tri_list(
+                        &c.draw_state,
                         &self.color,
                         |f|
                     triangulation::with_round_rectangle_tri_list(
@@ -163,12 +166,13 @@ impl Rectangle {
                 }
             }
         }
-       
+
         if let Some(Border { color, radius: border_radius }) = self.border {
             if color[3] == 0.0 { return; }
             match self.shape {
                 Shape::Square => {
                     back_end.tri_list(
+                        &c.draw_state,
                         &color,
                         |f| f(
                             &triangulation::rect_border_tri_list_xy(
@@ -178,6 +182,7 @@ impl Rectangle {
                 }
                 Shape::Round(round_radius) => {
                     back_end.tri_list(
+                        &c.draw_state,
                         &color,
                         |f|
                     triangulation::with_round_rectangle_border_tri_list(
@@ -191,6 +196,7 @@ impl Rectangle {
                 }
                 Shape::Bevel(bevel_radius) => {
                     back_end.tri_list(
+                        &c.draw_state,
                         &color,
                         |f|
                     triangulation::with_round_rectangle_border_tri_list(
@@ -203,7 +209,7 @@ impl Rectangle {
                     ));
                 }
             }
-        } 
+        }
     }
 }
 
@@ -237,4 +243,3 @@ mod test {
             .set(Border { color: [0.0; 4], radius: 4.0 });
     }
 }
-

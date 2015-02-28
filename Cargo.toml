@@ -1,7 +1,7 @@
 [package]
 
 name = "piston2d-graphics"
-version = "0.0.22"
+version = "0.0.23"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "Coeuvre <coeuvre@gmail.com>",
