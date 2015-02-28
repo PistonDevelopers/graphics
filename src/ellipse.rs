@@ -64,6 +64,7 @@ impl Ellipse {
         where B: Graphics
     {
         back_end.tri_list(
+            &c.draw_state,
             &self.color,
             |f|
         triangulation::with_ellipse_tri_list(
@@ -75,6 +76,7 @@ impl Ellipse {
 
         if let Some(Border { color, radius: border_radius }) = self.border {
             back_end.tri_list(
+                &c.draw_state,
                 &color,
                 |f|
             triangulation::with_ellipse_border_tri_list(

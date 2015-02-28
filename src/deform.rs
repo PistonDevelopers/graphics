@@ -206,6 +206,7 @@ impl DeformGrid {
         for &ind in self.indices.iter() {
             if offset >= buf_len {
                 back_end.tri_list_uv(
+                    &c.draw_state,
                     &color,
                     texture,
                     |f| f(&vertices, &uvs)
@@ -224,6 +225,7 @@ impl DeformGrid {
         }
         if offset > 0 {
             back_end.tri_list_uv(
+                &c.draw_state,
                 &color,
                 texture,
                 |f| f(
@@ -382,4 +384,3 @@ impl DeformGrid {
         }
     }
 }
-

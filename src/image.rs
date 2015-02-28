@@ -62,6 +62,7 @@ impl Image {
             source_rectangle[3] as Scalar
         ]);
         back_end.tri_list_uv(
+            &c.draw_state,
             &color,
             texture,
             |f| f(

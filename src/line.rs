@@ -67,6 +67,7 @@ impl Line {
         match self.shape {
             Shape::Square => {
                 back_end.tri_list(
+                    &c.draw_state,
                     &self.color,
                     |f|
                 triangulation::with_round_border_line_tri_list(
@@ -79,6 +80,7 @@ impl Line {
             }
             Shape::Round => {
                 back_end.tri_list(
+                    &c.draw_state,
                     &self.color,
                     |f|
                 triangulation::with_round_border_line_tri_list(
@@ -91,6 +93,7 @@ impl Line {
             }
             Shape::Bevel => {
                 back_end.tri_list(
+                    &c.draw_state,
                     &self.color,
                     |f|
                 triangulation::with_round_border_line_tri_list(

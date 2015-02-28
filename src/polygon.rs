@@ -31,6 +31,7 @@ impl Polygon {
         where B: Graphics
     {
         back_end.tri_list(
+            &c.draw_state,
             &self.color,
             |f|
         triangulation::with_polygon_tri_list(
@@ -52,6 +53,7 @@ impl Polygon {
     {
         if self.color[3] == 0.0 { return; }
         back_end.tri_list(
+            &c.draw_state,
             &self.color,
             |f|
         triangulation::with_lerp_polygons_tri_list(

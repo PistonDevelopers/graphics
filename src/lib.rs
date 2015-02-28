@@ -13,6 +13,7 @@ extern crate interpolation;
 extern crate draw_state;
 
 pub use texture::ImageSize;
+pub use draw_state::DrawState;
 
 pub use graphics::Graphics;
 pub use graphics::Graphics as BackEnd;
