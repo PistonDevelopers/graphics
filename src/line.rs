@@ -2,7 +2,7 @@
 
 use internal;
 use triangulation;
-use BackEnd;
+use Graphics;
 use Context;
 use Color;
 
@@ -62,7 +62,7 @@ impl Line {
         c: &Context,
         back_end: &mut B
     )
-        where B: BackEnd
+        where B: Graphics
     {
         match self.shape {
             Shape::Square => {
@@ -115,7 +115,7 @@ impl Line {
         c: &Context,
         back_end: &mut B
     )
-        where B: BackEnd
+        where B: Graphics
     {
         use RelativeTransform;
 

@@ -76,18 +76,18 @@ pub struct SrcRect(pub internal::SourceRectangle);
 pub fn clear<B>(
     color: internal::Color, back_end: &mut B
 )
-    where B: BackEnd
+    where B: Graphics
 {
     back_end.clear(color);
 }
 
 /// Draws image.
 pub fn image<B>(
-    image: &<B as BackEnd>::Texture,
+    image: &<B as Graphics>::Texture,
     c: &Context,
     back_end: &mut B
 )
-    where B: BackEnd
+    where B: Graphics
 {
     Image::new().draw(image, c, back_end);
 }
@@ -99,7 +99,7 @@ pub fn ellipse<B>(
     c: &Context,
     back_end: &mut B
 )
-    where B: BackEnd
+    where B: Graphics
 {
     Ellipse::new(color).draw(rect, c, back_end);
 }
@@ -111,7 +111,7 @@ pub fn rectangle<B>(
     c: &Context,
     back_end: &mut B
 )
-    where B: BackEnd
+    where B: Graphics
 {
     Rectangle::new(color).draw(rect, c, back_end);
 }
@@ -123,7 +123,7 @@ pub fn polygon<B>(
     c: &Context,
     back_end: &mut B
 )
-    where B: BackEnd
+    where B: Graphics
 {
     Polygon::new(color).draw(polygon, c, back_end);
 }

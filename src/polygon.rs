@@ -2,7 +2,7 @@
 
 use internal;
 use triangulation;
-use BackEnd;
+use Graphics;
 use Context;
 use Color;
 
@@ -28,7 +28,7 @@ impl Polygon {
         c: &Context,
         back_end: &mut B
     )
-        where B: BackEnd
+        where B: Graphics
     {
         back_end.tri_list(
             &self.color,
@@ -48,7 +48,7 @@ impl Polygon {
         c: &Context,
         back_end: &mut B
     )
-        where B: BackEnd
+        where B: Graphics
     {
         if self.color[3] == 0.0 { return; }
         back_end.tri_list(

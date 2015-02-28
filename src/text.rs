@@ -4,7 +4,7 @@ use color;
 use internal;
 use Image;
 use Context;
-use BackEnd;
+use Graphics;
 use character::CharacterCache;
 use RelativeTransform;
 
@@ -47,7 +47,7 @@ impl Text {
     )
         where
             C: CharacterCache,
-            B: BackEnd<Texture = <C as CharacterCache>::Texture>
+            B: Graphics<Texture = <C as CharacterCache>::Texture>
     {
         let image = Image::colored(self.color);
         let mut x = 0;
