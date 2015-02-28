@@ -13,8 +13,8 @@ extern crate interpolation;
 
 pub use texture::ImageSize;
 
-pub use back_end::Graphics;
-pub use back_end::Graphics as BackEnd;
+pub use graphics::Graphics;
+pub use graphics::Graphics as BackEnd;
 pub use relative::{
     RelativeColor,
     RelativeRectangle,
@@ -35,7 +35,7 @@ pub use context::Context as Context;
 /// This can be used to initialize buffers that fit the chunk size.
 pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 
-mod back_end;
+mod graphics;
 mod relative;
 
 pub mod character;
