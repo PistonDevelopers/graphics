@@ -5,7 +5,7 @@ pub use rectangle::centered_square as circle;
 
 use internal;
 use triangulation;
-use BackEnd;
+use Graphics;
 use Context;
 use Color;
 
@@ -61,7 +61,7 @@ impl Ellipse {
         c: &Context,
         back_end: &mut B
     )
-        where B: BackEnd
+        where B: Graphics
     {
         back_end.tri_list(
             &self.color,

@@ -2,7 +2,7 @@
 
 use internal;
 use triangulation;
-use BackEnd;
+use Graphics;
 use Color;
 use Context;
 use ImageSize;
@@ -42,11 +42,11 @@ impl Image {
     /// Draws the image.
     pub fn draw<B>(
         &self,
-        texture: &<B as BackEnd>::Texture,
+        texture: &<B as Graphics>::Texture,
         c: &Context,
         back_end: &mut B
     )
-        where B: BackEnd
+        where B: Graphics
     {
         use internal::Scalar;
 

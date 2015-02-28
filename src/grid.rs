@@ -2,7 +2,7 @@
 
 use vecmath::Scalar;
 use {
-    BackEnd,
+    Graphics,
     Context,
     Line,
 };
@@ -34,7 +34,7 @@ impl Grid {
         c: &Context,
         g: &mut B
     )
-        where B: BackEnd
+        where B: Graphics
     {
         let &Grid {
             cols, rows, units

@@ -3,7 +3,7 @@
 use internal;
 use triangulation;
 use Context;
-use BackEnd;
+use Graphics;
 use Color;
 
 pub use vecmath::margin_rectangle as margin;
@@ -127,7 +127,7 @@ impl Rectangle {
         c: &Context, 
         back_end: &mut B
     )
-        where B: BackEnd
+        where B: Graphics
     {
         if self.color[3] != 0.0 {
             match self.shape {

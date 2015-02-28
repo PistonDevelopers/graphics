@@ -2,7 +2,7 @@
 
 use {
     Line,
-    BackEnd,
+    Graphics,
     Context,
 };
 use std::num::Float;
@@ -187,11 +187,11 @@ impl DeformGrid {
     /// Draws deformed image.
     pub fn draw_image<B>(
         &self,
-        texture: &<B as BackEnd>::Texture,
+        texture: &<B as Graphics>::Texture,
         c: &Context,
         back_end: &mut B,
     )
-        where B: BackEnd
+        where B: Graphics
     {
         let mat = c.transform;
         let color = [1.0; 4];
@@ -248,7 +248,7 @@ impl DeformGrid {
         c: &Context,
         back_end: &mut B,
     )
-        where B: BackEnd
+        where B: Graphics
     {
         let grid = self;
         let nx = grid.cols + 1;
@@ -273,7 +273,7 @@ impl DeformGrid {
         c: &Context,
         back_end: &mut B,
     )
-        where B: BackEnd
+        where B: Graphics
     {
         let grid = self;
         let nx = grid.cols + 1;
