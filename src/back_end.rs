@@ -1,7 +1,7 @@
 use ImageSize;
 
 /// Implemented by all graphics back-ends.
-pub trait BackEnd {
+pub trait Graphics {
     /// The texture type associated with the back-end.
     type Texture: ImageSize;
 
@@ -19,7 +19,7 @@ pub trait BackEnd {
     fn tri_list_uv<F>(
         &mut self, 
         color: &[f32; 4],
-        texture: &<Self as BackEnd>::Texture, 
+        texture: &<Self as Graphics>::Texture, 
         f: F
     ) where F: FnMut(&mut FnMut(&[f32], &[f32]));
 }

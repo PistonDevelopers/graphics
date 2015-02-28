@@ -13,7 +13,8 @@ extern crate interpolation;
 
 pub use texture::ImageSize;
 
-pub use back_end::BackEnd;
+pub use back_end::Graphics;
+pub use back_end::Graphics as BackEnd;
 pub use relative::{
     RelativeColor,
     RelativeRectangle,
