@@ -1,5 +1,6 @@
 //! Transformation context
 
+use draw_state::DrawState;
 use vecmath::{
     identity,
     Matrix2d,
@@ -21,6 +22,8 @@ pub struct Context {
     pub view: Matrix2d,
     /// Current transformation.
     pub transform: Matrix2d,
+    /// Current draw state settings.
+    pub draw_state: DrawState,
 }
 
 quack! {
@@ -34,6 +37,15 @@ quack! {
     action:
 }
 
+
+fn default_draw_state() -> DrawState {
+    use draw_state::block::{ CullFace, RasterMethod };
+
+    let mut draw_state = DrawState::new();
+    draw_state.primitive.method = RasterMethod::Fill(CullFace::Nothing);
+    draw_state
+}
+
 impl Context {
     /// Creates a new drawing context.
     #[inline(always)]
@@ -41,6 +53,7 @@ impl Context {
         Context {
             view: identity(),
             transform: identity(),
+            draw_state: default_draw_state(),
         }
     }
 
@@ -63,6 +76,7 @@ impl Context {
         Context {
             view: mat,
             transform: mat,
+            draw_state: default_draw_state(),
         }
     }
 }
@@ -106,4 +120,3 @@ mod test {
         assert!((transform[1][1] - 3.0).abs() < 0.00001);
     }
 }
-
