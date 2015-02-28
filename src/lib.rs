@@ -10,6 +10,7 @@ extern crate read_color;
 #[macro_use]
 extern crate quack;
 extern crate interpolation;
+extern crate draw_state;
 
 pub use texture::ImageSize;
 
@@ -127,4 +128,3 @@ pub fn polygon<B>(
 {
     Polygon::new(color).draw(polygon, c, back_end);
 }
-
