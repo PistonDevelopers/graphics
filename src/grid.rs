@@ -20,7 +20,7 @@ pub struct Grid {
 
 /// Iterates through the cells of a grid as (u32, u32).
 #[derive(Copy)]
-pub struct GridIterator {
+pub struct GridCells {
     cols: u32,
     rows: u32,
     state: u64,
@@ -56,8 +56,8 @@ impl Grid {
     }
 
     /// Get a GridIterator for the grid
-    pub fn cells(&self) -> GridIterator {
-        GridIterator {
+    pub fn cells(&self) -> GridCells {
+        GridCells {
             cols: self.cols,
             rows: self.rows,
             state: 0,
@@ -65,7 +65,7 @@ impl Grid {
     }
 }
 
-impl Iterator for GridIterator {
+impl Iterator for GridCells {
     type Item = (u32, u32);
 
     fn next(&mut self) -> Option<(u32, u32)> {
