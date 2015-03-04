@@ -40,10 +40,11 @@ quack! {
 
 fn default_draw_state() -> DrawState {
     use draw_state::block::{ CullFace, RasterMethod };
+    use draw_state::BlendPreset;
 
     let mut draw_state = DrawState::new();
     draw_state.primitive.method = RasterMethod::Fill(CullFace::Nothing);
-    draw_state
+    draw_state.blend(BlendPreset::Alpha)
 }
 
 impl Context {
