@@ -4,6 +4,7 @@ use internal;
 use ImageSize;
 
 /// Holds rendered character data.
+#[derive(Clone)]
 pub struct Character<T: ImageSize> {
     /// The offset of character.
     pub offset: [f64; 2],
