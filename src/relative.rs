@@ -24,7 +24,7 @@ use Rect;
 use SrcRect;
 
 /// Implemented by contexts that contains color.
-pub trait RelativeColor: Sized {
+pub trait Colored: Sized {
     /// Multiplies with red, green, blue and alpha values.
     fn mul_rgba(
         &self,
@@ -62,7 +62,7 @@ pub trait RelativeColor: Sized {
     fn hue_rad(&self, angle: ColorComponent) -> Self;
 }
 
-impl<T: Get<Color> + Set<Color> + Clone> RelativeColor for T {
+impl<T: Get<Color> + Set<Color> + Clone> Colored for T {
     #[inline(always)]
     fn mul_rgba(
         &self,
@@ -83,7 +83,7 @@ impl<T: Get<Color> + Set<Color> + Clone> RelativeColor for T {
 }
 
 /// Should be implemented by contexts that have rectangle information.
-pub trait RelativeRectangle: Sized {
+pub trait Rectangled: Sized {
     /// Shrinks the current rectangle equally by all sides.
     fn margin(&self, m: Scalar) -> Self;
 
@@ -97,7 +97,7 @@ pub trait RelativeRectangle: Sized {
     fn rel(&self, x: Scalar, y: Scalar) -> Self;
 }
 
-impl<T: Get<Rect> + Set<Rect> + Clone> RelativeRectangle for T {
+impl<T: Get<Rect> + Set<Rect> + Clone> Rectangled for T {
     #[inline(always)]
     fn margin(&self, m: Scalar) -> Self {
         let Rect(val) = self.get();
@@ -113,7 +113,7 @@ impl<T: Get<Rect> + Set<Rect> + Clone> RelativeRectangle for T {
 
 /// Should be implemented by contexts that
 /// have source rectangle information.
-pub trait RelativeSourceRectangle {
+pub trait SourceRectangled {
     /// Adds a source rectangle.
     fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> Self;
 
@@ -134,7 +134,7 @@ pub trait RelativeSourceRectangle {
 impl<T: Get<SrcRect>
       + Set<SrcRect>
       + Clone
-> RelativeSourceRectangle for T {
+> SourceRectangled for T {
     #[inline(always)]
     fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> Self {
         self.clone().set(SrcRect([x, y, w, h]))
@@ -183,7 +183,7 @@ impl<T: Get<SrcRect>
 }
 
 /// Implemented by contexts that can transform.
-pub trait RelativeTransform: Sized {
+pub trait Transformed: Sized {
     /// Appends transform to the current one.
     fn append_transform(&self, transform: Matrix2d) -> Self;
 
@@ -240,9 +240,9 @@ pub trait RelativeTransform: Sized {
     fn shear(&self, v: Vec2d) -> Self;
 }
 
-impl<T: Clone> RelativeTransform for T
+impl<T: Clone> Transformed for T
     where
-        (Transform, Self): Pair<Data = Transform, Object = Self> 
+        (Transform, Self): Pair<Data = Transform, Object = Self>
             + GetFrom + SetAt
 {
     #[inline(always)]
@@ -295,7 +295,7 @@ impl<T: Clone> RelativeTransform for T
 
 /// Should be implemented by contexts that
 /// draws something relative to view.
-pub trait RelativeViewTransform {
+pub trait ViewTransformed {
     /// Moves the current transform to the view coordinate system.
     ///
     /// This is usually [0.0, 0.0] in the upper left corner
@@ -318,7 +318,7 @@ pub trait RelativeViewTransform {
     fn get_view_size(&self) -> (Scalar, Scalar);
 }
 
-impl<T: Clone> RelativeViewTransform for T
+impl<T: Clone> ViewTransformed for T
     where
         (ViewTransform, Self): Pair<Data = ViewTransform, Object = Self>
             + GetFrom + SetAt,
@@ -330,18 +330,18 @@ impl<T: Clone> RelativeViewTransform for T
         let ViewTransform(mat) = self.get();
         self.clone().set(Transform(mat))
     }
-    
+
     #[inline(always)]
     fn reset(&self) -> Self {
         self.clone().set(Transform(identity()))
     }
-    
+
     #[inline(always)]
     fn store_view(&self) -> Self {
         let Transform(mat) = self.get();
         self.clone().set(ViewTransform(mat))
     }
-    
+
     #[inline(always)]
     fn get_view_size(&self) -> (Scalar, Scalar) {
         let ViewTransform(mat) = self.get();
@@ -349,4 +349,3 @@ impl<T: Clone> RelativeViewTransform for T
         (2.0 / scale[0], 2.0 / scale[1])
     }
 }
-

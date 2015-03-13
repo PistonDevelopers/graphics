@@ -17,12 +17,17 @@ pub use draw_state::DrawState;
 
 pub use graphics::Graphics;
 pub use graphics::Graphics as BackEnd;
+pub use relative::Colored as RelativeColor;
+pub use relative::Rectangled as RelativeRectangle;
+pub use relative::SourceRectangled as RelativeSourceRectangle;
+pub use relative::Transformed as RelativeTransform;
+pub use relative::ViewTransformed as RelativeViewTransform;
 pub use relative::{
-    RelativeColor,
-    RelativeRectangle,
-    RelativeSourceRectangle,
-    RelativeTransform,
-    RelativeViewTransform,
+    Colored,
+    Rectangled,
+    SourceRectangled,
+    Transformed,
+    ViewTransformed,
 };
 pub use rectangle::Rectangle;
 pub use line::Line;
