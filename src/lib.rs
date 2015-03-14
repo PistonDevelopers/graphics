@@ -34,6 +34,8 @@ pub use line::Line;
 pub use ellipse::Ellipse;
 pub use image::Image;
 pub use polygon::Polygon;
+pub use vecmath::abs_transform;
+pub use default_draw_state::default_draw_state;
 
 pub use context::Context as Context;
 
@@ -44,6 +46,7 @@ pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 
 mod graphics;
 mod relative;
+mod default_draw_state;
 
 pub mod character;
 pub mod context;
@@ -91,46 +94,46 @@ pub fn clear<G>(
 /// Draws image.
 pub fn image<G>(
     image: &<G as Graphics>::Texture,
-    c: &Context,
+    transform: vecmath::Matrix2d,
     g: &mut G
 )
     where G: Graphics
 {
-    Image::new().draw(image, c, g);
+    Image::new().draw(image, default_draw_state(), transform, g);
 }
 
 /// Draws ellipse.
 pub fn ellipse<G>(
     color: internal::Color,
     rect: internal::Rectangle,
-    c: &Context,
+    transform: vecmath::Matrix2d,
     g: &mut G
 )
     where G: Graphics
 {
-    Ellipse::new(color).draw(rect, c, g);
+    Ellipse::new(color).draw(rect, default_draw_state(), transform, g);
 }
 
 /// Draws rectangle.
 pub fn rectangle<G>(
     color: internal::Color,
     rect: internal::Rectangle,
-    c: &Context,
+    transform: vecmath::Matrix2d,
     g: &mut G
 )
     where G: Graphics
 {
-    Rectangle::new(color).draw(rect, c, g);
+    Rectangle::new(color).draw(rect, default_draw_state(), transform, g);
 }
 
 /// Draws polygon.
 pub fn polygon<G>(
     color: internal::Color,
     polygon: internal::Polygon,
-    c: &Context,
+    transform: vecmath::Matrix2d,
     g: &mut G
 )
     where G: Graphics
 {
-    Polygon::new(color).draw(polygon, c, g);
+    Polygon::new(color).draw(polygon, default_draw_state(), transform, g);
 }

@@ -46,6 +46,19 @@ pub fn perp(v: [Scalar; 2]) -> [Scalar; 2] {
     [-v[1], v[0]]
 }
 
+/// Transforms from normalized to absolute coordinates.
+///
+/// Computes absolute transform from width and height of viewport.
+/// In absolute coordinates, the x axis points to the right,
+/// and the y axis points down on the screen.
+#[inline(always)]
+pub fn abs_transform(w: Scalar, h: Scalar) -> Matrix2d {
+    let sx = 2.0 / w;
+    let sy = -2.0 / h;
+    [[ sx, 0.0, -1.0 ],
+     [ 0.0,  sy, 1.0 ]]
+}
+
 /// Creates a translation matrix.
 #[inline(always)]
 pub fn translate(v: Vec2d) -> Matrix2d {
@@ -371,7 +384,7 @@ pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
 mod test_barycentric {
     use std::num::Float;
     use super::*;
-    
+
     #[test]
     fn test_barycentric() {
         let triangle = [[0.0, 0.0], [100.0, 0.0], [0.0, 50.0]];

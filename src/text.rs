@@ -3,10 +3,11 @@
 use color;
 use internal;
 use Image;
-use Context;
 use Graphics;
 use character::CharacterCache;
 use RelativeTransform;
+use vecmath::Matrix2d;
+use DrawState;
 
 /// Renders text
 #[derive(Copy, Clone)]
@@ -42,7 +43,8 @@ impl Text {
         &self,
         text: &str,
         cache: &mut C,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where
@@ -55,7 +57,8 @@ impl Text {
         for ch in text.chars() {
             let character = cache.character(self.font_size, ch);
             image.draw(&character.texture,
-                &c.trans(
+                draw_state,
+                transform.trans(
                     x as f64 + character.left(),
                     y as f64 - character.top()
                 ),

@@ -240,6 +240,49 @@ pub trait Transformed: Sized {
     fn shear(&self, v: Vec2d) -> Self;
 }
 
+impl Transformed for Matrix2d
+{
+    #[inline(always)]
+    fn append_transform(&self, transform: Matrix2d) -> Self {
+        multiply(*self, transform)
+    }
+
+    #[inline(always)]
+    fn prepend_transform(&self, transform: Matrix2d) -> Self {
+        multiply(transform, *self)
+    }
+
+    #[inline(always)]
+    fn trans(&self, x: Scalar, y: Scalar) -> Self {
+        let trans = translate([x, y]);
+        multiply(*self, trans)
+    }
+
+    #[inline(always)]
+    fn rot_rad(&self, angle: Scalar) -> Self {
+        let rot = rotate_radians(angle);
+        multiply(*self, rot)
+    }
+
+    #[inline(always)]
+    fn orient(&self, x: Scalar, y: Scalar) -> Self {
+        let orient = orient(x, y);
+        multiply(*self, orient)
+    }
+
+    #[inline(always)]
+    fn scale(&self, sx: Scalar, sy: Scalar) -> Self {
+        let scale = scale(sx, sy);
+        multiply(*self, scale)
+    }
+
+    #[inline(always)]
+    fn shear(&self, v: Vec2d) -> Self {
+        let shear = shear(v);
+        multiply(*self, shear)
+    }
+}
+
 impl<T: Clone> Transformed for T
     where
         (Transform, Self): Pair<Data = Transform, Object = Self>

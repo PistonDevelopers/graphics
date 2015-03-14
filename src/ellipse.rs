@@ -6,8 +6,9 @@ pub use rectangle::centered_square as circle;
 use internal;
 use triangulation;
 use Graphics;
-use Context;
 use Color;
+use vecmath::Matrix2d;
+use DrawState;
 
 /// Ellipse border
 #[derive(Copy, Clone)]
@@ -58,30 +59,31 @@ impl Ellipse {
     pub fn draw<G>(
         &self,
         rectangle: internal::Rectangle,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
     {
         g.tri_list(
-            &c.draw_state,
+            draw_state,
             &self.color,
             |f|
         triangulation::with_ellipse_tri_list(
             128,
-            c.transform,
+            transform,
             rectangle,
             |vertices| f(vertices)
         ));
 
         if let Some(Border { color, radius: border_radius }) = self.border {
             g.tri_list(
-                &c.draw_state,
+                &draw_state,
                 &color,
                 |f|
             triangulation::with_ellipse_border_tri_list(
                 128,
-                c.transform,
+                transform,
                 rectangle,
                 border_radius,
                 |vertices| f(vertices)
