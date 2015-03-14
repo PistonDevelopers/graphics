@@ -35,6 +35,7 @@ pub use ellipse::Ellipse;
 pub use image::Image;
 pub use polygon::Polygon;
 pub use vecmath::abs_transform;
+pub use default_draw_state::default_draw_state;
 
 pub use context::Context as Context;
 
@@ -45,6 +46,7 @@ pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 
 mod graphics;
 mod relative;
+mod default_draw_state;
 
 pub mod character;
 pub mod context;
@@ -79,16 +81,6 @@ pub struct Rect(pub internal::Rectangle);
 /// A source rectangle property
 #[derive(Copy)]
 pub struct SrcRect(pub internal::SourceRectangle);
-
-/// Returns a default draw state that does additive blending and no culling.
-pub fn default_draw_state() -> DrawState {
-    use draw_state::block::{ CullFace, RasterMethod };
-    use draw_state::BlendPreset;
-
-    let mut draw_state = DrawState::new();
-    draw_state.primitive.method = RasterMethod::Fill(CullFace::Nothing);
-    draw_state.blend(BlendPreset::Alpha)
-}
 
 /// Clears the screen.
 pub fn clear<G>(

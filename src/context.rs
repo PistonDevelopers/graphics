@@ -46,7 +46,7 @@ impl Context {
         Context {
             view: identity(),
             transform: identity(),
-            draw_state: default_draw_state(),
+            draw_state: *default_draw_state(),
         }
     }
 
@@ -66,7 +66,7 @@ impl Context {
         Context {
             view: mat,
             transform: mat,
-            draw_state: default_draw_state(),
+            draw_state: *default_draw_state(),
         }
     }
 }
