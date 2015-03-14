@@ -56,17 +56,17 @@ impl Line {
     }
 
     /// Draw the line.
-    pub fn draw<B>(
+    pub fn draw<G>(
         &self,
         line: internal::Line,
         c: &Context,
-        back_end: &mut B
+        g: &mut G
     )
-        where B: Graphics
+        where G: Graphics
     {
         match self.shape {
             Shape::Square => {
-                back_end.tri_list(
+                g.tri_list(
                     &c.draw_state,
                     &self.color,
                     |f|
@@ -79,7 +79,7 @@ impl Line {
                 ));
             }
             Shape::Round => {
-                back_end.tri_list(
+                g.tri_list(
                     &c.draw_state,
                     &self.color,
                     |f|
@@ -92,7 +92,7 @@ impl Line {
                 ));
             }
             Shape::Bevel => {
-                back_end.tri_list(
+                g.tri_list(
                     &c.draw_state,
                     &self.color,
                     |f|
@@ -111,22 +111,22 @@ impl Line {
     ///
     /// Head size is the sides of the triangle
     /// between the arrow hooks and the line
-    pub fn draw_arrow<B>(
+    pub fn draw_arrow<G>(
         &self,
         line: internal::Line,
         head_size: internal::Scalar,
         c: &Context,
-        back_end: &mut B
+        g: &mut G
     )
-        where B: Graphics
+        where G: Graphics
     {
         use RelativeTransform;
 
-        self.draw(line, c, back_end);
+        self.draw(line, c, g);
         let diff = [line[2] - line[0], line[3] - line[1]];
         let arrow_head = c.trans(line[2], line[3]).orient(diff[0], diff[1]);
-        self.draw([-head_size, head_size, 0.0, 0.0], &arrow_head, back_end);
-        self.draw([-head_size, -head_size, 0.0, 0.0], &arrow_head, back_end);
+        self.draw([-head_size, head_size, 0.0, 0.0], &arrow_head, g);
+        self.draw([-head_size, -head_size, 0.0, 0.0], &arrow_head, g);
     }
 }
 

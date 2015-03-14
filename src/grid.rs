@@ -28,13 +28,13 @@ pub struct GridCells {
 
 impl Grid {
     /// Draws the grid.
-    pub fn draw<B>(
+    pub fn draw<G>(
         &self,
         line: &Line,
         c: &Context,
-        g: &mut B
+        g: &mut G
     )
-        where B: Graphics
+        where G: Graphics
     {
         let &Grid {
             cols, rows, units
@@ -98,4 +98,3 @@ mod tests {
         assert_eq!(expected, cells);
     }
 }
-

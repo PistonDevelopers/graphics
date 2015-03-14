@@ -80,57 +80,57 @@ pub struct Rect(pub internal::Rectangle);
 pub struct SrcRect(pub internal::SourceRectangle);
 
 /// Clears the screen.
-pub fn clear<B>(
-    color: internal::Color, back_end: &mut B
+pub fn clear<G>(
+    color: internal::Color, g: &mut G
 )
-    where B: Graphics
+    where G: Graphics
 {
-    back_end.clear(color);
+    g.clear(color);
 }
 
 /// Draws image.
-pub fn image<B>(
-    image: &<B as Graphics>::Texture,
+pub fn image<G>(
+    image: &<G as Graphics>::Texture,
     c: &Context,
-    back_end: &mut B
+    g: &mut G
 )
-    where B: Graphics
+    where G: Graphics
 {
-    Image::new().draw(image, c, back_end);
+    Image::new().draw(image, c, g);
 }
 
 /// Draws ellipse.
-pub fn ellipse<B>(
+pub fn ellipse<G>(
     color: internal::Color,
     rect: internal::Rectangle,
     c: &Context,
-    back_end: &mut B
+    g: &mut G
 )
-    where B: Graphics
+    where G: Graphics
 {
-    Ellipse::new(color).draw(rect, c, back_end);
+    Ellipse::new(color).draw(rect, c, g);
 }
 
 /// Draws rectangle.
-pub fn rectangle<B>(
+pub fn rectangle<G>(
     color: internal::Color,
     rect: internal::Rectangle,
     c: &Context,
-    back_end: &mut B
+    g: &mut G
 )
-    where B: Graphics
+    where G: Graphics
 {
-    Rectangle::new(color).draw(rect, c, back_end);
+    Rectangle::new(color).draw(rect, c, g);
 }
 
 /// Draws polygon.
-pub fn polygon<B>(
+pub fn polygon<G>(
     color: internal::Color,
     polygon: internal::Polygon,
     c: &Context,
-    back_end: &mut B
+    g: &mut G
 )
-    where B: Graphics
+    where G: Graphics
 {
-    Polygon::new(color).draw(polygon, c, back_end);
+    Polygon::new(color).draw(polygon, c, g);
 }

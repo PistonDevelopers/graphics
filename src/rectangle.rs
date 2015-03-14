@@ -121,25 +121,25 @@ impl Rectangle {
     }
 
     /// Draws the rectangle
-    pub fn draw<B>(
+    pub fn draw<G>(
         &self,
         rectangle: internal::Rectangle,
         c: &Context,
-        back_end: &mut B
+        g: &mut G
     )
-        where B: Graphics
+        where G: Graphics
     {
         if self.color[3] != 0.0 {
             match self.shape {
                 Shape::Square => {
-                    back_end.tri_list(
+                    g.tri_list(
                         &c.draw_state,
                         &self.color,
                         |f| f(&triangulation::rect_tri_list_xy(c.transform, rectangle)),
                     );
                 }
                 Shape::Round(round_radius) => {
-                    back_end.tri_list(
+                    g.tri_list(
                         &c.draw_state,
                         &self.color,
                         |f|
@@ -152,7 +152,7 @@ impl Rectangle {
                     ));
                 }
                 Shape::Bevel(bevel_radius) => {
-                    back_end.tri_list(
+                    g.tri_list(
                         &c.draw_state,
                         &self.color,
                         |f|
@@ -171,7 +171,7 @@ impl Rectangle {
             if color[3] == 0.0 { return; }
             match self.shape {
                 Shape::Square => {
-                    back_end.tri_list(
+                    g.tri_list(
                         &c.draw_state,
                         &color,
                         |f| f(
@@ -181,7 +181,7 @@ impl Rectangle {
                     );
                 }
                 Shape::Round(round_radius) => {
-                    back_end.tri_list(
+                    g.tri_list(
                         &c.draw_state,
                         &color,
                         |f|
@@ -195,7 +195,7 @@ impl Rectangle {
                     ));
                 }
                 Shape::Bevel(bevel_radius) => {
-                    back_end.tri_list(
+                    g.tri_list(
                         &c.draw_state,
                         &color,
                         |f|

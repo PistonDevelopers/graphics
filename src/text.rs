@@ -28,7 +28,7 @@ impl Text {
 
     /// Creates a new colored text
     pub fn colored(
-        color: internal::Color, 
+        color: internal::Color,
         font_size: internal::FontSize
     ) -> Text {
         Text {
@@ -38,16 +38,16 @@ impl Text {
     }
 
     /// Draws text with a character cache
-    pub fn draw<C, B>(
-        &self, 
-        text: &str, 
-        cache: &mut C, 
-        c: &Context, 
-        back_end: &mut B
+    pub fn draw<C, G>(
+        &self,
+        text: &str,
+        cache: &mut C,
+        c: &Context,
+        g: &mut G
     )
         where
             C: CharacterCache,
-            B: Graphics<Texture = <C as CharacterCache>::Texture>
+            G: Graphics<Texture = <C as CharacterCache>::Texture>
     {
         let image = Image::colored(self.color);
         let mut x = 0;
@@ -59,11 +59,10 @@ impl Text {
                     x as f64 + character.left(),
                     y as f64 - character.top()
                 ),
-                back_end
+                g
             );
             x += character.width() as i32;
             y += character.height() as i32;
         }
     }
 }
-

@@ -40,13 +40,13 @@ impl Image {
     }
 
     /// Draws the image.
-    pub fn draw<B>(
+    pub fn draw<G>(
         &self,
-        texture: &<B as Graphics>::Texture,
+        texture: &<G as Graphics>::Texture,
         c: &Context,
-        back_end: &mut B
+        g: &mut G
     )
-        where B: Graphics
+        where G: Graphics
     {
         use internal::Scalar;
 
@@ -61,7 +61,7 @@ impl Image {
             source_rectangle[2] as Scalar,
             source_rectangle[3] as Scalar
         ]);
-        back_end.tri_list_uv(
+        g.tri_list_uv(
             &c.draw_state,
             &color,
             texture,

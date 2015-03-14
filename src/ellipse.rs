@@ -55,15 +55,15 @@ impl Ellipse {
     }
 
     /// Draws the ellipse.
-    pub fn draw<B>(
+    pub fn draw<G>(
         &self,
         rectangle: internal::Rectangle,
         c: &Context,
-        back_end: &mut B
+        g: &mut G
     )
-        where B: Graphics
+        where G: Graphics
     {
-        back_end.tri_list(
+        g.tri_list(
             &c.draw_state,
             &self.color,
             |f|
@@ -75,7 +75,7 @@ impl Ellipse {
         ));
 
         if let Some(Border { color, radius: border_radius }) = self.border {
-            back_end.tri_list(
+            g.tri_list(
                 &c.draw_state,
                 &color,
                 |f|
