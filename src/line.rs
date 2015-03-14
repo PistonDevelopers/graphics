@@ -3,8 +3,9 @@
 use internal;
 use triangulation;
 use Graphics;
-use Context;
 use Color;
+use vecmath::Matrix2d;
+use DrawState;
 
 /// The shape of the line
 #[derive(Copy, Clone)]
@@ -59,7 +60,8 @@ impl Line {
     pub fn draw<G>(
         &self,
         line: internal::Line,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
@@ -67,12 +69,12 @@ impl Line {
         match self.shape {
             Shape::Square => {
                 g.tri_list(
-                    &c.draw_state,
+                    draw_state,
                     &self.color,
                     |f|
                 triangulation::with_round_border_line_tri_list(
                     2,
-                    c.transform,
+                    transform,
                     line,
                     self.radius,
                     |vertices| f(vertices)
@@ -80,12 +82,12 @@ impl Line {
             }
             Shape::Round => {
                 g.tri_list(
-                    &c.draw_state,
+                    draw_state,
                     &self.color,
                     |f|
                 triangulation::with_round_border_line_tri_list(
                     64,
-                    c.transform,
+                    transform,
                     line,
                     self.radius,
                     |vertices| f(vertices)
@@ -93,12 +95,12 @@ impl Line {
             }
             Shape::Bevel => {
                 g.tri_list(
-                    &c.draw_state,
+                    draw_state,
                     &self.color,
                     |f|
                 triangulation::with_round_border_line_tri_list(
                     3,
-                    c.transform,
+                    transform,
                     line,
                     self.radius,
                     |vertices| f(vertices)
@@ -115,18 +117,21 @@ impl Line {
         &self,
         line: internal::Line,
         head_size: internal::Scalar,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
     {
         use RelativeTransform;
 
-        self.draw(line, c, g);
+        self.draw(line, draw_state, transform, g);
         let diff = [line[2] - line[0], line[3] - line[1]];
-        let arrow_head = c.trans(line[2], line[3]).orient(diff[0], diff[1]);
-        self.draw([-head_size, head_size, 0.0, 0.0], &arrow_head, g);
-        self.draw([-head_size, -head_size, 0.0, 0.0], &arrow_head, g);
+        let arrow_head = transform
+            .trans(line[2], line[3])
+            .orient(diff[0], diff[1]);
+        self.draw([-head_size, head_size, 0.0, 0.0], draw_state, arrow_head, g);
+        self.draw([-head_size, -head_size, 0.0, 0.0], draw_state, arrow_head, g);
     }
 }
 

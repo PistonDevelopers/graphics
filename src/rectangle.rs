@@ -2,9 +2,10 @@
 
 use internal;
 use triangulation;
-use Context;
 use Graphics;
 use Color;
+use DrawState;
+use vecmath::Matrix2d;
 
 pub use vecmath::margin_rectangle as margin;
 
@@ -124,7 +125,8 @@ impl Rectangle {
     pub fn draw<G>(
         &self,
         rectangle: internal::Rectangle,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
@@ -133,19 +135,23 @@ impl Rectangle {
             match self.shape {
                 Shape::Square => {
                     g.tri_list(
-                        &c.draw_state,
+                        draw_state,
                         &self.color,
-                        |f| f(&triangulation::rect_tri_list_xy(c.transform, rectangle)),
+                        |f|
+                            f(&triangulation::rect_tri_list_xy(
+                                transform,
+                                rectangle
+                            )),
                     );
                 }
                 Shape::Round(round_radius) => {
                     g.tri_list(
-                        &c.draw_state,
+                        draw_state,
                         &self.color,
                         |f|
                     triangulation::with_round_rectangle_tri_list(
                         32,
-                        c.transform,
+                        transform,
                         rectangle,
                         round_radius,
                         |vertices| f(vertices)
@@ -153,12 +159,12 @@ impl Rectangle {
                 }
                 Shape::Bevel(bevel_radius) => {
                     g.tri_list(
-                        &c.draw_state,
+                        draw_state,
                         &self.color,
                         |f|
                     triangulation::with_round_rectangle_tri_list(
                         2,
-                        c.transform,
+                        transform,
                         rectangle,
                         bevel_radius,
                         |vertices| f(vertices)
@@ -172,22 +178,22 @@ impl Rectangle {
             match self.shape {
                 Shape::Square => {
                     g.tri_list(
-                        &c.draw_state,
+                        draw_state,
                         &color,
                         |f| f(
                             &triangulation::rect_border_tri_list_xy(
-                                c.transform, rectangle, border_radius),
+                                transform, rectangle, border_radius),
                         )
                     );
                 }
                 Shape::Round(round_radius) => {
                     g.tri_list(
-                        &c.draw_state,
+                        draw_state,
                         &color,
                         |f|
                     triangulation::with_round_rectangle_border_tri_list(
                         128,
-                        c.transform,
+                        transform,
                         rectangle,
                         round_radius,
                         border_radius,
@@ -196,12 +202,12 @@ impl Rectangle {
                 }
                 Shape::Bevel(bevel_radius) => {
                     g.tri_list(
-                        &c.draw_state,
+                        draw_state,
                         &color,
                         |f|
                     triangulation::with_round_rectangle_border_tri_list(
                         2,
-                        c.transform,
+                        transform,
                         rectangle,
                         bevel_radius,
                         border_radius,

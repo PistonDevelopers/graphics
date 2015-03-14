@@ -96,7 +96,7 @@ pub fn image<G>(
 )
     where G: Graphics
 {
-    Image::new().draw(image, c, g);
+    Image::new().draw(image, &c.draw_state, c.transform, g);
 }
 
 /// Draws ellipse.
@@ -108,7 +108,7 @@ pub fn ellipse<G>(
 )
     where G: Graphics
 {
-    Ellipse::new(color).draw(rect, c, g);
+    Ellipse::new(color).draw(rect, &c.draw_state, c.transform, g);
 }
 
 /// Draws rectangle.
@@ -120,7 +120,7 @@ pub fn rectangle<G>(
 )
     where G: Graphics
 {
-    Rectangle::new(color).draw(rect, c, g);
+    Rectangle::new(color).draw(rect, &c.draw_state, c.transform, g);
 }
 
 /// Draws polygon.
@@ -132,5 +132,5 @@ pub fn polygon<G>(
 )
     where G: Graphics
 {
-    Polygon::new(color).draw(polygon, c, g);
+    Polygon::new(color).draw(polygon, &c.draw_state, c.transform, g);
 }

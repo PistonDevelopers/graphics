@@ -4,10 +4,11 @@ use internal;
 use triangulation;
 use Graphics;
 use Color;
-use Context;
 use ImageSize;
 use Rect;
 use SrcRect;
+use DrawState;
+use vecmath::Matrix2d;
 
 /// An image
 #[derive(Copy, Clone)]
@@ -43,7 +44,8 @@ impl Image {
     pub fn draw<G>(
         &self,
         texture: &<G as Graphics>::Texture,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
@@ -62,11 +64,11 @@ impl Image {
             source_rectangle[3] as Scalar
         ]);
         g.tri_list_uv(
-            &c.draw_state,
+            draw_state,
             &color,
             texture,
             |f| f(
-                &triangulation::rect_tri_list_xy(c.transform, rectangle),
+                &triangulation::rect_tri_list_xy(transform, rectangle),
                 &triangulation::rect_tri_list_uv(texture, source_rectangle)
             )
         );

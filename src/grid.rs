@@ -1,11 +1,7 @@
 //! A flat grid with square cells.
 
-use vecmath::Scalar;
-use {
-    Graphics,
-    Context,
-    Line,
-};
+use vecmath::{ Matrix2d, Scalar };
+use { DrawState, Graphics, Line };
 
 /// Represents a flat grid with square cells.
 #[derive(Copy, Clone)]
@@ -31,7 +27,8 @@ impl Grid {
     pub fn draw<G>(
         &self,
         line: &Line,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
@@ -44,14 +41,14 @@ impl Grid {
             let y1 = 0.0;
             let x2 = x1;
             let y2 = rows as Scalar * units;
-            line.draw([x1, y1, x2, y2], c, g);
+            line.draw([x1, y1, x2, y2], draw_state, transform, g);
         }
         for y in 0..rows + 1 {
             let x1 = 0.0;
             let y1 = y as Scalar * units;
             let x2 = cols as Scalar * units;
             let y2 = y1;
-            line.draw([x1, y1, x2, y2], c, g);
+            line.draw([x1, y1, x2, y2], draw_state, transform, g);
         }
     }
 

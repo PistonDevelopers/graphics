@@ -3,8 +3,9 @@
 use internal;
 use triangulation;
 use Graphics;
-use Context;
 use Color;
+use DrawState;
+use vecmath::Matrix2d;
 
 /// A polygon
 #[derive(Copy, Clone)]
@@ -25,17 +26,18 @@ impl Polygon {
     pub fn draw<G>(
         &self,
         polygon: internal::Polygon,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
     {
         g.tri_list(
-            &c.draw_state,
+            draw_state,
             &self.color,
             |f|
         triangulation::with_polygon_tri_list(
-            c.transform,
+            transform,
             polygon,
             |vertices| f(vertices)
         ));
@@ -46,18 +48,19 @@ impl Polygon {
         &self,
         polygons: internal::Polygons,
         tween_factor: internal::Scalar,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
     {
         if self.color[3] == 0.0 { return; }
         g.tri_list(
-            &c.draw_state,
+            draw_state,
             &self.color,
             |f|
         triangulation::with_lerp_polygons_tri_list(
-            c.transform,
+            transform,
             polygons,
             tween_factor,
             |vertices| f(vertices)

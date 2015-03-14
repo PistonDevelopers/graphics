@@ -3,12 +3,12 @@
 use {
     Line,
     Graphics,
-    Context,
 };
 use std::num::Float;
 use triangulation::{tx, ty};
-use vecmath::{ Scalar, Vec2d };
+use vecmath::{ Matrix2d, Scalar, Vec2d };
 use internal;
+use DrawState;
 
 /// Represents a deformed grid.
 #[derive(Clone)]
@@ -188,12 +188,13 @@ impl DeformGrid {
     pub fn draw_image<G>(
         &self,
         texture: &<G as Graphics>::Texture,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G,
     )
         where G: Graphics
     {
-        let mat = c.transform;
+        let mat = transform;
         let color = [1.0; 4];
         let a = color[3];
         if a == 0.0 { return; }
@@ -206,7 +207,7 @@ impl DeformGrid {
         for &ind in self.indices.iter() {
             if offset >= buf_len {
                 g.tri_list_uv(
-                    &c.draw_state,
+                    &draw_state,
                     &color,
                     texture,
                     |f| f(&vertices, &uvs)
@@ -225,7 +226,7 @@ impl DeformGrid {
         }
         if offset > 0 {
             g.tri_list_uv(
-                &c.draw_state,
+                &draw_state,
                 &color,
                 texture,
                 |f| f(
@@ -247,7 +248,8 @@ impl DeformGrid {
     pub fn draw_vertical_lines<G>(
         &self,
         line: &Line,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G,
     )
         where G: Graphics
@@ -263,7 +265,7 @@ impl DeformGrid {
                 let ip = i + (j + 1) * nx;
                 let x2 = grid.vertices[ip][0];
                 let y2 = grid.vertices[ip][1];
-                line.draw([x1, y1, x2, y2], c, g);
+                line.draw([x1, y1, x2, y2], draw_state, transform, g);
             }
         }
     }
@@ -272,7 +274,8 @@ impl DeformGrid {
     pub fn draw_horizontal_lines<G>(
         &self,
         line: &Line,
-        c: &Context,
+        draw_state: &DrawState,
+        transform: Matrix2d,
         g: &mut G,
     )
         where G: Graphics
@@ -288,7 +291,7 @@ impl DeformGrid {
                 let ip = (i + 1) + j * nx;
                 let x2 = grid.vertices[ip][0];
                 let y2 = grid.vertices[ip][1];
-                line.draw([x1, y1, x2, y2], c, g);
+                line.draw([x1, y1, x2, y2], draw_state, transform, g);
             }
         }
     }
