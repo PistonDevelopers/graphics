@@ -1,7 +1,9 @@
 //! Transformation context
 
 use draw_state::DrawState;
+use default_draw_state;
 use vecmath::{
+    abs_transform,
     identity,
     Matrix2d,
     Scalar
@@ -37,16 +39,6 @@ quack! {
     action:
 }
 
-
-fn default_draw_state() -> DrawState {
-    use draw_state::block::{ CullFace, RasterMethod };
-    use draw_state::BlendPreset;
-
-    let mut draw_state = DrawState::new();
-    draw_state.primitive.method = RasterMethod::Fill(CullFace::Nothing);
-    draw_state.blend(BlendPreset::Alpha)
-}
-
 impl Context {
     /// Creates a new drawing context.
     #[inline(always)]
@@ -70,10 +62,7 @@ impl Context {
     /// and y axis pointing down.
     #[inline(always)]
     pub fn abs(w: Scalar, h: Scalar) -> Context {
-        let sx = 2.0 / w;
-        let sy = -2.0 / h;
-        let mat = [[ sx, 0.0, -1.0 ],
-                   [ 0.0,  sy, 1.0 ]];
+        let mat = abs_transform(w, h);
         Context {
             view: mat,
             transform: mat,

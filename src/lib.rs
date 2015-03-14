@@ -80,6 +80,16 @@ pub struct Rect(pub internal::Rectangle);
 #[derive(Copy)]
 pub struct SrcRect(pub internal::SourceRectangle);
 
+/// Returns a default draw state that does additive blending and no culling.
+pub fn default_draw_state() -> DrawState {
+    use draw_state::block::{ CullFace, RasterMethod };
+    use draw_state::BlendPreset;
+
+    let mut draw_state = DrawState::new();
+    draw_state.primitive.method = RasterMethod::Fill(CullFace::Nothing);
+    draw_state.blend(BlendPreset::Alpha)
+}
+
 /// Clears the screen.
 pub fn clear<G>(
     color: internal::Color, g: &mut G
