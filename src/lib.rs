@@ -94,46 +94,46 @@ pub fn clear<G>(
 /// Draws image.
 pub fn image<G>(
     image: &<G as Graphics>::Texture,
-    c: &Context,
+    transform: vecmath::Matrix2d,
     g: &mut G
 )
     where G: Graphics
 {
-    Image::new().draw(image, &c.draw_state, c.transform, g);
+    Image::new().draw(image, default_draw_state(), transform, g);
 }
 
 /// Draws ellipse.
 pub fn ellipse<G>(
     color: internal::Color,
     rect: internal::Rectangle,
-    c: &Context,
+    transform: vecmath::Matrix2d,
     g: &mut G
 )
     where G: Graphics
 {
-    Ellipse::new(color).draw(rect, &c.draw_state, c.transform, g);
+    Ellipse::new(color).draw(rect, default_draw_state(), transform, g);
 }
 
 /// Draws rectangle.
 pub fn rectangle<G>(
     color: internal::Color,
     rect: internal::Rectangle,
-    c: &Context,
+    transform: vecmath::Matrix2d,
     g: &mut G
 )
     where G: Graphics
 {
-    Rectangle::new(color).draw(rect, &c.draw_state, c.transform, g);
+    Rectangle::new(color).draw(rect, default_draw_state(), transform, g);
 }
 
 /// Draws polygon.
 pub fn polygon<G>(
     color: internal::Color,
     polygon: internal::Polygon,
-    c: &Context,
+    transform: vecmath::Matrix2d,
     g: &mut G
 )
     where G: Graphics
 {
-    Polygon::new(color).draw(polygon, &c.draw_state, c.transform, g);
+    Polygon::new(color).draw(polygon, default_draw_state(), transform, g);
 }
