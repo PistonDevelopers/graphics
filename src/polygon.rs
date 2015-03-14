@@ -22,15 +22,15 @@ impl Polygon {
     }
 
     /// Draws polygon
-    pub fn draw<B>(
+    pub fn draw<G>(
         &self,
         polygon: internal::Polygon,
         c: &Context,
-        back_end: &mut B
+        g: &mut G
     )
-        where B: Graphics
+        where G: Graphics
     {
-        back_end.tri_list(
+        g.tri_list(
             &c.draw_state,
             &self.color,
             |f|
@@ -42,17 +42,17 @@ impl Polygon {
     }
 
     /// Draws tweened polygon with linear interpolation
-    pub fn draw_tween_lerp<B>(
+    pub fn draw_tween_lerp<G>(
         &self,
         polygons: internal::Polygons,
         tween_factor: internal::Scalar,
         c: &Context,
-        back_end: &mut B
+        g: &mut G
     )
-        where B: Graphics
+        where G: Graphics
     {
         if self.color[3] == 0.0 { return; }
-        back_end.tri_list(
+        g.tri_list(
             &c.draw_state,
             &self.color,
             |f|

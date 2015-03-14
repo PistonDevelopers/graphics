@@ -185,13 +185,13 @@ impl DeformGrid {
     }
 
     /// Draws deformed image.
-    pub fn draw_image<B>(
+    pub fn draw_image<G>(
         &self,
-        texture: &<B as Graphics>::Texture,
+        texture: &<G as Graphics>::Texture,
         c: &Context,
-        back_end: &mut B,
+        g: &mut G,
     )
-        where B: Graphics
+        where G: Graphics
     {
         let mat = c.transform;
         let color = [1.0; 4];
@@ -205,7 +205,7 @@ impl DeformGrid {
         let uv_align = 2;
         for &ind in self.indices.iter() {
             if offset >= buf_len {
-                back_end.tri_list_uv(
+                g.tri_list_uv(
                     &c.draw_state,
                     &color,
                     texture,
@@ -224,7 +224,7 @@ impl DeformGrid {
             offset += 1;
         }
         if offset > 0 {
-            back_end.tri_list_uv(
+            g.tri_list_uv(
                 &c.draw_state,
                 &color,
                 texture,
@@ -244,13 +244,13 @@ impl DeformGrid {
     }
 
     /// Draw vertical grid lines.
-    pub fn draw_vertical_lines<B>(
+    pub fn draw_vertical_lines<G>(
         &self,
         line: &Line,
         c: &Context,
-        back_end: &mut B,
+        g: &mut G,
     )
-        where B: Graphics
+        where G: Graphics
     {
         let grid = self;
         let nx = grid.cols + 1;
@@ -263,19 +263,19 @@ impl DeformGrid {
                 let ip = i + (j + 1) * nx;
                 let x2 = grid.vertices[ip][0];
                 let y2 = grid.vertices[ip][1];
-                line.draw([x1, y1, x2, y2], c, back_end);
+                line.draw([x1, y1, x2, y2], c, g);
             }
         }
     }
 
     /// Draw horizontal grid lines.
-    pub fn draw_horizontal_lines<B>(
+    pub fn draw_horizontal_lines<G>(
         &self,
         line: &Line,
         c: &Context,
-        back_end: &mut B,
+        g: &mut G,
     )
-        where B: Graphics
+        where G: Graphics
     {
         let grid = self;
         let nx = grid.cols + 1;
@@ -288,7 +288,7 @@ impl DeformGrid {
                 let ip = (i + 1) + j * nx;
                 let x2 = grid.vertices[ip][0];
                 let y2 = grid.vertices[ip][1];
-                line.draw([x1, y1, x2, y2], c, back_end);
+                line.draw([x1, y1, x2, y2], c, g);
             }
         }
     }
