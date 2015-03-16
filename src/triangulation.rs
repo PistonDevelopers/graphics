@@ -618,9 +618,9 @@ pub fn rect_tri_list_uv<I: ImageSize>(
         / w as f32;
     let y1 = source_rect[1] as f32
         / h as f32;
-    let x2 = (source_rect[0] + source_rect[2]) as f32
+    let x2 = source_rect[2] as f32
         / w as f32;
-    let y2 = (source_rect[1] + source_rect[3]) as f32
+    let y2 = source_rect[3] as f32
         / h as f32;
     [
         x1, y1, x2, y1, x1, y2,
