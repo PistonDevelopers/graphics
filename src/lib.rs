@@ -10,9 +10,10 @@ extern crate read_color;
 #[macro_use]
 extern crate quack;
 extern crate interpolation;
-extern crate draw_state;
+extern crate "draw_state" as draw_state_lib;
 
 pub use texture::ImageSize;
+pub use draw_state_lib as draw_state;
 pub use draw_state::DrawState;
 
 pub use graphics::Graphics;
