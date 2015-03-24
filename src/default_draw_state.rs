@@ -1,4 +1,4 @@
-use draw_state::block::*;
+use draw_state::state::*;
 use DrawState;
 
 static DEFAULT_DRAW_STATE: &'static DrawState =
