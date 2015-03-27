@@ -4,13 +4,13 @@
 
 //! A library for 2D graphics that works with multiple back-ends.
 
-extern crate "vecmath" as vecmath_lib;
+extern crate vecmath as vecmath_lib;
 extern crate texture;
 extern crate read_color;
 #[macro_use]
 extern crate quack;
 extern crate interpolation;
-extern crate "draw_state" as draw_state_lib;
+extern crate draw_state as draw_state_lib;
 
 pub use texture::ImageSize;
 pub use draw_state_lib as draw_state;
