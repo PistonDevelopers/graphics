@@ -26,8 +26,8 @@ git = "https://github.com/PistonDevelopers/vecmath"
 #version = "0.0.5"
 
 [dependencies.draw_state]
-#git = "https://github.com/gfx-rs/draw_state"
-version = "*"
+git = "https://github.com/gfx-rs/draw_state"
+#version = "0.0.2"
 
 [dependencies.piston-texture]
 git = "https://github.com/PistonDevelopers/texture"
