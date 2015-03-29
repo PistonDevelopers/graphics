@@ -1,14 +1,9 @@
 //! Least square deforming of a 2D grid.
 
-use {
-    Line,
-    Graphics,
-};
+use { Line, Graphics, internal, DrawState };
 use std::num::Float;
-use triangulation::{tx, ty};
+use triangulation::{ tx, ty };
 use vecmath::{ Matrix2d, Scalar, Vec2d };
-use internal;
-use DrawState;
 
 /// Represents a deformed grid.
 #[derive(Clone)]
@@ -310,10 +305,10 @@ impl DeformGrid {
             ref mut wis,
             ..
         } = self;
-        let ps = ps.as_mut_slice();
-        let qs = qs.as_mut_slice();
-        let wis = wis.as_mut_slice();
-        let vertices = vertices.as_mut_slice();
+        let ps = &mut ps[..];
+        let qs = &mut qs[..];
+        let wis = &mut wis[..];
+        let vertices = &mut vertices[..];
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let units_h = w / cols as Scalar;
