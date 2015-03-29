@@ -1,6 +1,7 @@
 #![crate_name = "graphics"]
 #![deny(missing_docs)]
 #![deny(missing_copy_implementations)]
+#![feature(slice_patterns)]
 
 //! A library for 2D graphics that works with multiple back-ends.
 
@@ -38,7 +39,7 @@ pub use polygon::Polygon;
 pub use vecmath::abs_transform;
 pub use default_draw_state::default_draw_state;
 
-pub use context::Context as Context;
+pub use context::Context;
 
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
