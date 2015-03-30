@@ -17,25 +17,13 @@ static DEFAULT_DRAW_STATE: &'static DrawState =
         blend: Some(Blend {
                 color: BlendChannel {
                     equation: Equation::Add,
-                    source: Factor(
-                        InverseFlag::Normal,
-                        BlendValue::SourceAlpha
-                    ),
-                    destination: Factor(
-                        InverseFlag::Inverse,
-                        BlendValue::SourceAlpha
-                    ),
+                    source: Factor::ZeroPlus(BlendValue::SourceAlpha),
+                    destination: Factor::OneMinus(BlendValue::SourceAlpha),
                 },
                 alpha: BlendChannel {
                     equation: Equation::Add,
-                    source: Factor(
-                        InverseFlag::Inverse,
-                        BlendValue::Zero
-                    ),
-                    destination: Factor(
-                        InverseFlag::Inverse,
-                        BlendValue::Zero
-                    ),
+                    source: Factor::One,
+                    destination: Factor::One,
                 },
                 value: [0.0, 0.0, 0.0, 0.0],
             }),
