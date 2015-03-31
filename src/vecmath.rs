@@ -1,7 +1,4 @@
-
 //! Various methods for computing with vectors.
-
-use vecmath_lib;
 
 pub use vecmath_lib::row_mat2x3_mul as multiply;
 pub use vecmath_lib::vec2_dot as dot;
@@ -14,7 +11,7 @@ pub use vecmath_lib::vec2_scale as mul_scalar;
 pub use vecmath_lib::vec2_square_len as square_len;
 
 use std::ops::{ Add, Rem };
-
+use vecmath_lib;
 use internal::{
     Area,
     Color,
@@ -25,8 +22,8 @@ use internal::{
     SourceRectangle,
     Triangle,
 };
-use std::num::{Float};
-use modular_index::{previous};
+use std::num::Float;
+use modular_index::previous;
 
 /// The type used for scalars.
 pub type Scalar = f64;

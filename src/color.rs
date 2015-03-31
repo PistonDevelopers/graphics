@@ -8,7 +8,7 @@ pub const TRANSPARENT: internal::Color = [0.0; 4];
 
 /// Returns a grey color
 pub fn grey(f: internal::ColorComponent) -> internal::Color {
-    [f, f, f, 1.0]    
+    [f, f, f, 1.0]
 }
 
 /// Returns a semi-transparent white color

@@ -1,4 +1,3 @@
-
 //! Helper functions for computing modular index safely.
 
 /// Computes modular offset safely for indices.
@@ -36,4 +35,3 @@ mod tests {
         assert_eq!(offset(3, 3, 1), 1);
     }
 }
-
