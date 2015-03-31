@@ -43,9 +43,8 @@ pub trait CharacterCache {
 
     /// Get reference to character.
     fn character(
-        &mut self, 
-        font_size: internal::FontSize, 
+        &mut self,
+        font_size: internal::FontSize,
         ch: char
     ) -> &Character<<Self as CharacterCache>::Texture>;
 }
-

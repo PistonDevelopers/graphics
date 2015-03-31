@@ -1,4 +1,3 @@
-
 //! Contains type aliases used in this library
 
 pub use vecmath::{ Scalar, Vec2d };
@@ -41,4 +40,3 @@ pub type Width = Scalar;
 
 /// The type used for font size.
 pub type FontSize = u32;
-
