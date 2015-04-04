@@ -28,19 +28,6 @@ pub struct Context {
     pub draw_state: DrawState,
 }
 
-/*
-quack! {
-    c: Context[]
-    get:
-        fn () -> Transform [] { Transform(c.transform) }
-        fn () -> ViewTransform [] { ViewTransform(c.view) }
-    set:
-        fn (val: Transform) [] { c.transform = val.0 }
-        fn (val: ViewTransform) [] { c.view = val.0 }
-    action:
-}
-*/
-
 impl Context {
     /// Creates a new drawing context.
     #[inline(always)]
