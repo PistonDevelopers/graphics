@@ -68,6 +68,7 @@ impl Polygon {
     }
 }
 
+/*
 quack! {
     p: Polygon[]
     get:
@@ -76,6 +77,7 @@ quack! {
         fn (val: Color) [] { p.color = val.0 }
     action:
 }
+*/
 
 #[cfg(test)]
 mod test {

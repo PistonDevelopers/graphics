@@ -19,11 +19,11 @@ pub enum Shape {
 }
 
 /// The line border radius
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Radius(pub internal::Radius);
 
 /// The line border width
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Width(pub internal::Width);
 
 /// A colored line with a default border radius
@@ -135,6 +135,7 @@ impl Line {
     }
 }
 
+/*
 quack! {
     l: Line[]
     get:
@@ -149,6 +150,7 @@ quack! {
         fn (val: Shape) [] { l.shape = val }
     action:
 }
+*/
 
 #[cfg(test)]
 mod test {

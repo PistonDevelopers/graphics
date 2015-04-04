@@ -75,6 +75,7 @@ impl Image {
     }
 }
 
+/*
 quack! {
     img: Image[]
     get:
@@ -84,6 +85,7 @@ quack! {
         fn (val: SrcRect) [] { img.source_rectangle = Some(val.0) }
     action:
 }
+*/
 
 #[cfg(test)]
 mod test {

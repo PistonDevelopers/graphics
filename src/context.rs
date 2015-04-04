@@ -10,11 +10,11 @@ use vecmath::{
 };
 
 /// Transform property
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Transform(pub Matrix2d);
 
 /// View transform property
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct ViewTransform(pub Matrix2d);
 
 /// Drawing 2d context.
@@ -28,6 +28,7 @@ pub struct Context {
     pub draw_state: DrawState,
 }
 
+/*
 quack! {
     c: Context[]
     get:
@@ -38,6 +39,7 @@ quack! {
         fn (val: ViewTransform) [] { c.view = val.0 }
     action:
 }
+*/
 
 impl Context {
     /// Creates a new drawing context.

@@ -15,7 +15,7 @@ pub struct Grid {
 }
 
 /// Iterates through the cells of a grid as (u32, u32).
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct GridCells {
     cols: u32,
     rows: u32,

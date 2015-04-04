@@ -11,8 +11,7 @@ pub use vecmath::margin_rectangle as margin;
 
 /// Use x, y, half-width, half-height
 pub fn centered(rect: internal::Rectangle) -> internal::Rectangle {
-    let [cx, cy, rw, rh] = rect;
-    [cx - rw, cy - rh, 2.0 * rw, 2.0 * rh]
+    [rect[0] - rect[2], rect[1] - rect[3], 2.0 * rect[2], 2.0 * rect[3]]
 }
 
 /// Use centered square
@@ -54,7 +53,7 @@ pub struct Border {
 }
 
 /// Maybe border property
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct MaybeBorder(pub Option<Border>);
 
 /// A filled rectangle
@@ -219,6 +218,7 @@ impl Rectangle {
     }
 }
 
+/*
 quack! {
     r: Rectangle[]
     get:
@@ -232,6 +232,7 @@ quack! {
         fn (val: MaybeBorder) [] { r.border = val.0 }
     action:
 }
+*/
 
 #[cfg(test)]
 mod test {
