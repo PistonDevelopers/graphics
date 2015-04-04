@@ -1,7 +1,7 @@
 //! Least square deforming of a 2D grid.
 
 use { Line, Graphics, internal, DrawState };
-use std::num::Float;
+use num::Float;
 use triangulation::{ tx, ty };
 use vecmath::{ Matrix2d, Scalar, Vec2d };
 

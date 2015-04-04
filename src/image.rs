@@ -5,8 +5,6 @@ use triangulation;
 use Graphics;
 use Color;
 use ImageSize;
-use Rect;
-use SrcRect;
 use DrawState;
 use vecmath::Matrix2d;
 
