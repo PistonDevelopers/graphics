@@ -105,7 +105,7 @@ impl Rectangle {
     }
 
     /// Creates a new round rectangle border.
-    pub fn round_border(
+    pub fn new_round_border(
         color: internal::Color,
         round_radius: internal::Radius,
         border_radius: internal::Radius
