@@ -23,12 +23,10 @@ pub use relative::Colored as RelativeColor;
 pub use relative::Rectangled as RelativeRectangle;
 pub use relative::SourceRectangled as RelativeSourceRectangle;
 pub use transformed::Transformed as RelativeTransform;
-pub use relative::ViewTransformed as RelativeViewTransform;
 pub use relative::{
     Colored,
     Rectangled,
     SourceRectangled,
-    ViewTransformed,
 };
 pub use transformed::Transformed;
 pub use rectangle::Rectangle;

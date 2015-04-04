@@ -5,6 +5,7 @@ use default_draw_state;
 use vecmath::{
     abs_transform,
     identity,
+    get_scale,
     Matrix2d,
     Scalar
 };
@@ -57,6 +58,42 @@ impl Context {
             transform: mat,
             draw_state: *default_draw_state(),
         }
+    }
+
+    /// Moves the current transform to the view coordinate system.
+    ///
+    /// This is usually [0.0, 0.0] in the upper left corner
+    /// with the x axis pointing to the right
+    /// and the y axis pointing down.
+    #[inline(always)]
+    pub fn view(mut self) -> Self {
+        self.transform = self.view;
+        self
+    }
+
+    /// Moves the current transform to the default coordinate system.
+    ///
+    /// This is usually [0.0, 0.0] in the center
+    /// with the x axis pointing to the right
+    /// and the y axis pointing up.
+    #[inline(always)]
+    pub fn reset(mut self) -> Self {
+        self.transform = identity();
+        self
+    }
+
+    /// Stores the current transform as new view.
+    #[inline(always)]
+    pub fn store_view(mut self) -> Self {
+        self.view = self.transform;
+        self
+    }
+
+    /// Computes the current view size.
+    #[inline(always)]
+    pub fn get_view_size(&self) -> (Scalar, Scalar) {
+        let scale = get_scale(self.view);
+        (2.0 / scale[0], 2.0 / scale[1])
     }
 }
 
