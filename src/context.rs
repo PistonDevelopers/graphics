@@ -11,10 +11,6 @@ use math::{
     Vec2d,
 };
 
-/// View transform property
-#[derive(Copy, Clone)]
-pub struct ViewTransform(pub Matrix2d);
-
 /// Drawing 2d context.
 #[derive(Copy, Clone)]
 pub struct Context {
