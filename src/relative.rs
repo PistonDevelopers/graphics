@@ -7,7 +7,7 @@ use math::{
     Scalar,
 };
 use radians::Radians;
-use Line;
+use { Ellipse, Line, Rectangle };
 
 /// Implemented by contexts that contains color.
 pub trait Colored: Sized {
@@ -67,6 +67,46 @@ impl Colored for Color {
 }
 
 impl Colored for Line {
+    #[inline(always)]
+    fn mul_rgba(
+        mut self,
+        r: ColorComponent,
+        g: ColorComponent,
+        b: ColorComponent,
+        a: ColorComponent
+    ) -> Self {
+        self.color = self.color.mul_rgba(r, g, b, a);
+        self
+    }
+
+    #[inline(always)]
+    fn hue_rad(mut self, angle: ColorComponent) -> Self {
+        self.color = self.color.hue_rad(angle);
+        self
+    }
+}
+
+impl Colored for Ellipse {
+    #[inline(always)]
+    fn mul_rgba(
+        mut self,
+        r: ColorComponent,
+        g: ColorComponent,
+        b: ColorComponent,
+        a: ColorComponent
+    ) -> Self {
+        self.color = self.color.mul_rgba(r, g, b, a);
+        self
+    }
+
+    #[inline(always)]
+    fn hue_rad(mut self, angle: ColorComponent) -> Self {
+        self.color = self.color.hue_rad(angle);
+        self
+    }
+}
+
+impl Colored for Rectangle {
     #[inline(always)]
     fn mul_rgba(
         mut self,
