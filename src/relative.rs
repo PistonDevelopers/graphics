@@ -1,6 +1,6 @@
 use internal::ColorComponent;
-use quack::{ GetFrom, Get, SetAt, Set, Pair };
-use context::{ Context, Transform, ViewTransform };
+use quack::{ Get, Set };
+use context::Context;
 use vecmath::{
     get_scale,
     hsv,
@@ -240,8 +240,7 @@ pub trait Transformed: Sized {
     fn shear(self, v: Vec2d) -> Self;
 }
 
-impl Transformed for Matrix2d
-{
+impl Transformed for Matrix2d {
     #[inline(always)]
     fn append_transform(self, transform: Matrix2d) -> Self {
         multiply(self, transform)
@@ -283,8 +282,7 @@ impl Transformed for Matrix2d
     }
 }
 
-impl Transformed for Context
-{
+impl Transformed for Context {
     #[inline(always)]
     fn append_transform(mut self, transform: Matrix2d) -> Self {
         self.transform = self.transform.append_transform(transform);
@@ -337,50 +335,44 @@ pub trait ViewTransformed {
     /// with the x axis pointing to the right
     /// and the y axis pointing down.
     #[inline(always)]
-    fn view(&self) -> Self;
+    fn view(self) -> Self;
 
     /// Moves the current transform to the default coordinate system.
     ///
     /// This is usually [0.0, 0.0] in the center
     /// with the x axis pointing to the right
     /// and the y axis pointing up.
-    fn reset(&self) -> Self;
+    fn reset(self) -> Self;
 
     /// Stores the current transform as new view.
-    fn store_view(&self) -> Self;
+    fn store_view(self) -> Self;
 
     /// Computes the current view size.
     fn get_view_size(&self) -> (Scalar, Scalar);
 }
 
-impl<T: Clone> ViewTransformed for T
-    where
-        (ViewTransform, Self): Pair<Data = ViewTransform, Object = Self>
-            + GetFrom + SetAt,
-        (Transform, Self): Pair<Data = Transform, Object = Self>
-            + GetFrom + SetAt,
-{
+impl ViewTransformed for Context {
     #[inline(always)]
-    fn view(&self) -> Self {
-        let ViewTransform(mat) = self.get();
-        self.clone().set(Transform(mat))
+    fn view(mut self) -> Self {
+        self.transform = self.view;
+        self
     }
 
     #[inline(always)]
-    fn reset(&self) -> Self {
-        self.clone().set(Transform(identity()))
+    fn reset(mut self) -> Self {
+        self.transform = identity();
+        self
     }
 
     #[inline(always)]
-    fn store_view(&self) -> Self {
-        let Transform(mat) = self.get();
-        self.clone().set(ViewTransform(mat))
+    fn store_view(mut self) -> Self {
+        self.view = self.transform;
+        self
     }
 
     #[inline(always)]
     fn get_view_size(&self) -> (Scalar, Scalar) {
-        let ViewTransform(mat) = self.get();
-        let scale = get_scale(mat);
+        let scale = get_scale(self.view);
         (2.0 / scale[0], 2.0 / scale[1])
     }
 }
