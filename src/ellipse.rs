@@ -38,7 +38,7 @@ impl Ellipse {
     }
 
     /// Creates a new ellipse border
-    pub fn border(
+    pub fn new_border(
         color: internal::Color,
         radius: internal::Radius
     ) -> Ellipse {
