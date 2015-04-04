@@ -1,4 +1,4 @@
-use internal::ColorComponent;
+use internal::{ Color, ColorComponent };
 use math::{
     hsv,
     margin_rectangle,
@@ -47,8 +47,7 @@ pub trait Colored: Sized {
     fn hue_rad(&self, angle: ColorComponent) -> Self;
 }
 
-/*
-impl<T: Get<Color> + Set<Color> + Clone> Colored for T {
+impl Colored for Color {
     #[inline(always)]
     fn mul_rgba(
         &self,
@@ -57,17 +56,14 @@ impl<T: Get<Color> + Set<Color> + Clone> Colored for T {
         b: ColorComponent,
         a: ColorComponent
     ) -> Self {
-        let Color(col) = self.get();
-        self.clone().set(Color([col[0] * r, col[1] * g, col[2] * b, col[3] * a]))
+        [self[0] * r, self[1] * g, self[2] * b, self[3] * a]
     }
 
     #[inline(always)]
     fn hue_rad(&self, angle: ColorComponent) -> Self {
-        let Color(val) = self.get();
-        self.clone().set(Color(hsv(val, angle, 1.0, 1.0)))
+        hsv(*self, angle, 1.0, 1.0)
     }
 }
-*/
 
 /// Should be implemented by contexts that have rectangle information.
 pub trait Rectangled: Sized {
