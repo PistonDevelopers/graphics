@@ -18,10 +18,6 @@ pub enum Shape {
     Bevel,
 }
 
-/// The line border radius
-#[derive(Copy, Clone)]
-pub struct Radius(pub internal::Radius);
-
 /// The line border width
 #[derive(Copy, Clone)]
 pub struct Width(pub internal::Width);
@@ -137,12 +133,6 @@ impl Line {
 
 /*
 quack! {
-    l: Line[]
-    get:
-        fn () -> Color [] { Color(l.color) }
-        fn () -> Radius [] { Radius(l.radius) }
-        fn () -> Width [] { Width(2.0 * l.radius) }
-        fn () -> Shape [] { l.shape }
     set:
         fn (val: Color) [] { l.color = val.0 }
         fn (val: Radius) [] { l.radius = val.0 }
@@ -154,9 +144,7 @@ quack! {
 
 #[cfg(test)]
 mod test {
-    use super::Line;
-    use super::Shape;
-    use super::Radius;
+    use super::*;
     use Color;
 
     #[test]
