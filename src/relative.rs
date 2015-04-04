@@ -1,5 +1,4 @@
 use internal::ColorComponent;
-use quack::{ Get, Set };
 use math::{
     hsv,
     margin_rectangle,
@@ -8,9 +7,6 @@ use math::{
     Scalar,
 };
 use radians::Radians;
-use Color;
-use Rect;
-use SrcRect;
 
 /// Implemented by contexts that contains color.
 pub trait Colored: Sized {
@@ -51,6 +47,7 @@ pub trait Colored: Sized {
     fn hue_rad(&self, angle: ColorComponent) -> Self;
 }
 
+/*
 impl<T: Get<Color> + Set<Color> + Clone> Colored for T {
     #[inline(always)]
     fn mul_rgba(
@@ -70,6 +67,7 @@ impl<T: Get<Color> + Set<Color> + Clone> Colored for T {
         self.clone().set(Color(hsv(val, angle, 1.0, 1.0)))
     }
 }
+*/
 
 /// Should be implemented by contexts that have rectangle information.
 pub trait Rectangled: Sized {
@@ -86,6 +84,7 @@ pub trait Rectangled: Sized {
     fn rel(&self, x: Scalar, y: Scalar) -> Self;
 }
 
+/*
 impl<T: Get<Rect> + Set<Rect> + Clone> Rectangled for T {
     #[inline(always)]
     fn margin(&self, m: Scalar) -> Self {
@@ -99,6 +98,7 @@ impl<T: Get<Rect> + Set<Rect> + Clone> Rectangled for T {
         self.clone().set(Rect(relative_rectangle(val, [x, y])))
     }
 }
+*/
 
 /// Should be implemented by contexts that
 /// have source rectangle information.
@@ -120,6 +120,7 @@ pub trait SourceRectangled {
     fn src_flip_hv(&self) -> Self;
 }
 
+/*
 impl<T: Get<SrcRect>
       + Set<SrcRect>
       + Clone
@@ -170,3 +171,4 @@ impl<T: Get<SrcRect>
         ]))
     }
 }
+*/
