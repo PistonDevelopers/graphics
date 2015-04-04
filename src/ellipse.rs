@@ -115,7 +115,7 @@ mod test {
     #[test]
     fn test_ellipse() {
         let _ellipse = Ellipse::new([1.0; 4])
-            .set(Color([0.0; 4]))
-            .set(Border { color: [1.0; 4], radius: 3.0 });
+            .color([0.0; 4])
+            .border(Border { color: [1.0; 4], radius: 3.0 });
     }
 }
