@@ -4,20 +4,20 @@ use math::relative_source_rectangle;
 /// have source rectangle information.
 pub trait SourceRectangled {
     /// Adds a source rectangle.
-    fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> Self;
+    fn src_rect(self, x: i32, y: i32, w: i32, h: i32) -> Self;
 
     /// Moves to a relative source rectangle using
     /// the current source rectangle as tile.
-    fn src_rel(&self, x: i32, y: i32) -> Self;
+    fn src_rel(self, x: i32, y: i32) -> Self;
 
     /// Flips the source rectangle horizontally.
-    fn src_flip_h(&self) -> Self;
+    fn src_flip_h(self) -> Self;
 
     /// Flips the source rectangle vertically.
-    fn src_flip_v(&self) -> Self;
+    fn src_flip_v(self) -> Self;
 
     /// Flips the source rectangle horizontally and vertically.
-    fn src_flip_hv(&self) -> Self;
+    fn src_flip_hv(self) -> Self;
 }
 
 /*
