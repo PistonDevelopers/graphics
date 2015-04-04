@@ -1,4 +1,5 @@
 use math::relative_source_rectangle;
+use internal::SourceRectangle;
 
 /// Should be implemented by contexts that
 /// have source rectangle information.
@@ -20,55 +21,44 @@ pub trait SourceRectangled {
     fn src_flip_hv(self) -> Self;
 }
 
-/*
-impl<T: Get<SrcRect>
-      + Set<SrcRect>
-      + Clone
-> SourceRectangled for T {
+impl SourceRectangled for SourceRectangle {
     #[inline(always)]
-    fn src_rect(&self, x: i32, y: i32, w: i32, h: i32) -> Self {
-        self.clone().set(SrcRect([x, y, w, h]))
+    fn src_rect(self, x: i32, y: i32, w: i32, h: i32) -> Self {
+        [x, y, w, h]
     }
 
     #[inline(always)]
-    fn src_rel(&self, x: i32, y: i32) -> Self {
-        let SrcRect(val) = self.get();
-        self.clone().set(SrcRect(
-            relative_source_rectangle(val, x, y)
-        ))
+    fn src_rel(self, x: i32, y: i32) -> Self {
+        relative_source_rectangle(self, x, y)
     }
 
     #[inline(always)]
-    fn src_flip_h(&self) -> Self {
-        let SrcRect(source_rect) = self.get();
-        self.clone().set(SrcRect([
-            source_rect[0] + source_rect[2],
-            source_rect[1],
-            -source_rect[2],
-            source_rect[3]
-        ]))
+    fn src_flip_h(self) -> Self {
+        [
+            self[0] + self[2],
+            self[1],
+            -self[2],
+            self[3]
+        ]
     }
 
     #[inline(always)]
-    fn src_flip_v(&self) -> Self {
-        let SrcRect(source_rect) = self.get();
-        self.clone().set(SrcRect([
-            source_rect[0],
-            source_rect[1] + source_rect[3],
-            source_rect[2],
-            -source_rect[3]
-        ]))
+    fn src_flip_v(self) -> Self {
+        [
+            self[0],
+            self[1] + self[3],
+            self[2],
+            -self[3]
+        ]
     }
 
     #[inline(always)]
-    fn src_flip_hv(&self) -> Self {
-        let SrcRect(source_rect) = self.get();
-        self.clone().set(SrcRect([
-            source_rect[0] + source_rect[2],
-            source_rect[1] + source_rect[3],
-            -source_rect[2],
-            -source_rect[3]
-        ]))
+    fn src_flip_hv(self) -> Self {
+        [
+            self[0] + self[2],
+            self[1] + self[3],
+            -self[2],
+            -self[3]
+        ]
     }
 }
-*/

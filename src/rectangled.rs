@@ -1,7 +1,6 @@
 use math::{
     margin_rectangle,
     relative_rectangle,
-    relative_source_rectangle,
     Scalar,
 };
 use internal::Rectangle;
