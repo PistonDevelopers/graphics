@@ -22,7 +22,7 @@ use internal::{
     SourceRectangle,
     Triangle,
 };
-use std::num::Float;
+use num::Float;
 use modular_index::previous;
 
 /// The type used for scalars.
@@ -314,9 +314,9 @@ pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
     let bc_side = line_side([bx, by, cx, cy], v);
     let ca_side = line_side([cx, cy, ax, ay], v);
 
-    let ab_positive = ab_side.is_positive();
-    let bc_positive = bc_side.is_positive();
-    let ca_positive = ca_side.is_positive();
+    let ab_positive = ab_side.is_sign_positive();
+    let bc_positive = bc_side.is_sign_positive();
+    let ca_positive = ca_side.is_sign_positive();
 
     ab_positive == bc_positive
     && bc_positive == ca_positive
@@ -339,7 +339,7 @@ pub fn triangle_face(
 
     let ab_side = line_side([ax, ay, bx, by], [cx, cy]);
 
-    ab_side.is_negative()
+    ab_side.is_sign_negative()
 }
 
 #[cfg(test)]

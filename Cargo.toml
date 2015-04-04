@@ -44,3 +44,7 @@ git = "https://github.com/PistonDevelopers/quack"
 [dependencies.interpolation]
 git = "https://github.com/PistonDevelopers/interpolation"
 #version = "0.0.3"
+
+[dependencies]
+
+num = "0.1"

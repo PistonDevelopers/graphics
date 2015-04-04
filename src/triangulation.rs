@@ -10,7 +10,7 @@ use internal::{
     Radius,
     Rectangle,
 };
-use std::num::Float;
+use num::Float;
 use vecmath::{
     multiply,
     orient,
