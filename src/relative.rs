@@ -7,6 +7,7 @@ use math::{
     Scalar,
 };
 use radians::Radians;
+use Line;
 
 /// Implemented by contexts that contains color.
 pub trait Colored: Sized {
@@ -62,6 +63,26 @@ impl Colored for Color {
     #[inline(always)]
     fn hue_rad(self, angle: ColorComponent) -> Self {
         hsv(self, angle, 1.0, 1.0)
+    }
+}
+
+impl Colored for Line {
+    #[inline(always)]
+    fn mul_rgba(
+        mut self,
+        r: ColorComponent,
+        g: ColorComponent,
+        b: ColorComponent,
+        a: ColorComponent
+    ) -> Self {
+        self.color = self.color.mul_rgba(r, g, b, a);
+        self
+    }
+
+    #[inline(always)]
+    fn hue_rad(mut self, angle: ColorComponent) -> Self {
+        self.color = self.color.hue_rad(angle);
+        self
     }
 }
 
