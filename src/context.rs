@@ -97,7 +97,7 @@ mod test {
 
     #[test]
     fn test_context() {
-        use RelativeTransform;
+        use Transformed;
 
         let c = Context::new();
         {
@@ -120,7 +120,7 @@ mod test {
 
     #[test]
     fn test_scale() {
-        use RelativeTransform;
+        use Transformed;
 
         let c = Context::new();
         let c = c.scale(2.0, 3.0);

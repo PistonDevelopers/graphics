@@ -154,7 +154,6 @@ quack! {
 
 #[cfg(test)]
 mod test {
-    use quack::{ Get, Set };
     use super::Line;
     use super::Shape;
     use super::Radius;
@@ -162,7 +161,7 @@ mod test {
 
     #[test]
     fn test_line() {
-        use RelativeColor;
+        use Colored;
 
         let _line = Line::new([0.0; 4], 3.0)
             .set(Color([1.0; 4]))

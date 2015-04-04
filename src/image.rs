@@ -91,7 +91,6 @@ mod test {
     use Color;
     use Rect;
     use SrcRect;
-    use quack::Set;
 
     #[test]
     fn test_image() {

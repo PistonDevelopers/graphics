@@ -240,7 +240,6 @@ mod test {
     use super::Shape;
     use super::Border;
     use Color;
-    use quack::Set;
 
     #[test]
     fn test_rectangle() {
