@@ -7,7 +7,8 @@ use vecmath::{
     identity,
     get_scale,
     Matrix2d,
-    Scalar
+    Scalar,
+    Vec2d,
 };
 
 /// Transform property
@@ -91,9 +92,9 @@ impl Context {
 
     /// Computes the current view size.
     #[inline(always)]
-    pub fn get_view_size(&self) -> (Scalar, Scalar) {
+    pub fn get_view_size(&self) -> Vec2d {
         let scale = get_scale(self.view);
-        (2.0 / scale[0], 2.0 / scale[1])
+        [2.0 / scale[0], 2.0 / scale[1]]
     }
 }
 
