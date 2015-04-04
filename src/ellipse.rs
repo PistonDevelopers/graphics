@@ -19,10 +19,6 @@ pub struct Border {
     pub radius: internal::Radius,
 }
 
-/// Maybe border property
-#[derive(Copy, Clone)]
-pub struct MaybeBorder(pub Option<Border>);
-
 /// An ellipse with filled color
 #[derive(Copy, Clone)]
 pub struct Ellipse {
