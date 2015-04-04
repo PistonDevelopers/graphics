@@ -78,7 +78,7 @@ impl Rectangle {
     }
 
     /// Creates a new round rectangle.
-    pub fn round(
+    pub fn new_round(
         color: internal::Color,
         round_radius: internal::Radius
     ) -> Rectangle {
