@@ -38,6 +38,42 @@ impl Image {
         }
     }
 
+    /// Sets color.
+    pub fn color(mut self, value: internal::Color) -> Self {
+        self.color = Some(value);
+        self
+    }
+
+    /// Sets optional color.
+    pub fn maybe_color(mut self, value: Option<internal::Color>) -> Self {
+        self.color = value;
+        self
+    }
+
+    /// Sets rectangle.
+    pub fn rect(mut self, value: internal::Rectangle) -> Self {
+        self.rectangle = Some(value);
+        self
+    }
+
+    /// Sets optional rectangle.
+    pub fn maybe_rect(mut self, value: Option<internal::Rectangle>) -> Self {
+        self.rectangle = value;
+        self
+    }
+
+    /// Sets source rectangle.
+    pub fn src_rect(mut self, value: internal::SourceRectangle) -> Self {
+        self.source_rectangle = Some(value);
+        self
+    }
+
+    /// Sets optional source rectangle.
+    pub fn maybe_src_rect(mut self, value: Option<internal::SourceRectangle>) -> Self {
+        self.source_rectangle = value;
+        self
+    }
+
     /// Draws the image.
     pub fn draw<G>(
         &self,
@@ -73,18 +109,6 @@ impl Image {
     }
 }
 
-/*
-quack! {
-    img: Image[]
-    get:
-    set:
-        fn (val: Color) [] { img.color = Some(val.0) }
-        fn (val: Rect) [] { img.rectangle = Some(val.0) }
-        fn (val: SrcRect) [] { img.source_rectangle = Some(val.0) }
-    action:
-}
-*/
-
 #[cfg(test)]
 mod test {
     use super::Image;
@@ -95,8 +119,8 @@ mod test {
     #[test]
     fn test_image() {
         let _img = Image::new()
-            .set(Color([1.0; 4]))
-            .set(Rect([0.0, 0.0, 100.0, 100.0]))
-            .set(SrcRect([0, 0, 32, 32]));
+            .color([1.0; 4])
+            .rect([0.0, 0.0, 100.0, 100.0])
+            .src_rect([0, 0, 32, 32]);
     }
 }
