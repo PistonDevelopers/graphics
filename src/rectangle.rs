@@ -52,10 +52,6 @@ pub struct Border {
     pub radius: internal::Radius,
 }
 
-/// Maybe border property
-#[derive(Copy, Clone)]
-pub struct MaybeBorder(pub Option<Border>);
-
 /// A filled rectangle
 #[derive(Copy, Clone)]
 pub struct Rectangle {
