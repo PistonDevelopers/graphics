@@ -4,20 +4,21 @@ use math::{
     relative_source_rectangle,
     Scalar,
 };
+use internal::Rectangle;
 
 /// Should be implemented by contexts that have rectangle information.
 pub trait Rectangled: Sized {
     /// Shrinks the current rectangle equally by all sides.
-    fn margin(&self, m: Scalar) -> Self;
+    fn margin(self, m: Scalar) -> Self;
 
     /// Expands the current rectangle equally by all sides.
     #[inline(always)]
-    fn expand(&self, m: Scalar) -> Self {
+    fn expand(self, m: Scalar) -> Self {
         self.margin(-m)
     }
 
     /// Moves to a relative rectangle using the current rectangle as tile.
-    fn rel(&self, x: Scalar, y: Scalar) -> Self;
+    fn rel(self, x: Scalar, y: Scalar) -> Self;
 }
 
 /*
