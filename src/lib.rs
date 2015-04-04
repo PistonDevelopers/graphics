@@ -16,9 +16,7 @@ pub use draw_state_lib as draw_state;
 pub use draw_state::DrawState;
 
 pub use graphics::Graphics;
-pub use relative::{
-    SourceRectangled,
-};
+pub use source_rectangled::SourceRectangled;
 pub use rectangled::Rectangled;
 pub use transformed::Transformed;
 pub use colored::Colored;
@@ -38,7 +36,7 @@ pub use context::Context;
 pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 
 mod graphics;
-mod relative;
+mod source_rectangled;
 mod rectangled;
 mod transformed;
 mod colored;
