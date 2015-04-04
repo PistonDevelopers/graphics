@@ -11,10 +11,6 @@ use math::{
     Vec2d,
 };
 
-/// Transform property
-#[derive(Copy, Clone)]
-pub struct Transform(pub Matrix2d);
-
 /// View transform property
 #[derive(Copy, Clone)]
 pub struct ViewTransform(pub Matrix2d);
