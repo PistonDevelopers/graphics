@@ -1,26 +1,22 @@
 //! Draw text
 
-use color;
-use internal;
-use Image;
-use Graphics;
+use types::{ Color, FontSize };
+use { color, Image, Graphics, Transformed, DrawState };
 use character::CharacterCache;
-use Transformed;
 use math::Matrix2d;
-use DrawState;
 
 /// Renders text
 #[derive(Copy, Clone)]
 pub struct Text {
     /// The color
-    pub color: internal::Color,
+    pub color: Color,
     /// The font size
-    pub font_size: internal::FontSize,
+    pub font_size: FontSize,
 }
 
 impl Text {
     /// Creates a new text with black color
-    pub fn new(font_size: internal::FontSize) -> Text {
+    pub fn new(font_size: FontSize) -> Text {
         Text {
             color: color::BLACK,
             font_size: font_size,
@@ -29,8 +25,8 @@ impl Text {
 
     /// Creates a new colored text
     pub fn colored(
-        color: internal::Color,
-        font_size: internal::FontSize
+        color: Color,
+        font_size: FontSize
     ) -> Text {
         Text {
             color: color,

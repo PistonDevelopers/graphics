@@ -50,7 +50,7 @@ pub mod line;
 pub mod ellipse;
 pub mod rectangle;
 pub mod image;
-pub mod internal;
+pub mod types;
 pub mod modular_index;
 pub mod text;
 pub mod triangulation;
@@ -66,11 +66,11 @@ pub mod radians {
 
 /// A rectangle property
 #[derive(Copy, Clone)]
-pub struct Rect(pub internal::Rectangle);
+pub struct Rect(pub types::Rectangle);
 
 /// Clears the screen.
 pub fn clear<G>(
-    color: internal::Color, g: &mut G
+    color: types::Color, g: &mut G
 )
     where G: Graphics
 {
@@ -90,8 +90,8 @@ pub fn image<G>(
 
 /// Draws ellipse.
 pub fn ellipse<G>(
-    color: internal::Color,
-    rect: internal::Rectangle,
+    color: types::Color,
+    rect: types::Rectangle,
     transform: math::Matrix2d,
     g: &mut G
 )
@@ -102,8 +102,8 @@ pub fn ellipse<G>(
 
 /// Draws rectangle.
 pub fn rectangle<G>(
-    color: internal::Color,
-    rect: internal::Rectangle,
+    color: types::Color,
+    rect: types::Rectangle,
     transform: math::Matrix2d,
     g: &mut G
 )
@@ -114,8 +114,8 @@ pub fn rectangle<G>(
 
 /// Draws polygon.
 pub fn polygon<G>(
-    color: internal::Color,
-    polygon: internal::Polygon,
+    color: types::Color,
+    polygon: types::Polygon,
     transform: math::Matrix2d,
     g: &mut G
 )

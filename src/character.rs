@@ -1,6 +1,6 @@
 //! A text character
 
-use internal;
+use types::FontSize;
 use ImageSize;
 
 /// Holds rendered character data.
@@ -44,7 +44,7 @@ pub trait CharacterCache {
     /// Get reference to character.
     fn character(
         &mut self,
-        font_size: internal::FontSize,
+        font_size: FontSize,
         ch: char
     ) -> &Character<<Self as CharacterCache>::Texture>;
 }

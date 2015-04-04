@@ -1,9 +1,10 @@
 //! Draw Line
 
-use internal;
+use types;
+use types::{ Color, Radius, Width };
 use triangulation;
 use Graphics;
-use math::Matrix2d;
+use math::{ Matrix2d, Scalar };
 use DrawState;
 
 /// The shape of the line
@@ -21,16 +22,16 @@ pub enum Shape {
 #[derive(Copy, Clone)]
 pub struct Line {
     /// The line color
-    pub color: internal::Color,
+    pub color: Color,
     /// The line radius
-    pub radius: internal::Radius,
+    pub radius: Radius,
     /// The line shape
     pub shape: Shape,
 }
 
 impl Line {
     /// Creates a new line
-    pub fn new(color: internal::Color, radius: internal::Radius) -> Line {
+    pub fn new(color: Color, radius: Radius) -> Line {
         Line {
             color: color,
             radius: radius,
@@ -39,7 +40,7 @@ impl Line {
     }
 
     /// Creates a new line
-    pub fn new_round(color: internal::Color, radius: internal::Radius) -> Line {
+    pub fn new_round(color: Color, radius: Radius) -> Line {
         Line {
             color: color,
             radius: radius,
@@ -48,19 +49,19 @@ impl Line {
     }
 
     /// Sets color.
-    pub fn color(mut self, value: internal::Color) -> Self {
+    pub fn color(mut self, value: Color) -> Self {
         self.color = value;
         self
     }
 
     /// Sets radius.
-    pub fn radius(mut self, value: internal::Radius) -> Self {
+    pub fn radius(mut self, value: Radius) -> Self {
         self.radius = value;
         self
     }
 
     /// Sets width.
-    pub fn width(mut self, value: internal::Width) -> Self {
+    pub fn width(mut self, value: types::Width) -> Self {
         self.radius = 0.5 * value;
         self
     }
@@ -74,7 +75,7 @@ impl Line {
     /// Draw the line.
     pub fn draw<G>(
         &self,
-        line: internal::Line,
+        line: types::Line,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G
@@ -130,8 +131,8 @@ impl Line {
     /// between the arrow hooks and the line
     pub fn draw_arrow<G>(
         &self,
-        line: internal::Line,
-        head_size: internal::Scalar,
+        line: types::Line,
+        head_size: Scalar,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G

@@ -1,33 +1,31 @@
 //! Draw rectangle
 
-use internal;
-use triangulation;
-use Graphics;
-use DrawState;
-use math::Matrix2d;
+use types::{ Color, Radius };
+use { types, triangulation, Graphics, DrawState };
+use math::{ Matrix2d, Scalar };
 
 pub use math::margin_rectangle as margin;
 
 /// Use x, y, half-width, half-height
-pub fn centered(rect: internal::Rectangle) -> internal::Rectangle {
+pub fn centered(rect: types::Rectangle) -> types::Rectangle {
     [rect[0] - rect[2], rect[1] - rect[3], 2.0 * rect[2], 2.0 * rect[3]]
 }
 
 /// Use centered square
 pub fn centered_square(
-    x: internal::Scalar,
-    y: internal::Scalar,
-    radius: internal::Scalar
-) -> internal::Rectangle {
+    x: Scalar,
+    y: Scalar,
+    radius: Scalar
+) -> types::Rectangle {
     [x - radius, y - radius, 2.0 * radius, 2.0 * radius]
 }
 
 /// Use square with x, y in upper left corner
 pub fn square(
-    x: internal::Scalar,
-    y: internal::Scalar,
-    size: internal::Scalar
-) -> internal::Rectangle {
+    x: Scalar,
+    y: Scalar,
+    size: Scalar
+) -> types::Rectangle {
     [x, y, size, size]
 }
 
@@ -37,25 +35,25 @@ pub enum Shape {
     /// Square corners
     Square,
     /// Round corners
-    Round(internal::Radius),
+    Round(Radius),
     /// Bevel corners
-    Bevel(internal::Radius),
+    Bevel(Radius),
 }
 
 /// The border of the rectangle
 #[derive(Copy, Clone)]
 pub struct Border {
     /// The color of the border
-    pub color: internal::Color,
+    pub color: Color,
     /// The radius of the border
-    pub radius: internal::Radius,
+    pub radius: Radius,
 }
 
 /// A filled rectangle
 #[derive(Copy, Clone)]
 pub struct Rectangle {
     /// The rectangle color
-    pub color: internal::Color,
+    pub color: Color,
     /// The roundness of the rectangle
     pub shape: Shape,
     /// The border
@@ -64,7 +62,7 @@ pub struct Rectangle {
 
 impl Rectangle {
     /// Creates a new rectangle.
-    pub fn new(color: internal::Color) -> Rectangle {
+    pub fn new(color: Color) -> Rectangle {
         Rectangle {
             color: color,
             shape: Shape::Square,
@@ -74,8 +72,8 @@ impl Rectangle {
 
     /// Creates a new round rectangle.
     pub fn new_round(
-        color: internal::Color,
-        round_radius: internal::Radius
+        color: Color,
+        round_radius: Radius
     ) -> Rectangle {
         Rectangle {
             color: color,
@@ -86,8 +84,8 @@ impl Rectangle {
 
     /// Creates a new rectangle border.
     pub fn new_border(
-        color: internal::Color,
-        radius: internal::Radius
+        color: Color,
+        radius: Radius
     ) -> Rectangle {
         Rectangle {
             color: [0.0; 4],
@@ -101,9 +99,9 @@ impl Rectangle {
 
     /// Creates a new round rectangle border.
     pub fn new_round_border(
-        color: internal::Color,
-        round_radius: internal::Radius,
-        border_radius: internal::Radius
+        color: Color,
+        round_radius: Radius,
+        border_radius: Radius
     ) -> Rectangle {
         Rectangle {
             color: [0.0; 4],
@@ -116,7 +114,7 @@ impl Rectangle {
     }
 
     /// Sets color.
-    pub fn color(mut self, value: internal::Color) -> Self {
+    pub fn color(mut self, value: Color) -> Self {
         self.color = value;
         self
     }
@@ -142,7 +140,7 @@ impl Rectangle {
     /// Draws the rectangle
     pub fn draw<G>(
         &self,
-        rectangle: internal::Rectangle,
+        rectangle: types::Rectangle,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G

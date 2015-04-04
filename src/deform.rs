@@ -1,6 +1,7 @@
 //! Least square deforming of a 2D grid.
 
-use { Line, Graphics, internal, DrawState };
+use types::Rectangle;
+use { Line, Graphics, DrawState };
 use num::Float;
 use triangulation::{ tx, ty };
 use math::{ Matrix2d, Scalar, Vec2d };
@@ -30,7 +31,7 @@ pub struct DeformGrid {
 
 impl DeformGrid {
     /// Creates a new DeformGrid.
-    pub fn new(rect: internal::Rectangle, cols: usize, rows: usize) -> DeformGrid {
+    pub fn new(rect: Rectangle, cols: usize, rows: usize) -> DeformGrid {
         let x = rect[0]; let y = rect[1];
         let w = rect[2]; let h = rect[3];
         let mut vertices = Vec::new();

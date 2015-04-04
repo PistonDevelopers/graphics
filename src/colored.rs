@@ -1,4 +1,4 @@
-use internal::{ Color, ColorComponent };
+use types::{ Color, ColorComponent };
 use { Ellipse, Line, Rectangle };
 use radians::Radians;
 use math::hsv;

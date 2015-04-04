@@ -3,7 +3,7 @@ use math::{
     relative_rectangle,
     Scalar,
 };
-use internal::Rectangle;
+use types::Rectangle;
 
 /// Should be implemented by contexts that have rectangle information.
 pub trait Rectangled: Sized {

@@ -1,28 +1,26 @@
 //! Draw polygon
 
-use internal;
-use triangulation;
-use Graphics;
-use DrawState;
-use math::Matrix2d;
+use types::Color;
+use { types, triangulation, Graphics, DrawState };
+use math::{ Matrix2d, Scalar };
 
 /// A polygon
 #[derive(Copy, Clone)]
 pub struct Polygon {
     /// The color of the polygon
-    pub color: internal::Color,
+    pub color: Color,
 }
 
 impl Polygon {
     /// Creates new polygon
-    pub fn new(color: internal::Color) -> Polygon {
+    pub fn new(color: Color) -> Polygon {
         Polygon {
             color: color,
         }
     }
 
     /// Sets color.
-    pub fn color(mut self, color: internal::Color) -> Self {
+    pub fn color(mut self, color: Color) -> Self {
         self.color = color;
         self
     }
@@ -30,7 +28,7 @@ impl Polygon {
     /// Draws polygon
     pub fn draw<G>(
         &self,
-        polygon: internal::Polygon,
+        polygon: types::Polygon,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G
@@ -51,8 +49,8 @@ impl Polygon {
     /// Draws tweened polygon with linear interpolation
     pub fn draw_tween_lerp<G>(
         &self,
-        polygons: internal::Polygons,
-        tween_factor: internal::Scalar,
+        polygons: types::Polygons,
+        tween_factor: Scalar,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G

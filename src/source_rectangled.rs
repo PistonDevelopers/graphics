@@ -1,5 +1,5 @@
 use math::relative_source_rectangle;
-use internal::SourceRectangle;
+use types::SourceRectangle;
 
 /// Should be implemented by contexts that
 /// have source rectangle information.

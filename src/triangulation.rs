@@ -2,7 +2,7 @@
 
 use ImageSize;
 use interpolation::lerp;
-use internal::{
+use types::{
     Line,
     SourceRectangle,
     Polygon,

@@ -12,7 +12,7 @@ pub use vecmath_lib::vec2_square_len as square_len;
 
 use std::ops::{ Add, Rem };
 use vecmath_lib;
-use internal::{
+use types::{
     Area,
     Color,
     Line,
