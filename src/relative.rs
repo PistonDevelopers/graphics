@@ -21,21 +21,17 @@ pub trait Rectangled: Sized {
     fn rel(self, x: Scalar, y: Scalar) -> Self;
 }
 
-/*
-impl<T: Get<Rect> + Set<Rect> + Clone> Rectangled for T {
+impl Rectangled for Rectangle {
     #[inline(always)]
-    fn margin(&self, m: Scalar) -> Self {
-        let Rect(val) = self.get();
-        self.clone().set(Rect(margin_rectangle(val, m)))
+    fn margin(self, m: Scalar) -> Self {
+        margin_rectangle(self, m)
     }
 
     #[inline(always)]
-    fn rel(&self, x: Scalar, y: Scalar) -> Self {
-        let Rect(val) = self.get();
-        self.clone().set(Rect(relative_rectangle(val, [x, y])))
+    fn rel(self, x: Scalar, y: Scalar) -> Self {
+        relative_rectangle(self, [x, y])
     }
 }
-*/
 
 /// Should be implemented by contexts that
 /// have source rectangle information.
