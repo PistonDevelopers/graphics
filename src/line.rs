@@ -40,7 +40,7 @@ impl Line {
     }
 
     /// Creates a new line
-    pub fn round(color: internal::Color, radius: internal::Radius) -> Line {
+    pub fn new_round(color: internal::Color, radius: internal::Radius) -> Line {
         Line {
             color: color,
             radius: radius,
