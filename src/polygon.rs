@@ -22,6 +22,12 @@ impl Polygon {
         }
     }
 
+    /// Sets color.
+    pub fn color(mut self, color: internal::Color) -> Self {
+        self.color = color;
+        self
+    }
+
     /// Draws polygon
     pub fn draw<G>(
         &self,
@@ -68,17 +74,6 @@ impl Polygon {
     }
 }
 
-/*
-quack! {
-    p: Polygon[]
-    get:
-        fn () -> Color [] { Color(p.color) }
-    set:
-        fn (val: Color) [] { p.color = val.0 }
-    action:
-}
-*/
-
 #[cfg(test)]
 mod test {
     use super::Polygon;
@@ -87,6 +82,6 @@ mod test {
     #[test]
     fn test_polygon() {
         let _polygon = Polygon::new([1.0; 4])
-            .set(Color([0.0; 4]));
+            .color([0.0; 4]);
     }
 }
