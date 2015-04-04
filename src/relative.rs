@@ -1,14 +1,10 @@
 use internal::ColorComponent;
 use quack::{ Get, Set };
-use context::Context;
 use vecmath::{
-    get_scale,
     hsv,
-    identity,
     margin_rectangle,
     relative_rectangle,
     relative_source_rectangle,
-    scale,
     Scalar,
 };
 use radians::Radians;
@@ -172,56 +168,5 @@ impl<T: Get<SrcRect>
             -source_rect[2],
             -source_rect[3]
         ]))
-    }
-}
-
-/// Should be implemented by contexts that
-/// draws something relative to view.
-pub trait ViewTransformed {
-    /// Moves the current transform to the view coordinate system.
-    ///
-    /// This is usually [0.0, 0.0] in the upper left corner
-    /// with the x axis pointing to the right
-    /// and the y axis pointing down.
-    #[inline(always)]
-    fn view(self) -> Self;
-
-    /// Moves the current transform to the default coordinate system.
-    ///
-    /// This is usually [0.0, 0.0] in the center
-    /// with the x axis pointing to the right
-    /// and the y axis pointing up.
-    fn reset(self) -> Self;
-
-    /// Stores the current transform as new view.
-    fn store_view(self) -> Self;
-
-    /// Computes the current view size.
-    fn get_view_size(&self) -> (Scalar, Scalar);
-}
-
-impl ViewTransformed for Context {
-    #[inline(always)]
-    fn view(mut self) -> Self {
-        self.transform = self.view;
-        self
-    }
-
-    #[inline(always)]
-    fn reset(mut self) -> Self {
-        self.transform = identity();
-        self
-    }
-
-    #[inline(always)]
-    fn store_view(mut self) -> Self {
-        self.view = self.transform;
-        self
-    }
-
-    #[inline(always)]
-    fn get_view_size(&self) -> (Scalar, Scalar) {
-        let scale = get_scale(self.view);
-        (2.0 / scale[0], 2.0 / scale[1])
     }
 }
