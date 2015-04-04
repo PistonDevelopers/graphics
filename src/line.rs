@@ -1,11 +1,8 @@
 //! Draw Line
 
-use types;
+use { types, triangulation, DrawState, Graphics };
 use types::{ Color, Radius, Width };
-use triangulation;
-use Graphics;
 use math::{ Matrix2d, Scalar };
-use DrawState;
 
 /// The shape of the line
 #[derive(Copy, Clone)]
