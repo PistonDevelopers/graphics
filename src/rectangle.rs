@@ -90,7 +90,7 @@ impl Rectangle {
     }
 
     /// Creates a new rectangle border.
-    pub fn border(
+    pub fn new_border(
         color: internal::Color,
         radius: internal::Radius
     ) -> Rectangle {
