@@ -393,7 +393,7 @@ pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
 
 #[cfg(test)]
 mod test_barycentric {
-    use std::num::Float;
+    use num::Float;
     use super::*;
 
     #[test]
