@@ -12,7 +12,7 @@ use radians::Radians;
 pub trait Colored: Sized {
     /// Multiplies with red, green, blue and alpha values.
     fn mul_rgba(
-        &self,
+        self,
         r: ColorComponent,
         g: ColorComponent,
         b: ColorComponent,
@@ -23,7 +23,7 @@ pub trait Colored: Sized {
     ///
     /// 0 is black and 1 is white.
     #[inline(always)]
-    fn tint(&self, f: ColorComponent) -> Self {
+    fn tint(self, f: ColorComponent) -> Self {
         self.mul_rgba(f, f, f, 1.0)
     }
 
@@ -31,26 +31,26 @@ pub trait Colored: Sized {
     ///
     /// 0 is white and 1 is black.
     #[inline(always)]
-    fn shade(&self, f: ColorComponent) -> Self {
+    fn shade(self, f: ColorComponent) -> Self {
         let f = 1.0 - f;
         self.mul_rgba(f, f, f, 1.0)
     }
 
     /// Rotates hue by degrees.
     #[inline(always)]
-    fn hue_deg(&self, angle: ColorComponent) -> Self {
+    fn hue_deg(self, angle: ColorComponent) -> Self {
         let pi: ColorComponent = Radians::_180();
         self.hue_rad(angle * pi / 180.0)
     }
 
     /// Rotates hue by radians.
-    fn hue_rad(&self, angle: ColorComponent) -> Self;
+    fn hue_rad(self, angle: ColorComponent) -> Self;
 }
 
 impl Colored for Color {
     #[inline(always)]
     fn mul_rgba(
-        &self,
+        self,
         r: ColorComponent,
         g: ColorComponent,
         b: ColorComponent,
@@ -60,8 +60,8 @@ impl Colored for Color {
     }
 
     #[inline(always)]
-    fn hue_rad(&self, angle: ColorComponent) -> Self {
-        hsv(*self, angle, 1.0, 1.0)
+    fn hue_rad(self, angle: ColorComponent) -> Self {
+        hsv(self, angle, 1.0, 1.0)
     }
 }
 
