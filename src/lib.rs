@@ -73,10 +73,6 @@ pub struct Color(pub internal::Color);
 #[derive(Copy, Clone)]
 pub struct Rect(pub internal::Rectangle);
 
-/// A source rectangle property
-#[derive(Copy, Clone)]
-pub struct SrcRect(pub internal::SourceRectangle);
-
 /// Clears the screen.
 pub fn clear<G>(
     color: internal::Color, g: &mut G

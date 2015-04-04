@@ -1,12 +1,10 @@
 use internal::{ Color, ColorComponent };
 use math::{
-    hsv,
     margin_rectangle,
     relative_rectangle,
     relative_source_rectangle,
     Scalar,
 };
-use radians::Radians;
 
 /// Should be implemented by contexts that have rectangle information.
 pub trait Rectangled: Sized {

@@ -112,9 +112,6 @@ impl Image {
 #[cfg(test)]
 mod test {
     use super::Image;
-    use Color;
-    use Rect;
-    use SrcRect;
 
     #[test]
     fn test_image() {
