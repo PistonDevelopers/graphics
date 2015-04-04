@@ -29,7 +29,7 @@ pub use line::Line;
 pub use ellipse::Ellipse;
 pub use image::Image;
 pub use polygon::Polygon;
-pub use vecmath::abs_transform;
+pub use math::abs_transform;
 pub use default_draw_state::default_draw_state;
 
 pub use context::Context;
@@ -56,7 +56,7 @@ pub mod internal;
 pub mod modular_index;
 pub mod text;
 pub mod triangulation;
-pub mod vecmath;
+pub mod math;
 pub mod deform;
 pub mod grid;
 
@@ -90,7 +90,7 @@ pub fn clear<G>(
 /// Draws image.
 pub fn image<G>(
     image: &<G as Graphics>::Texture,
-    transform: vecmath::Matrix2d,
+    transform: math::Matrix2d,
     g: &mut G
 )
     where G: Graphics
@@ -102,7 +102,7 @@ pub fn image<G>(
 pub fn ellipse<G>(
     color: internal::Color,
     rect: internal::Rectangle,
-    transform: vecmath::Matrix2d,
+    transform: math::Matrix2d,
     g: &mut G
 )
     where G: Graphics
@@ -114,7 +114,7 @@ pub fn ellipse<G>(
 pub fn rectangle<G>(
     color: internal::Color,
     rect: internal::Rectangle,
-    transform: vecmath::Matrix2d,
+    transform: math::Matrix2d,
     g: &mut G
 )
     where G: Graphics
@@ -126,7 +126,7 @@ pub fn rectangle<G>(
 pub fn polygon<G>(
     color: internal::Color,
     polygon: internal::Polygon,
-    transform: vecmath::Matrix2d,
+    transform: math::Matrix2d,
     g: &mut G
 )
     where G: Graphics

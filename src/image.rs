@@ -6,7 +6,7 @@ use Graphics;
 use Color;
 use ImageSize;
 use DrawState;
-use vecmath::Matrix2d;
+use math::Matrix2d;
 
 /// An image
 #[derive(Copy, Clone)]
@@ -48,7 +48,7 @@ impl Image {
     )
         where G: Graphics
     {
-        use internal::Scalar;
+        use math::Scalar;
 
         let color = self.color.unwrap_or([1.0; 4]);
         let source_rectangle = self.source_rectangle.unwrap_or({

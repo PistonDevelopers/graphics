@@ -11,7 +11,7 @@ use internal::{
     Rectangle,
 };
 use num::Float;
-use vecmath::{
+use math::{
     multiply,
     orient,
     translate,

@@ -2,7 +2,7 @@
 
 use draw_state::DrawState;
 use default_draw_state;
-use vecmath::{
+use math::{
     abs_transform,
     identity,
     get_scale,

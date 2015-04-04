@@ -6,7 +6,7 @@ use Image;
 use Graphics;
 use character::CharacterCache;
 use Transformed;
-use vecmath::Matrix2d;
+use math::Matrix2d;
 use DrawState;
 
 /// Renders text

@@ -1,6 +1,6 @@
 //! Contains type aliases used in this library
 
-pub use vecmath::{ Scalar, Vec2d };
+pub use math::{ Scalar, Vec2d };
 
 /// The type used for area.
 pub type Area = Scalar;
