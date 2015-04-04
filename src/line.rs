@@ -18,10 +18,6 @@ pub enum Shape {
     Bevel,
 }
 
-/// The line border width
-#[derive(Copy, Clone)]
-pub struct Width(pub internal::Width);
-
 /// A colored line with a default border radius
 #[derive(Copy, Clone)]
 pub struct Line {
