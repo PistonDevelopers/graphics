@@ -22,15 +22,15 @@ pub use graphics::Graphics as BackEnd;
 pub use relative::Colored as RelativeColor;
 pub use relative::Rectangled as RelativeRectangle;
 pub use relative::SourceRectangled as RelativeSourceRectangle;
-pub use relative::Transformed as RelativeTransform;
+pub use transformed::Transformed as RelativeTransform;
 pub use relative::ViewTransformed as RelativeViewTransform;
 pub use relative::{
     Colored,
     Rectangled,
     SourceRectangled,
-    Transformed,
     ViewTransformed,
 };
+pub use transformed::Transformed;
 pub use rectangle::Rectangle;
 pub use line::Line;
 pub use ellipse::Ellipse;
@@ -48,6 +48,7 @@ pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 
 mod graphics;
 mod relative;
+mod transformed;
 mod default_draw_state;
 
 pub mod character;
