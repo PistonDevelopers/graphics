@@ -11,14 +11,6 @@ use math::{
     Vec2d,
 };
 
-/// Transform property
-#[derive(Copy, Clone)]
-pub struct Transform(pub Matrix2d);
-
-/// View transform property
-#[derive(Copy, Clone)]
-pub struct ViewTransform(pub Matrix2d);
-
 /// Drawing 2d context.
 #[derive(Copy, Clone)]
 pub struct Context {
@@ -105,7 +97,7 @@ mod test {
 
     #[test]
     fn test_context() {
-        use RelativeTransform;
+        use Transformed;
 
         let c = Context::new();
         {
@@ -128,7 +120,7 @@ mod test {
 
     #[test]
     fn test_scale() {
-        use RelativeTransform;
+        use Transformed;
 
         let c = Context::new();
         let c = c.scale(2.0, 3.0);

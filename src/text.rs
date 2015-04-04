@@ -51,7 +51,7 @@ impl Text {
             C: CharacterCache,
             G: Graphics<Texture = <C as CharacterCache>::Texture>
     {
-        let image = Image::colored(self.color);
+        let image = Image::new_colored(self.color);
         let mut x = 0;
         let mut y = 0;
         for ch in text.chars() {

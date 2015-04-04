@@ -81,7 +81,6 @@ quack! {
 
 #[cfg(test)]
 mod test {
-    use quack::Set;
     use super::Polygon;
     use Color;
 

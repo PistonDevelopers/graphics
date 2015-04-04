@@ -19,10 +19,6 @@ pub struct Border {
     pub radius: internal::Radius,
 }
 
-/// Maybe border property
-#[derive(Copy, Clone)]
-pub struct MaybeBorder(pub Option<Border>);
-
 /// An ellipse with filled color
 #[derive(Copy, Clone)]
 pub struct Ellipse {
@@ -42,7 +38,7 @@ impl Ellipse {
     }
 
     /// Creates a new ellipse border
-    pub fn border(
+    pub fn new_border(
         color: internal::Color,
         radius: internal::Radius
     ) -> Ellipse {
@@ -53,6 +49,24 @@ impl Ellipse {
                     radius: radius,
                 })
         }
+    }
+
+    /// Sets ellipse color.
+    pub fn color(mut self, value: internal::Color) -> Self {
+        self.color = value;
+        self
+    }
+
+    /// Sets ellipse border.
+    pub fn border(mut self, value: Border) -> Self {
+        self.border = Some(value);
+        self
+    }
+
+    /// Sets optional ellipse border.
+    pub fn maybe_border(mut self, value: Option<Border>) -> Self {
+        self.border = value;
+        self
     }
 
     /// Draws the ellipse.
@@ -92,31 +106,16 @@ impl Ellipse {
     }
 }
 
-/*
-quack! {
-    e: Ellipse[]
-    get:
-        fn () -> Color [] { Color(e.color) }
-        fn () -> MaybeBorder [] { MaybeBorder(e.border) }
-    set:
-        fn (val: Color) [] { e.color = val.0 }
-        fn (val: Border) [] { e.border = Some(val) }
-        fn (val: MaybeBorder) [] { e.border = val.0 }
-    action:
-}
-*/
-
 #[cfg(test)]
 mod test {
     use super::Ellipse;
     use super::Border;
     use Color;
-    use quack::Set;
 
     #[test]
     fn test_ellipse() {
         let _ellipse = Ellipse::new([1.0; 4])
-            .set(Color([0.0; 4]))
-            .set(Border { color: [1.0; 4], radius: 3.0 });
+            .color([0.0; 4])
+            .border(Border { color: [1.0; 4], radius: 3.0 });
     }
 }

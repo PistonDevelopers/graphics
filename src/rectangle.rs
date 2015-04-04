@@ -52,10 +52,6 @@ pub struct Border {
     pub radius: internal::Radius,
 }
 
-/// Maybe border property
-#[derive(Copy, Clone)]
-pub struct MaybeBorder(pub Option<Border>);
-
 /// A filled rectangle
 #[derive(Copy, Clone)]
 pub struct Rectangle {
@@ -78,7 +74,7 @@ impl Rectangle {
     }
 
     /// Creates a new round rectangle.
-    pub fn round(
+    pub fn new_round(
         color: internal::Color,
         round_radius: internal::Radius
     ) -> Rectangle {
@@ -90,7 +86,7 @@ impl Rectangle {
     }
 
     /// Creates a new rectangle border.
-    pub fn border(
+    pub fn new_border(
         color: internal::Color,
         radius: internal::Radius
     ) -> Rectangle {
@@ -105,7 +101,7 @@ impl Rectangle {
     }
 
     /// Creates a new round rectangle border.
-    pub fn round_border(
+    pub fn new_round_border(
         color: internal::Color,
         round_radius: internal::Radius,
         border_radius: internal::Radius
@@ -118,6 +114,30 @@ impl Rectangle {
                     radius: border_radius
                 })
         }
+    }
+
+    /// Sets color.
+    pub fn color(mut self, value: internal::Color) -> Self {
+        self.color = value;
+        self
+    }
+
+    /// Sets shape.
+    pub fn shape(mut self, value: Shape) -> Self {
+        self.shape = value;
+        self
+    }
+
+    /// Sets border.
+    pub fn border(mut self, value: Border) -> Self {
+        self.border = Some(value);
+        self
+    }
+
+    /// Sets optional border.
+    pub fn maybe_border(mut self, value: Option<Border>) -> Self {
+        self.border = value;
+        self
     }
 
     /// Draws the rectangle
@@ -218,35 +238,18 @@ impl Rectangle {
     }
 }
 
-/*
-quack! {
-    r: Rectangle[]
-    get:
-        fn () -> Color [] { Color(r.color) }
-        fn () -> Shape [] { r.shape }
-        fn () -> MaybeBorder [] { MaybeBorder(r.border) }
-    set:
-        fn (val: Color) [] { r.color = val.0 }
-        fn (val: Shape) [] { r.shape = val }
-        fn (val: Border) [] { r.border = Some(val) }
-        fn (val: MaybeBorder) [] { r.border = val.0 }
-    action:
-}
-*/
-
 #[cfg(test)]
 mod test {
     use super::Rectangle;
     use super::Shape;
     use super::Border;
     use Color;
-    use quack::Set;
 
     #[test]
     fn test_rectangle() {
         let _rectangle = Rectangle::new([1.0; 4])
-            .set(Color([0.0; 4]))
-            .set(Shape::Round(10.0))
-            .set(Border { color: [0.0; 4], radius: 4.0 });
+            .color([0.0; 4])
+            .shape(Shape::Round(10.0))
+            .border(Border { color: [0.0; 4], radius: 4.0 });
     }
 }
