@@ -93,7 +93,7 @@ impl Context {
 #[cfg(test)]
 mod test {
     use super::Context;
-    use std::num::Float;
+    use num::Float;
 
     #[test]
     fn test_context() {

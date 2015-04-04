@@ -76,8 +76,7 @@ impl Polygon {
 
 #[cfg(test)]
 mod test {
-    use super::Polygon;
-    use Color;
+    use super::*;
 
     #[test]
     fn test_polygon() {

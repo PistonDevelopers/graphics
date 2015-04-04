@@ -240,10 +240,7 @@ impl Rectangle {
 
 #[cfg(test)]
 mod test {
-    use super::Rectangle;
-    use super::Shape;
-    use super::Border;
-    use Color;
+    use super::*;
 
     #[test]
     fn test_rectangle() {

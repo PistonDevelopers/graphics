@@ -108,9 +108,7 @@ impl Ellipse {
 
 #[cfg(test)]
 mod test {
-    use super::Ellipse;
-    use super::Border;
-    use Color;
+    use super::*;
 
     #[test]
     fn test_ellipse() {
