@@ -123,7 +123,7 @@ impl Line {
     )
         where G: Graphics
     {
-        use RelativeTransform;
+        use Transformed;
 
         self.draw(line, draw_state, transform, g);
         let diff = [line[2] - line[0], line[3] - line[1]];

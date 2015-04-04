@@ -18,11 +18,6 @@ pub use draw_state_lib as draw_state;
 pub use draw_state::DrawState;
 
 pub use graphics::Graphics;
-pub use graphics::Graphics as BackEnd;
-pub use relative::Colored as RelativeColor;
-pub use relative::Rectangled as RelativeRectangle;
-pub use relative::SourceRectangled as RelativeSourceRectangle;
-pub use transformed::Transformed as RelativeTransform;
 pub use relative::{
     Colored,
     Rectangled,
