@@ -165,6 +165,5 @@ mod test {
             .radius(3.0)
             .shape(Shape::Round)
             .hue_deg(1.0);
-        let Color(_) = _line.get();
     }
 }
