@@ -283,6 +283,7 @@ impl Transformed for Matrix2d
     }
 }
 
+/*
 impl<T: Clone> Transformed for T
     where
         (Transform, Self): Pair<Data = Transform, Object = Self>
@@ -335,6 +336,7 @@ impl<T: Clone> Transformed for T
         self.clone().set(Transform(multiply(mat, shear)))
     }
 }
+*/
 
 /// Should be implemented by contexts that
 /// draws something relative to view.

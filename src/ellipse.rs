@@ -20,7 +20,7 @@ pub struct Border {
 }
 
 /// Maybe border property
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct MaybeBorder(pub Option<Border>);
 
 /// An ellipse with filled color
@@ -92,6 +92,7 @@ impl Ellipse {
     }
 }
 
+/*
 quack! {
     e: Ellipse[]
     get:
@@ -103,6 +104,7 @@ quack! {
         fn (val: MaybeBorder) [] { e.border = val.0 }
     action:
 }
+*/
 
 #[cfg(test)]
 mod test {

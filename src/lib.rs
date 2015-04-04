@@ -1,7 +1,6 @@
 #![crate_name = "graphics"]
 #![deny(missing_docs)]
 #![deny(missing_copy_implementations)]
-#![feature(slice_patterns)]
 
 //! A library for 2D graphics that works with multiple back-ends.
 
@@ -73,15 +72,15 @@ pub mod radians {
 }
 
 /// A color property
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Color(pub internal::Color);
 
 /// A rectangle property
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct Rect(pub internal::Rectangle);
 
 /// A source rectangle property
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct SrcRect(pub internal::SourceRectangle);
 
 /// Clears the screen.

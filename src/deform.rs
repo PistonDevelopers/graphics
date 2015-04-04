@@ -109,20 +109,20 @@ impl DeformGrid {
 
         let cols = self.cols;
         let rows = self.rows;
-        let [x, y, w, h] = self.rect;
-        let units_h = w / cols as Scalar;
-        let units_v = h / rows as Scalar;
+        let r = self.rect;
+        let units_h = r[2] / cols as Scalar;
+        let units_v = r[3] / rows as Scalar;
         let nx = cols + 1;
         let ny = rows + 1;
         for iy in 0..ny {
             for ix in 0..nx {
                 self.vertices.push([
-                    x + ix as Scalar * units_h,
-                    y + iy as Scalar * units_v
+                    r[0] + ix as Scalar * units_h,
+                    r[1] + iy as Scalar * units_v
                 ]);
                 self.texture_coords.push([
-                    ix as f32 * units_h as f32 / w as f32,
-                    iy as f32 * units_v as f32 / h as f32
+                    ix as f32 * units_h as f32 / r[2] as f32,
+                    iy as f32 * units_v as f32 / r[3] as f32
                 ]);
             }
         }
@@ -156,10 +156,10 @@ impl DeformGrid {
                         [i as Scalar, (j + 1) as Scalar]
                     ];
                     let tri_pos = from_barycentric(tri, b);
-                    let [rx, ry, w, h] = self.rect;
-                    let units_h = w / self.cols as Scalar;
-                    let units_v = h / self.rows as Scalar;
-                    return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
+                    let r = self.rect;
+                    let units_h = r[2] / self.cols as Scalar;
+                    let units_v = r[3] / self.rows as Scalar;
+                    return Some([r[0] + tri_pos[0] * units_h, r[1] + tri_pos[1] * units_v]);
                 } else if inside_triangle(tri2, [pos[0], pos[1]]) {
                     let b = to_barycentric(tri2, pos);
                     // Lower right triangle.
@@ -169,10 +169,10 @@ impl DeformGrid {
                         [(i + 1) as Scalar, (j + 1) as Scalar]
                     ];
                     let tri_pos = from_barycentric(tri, b);
-                    let [rx, ry, w, h] = self.rect;
-                    let units_h = w / self.cols as Scalar;
-                    let units_v = h / self.rows as Scalar;
-                    return Some([rx + tri_pos[0] * units_h, ry + tri_pos[1] * units_v]);
+                    let r = self.rect;
+                    let units_h = r[2] / self.cols as Scalar;
+                    let units_v = r[3] / self.rows as Scalar;
+                    return Some([r[0] + tri_pos[0] * units_h, r[1] + tri_pos[1] * units_v]);
                 }
             }
         }
