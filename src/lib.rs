@@ -65,10 +65,6 @@ pub mod radians {
     pub use vecmath_lib::consts::Radians;
 }
 
-/// A color property
-#[derive(Copy, Clone)]
-pub struct Color(pub internal::Color);
-
 /// A rectangle property
 #[derive(Copy, Clone)]
 pub struct Rect(pub internal::Rectangle);

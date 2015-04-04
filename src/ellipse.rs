@@ -6,7 +6,6 @@ pub use rectangle::centered_square as circle;
 use internal;
 use triangulation;
 use Graphics;
-use Color;
 use math::Matrix2d;
 use DrawState;
 

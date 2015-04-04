@@ -3,7 +3,6 @@
 use internal;
 use triangulation;
 use Graphics;
-use Color;
 use math::Matrix2d;
 use DrawState;
 

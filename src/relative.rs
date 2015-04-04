@@ -1,4 +1,3 @@
-use internal::{ Color, ColorComponent };
 use math::{
     margin_rectangle,
     relative_rectangle,
