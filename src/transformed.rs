@@ -1,5 +1,5 @@
 use Context;
-use vecmath::{
+use math::{
     multiply,
     shear,
     scale,
@@ -7,9 +7,9 @@ use vecmath::{
     rotate_radians,
     translate,
     Matrix2d,
-    Vec2d
+    Vec2d,
+    Scalar,
 };
-use internal::Scalar;
 use radians::Radians;
 
 /// Implemented by contexts that can transform.

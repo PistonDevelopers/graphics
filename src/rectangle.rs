@@ -5,9 +5,9 @@ use triangulation;
 use Graphics;
 use Color;
 use DrawState;
-use vecmath::Matrix2d;
+use math::Matrix2d;
 
-pub use vecmath::margin_rectangle as margin;
+pub use math::margin_rectangle as margin;
 
 /// Use x, y, half-width, half-height
 pub fn centered(rect: internal::Rectangle) -> internal::Rectangle {

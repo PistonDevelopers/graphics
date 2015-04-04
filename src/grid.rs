@@ -1,6 +1,6 @@
 //! A flat grid with square cells.
 
-use vecmath::{ Matrix2d, Scalar };
+use math::{ Matrix2d, Scalar };
 use { DrawState, Graphics, Line };
 
 /// Represents a flat grid with square cells.

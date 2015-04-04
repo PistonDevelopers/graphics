@@ -4,7 +4,7 @@ use internal;
 use triangulation;
 use Graphics;
 use Color;
-use vecmath::Matrix2d;
+use math::Matrix2d;
 use DrawState;
 
 /// The shape of the line

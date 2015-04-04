@@ -3,7 +3,7 @@
 use { Line, Graphics, internal, DrawState };
 use num::Float;
 use triangulation::{ tx, ty };
-use vecmath::{ Matrix2d, Scalar, Vec2d };
+use math::{ Matrix2d, Scalar, Vec2d };
 
 /// Represents a deformed grid.
 #[derive(Clone)]
@@ -132,7 +132,7 @@ impl DeformGrid {
     /// If the deformed grid is overlapping itself, multiple hits might occur.
     /// Returns the first hit it finds.
     pub fn hit(&self, pos: Vec2d) -> Option<Vec2d> {
-        use vecmath::{ inside_triangle, to_barycentric, from_barycentric };
+        use math::{ inside_triangle, to_barycentric, from_barycentric };
         let nx = self.cols + 1;
         let ny = self.rows + 1;
         for i in 0..nx - 1 {
@@ -293,7 +293,7 @@ impl DeformGrid {
 
     /// Updates the grid, by deforming the vertices.
     pub fn update(&mut self) {
-        use vecmath::{ add, cross, dot, mul_scalar, perp, square_len, sub };
+        use math::{ add, cross, dot, mul_scalar, perp, square_len, sub };
 
         let &mut DeformGrid {
             cols,

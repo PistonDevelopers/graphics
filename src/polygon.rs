@@ -5,7 +5,7 @@ use triangulation;
 use Graphics;
 use Color;
 use DrawState;
-use vecmath::Matrix2d;
+use math::Matrix2d;
 
 /// A polygon
 #[derive(Copy, Clone)]

@@ -1,6 +1,6 @@
 use internal::ColorComponent;
 use quack::{ Get, Set };
-use vecmath::{
+use math::{
     hsv,
     margin_rectangle,
     relative_rectangle,
