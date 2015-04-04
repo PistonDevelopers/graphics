@@ -17,11 +17,11 @@ pub use draw_state::DrawState;
 
 pub use graphics::Graphics;
 pub use relative::{
-    Colored,
     Rectangled,
     SourceRectangled,
 };
 pub use transformed::Transformed;
+pub use colored::Colored;
 pub use rectangle::Rectangle;
 pub use line::Line;
 pub use ellipse::Ellipse;
@@ -40,6 +40,7 @@ pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 mod graphics;
 mod relative;
 mod transformed;
+mod colored;
 mod default_draw_state;
 
 pub mod character;
