@@ -1,23 +1,23 @@
 //! Helper methods for colors
 
-use internal;
+use types::{ Color, ColorComponent };
 
-pub const WHITE: internal::Color = [1.0; 4];
-pub const BLACK: internal::Color = [0.0, 0.0, 0.0, 1.0];
-pub const TRANSPARENT: internal::Color = [0.0; 4];
+pub const WHITE: Color = [1.0; 4];
+pub const BLACK: Color = [0.0, 0.0, 0.0, 1.0];
+pub const TRANSPARENT: Color = [0.0; 4];
 
 /// Returns a grey color
-pub fn grey(f: internal::ColorComponent) -> internal::Color {
+pub fn grey(f: ColorComponent) -> Color {
     [f, f, f, 1.0]
 }
 
 /// Returns a semi-transparent white color
-pub fn alpha(f: internal::ColorComponent) -> internal::Color {
+pub fn alpha(f: ColorComponent) -> Color {
     [1.0, 1.0, 1.0, f]
 }
 
 /// Converts from hexadecimal color format
-pub fn hex(hex: &str) -> internal::Color {
+pub fn hex(hex: &str) -> Color {
     use read_color::rgb_maybe_a;
 
     let (rgb, a) = rgb_maybe_a(&mut hex.chars()).unwrap();

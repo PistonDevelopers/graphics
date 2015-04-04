@@ -1,9 +1,8 @@
 //! Draw image
 
-use internal;
+use types::{ Color, Rectangle, SourceRectangle };
 use triangulation;
 use Graphics;
-use Color;
 use ImageSize;
 use DrawState;
 use math::Matrix2d;
@@ -12,11 +11,11 @@ use math::Matrix2d;
 #[derive(Copy, Clone)]
 pub struct Image {
     /// The color
-    pub color: Option<internal::Color>,
+    pub color: Option<Color>,
     /// The rectangle to draw image inside
-    pub rectangle: Option<internal::Rectangle>,
+    pub rectangle: Option<Rectangle>,
     /// The image source rectangle
-    pub source_rectangle: Option<internal::SourceRectangle>,
+    pub source_rectangle: Option<SourceRectangle>,
 }
 
 impl Image {
@@ -30,7 +29,7 @@ impl Image {
     }
 
     /// Creates a new colored image
-    pub fn new_colored(color: internal::Color) -> Image {
+    pub fn new_colored(color: Color) -> Image {
         Image {
             color: Some(color),
             source_rectangle: None,
@@ -39,37 +38,37 @@ impl Image {
     }
 
     /// Sets color.
-    pub fn color(mut self, value: internal::Color) -> Self {
+    pub fn color(mut self, value: Color) -> Self {
         self.color = Some(value);
         self
     }
 
     /// Sets optional color.
-    pub fn maybe_color(mut self, value: Option<internal::Color>) -> Self {
+    pub fn maybe_color(mut self, value: Option<Color>) -> Self {
         self.color = value;
         self
     }
 
     /// Sets rectangle.
-    pub fn rect(mut self, value: internal::Rectangle) -> Self {
+    pub fn rect(mut self, value: Rectangle) -> Self {
         self.rectangle = Some(value);
         self
     }
 
     /// Sets optional rectangle.
-    pub fn maybe_rect(mut self, value: Option<internal::Rectangle>) -> Self {
+    pub fn maybe_rect(mut self, value: Option<Rectangle>) -> Self {
         self.rectangle = value;
         self
     }
 
     /// Sets source rectangle.
-    pub fn src_rect(mut self, value: internal::SourceRectangle) -> Self {
+    pub fn src_rect(mut self, value: SourceRectangle) -> Self {
         self.source_rectangle = Some(value);
         self
     }
 
     /// Sets optional source rectangle.
-    pub fn maybe_src_rect(mut self, value: Option<internal::SourceRectangle>) -> Self {
+    pub fn maybe_src_rect(mut self, value: Option<SourceRectangle>) -> Self {
         self.source_rectangle = value;
         self
     }
@@ -112,9 +111,6 @@ impl Image {
 #[cfg(test)]
 mod test {
     use super::Image;
-    use Color;
-    use Rect;
-    use SrcRect;
 
     #[test]
     fn test_image() {

@@ -12,7 +12,7 @@ pub use vecmath_lib::vec2_square_len as square_len;
 
 use std::ops::{ Add, Rem };
 use vecmath_lib;
-use internal::{
+use types::{
     Area,
     Color,
     Line,
@@ -393,7 +393,7 @@ pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
 
 #[cfg(test)]
 mod test_barycentric {
-    use std::num::Float;
+    use num::Float;
     use super::*;
 
     #[test]

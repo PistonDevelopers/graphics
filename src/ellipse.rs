@@ -1,36 +1,33 @@
 //! Draw ellipse
 
+use types::{ Color, Radius, Rectangle };
+use { triangulation, DrawState, Graphics };
+use math::Matrix2d;
+
 pub use rectangle::centered;
 pub use rectangle::centered_square as circle;
-
-use internal;
-use triangulation;
-use Graphics;
-use Color;
-use math::Matrix2d;
-use DrawState;
 
 /// Ellipse border
 #[derive(Copy, Clone)]
 pub struct Border {
     /// The border color
-    pub color: internal::Color,
+    pub color: Color,
     /// The border radius
-    pub radius: internal::Radius,
+    pub radius: Radius,
 }
 
 /// An ellipse with filled color
 #[derive(Copy, Clone)]
 pub struct Ellipse {
     /// The ellipse color
-    pub color: internal::Color,
+    pub color: Color,
     /// The ellipse border
     pub border: Option<Border>,
 }
 
 impl Ellipse {
     /// Creates a new ellipse
-    pub fn new(color: internal::Color) -> Ellipse {
+    pub fn new(color: Color) -> Ellipse {
         Ellipse {
             color: color,
             border: None
@@ -39,8 +36,8 @@ impl Ellipse {
 
     /// Creates a new ellipse border
     pub fn new_border(
-        color: internal::Color,
-        radius: internal::Radius
+        color: Color,
+        radius: Radius
     ) -> Ellipse {
         Ellipse {
             color: [0.0; 4],
@@ -52,7 +49,7 @@ impl Ellipse {
     }
 
     /// Sets ellipse color.
-    pub fn color(mut self, value: internal::Color) -> Self {
+    pub fn color(mut self, value: Color) -> Self {
         self.color = value;
         self
     }
@@ -72,7 +69,7 @@ impl Ellipse {
     /// Draws the ellipse.
     pub fn draw<G>(
         &self,
-        rectangle: internal::Rectangle,
+        rectangle: Rectangle,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G
@@ -108,9 +105,7 @@ impl Ellipse {
 
 #[cfg(test)]
 mod test {
-    use super::Ellipse;
-    use super::Border;
-    use Color;
+    use super::*;
 
     #[test]
     fn test_ellipse() {

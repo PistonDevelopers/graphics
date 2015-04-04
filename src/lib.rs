@@ -16,10 +16,8 @@ pub use draw_state_lib as draw_state;
 pub use draw_state::DrawState;
 
 pub use graphics::Graphics;
-pub use relative::{
-    Rectangled,
-    SourceRectangled,
-};
+pub use source_rectangled::SourceRectangled;
+pub use rectangled::Rectangled;
 pub use transformed::Transformed;
 pub use colored::Colored;
 pub use rectangle::Rectangle;
@@ -38,7 +36,8 @@ pub use context::Context;
 pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 
 mod graphics;
-mod relative;
+mod source_rectangled;
+mod rectangled;
 mod transformed;
 mod colored;
 mod default_draw_state;
@@ -51,7 +50,7 @@ pub mod line;
 pub mod ellipse;
 pub mod rectangle;
 pub mod image;
-pub mod internal;
+pub mod types;
 pub mod modular_index;
 pub mod text;
 pub mod triangulation;
@@ -65,21 +64,13 @@ pub mod radians {
     pub use vecmath_lib::consts::Radians;
 }
 
-/// A color property
-#[derive(Copy, Clone)]
-pub struct Color(pub internal::Color);
-
 /// A rectangle property
 #[derive(Copy, Clone)]
-pub struct Rect(pub internal::Rectangle);
-
-/// A source rectangle property
-#[derive(Copy, Clone)]
-pub struct SrcRect(pub internal::SourceRectangle);
+pub struct Rect(pub types::Rectangle);
 
 /// Clears the screen.
 pub fn clear<G>(
-    color: internal::Color, g: &mut G
+    color: types::Color, g: &mut G
 )
     where G: Graphics
 {
@@ -99,8 +90,8 @@ pub fn image<G>(
 
 /// Draws ellipse.
 pub fn ellipse<G>(
-    color: internal::Color,
-    rect: internal::Rectangle,
+    color: types::Color,
+    rect: types::Rectangle,
     transform: math::Matrix2d,
     g: &mut G
 )
@@ -111,8 +102,8 @@ pub fn ellipse<G>(
 
 /// Draws rectangle.
 pub fn rectangle<G>(
-    color: internal::Color,
-    rect: internal::Rectangle,
+    color: types::Color,
+    rect: types::Rectangle,
     transform: math::Matrix2d,
     g: &mut G
 )
@@ -123,8 +114,8 @@ pub fn rectangle<G>(
 
 /// Draws polygon.
 pub fn polygon<G>(
-    color: internal::Color,
-    polygon: internal::Polygon,
+    color: types::Color,
+    polygon: types::Polygon,
     transform: math::Matrix2d,
     g: &mut G
 )
