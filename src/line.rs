@@ -48,6 +48,30 @@ impl Line {
         }
     }
 
+    /// Sets color.
+    pub fn color(mut self, value: internal::Color) -> Self {
+        self.color = value;
+        self
+    }
+
+    /// Sets radius.
+    pub fn radius(mut self, value: internal::Radius) -> Self {
+        self.radius = value;
+        self
+    }
+
+    /// Sets width.
+    pub fn width(mut self, value: internal::Width) -> Self {
+        self.radius = 0.5 * value;
+        self
+    }
+
+    /// Sets shape.
+    pub fn shape(mut self, value: Shape) -> Self {
+        self.shape = value;
+        self
+    }
+
     /// Draw the line.
     pub fn draw<G>(
         &self,
@@ -127,17 +151,6 @@ impl Line {
     }
 }
 
-/*
-quack! {
-    set:
-        fn (val: Color) [] { l.color = val.0 }
-        fn (val: Radius) [] { l.radius = val.0 }
-        fn (val: Width) [] { l.radius = 0.5 * val.0 }
-        fn (val: Shape) [] { l.shape = val }
-    action:
-}
-*/
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -148,9 +161,9 @@ mod test {
         use Colored;
 
         let _line = Line::new([0.0; 4], 3.0)
-            .set(Color([1.0; 4]))
-            .set(Radius(3.0))
-            .set(Shape::Round)
+            .color([1.0; 4])
+            .radius(3.0)
+            .shape(Shape::Round)
             .hue_deg(1.0);
         let Color(_) = _line.get();
     }
