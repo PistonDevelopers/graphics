@@ -51,6 +51,24 @@ impl Ellipse {
         }
     }
 
+    /// Sets ellipse color.
+    pub fn color(mut self, value: internal::Color) -> Self {
+        self.color = value;
+        self
+    }
+
+    /// Sets ellipse border.
+    pub fn border(mut self, value: Border) -> Self {
+        self.border = Some(value);
+        self
+    }
+
+    /// Sets optional ellipse border.
+    pub fn maybe_border(mut self, value: Option<Border>) -> Self {
+        self.border = value;
+        self
+    }
+
     /// Draws the ellipse.
     pub fn draw<G>(
         &self,
@@ -87,20 +105,6 @@ impl Ellipse {
         }
     }
 }
-
-/*
-quack! {
-    e: Ellipse[]
-    get:
-        fn () -> Color [] { Color(e.color) }
-        fn () -> MaybeBorder [] { MaybeBorder(e.border) }
-    set:
-        fn (val: Color) [] { e.color = val.0 }
-        fn (val: Border) [] { e.border = Some(val) }
-        fn (val: MaybeBorder) [] { e.border = val.0 }
-    action:
-}
-*/
 
 #[cfg(test)]
 mod test {
