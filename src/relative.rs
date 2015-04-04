@@ -1,6 +1,6 @@
 use internal::ColorComponent;
 use quack::{ GetFrom, Get, SetAt, Set, Pair };
-use context::{ Transform, ViewTransform };
+use context::{ Context, Transform, ViewTransform };
 use vecmath::{
     get_scale,
     hsv,
@@ -283,60 +283,50 @@ impl Transformed for Matrix2d
     }
 }
 
-/*
-impl<T: Clone> Transformed for T
-    where
-        (Transform, Self): Pair<Data = Transform, Object = Self>
-            + GetFrom + SetAt
+impl Transformed for Context
 {
     #[inline(always)]
-    fn append_transform(&self, transform: Matrix2d) -> Self {
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, transform)))
+    fn append_transform(mut self, transform: Matrix2d) -> Self {
+        self.transform = self.transform.append_transform(transform);
+        self
     }
 
     #[inline(always)]
-    fn prepend_transform(&self, transform: Matrix2d) -> Self {
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(transform, mat)))
+    fn prepend_transform(mut self, transform: Matrix2d) -> Self {
+        self.transform = self.transform.prepend_transform(transform);
+        self
     }
 
     #[inline(always)]
-    fn trans(&self, x: Scalar, y: Scalar) -> Self {
-        let trans = translate([x, y]);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, trans)))
+    fn trans(mut self, x: Scalar, y: Scalar) -> Self {
+        self.transform = self.transform.trans(x, y);
+        self
     }
 
     #[inline(always)]
-    fn rot_rad(&self, angle: Scalar) -> Self {
-        let rot = rotate_radians(angle);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, rot)))
+    fn rot_rad(mut self, angle: Scalar) -> Self {
+        self.transform = self.transform.rot_rad(angle);
+        self
     }
 
     #[inline(always)]
-    fn orient(&self, x: Scalar, y: Scalar) -> Self {
-        let orient = orient(x, y);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, orient)))
+    fn orient(mut self, x: Scalar, y: Scalar) -> Self {
+        self.transform = self.transform.orient(x, y);
+        self
     }
 
     #[inline(always)]
-    fn scale(&self, sx: Scalar, sy: Scalar) -> Self {
-        let scale = scale(sx, sy);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, scale)))
+    fn scale(mut self, sx: Scalar, sy: Scalar) -> Self {
+        self.transform = self.transform.scale(sx, sy);
+        self
     }
 
     #[inline(always)]
-    fn shear(&self, v: Vec2d) -> Self {
-        let shear = shear(v);
-        let Transform(mat) = self.get();
-        self.clone().set(Transform(multiply(mat, shear)))
+    fn shear(mut self, v: Vec2d) -> Self {
+        self.transform = self.transform.shear(v);
+        self
     }
 }
-*/
 
 /// Should be implemented by contexts that
 /// draws something relative to view.
