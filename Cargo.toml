@@ -1,7 +1,7 @@
 [package]
 
 name = "piston2d-graphics"
-version = "0.0.26"
+version = "0.0.27"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "Coeuvre <coeuvre@gmail.com>",
@@ -23,11 +23,11 @@ path = "./src/lib.rs"
 
 [dependencies.vecmath]
 git = "https://github.com/PistonDevelopers/vecmath"
-#version = "0.0.5"
+#version = "0.0.6"
 
 [dependencies.draw_state]
 git = "https://github.com/gfx-rs/draw_state"
-#version = "0.0.5"
+#version = "0.0.7"
 
 [dependencies.piston-texture]
 git = "https://github.com/PistonDevelopers/texture"
@@ -39,7 +39,7 @@ git = "https://github.com/PistonDevelopers/read_color"
 
 [dependencies.interpolation]
 git = "https://github.com/PistonDevelopers/interpolation"
-#version = "0.0.3"
+#version = "0.0.4"
 
 [dependencies]
 
