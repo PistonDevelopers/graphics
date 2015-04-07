@@ -27,6 +27,9 @@ pub use image::Image;
 pub use polygon::Polygon;
 pub use math::abs_transform;
 pub use default_draw_state::default_draw_state;
+pub use clip_draw_state::clip_draw_state;
+pub use inside_draw_state::inside_draw_state;
+pub use outside_draw_state::outside_draw_state;
 
 pub use context::Context;
 
@@ -41,6 +44,9 @@ mod rectangled;
 mod transformed;
 mod colored;
 mod default_draw_state;
+mod clip_draw_state;
+mod inside_draw_state;
+mod outside_draw_state;
 
 pub mod character;
 pub mod context;
