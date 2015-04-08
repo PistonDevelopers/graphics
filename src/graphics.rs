@@ -9,6 +9,9 @@ pub trait Graphics {
     /// Clears background with a color.
     fn clear(&mut self, color: [f32; 4]);
 
+    /// Clears stencil buffer with a value.
+    fn clear_stencil(&mut self, value: u8);
+
     /// Renders list of 2d triangles.
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
         where F: FnMut(&mut FnMut(&[f32]));
