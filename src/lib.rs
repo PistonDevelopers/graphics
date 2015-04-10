@@ -57,6 +57,7 @@ pub mod ellipse;
 pub mod rectangle;
 pub mod image;
 pub mod types;
+pub mod types_new;
 pub mod modular_index;
 pub mod text;
 pub mod triangulation;
