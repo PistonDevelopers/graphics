@@ -1,6 +1,6 @@
 //! Contains types used in this library
 use std::convert::From;
-use std::ops::{ Add, Mul };
+use std::ops::{ Add, Mul, Sub };
 
 pub use math::{ Matrix2d, Scalar, Vec2d };
 
@@ -39,27 +39,11 @@ impl Mul<Vec2d> for Dimensions {
     }
 }
 
-impl Mul<Dimensions> for Vec2d {
-    type Output = Dimensions;
-
-    fn mul(self, d: Dimensions) -> Dimensions {
-        Dimensions { width: d.width * self[0], height: d.height * self[1] }
-    }
-}
-
 impl Mul<Scalar> for Dimensions {
     type Output = Dimensions;
 
     fn mul(self, s: Scalar) -> Dimensions {
         Dimensions { width: self.width * s, height: self.height * s }
-    }
-}
-
-impl Mul<Dimensions> for Scalar {
-    type Output = Dimensions;
-
-    fn mul(self, d: Dimensions) -> Dimensions {
-        Dimensions { width: d.width * self, height: d.height * self }
     }
 }
 
@@ -70,22 +54,6 @@ pub struct Point {
     y: Scalar,
 }
 
-impl Add<Vec2d> for Point {
-    type Output = Point;
-
-    fn add(self, v: Vec2d) -> Point {
-        Point { x: self.x + v[0], y: self.y + v[1] }
-    }
-}
-
-impl Add<Point> for Vec2d {
-    type Output = Point;
-
-    fn add(self, p: Point) -> Point {
-        Point { x: p.x + self[0], y: p.y + self[1] }
-    }
-}
-
 impl Add<Scalar> for Point {
     type Output = Point;
 
@@ -94,17 +62,33 @@ impl Add<Scalar> for Point {
     }
 }
 
-impl Add<Point> for Scalar {
+impl Add<Vec2d> for Point {
     type Output = Point;
 
-    fn add(self, p: Point) -> Point {
-        Point { x: p.x + self, y: p.y + self }
+    fn add(self, v: Vec2d) -> Point {
+        Point { x: self.x + v[0], y: self.y + v[1] }
     }
 }
 
 impl From<Vec2d> for Point {
     fn from(v: Vec2d) -> Point {
         Point { x: v[0], y: v[1] }
+    }
+}
+
+impl Sub<Scalar> for Point {
+    type Output = Point;
+
+    fn sub(self, s: Scalar) -> Point {
+        Point { x: self.x - s, y: self.y - s }
+    }
+}
+
+impl Sub<Vec2d> for Point {
+    type Output = Point;
+
+    fn sub(self, v: Vec2d) -> Point {
+        Point { x: self.x - v[0], y: self.y - v[1] }
     }
 }
 
@@ -180,7 +164,7 @@ impl Rectangle {
                  x: self.pos.x - self.dim.width,
                  y: self.pos.y - self.dim.height,
             },
-            dim: 2.0 * self.dim,
+            dim: self.dim * 2.0,
         }
     }
 
