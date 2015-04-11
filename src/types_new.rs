@@ -4,13 +4,6 @@ use std::ops::{ Add, Mul, Sub };
 
 pub use math::{ Matrix2d, Scalar, Vec2d };
 
-/// A circle.
-#[derive(Clone, Copy, Debug)]
-pub struct Circle {
-    center: Point,
-    radius: Scalar,
-}
-
 /// The size of a shape.
 #[derive(Clone, Copy, Debug)]
 pub struct Size {
@@ -106,22 +99,6 @@ pub struct Rect {
     size: Size,
 }
 
-impl From<Circle> for Rect {
-    /// Convert from a circle to a rectangle.
-    fn from(c: Circle) -> Rect {
-        Rect {
-            pos: Point {
-                x: c.center.x - c.radius,
-                y: c.center.y - c.radius,
-            },
-            size: Size {
-                width: 2.0 * c.radius,
-                height: 2.0 * c.radius,
-            },
-        }
-    }
-}
-
 impl From<(Point, Size)> for Rect {
     /// Creates a rectangle from the position of its top left corner and its size.
     fn from(rectangle: (Point, Size)) -> Rect {
@@ -136,16 +113,6 @@ impl From<[Scalar; 4]> for Rect {
         Rect {
             pos: Point { x: v[0], y: v[1] },
             size: Size { width: v[2], height: v[3] },
-        }
-    }
-}
-
-impl From<Square> for Rect {
-    /// Convert a square into a rectangle.
-    fn from(s: Square) -> Rect {
-        Rect {
-            pos: s.pos,
-            size: Size { width: s.len, height: s.len },
         }
     }
 }
@@ -173,6 +140,28 @@ impl Rect {
     pub fn contains(&self, point: Point) -> bool {
         self.left() < point.x && point.x < self.right() &&
         self.top() < point.y && point.y < self.bottom()
+    }
+
+    /// Create a rectangle that circumscribes the given circle.
+    pub fn from_circle(center: Point, radius: Scalar) -> Rect {
+        Rect {
+            pos: Point {
+                x: center.x - radius,
+                y: center.y - radius,
+            },
+            size: Size {
+                width: 2.0 * radius,
+                height: 2.0 * radius,
+            },
+        }
+    }
+
+    /// Create a square rectangle with sides of length len and top left corner at pos.
+    pub fn from_square(pos: Point, len: Scalar) -> Rect {
+        Rect {
+            pos: pos,
+            size: Size { width: len, height: len },
+        }
     }
 
     /// Converts a rectangle into [x, y, w, h].
@@ -242,11 +231,4 @@ impl Rect {
     pub fn top(&self) -> Scalar {
         self.pos.y
     }
-}
-
-/// A square.
-#[derive(Clone, Copy, Debug)]
-pub struct Square {
-    pos: Point,
-    len: Scalar,
 }
