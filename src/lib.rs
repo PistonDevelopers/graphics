@@ -10,10 +10,12 @@ extern crate read_color;
 extern crate interpolation;
 extern crate draw_state as draw_state_lib;
 extern crate num;
+extern crate viewport;
 
 pub use texture::ImageSize;
 pub use draw_state_lib as draw_state;
 pub use draw_state::DrawState;
+pub use viewport::Viewport;
 
 pub use graphics::Graphics;
 pub use source_rectangled::SourceRectangled;
