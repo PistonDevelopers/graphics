@@ -7,8 +7,10 @@ pub use math::{ Matrix2d, Scalar, Vec2d };
 /// The size of a shape.
 #[derive(Clone, Copy, Debug)]
 pub struct Size {
-    width: Scalar,
-    height: Scalar,
+    /// The horizontal length of the shape.
+    pub width: Scalar,
+    /// The vertical length of the shape.
+    pub height: Scalar,
 }
 
 impl From<Vec2d> for Size {
@@ -43,8 +45,10 @@ impl Mul<Scalar> for Size {
 /// A point in the Cartesian plane.
 #[derive(Clone, Copy, Debug)]
 pub struct Point {
-    x: Scalar,
-    y: Scalar,
+    /// The x coordinate.
+    pub x: Scalar,
+    /// The y coordinate.
+    pub y: Scalar,
 }
 
 impl Add<Scalar> for Point {
@@ -92,11 +96,13 @@ impl Point {
     }
 }
 
-/// A rectangle whose top left corner is at pos.
+/// A rectangle.
 #[derive(Clone, Copy, Debug)]
 pub struct Rect {
-    pos: Point,
-    size: Size,
+    /// The position of the top left corner of the rectangle.
+    pub pos: Point,
+    /// The width and height of the rectangle.
+    pub size: Size,
 }
 
 impl From<(Point, Size)> for Rect {
