@@ -6,6 +6,8 @@ use math::{
     abs_transform,
     identity,
     get_scale,
+    multiply,
+    scale,
     Matrix2d,
     Scalar,
     Vec2d,
@@ -34,6 +36,32 @@ impl Context {
             transform: identity(),
             draw_state: *default_draw_state(),
             viewport: None,
+        }
+    }
+    
+    /// Creates a new context with absolute transform in point coordinates.
+    ///
+    /// This function assumes the default coordinate system
+    /// being centered with x axis pointing to the right
+    /// and y axis pointing up.
+    ///
+    /// Returns a drawing context
+    /// with origin in the upper left corner
+    /// and x axis pointing to the right
+    /// and y axis pointing down.
+    #[inline(always)]
+    pub fn new_viewport(viewport: Viewport) -> Context {
+        let sx = viewport.window_size[0] as f64 / viewport.draw_size[0] as f64;
+        let sy = viewport.window_size[1] as f64 / viewport.draw_size[1] as f64;
+        let mat = multiply(
+                abs_transform(viewport.draw_size[0] as f64, viewport.draw_size[1] as f64),
+                scale(sx, sy)
+            );
+        Context {
+            view: mat,
+            transform: mat,
+            draw_state: *default_draw_state(),
+            viewport: Some(viewport),
         }
     }
 
