@@ -10,10 +10,13 @@ use math::{
     Scalar,
     Vec2d,
 };
+use Viewport;
 
 /// Drawing 2d context.
 #[derive(Copy, Clone)]
 pub struct Context {
+    /// Viewport information.
+    pub viewport: Option<Viewport>,
     /// View transformation.
     pub view: Matrix2d,
     /// Current transformation.
@@ -30,6 +33,7 @@ impl Context {
             view: identity(),
             transform: identity(),
             draw_state: *default_draw_state(),
+            viewport: None,
         }
     }
 
@@ -50,6 +54,7 @@ impl Context {
             view: mat,
             transform: mat,
             draw_state: *default_draw_state(),
+            viewport: None,
         }
     }
 
