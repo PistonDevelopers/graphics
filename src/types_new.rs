@@ -7,22 +7,22 @@ pub use math::{ Matrix2d, Scalar, Vec2d };
 /// The size of a shape.
 #[derive(Clone, Copy, Debug)]
 pub struct Size {
-    /// The horizontal length of the shape.
-    pub width: Scalar,
-    /// The vertical length of the shape.
-    pub height: Scalar,
+    /// The horizontal length of the shape (width).
+    pub w: Scalar,
+    /// The vertical length of the shape (height).
+    pub h: Scalar,
 }
 
 impl From<Vec2d> for Size {
     fn from(v: Vec2d) -> Size {
-        Size { width: v[0], height: v[1] }
+        Size { w: v[0], h: v[1] }
     }
 }
 
 impl Size {
     /// Convert size to a vector.
     pub fn to_vec2d(&self) -> Vec2d {
-        [self.width, self.height]
+        [self.w, self.h]
     }
 }
 
@@ -30,7 +30,7 @@ impl Mul<Vec2d> for Size {
     type Output = Size;
 
     fn mul(self, v: Vec2d) -> Size {
-        Size { width: self.width * v[0], height: self.height * v[1] }
+        Size { w: self.w * v[0], h: self.h * v[1] }
     }
 }
 
@@ -38,7 +38,7 @@ impl Mul<Scalar> for Size {
     type Output = Size;
 
     fn mul(self, s: Scalar) -> Size {
-        Size { width: self.width * s, height: self.height * s }
+        Size { w: self.w * s, h: self.h * s }
     }
 }
 
@@ -118,7 +118,7 @@ impl From<[Scalar; 4]> for Rect {
     fn from(v: [Scalar; 4]) -> Rect {
         Rect {
             pos: Point { x: v[0], y: v[1] },
-            size: Size { width: v[2], height: v[3] },
+            size: Size { w: v[2], h: v[3] },
         }
     }
 }
@@ -126,7 +126,7 @@ impl From<[Scalar; 4]> for Rect {
 impl Rect {
     /// Returns the position of the bottom side of the rectangle.
     pub fn bottom(&self) -> Scalar {
-        self.pos.y + self.size.height
+        self.pos.y + self.size.h
     }
 
     /// Computes a rectangle with quadruple the surface area of self and with center
@@ -134,8 +134,8 @@ impl Rect {
     pub fn centered(&self) -> Rect {
         Rect {
             pos: Point {
-                 x: self.pos.x - self.size.width,
-                 y: self.pos.y - self.size.height,
+                 x: self.pos.x - self.size.w,
+                 y: self.pos.y - self.size.h,
             },
             size: self.size * 2.0,
         }
@@ -156,8 +156,8 @@ impl Rect {
                 y: center.y - radius,
             },
             size: Size {
-                width: 2.0 * radius,
-                height: 2.0 * radius,
+                w: 2.0 * radius,
+                h: 2.0 * radius,
             },
         }
     }
@@ -166,13 +166,13 @@ impl Rect {
     pub fn from_square(pos: Point, len: Scalar) -> Rect {
         Rect {
             pos: pos,
-            size: Size { width: len, height: len },
+            size: Size { w: len, h: len },
         }
     }
 
     /// Converts a rectangle into [x, y, w, h].
     pub fn into_array(self) -> [Scalar; 4] {
-        [self.pos.x, self.pos.y, self.size.width, self.size.height]
+        [self.pos.x, self.pos.y, self.size.w, self.size.h]
     }
 
     /// Returns the position of the left side of the rectangle.
@@ -183,24 +183,24 @@ impl Rect {
     /// Computes a rectangle whose perimeter forms the inside edge of margin with size m for self.
     #[inline(always)]
     pub fn margin(&self, m: Scalar) -> Rect {
-        let w = self.size.width - 2.0 * m;
-        let h = self.size.height - 2.0 * m;
+        let w = self.size.w - 2.0 * m;
+        let h = self.size.h - 2.0 * m;
         let (x, w)
             =   if w < 0.0 {
-                    (self.pos.x + 0.5 * self.size.width, 0.0)
+                    (self.pos.x + 0.5 * self.size.w, 0.0)
                 } else {
                     (self.pos.x + m, w)
                 };
         let (y, h)
             =   if h < 0.0 {
-                    (self.pos.y + 0.5 * self.size.height, 0.0)
+                    (self.pos.y + 0.5 * self.size.h, 0.0)
                 } else {
                     (self.pos.y + m, h)
                 };
 
         Rect {
             pos: Point { x: x, y: y },
-            size: Size { width: w, height: h },
+            size: Size { w: w, h: h },
         }
     }
 
@@ -217,7 +217,7 @@ impl Rect {
 
     /// Returns the position of the right side of the rectangle.
     pub fn right(&self) -> Scalar {
-        self.pos.x + self.size.width
+        self.pos.x + self.size.w
     }
 
     /// Computes a scaled rectangle with the same position as self.
@@ -230,7 +230,7 @@ impl Rect {
 
     /// Converts a rectangle to [x, y, w, h].
     pub fn to_array(&self) -> [Scalar; 4] {
-        [self.pos.x, self.pos.y, self.size.width, self.size.height]
+        [self.pos.x, self.pos.y, self.size.w, self.size.h]
     }
 
     /// Returns the position of the top side of the rectangle.
