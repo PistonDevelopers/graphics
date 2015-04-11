@@ -38,7 +38,7 @@ impl Context {
             viewport: None,
         }
     }
-    
+
     /// Creates a new context with absolute transform in point coordinates.
     ///
     /// This function assumes the default coordinate system
@@ -51,8 +51,8 @@ impl Context {
     /// and y axis pointing down.
     #[inline(always)]
     pub fn new_viewport(viewport: Viewport) -> Context {
-        let sx = viewport.window_size[0] as f64 / viewport.draw_size[0] as f64;
-        let sy = viewport.window_size[1] as f64 / viewport.draw_size[1] as f64;
+        let sx = viewport.draw_size[0] as f64 / viewport.window_size[0] as f64;
+        let sy = viewport.draw_size[1] as f64 / viewport.window_size[1] as f64;
         let mat = multiply(
                 abs_transform(viewport.draw_size[0] as f64, viewport.draw_size[1] as f64),
                 scale(sx, sy)
