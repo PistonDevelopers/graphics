@@ -11,39 +11,39 @@ pub struct Circle {
     radius: Scalar,
 }
 
-/// The dimensions of a shape.
+/// The size of a shape.
 #[derive(Clone, Copy, Debug)]
-pub struct Dimensions {
+pub struct Size {
     width: Scalar,
     height: Scalar,
 }
 
-impl From<Vec2d> for Dimensions {
-    fn from(v: Vec2d) -> Dimensions {
-        Dimensions { width: v[0], height: v[1] }
+impl From<Vec2d> for Size {
+    fn from(v: Vec2d) -> Size {
+        Size { width: v[0], height: v[1] }
     }
 }
 
-impl Dimensions {
-    /// Convert dimenions to a vector.
-    pub fn to_vec(&self) -> Vec2d {
+impl Size {
+    /// Convert size to a vector.
+    pub fn to_vec2d(&self) -> Vec2d {
         [self.width, self.height]
     }
 }
 
-impl Mul<Vec2d> for Dimensions {
-    type Output = Dimensions;
+impl Mul<Vec2d> for Size {
+    type Output = Size;
 
-    fn mul(self, v: Vec2d) -> Dimensions {
-        Dimensions { width: self.width * v[0], height: self.height * v[1] }
+    fn mul(self, v: Vec2d) -> Size {
+        Size { width: self.width * v[0], height: self.height * v[1] }
     }
 }
 
-impl Mul<Scalar> for Dimensions {
-    type Output = Dimensions;
+impl Mul<Scalar> for Size {
+    type Output = Size;
 
-    fn mul(self, s: Scalar) -> Dimensions {
-        Dimensions { width: self.width * s, height: self.height * s }
+    fn mul(self, s: Scalar) -> Size {
+        Size { width: self.width * s, height: self.height * s }
     }
 }
 
@@ -94,27 +94,27 @@ impl Sub<Vec2d> for Point {
 
 impl Point {
     /// Convert the point to a vector.
-    pub fn to_vec(&self) -> Vec2d {
+    pub fn to_vec2d(&self) -> Vec2d {
         [self.x, self.y]
     }
 }
 
-/// A rectangle whose top left corner is at (x, y).
+/// A rectangle whose top left corner is at pos.
 #[derive(Clone, Copy, Debug)]
-pub struct Rectangle {
+pub struct Rect {
     pos: Point,
-    dim: Dimensions,
+    size: Size,
 }
 
-impl From<Circle> for Rectangle {
+impl From<Circle> for Rect {
     /// Convert from a circle to a rectangle.
-    fn from(c: Circle) -> Rectangle {
-        Rectangle {
+    fn from(c: Circle) -> Rect {
+        Rect {
             pos: Point {
                 x: c.center.x - c.radius,
                 y: c.center.y - c.radius,
             },
-            dim: Dimensions {
+            size: Size {
                 width: 2.0 * c.radius,
                 height: 2.0 * c.radius,
             },
@@ -122,49 +122,49 @@ impl From<Circle> for Rectangle {
     }
 }
 
-impl From<(Point, Dimensions)> for Rectangle {
-    /// Creates a rectangle from the position of its top left corner and its dimensions.
-    fn from(rectangle: (Point, Dimensions)) -> Rectangle {
-        let (pos, dim) = rectangle;
-        Rectangle { pos: pos, dim: dim }
+impl From<(Point, Size)> for Rect {
+    /// Creates a rectangle from the position of its top left corner and its size.
+    fn from(rectangle: (Point, Size)) -> Rect {
+        let (pos, size) = rectangle;
+        Rect { pos: pos, size: size }
     }
 }
 
-impl From<[Scalar; 4]> for Rectangle {
+impl From<[Scalar; 4]> for Rect {
     /// Creates a rectangle from an array.
-    fn from(v: [Scalar; 4]) -> Rectangle {
-        Rectangle {
+    fn from(v: [Scalar; 4]) -> Rect {
+        Rect {
             pos: Point { x: v[0], y: v[1] },
-            dim: Dimensions { width: v[2], height: v[3] },
+            size: Size { width: v[2], height: v[3] },
         }
     }
 }
 
-impl From<Square> for Rectangle {
+impl From<Square> for Rect {
     /// Convert a square into a rectangle.
-    fn from(s: Square) -> Rectangle {
-        Rectangle {
+    fn from(s: Square) -> Rect {
+        Rect {
             pos: s.pos,
-            dim: Dimensions { width: s.len, height: s.len },
+            size: Size { width: s.len, height: s.len },
         }
     }
 }
 
-impl Rectangle {
+impl Rect {
     /// Returns the position of the bottom side of the rectangle.
     pub fn bottom(&self) -> Scalar {
-        self.pos.y + self.dim.height
+        self.pos.y + self.size.height
     }
 
     /// Computes a rectangle with quadruple the surface area of self and with center
     /// (self.x, self.y).
-    pub fn centered(&self) -> Rectangle {
-        Rectangle {
+    pub fn centered(&self) -> Rect {
+        Rect {
             pos: Point {
-                 x: self.pos.x - self.dim.width,
-                 y: self.pos.y - self.dim.height,
+                 x: self.pos.x - self.size.width,
+                 y: self.pos.y - self.size.height,
             },
-            dim: self.dim * 2.0,
+            size: self.size * 2.0,
         }
     }
 
@@ -175,9 +175,9 @@ impl Rectangle {
         self.top() < point.y && point.y < self.bottom()
     }
 
-    /// Converts a rectangle into an array.
-    pub fn into_vec(self) -> [Scalar; 4] {
-        [self.pos.x, self.pos.y, self.dim.width, self.dim.height]
+    /// Converts a rectangle into [x, y, w, h].
+    pub fn into_array(self) -> [Scalar; 4] {
+        [self.pos.x, self.pos.y, self.size.width, self.size.height]
     }
 
     /// Returns the position of the left side of the rectangle.
@@ -187,25 +187,25 @@ impl Rectangle {
 
     /// Computes a rectangle whose perimeter forms the inside edge of margin with size m for self.
     #[inline(always)]
-    pub fn margin(&self, m: Scalar) -> Rectangle {
-        let w = self.dim.width - 2.0 * m;
-        let h = self.dim.height - 2.0 * m;
+    pub fn margin(&self, m: Scalar) -> Rect {
+        let w = self.size.width - 2.0 * m;
+        let h = self.size.height - 2.0 * m;
         let (x, w)
             =   if w < 0.0 {
-                    (self.pos.x + 0.5 * self.dim.width, 0.0)
+                    (self.pos.x + 0.5 * self.size.width, 0.0)
                 } else {
                     (self.pos.x + m, w)
                 };
         let (y, h)
             =   if h < 0.0 {
-                    (self.pos.y + 0.5 * self.dim.height, 0.0)
+                    (self.pos.y + 0.5 * self.size.height, 0.0)
                 } else {
                     (self.pos.y + m, h)
                 };
 
-        Rectangle {
+        Rect {
             pos: Point { x: x, y: y },
-            dim: Dimensions { width: w, height: h },
+            size: Size { width: w, height: h },
         }
     }
 
@@ -213,29 +213,29 @@ impl Rectangle {
     /// to the size of the rectangle. For example, self.relative([1.0, 1.0]) returns a rectangle
     /// one rectangle to the right and down from the original.
     #[inline(always)]
-    pub fn relative(&self, v: Vec2d) -> Rectangle {
-        Rectangle {
-            pos: self.pos + (self.dim * v).to_vec(),
-            dim: self.dim,
+    pub fn relative(&self, v: Vec2d) -> Rect {
+        Rect {
+            pos: self.pos + (self.size * v).to_vec2d(),
+            size: self.size,
         }
     }
 
     /// Returns the position of the right side of the rectangle.
     pub fn right(&self) -> Scalar {
-        self.pos.x + self.dim.width
+        self.pos.x + self.size.width
     }
 
     /// Computes a scaled rectangle with the same position as self.
-    pub fn scaled(&self, v: Vec2d) -> Rectangle {
-        Rectangle {
+    pub fn scaled(&self, v: Vec2d) -> Rect {
+        Rect {
             pos: self.pos,
-            dim: self.dim * v,
+            size: self.size * v,
         }
     }
 
-    /// Converts a rectangle into a Vec4<Scalar> representation.
-    pub fn to_vec(&self) -> [Scalar; 4] {
-        [self.pos.x, self.pos.y, self.dim.width, self.dim.height]
+    /// Converts a rectangle to [x, y, w, h].
+    pub fn to_array(&self) -> [Scalar; 4] {
+        [self.pos.x, self.pos.y, self.size.width, self.size.height]
     }
 
     /// Returns the position of the top side of the rectangle.
