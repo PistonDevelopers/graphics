@@ -149,7 +149,7 @@ impl Rect {
     }
 
     /// Create a rectangle that circumscribes the given circle.
-    pub fn from_circle(center: Point, radius: Scalar) -> Rect {
+    pub fn new_circle(center: Point, radius: Scalar) -> Rect {
         Rect {
             pos: Point {
                 x: center.x - radius,
@@ -163,7 +163,7 @@ impl Rect {
     }
 
     /// Create a square rectangle with sides of length len and top left corner at pos.
-    pub fn from_square(pos: Point, len: Scalar) -> Rect {
+    pub fn new_square(pos: Point, len: Scalar) -> Rect {
         Rect {
             pos: pos,
             size: Size { w: len, h: len },
