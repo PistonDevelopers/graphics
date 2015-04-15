@@ -1,17 +1,6 @@
 language: rust
-notifications:
-    irc: "irc.mozilla.org#piston-internals"
-os:
-    - linux
-    - osx
-env:
-    global:
-        - secure: Kmv/HfROnT5+YKU7HpqU0FPMzfojZS3IUvn5AXJuLLf2U3CeixR7h5/TtWBXpNWywKwuFZeqNhv4loTRD10Q44bjDNQ1BT1p06YB1DWLYVTJvc7h7DhyaY3JGreiuXCK5an3RFYiXzxCn6YHxqUrzgPMx20lLmgkDvSGoIXoHnI=
 script:
-    - cargo build -v
-    - cargo test -v
-    - cargo doc -v
+  - cargo test -v
+  - cargo doc -v
 after_success:
-    - cp -R target/doc doc
-    - curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh
-    - rm -r doc
+  - curl http://docs.piston.rs/travis-doc-upload.sh | sh

@@ -4,7 +4,7 @@ A library for 2D graphics, written in Rust, that works with multiple back-ends.
 
 Maintainers: @bvssvni, @Coeuvre
 
-[Graphics online docs](http://www.rust-ci.org/PistonDevelopers/piston/doc/graphics/index.html)
+[Graphics online docs](http://docs.piston.rs/graphics/graphics/)
 
 *Notice: This is a very early stage of the project!*
 
