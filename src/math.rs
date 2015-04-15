@@ -9,6 +9,8 @@ pub use vecmath_lib::vec2_cast as cast;
 pub use vecmath_lib::vec2_mul as mul;
 pub use vecmath_lib::vec2_scale as mul_scalar;
 pub use vecmath_lib::vec2_square_len as square_len;
+pub use vecmath_lib::row_mat2x3_transform_pos2 as transform_pos;
+pub use vecmath_lib::row_mat2x3_transform_vec2 as transform_vec;
 
 use std::ops::{ Add, Rem };
 use vecmath_lib;
