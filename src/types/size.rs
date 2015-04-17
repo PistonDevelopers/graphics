@@ -1,6 +1,6 @@
 use std::ops::{ Mul };
 
-use math::{ Scalar, Vec2d };
+use math::Scalar;
 
 /// The size of a shape.
 #[derive(Clone, Copy, Debug)]
@@ -17,8 +17,8 @@ impl From<Size<f32>> for Size {
     }
 }
 
-impl From<Vec2d> for Size {
-    fn from(v: Vec2d) -> Size {
+impl<S: Copy> From<[S; 2]> for Size<S> {
+    fn from(v: [S; 2]) -> Size<S> {
         Size { w: v[0], h: v[1] }
     }
 }
@@ -29,24 +29,24 @@ impl From<[f32; 2]> for Size {
     }
 }
 
-impl From<(Scalar, Scalar)> for Size {
-    fn from((w, h): (Scalar, Scalar)) -> Size {
+impl<S> From<(S, S)> for Size<S> {
+    fn from((w, h): (S, S)) -> Size<S> {
         Size { w: w, h: h }
     }
 }
 
-impl Size {
-    /// Convert size to a vector.
-    pub fn to_array(self) -> Vec2d {
+impl<S> Size<S> {
+    /// Convert size to an array.
+    pub fn to_array(self) -> [S; 2] {
         [self.w, self.h]
     }
 }
 
-impl<T: Into<Size>> Mul<T> for Size {
-    type Output = Size;
+impl<S: Mul<S, Output = S>, T: Into<Size<S>>> Mul<T> for Size<S> {
+    type Output = Size<S>;
 
-    fn mul(self, v: T) -> Size {
-        let v: Size = v.into();
+    fn mul(self, v: T) -> Size<S> {
+        let v: Size<S> = v.into();
         Size { w: self.w * v.w, h: self.h * v.h }
     }
 }
@@ -55,6 +55,14 @@ impl Mul<Scalar> for Size {
     type Output = Size;
 
     fn mul(self, s: Scalar) -> Size {
+        Size { w: self.w * s, h: self.h * s }
+    }
+}
+
+impl Mul<f32> for Size<f32> {
+    type Output = Size<f32>;
+
+    fn mul(self, s: f32) -> Size<f32> {
         Size { w: self.w * s, h: self.h * s }
     }
 }
