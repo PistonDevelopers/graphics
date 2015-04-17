@@ -27,6 +27,9 @@ pub use line::Line;
 pub use ellipse::Ellipse;
 pub use image::Image;
 pub use polygon::Polygon;
+pub use size::Size;
+pub use point::Point;
+pub use rect::Rect;
 pub use math::abs_transform;
 pub use default_draw_state::default_draw_state;
 pub use clip_draw_state::clip_draw_state;
@@ -49,6 +52,9 @@ mod default_draw_state;
 mod clip_draw_state;
 mod inside_draw_state;
 mod outside_draw_state;
+mod size;
+mod point;
+mod rect;
 
 pub mod character;
 pub mod context;
@@ -59,7 +65,6 @@ pub mod ellipse;
 pub mod rectangle;
 pub mod image;
 pub mod types;
-pub mod types_new;
 pub mod modular_index;
 pub mod text;
 pub mod triangulation;
@@ -72,10 +77,6 @@ pub mod radians {
 
     pub use vecmath_lib::consts::Radians;
 }
-
-/// A rectangle property
-#[derive(Copy, Clone)]
-pub struct Rect(pub types::Rectangle);
 
 /// Clears the screen.
 pub fn clear<G>(
