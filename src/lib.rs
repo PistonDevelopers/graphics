@@ -59,7 +59,6 @@ pub mod ellipse;
 pub mod rectangle;
 pub mod image;
 pub mod types;
-pub mod types_new;
 pub mod modular_index;
 pub mod text;
 pub mod triangulation;
@@ -72,10 +71,6 @@ pub mod radians {
 
     pub use vecmath_lib::consts::Radians;
 }
-
-/// A rectangle property
-#[derive(Copy, Clone)]
-pub struct Rect(pub types::Rectangle);
 
 /// Clears the screen.
 pub fn clear<G>(
@@ -98,9 +93,9 @@ pub fn image<G>(
 }
 
 /// Draws ellipse.
-pub fn ellipse<G>(
+pub fn ellipse<R: Into<types::Rect>, G>(
     color: types::Color,
-    rect: types::Rectangle,
+    rect: R,
     transform: math::Matrix2d,
     g: &mut G
 )
@@ -110,9 +105,9 @@ pub fn ellipse<G>(
 }
 
 /// Draws rectangle.
-pub fn rectangle<G>(
+pub fn rectangle<R: Into<types::Rect>, G>(
     color: types::Color,
-    rect: types::Rectangle,
+    rect: R,
     transform: math::Matrix2d,
     g: &mut G
 )

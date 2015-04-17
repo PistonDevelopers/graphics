@@ -1,6 +1,6 @@
 //! Draw image
 
-use types::{ Color, Rectangle, SourceRectangle };
+use types::{ Color, Rect, SourceRectangle };
 use triangulation;
 use Graphics;
 use ImageSize;
@@ -13,7 +13,7 @@ pub struct Image {
     /// The color
     pub color: Option<Color>,
     /// The rectangle to draw image inside
-    pub rectangle: Option<Rectangle>,
+    pub rectangle: Option<Rect>,
     /// The image source rectangle
     pub source_rectangle: Option<SourceRectangle>,
 }
@@ -50,14 +50,14 @@ impl Image {
     }
 
     /// Sets rectangle.
-    pub fn rect(mut self, value: Rectangle) -> Self {
-        self.rectangle = Some(value);
+    pub fn rect<T: Into<Rect>>(mut self, value: T) -> Self {
+        self.rectangle = Some(value.into());
         self
     }
 
     /// Sets optional rectangle.
-    pub fn maybe_rect(mut self, value: Option<Rectangle>) -> Self {
-        self.rectangle = value;
+    pub fn maybe_rect<T: Into<Rect>>(mut self, value: Option<T>) -> Self {
+        self.rectangle = value.map(|v| v.into());
         self
     }
 
@@ -95,7 +95,7 @@ impl Image {
             0.0,
             source_rectangle[2] as Scalar,
             source_rectangle[3] as Scalar
-        ]);
+        ].into());
         g.tri_list_uv(
             draw_state,
             &color,

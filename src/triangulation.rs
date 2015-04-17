@@ -8,7 +8,7 @@ use types::{
     Polygon,
     Polygons,
     Radius,
-    Rectangle,
+    Rect,
 };
 use num::Float;
 use math::{
@@ -76,14 +76,14 @@ pub fn with_lerp_polygons_tri_list<F>(
 pub fn with_ellipse_tri_list<F>(
     resolution: usize,
     m: Matrix2d,
-    rect: Rectangle,
+    rect: Rect,
     f: F
 )
     where
         F: FnMut(&[f32])
 {
 
-    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (x, y, w, h) = rect.to_tuple();
     let (cw, ch) = (0.5 * w, 0.5 * h);
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
@@ -111,11 +111,10 @@ pub fn with_round_border_line_tri_list<F>(
 {
 
     let radius = round_border_radius;
-    let (x1, y1, x2, y2) = (line[0], line[1], line[2], line[3]);
-    let (dx, dy) = (x2 - x1, y2 - y1);
-    let w = (dx * dx + dy * dy).sqrt();
-    let m = multiply(m, translate([x1, y1]));
-    let m = multiply(m, orient(dx, dy));
+    let d = line.end - line.start;
+    let w = d.len();
+    let m = multiply(m, translate(line.start.to_array()));
+    let m = multiply(m, orient(d.x, d.y));
     let n = resolution_cap * 2;
     let mut i: usize = 0;
     stream_polygon_tri_list(m, || {
@@ -158,7 +157,7 @@ pub fn with_round_border_line_tri_list<F>(
 pub fn with_round_rectangle_tri_list<F>(
     resolution_corner: usize,
     m: Matrix2d,
-    rect: Rectangle,
+    rect: Rect,
     round_radius: Radius,
     f: F
 )
@@ -166,7 +165,7 @@ pub fn with_round_rectangle_tri_list<F>(
         F: FnMut(&[f32])
 {
 
-    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (x, y, w, h) = rect.to_tuple();
     let radius = round_radius;
     let n = resolution_corner * 4;
     let mut i: usize = 0;
@@ -297,7 +296,7 @@ pub fn stream_polygon_tri_list<E, F>(
 pub fn with_ellipse_border_tri_list<F>(
     resolution: usize,
     m: Matrix2d,
-    rect: Rectangle,
+    rect: Rect,
     border_radius: Radius,
     f: F
 )
@@ -305,7 +304,7 @@ pub fn with_ellipse_border_tri_list<F>(
         F: FnMut(&[f32])
 {
 
-    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (x, y, w, h) = rect.to_tuple();
     let (cw, ch) = (0.5 * w, 0.5 * h);
     let (cw1, ch1) = (cw + border_radius, ch + border_radius);
     let (cw2, ch2) = (cw - border_radius, ch - border_radius);
@@ -329,7 +328,7 @@ pub fn with_ellipse_border_tri_list<F>(
 pub fn with_round_rectangle_border_tri_list<F>(
     resolution_corner: usize,
     m: Matrix2d,
-    rect: Rectangle,
+    rect: Rect,
     round_radius: Radius,
     border_radius: Radius,
     f: F
@@ -338,7 +337,7 @@ pub fn with_round_rectangle_border_tri_list<F>(
         F: FnMut(&[f32])
 {
 
-    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (x, y, w, h) = rect.to_tuple();
     let radius = round_radius;
     let radius1 = round_radius + border_radius;
     let radius2 = round_radius - border_radius;
@@ -543,9 +542,9 @@ pub fn with_polygon_tri_list<F>(
 #[inline(always)]
 pub fn rect_tri_list_xy(
     m: Matrix2d,
-    rect: Rectangle
+    rect: Rect
 ) -> [f32; 12] {
-    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (x, y, w, h) = rect.to_tuple();
     let (x2, y2) = (x + w, y + h);
     [
         tx(m,x,y), ty(m,x,y),
@@ -561,10 +560,10 @@ pub fn rect_tri_list_xy(
 #[inline(always)]
 pub fn rect_border_tri_list_xy(
     m: Matrix2d,
-    rect: Rectangle,
+    rect: Rect,
     border_radius: Radius,
 ) -> [f32; 48] {
-    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (x, y, w, h) = rect.to_tuple();
     let (w1, h1) = (w + border_radius, h + border_radius);
     let (w2, h2) = (w - border_radius, h - border_radius);
     let (x11, y11) = (x - border_radius, y - border_radius);
