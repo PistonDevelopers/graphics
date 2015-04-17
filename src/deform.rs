@@ -14,7 +14,7 @@ pub struct DeformGrid {
     /// The number of rows in the grid.
     pub rows: usize,
     /// The grid undeformed, which is a plain rectangle.
-    pub rect: [Scalar; 4],
+    pub rect: Rect,
     /// The vertices, deformed.
     pub vertices: Vec<Vec2d>,
     /// The triangle indices.
@@ -69,7 +69,7 @@ impl DeformGrid {
         DeformGrid {
             cols: cols,
             rows: rows,
-            rect: rect.to_array(),
+            rect: rect,
             vertices: vertices,
             indices: indices,
             texture_coords: texture_coords,
@@ -111,19 +111,19 @@ impl DeformGrid {
         let cols = self.cols;
         let rows = self.rows;
         let r = self.rect;
-        let units_h = r[2] / cols as Scalar;
-        let units_v = r[3] / rows as Scalar;
+        let units_h = r.size.w / cols as Scalar;
+        let units_v = r.size.h / rows as Scalar;
         let nx = cols + 1;
         let ny = rows + 1;
         for iy in 0..ny {
             for ix in 0..nx {
                 self.vertices.push([
-                    r[0] + ix as Scalar * units_h,
-                    r[1] + iy as Scalar * units_v
+                    r.pos.x + ix as Scalar * units_h,
+                    r.pos.y + iy as Scalar * units_v
                 ]);
                 self.texture_coords.push([
-                    ix as f32 * units_h as f32 / r[2] as f32,
-                    iy as f32 * units_v as f32 / r[3] as f32
+                    ix as f32 * units_h as f32 / r.size.w as f32,
+                    iy as f32 * units_v as f32 / r.size.h as f32
                 ]);
             }
         }
@@ -160,10 +160,10 @@ impl DeformGrid {
                     ];
                     let tri_pos = from_barycentric(tri, b);
                     let r = self.rect;
-                    let units_h = r[2] / self.cols as Scalar;
-                    let units_v = r[3] / self.rows as Scalar;
-                    return Some([r[0] + tri_pos[0] * units_h,
-                        r[1] + tri_pos[1] * units_v].into());
+                    let units_h = r.size.w / self.cols as Scalar;
+                    let units_v = r.size.h / self.rows as Scalar;
+                    return Some([r.pos.x + tri_pos[0] * units_h,
+                        r.pos.y + tri_pos[1] * units_v].into());
                 } else if inside_triangle(tri2, pos.to_array()) {
                     let b = to_barycentric(tri2, pos.to_array());
                     // Lower right triangle.
@@ -174,10 +174,10 @@ impl DeformGrid {
                     ];
                     let tri_pos = from_barycentric(tri, b);
                     let r = self.rect;
-                    let units_h = r[2] / self.cols as Scalar;
-                    let units_v = r[3] / self.rows as Scalar;
-                    return Some([r[0] + tri_pos[0] * units_h,
-                        r[1] + tri_pos[1] * units_v].into());
+                    let units_h = r.size.w / self.cols as Scalar;
+                    let units_v = r.size.h / self.rows as Scalar;
+                    return Some([r.pos.x + tri_pos[0] * units_h,
+                        r.pos.y + tri_pos[1] * units_v].into());
                 }
             }
         }
@@ -315,8 +315,7 @@ impl DeformGrid {
         let qs = &mut qs[..];
         let wis = &mut wis[..];
         let vertices = &mut vertices[..];
-        let x = rect[0]; let y = rect[1];
-        let w = rect[2]; let h = rect[3];
+        let (x, y, w, h) = rect.to_tuple();
         let units_h = w / cols as Scalar;
         let units_v = h / rows as Scalar;
         let num = ps.len();
