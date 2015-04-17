@@ -127,9 +127,9 @@ impl Line {
     ///
     /// Head size is the sides of the triangle
     /// between the arrow hooks and the line
-    pub fn draw_arrow<G>(
+    pub fn draw_arrow<L: Into<types::Line>, G>(
         &self,
-        line: types::Line,
+        line: L,
         head_size: Scalar,
         draw_state: &DrawState,
         transform: Matrix2d,
@@ -139,6 +139,7 @@ impl Line {
     {
         use Transformed;
 
+        let line = line.into();
         self.draw(line, draw_state, transform, g);
         let diff = line.end - line.start;
         let arrow_head = transform

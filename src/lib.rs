@@ -93,9 +93,9 @@ pub fn image<G>(
 }
 
 /// Draws ellipse.
-pub fn ellipse<G>(
+pub fn ellipse<R: Into<types::Rect>, G>(
     color: types::Color,
-    rect: types::Rect,
+    rect: R,
     transform: math::Matrix2d,
     g: &mut G
 )
@@ -105,9 +105,9 @@ pub fn ellipse<G>(
 }
 
 /// Draws rectangle.
-pub fn rectangle<G>(
+pub fn rectangle<R: Into<types::Rect>, G>(
     color: types::Color,
-    rect: types::Rect,
+    rect: R,
     transform: math::Matrix2d,
     g: &mut G
 )

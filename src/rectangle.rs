@@ -7,8 +7,8 @@ use math::{ Matrix2d, Scalar };
 pub use math::margin_rectangle as margin;
 
 /// Use x, y, half-width, half-height
-pub fn centered(rect: types::Rect) -> types::Rect {
-    let rect = rect.to_array();
+pub fn centered<T: Into<types::Rect>>(rect: T) -> types::Rect {
+    let rect = rect.into().to_array();
     [rect[0] - rect[2], rect[1] - rect[3], 2.0 * rect[2], 2.0 * rect[3]].into()
 }
 
@@ -131,15 +131,16 @@ impl Rectangle {
     }
 
     /// Draws the rectangle
-    pub fn draw<G>(
+    pub fn draw<R: Into<types::Rect>, G>(
         &self,
-        rectangle: types::Rect,
+        rectangle: R,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
     {
+        let rectangle = rectangle.into();
         if self.color[3] != 0.0 {
             match self.shape {
                 Shape::Square => {

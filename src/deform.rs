@@ -1,6 +1,6 @@
 //! Least square deforming of a 2D grid.
 
-use types::Rect;
+use types::{ Point, Rect };
 use { Line, Graphics, DrawState };
 use num::Float;
 use triangulation::{ tx, ty };
@@ -31,9 +31,9 @@ pub struct DeformGrid {
 
 impl DeformGrid {
     /// Creates a new DeformGrid.
-    pub fn new(rect: Rect, cols: usize, rows: usize) -> DeformGrid {
-        let x = rect.pos.x; let y = rect.pos.y;
-        let w = rect.size.w; let h = rect.size.h;
+    pub fn new<T: Into<Rect>>(rect: T, cols: usize, rows: usize) -> DeformGrid {
+        let rect = rect.into();
+        let (x, y, w, h) = rect.to_tuple();
         let mut vertices = Vec::new();
         let mut texture_coords: Vec<[f32; 2]> = Vec::new();
         let units_h = w / cols as Scalar;
@@ -81,14 +81,14 @@ impl DeformGrid {
 
     /// Sets current control position.
     #[inline(always)]
-    pub fn set_current(&mut self, i: usize, pos: Vec2d) {
-        self.qs[i] = pos;
+    pub fn set_current<T: Into<Point>>(&mut self, i: usize, pos: T) {
+        self.qs[i] = pos.into().to_array();
     }
 
     /// Sets original control position.
     #[inline(always)]
-    pub fn set_original(&mut self, i: usize, pos: Vec2d) {
-        self.ps[i] = pos;
+    pub fn set_original<T: Into<Point>>(&mut self, i: usize, pos: T) {
+        self.ps[i] = pos.into().to_array();
     }
 
     /// Removes all control points.
@@ -132,8 +132,10 @@ impl DeformGrid {
     /// Finds original coordinate.
     /// If the deformed grid is overlapping itself, multiple hits might occur.
     /// Returns the first hit it finds.
-    pub fn hit(&self, pos: Vec2d) -> Option<Vec2d> {
+    pub fn hit<T: Into<Point>>(&self, pos: T) -> Option<Point> {
         use math::{ inside_triangle, to_barycentric, from_barycentric };
+
+        let pos = pos.into();
         let nx = self.cols + 1;
         let ny = self.rows + 1;
         for i in 0..nx - 1 {
@@ -148,8 +150,8 @@ impl DeformGrid {
                 let p4 = self.vertices[ip];
                 let tri1 = [p1, p2, p3];
                 let tri2 = [p3, p2, p4];
-                if inside_triangle(tri1, [pos[0], pos[1]]) {
-                    let b = to_barycentric(tri1, pos);
+                if inside_triangle(tri1, pos.to_array()) {
+                    let b = to_barycentric(tri1, pos.to_array());
                     // Upper left triangle.
                     let tri = [
                         [i as Scalar, j as Scalar],
@@ -160,9 +162,10 @@ impl DeformGrid {
                     let r = self.rect;
                     let units_h = r[2] / self.cols as Scalar;
                     let units_v = r[3] / self.rows as Scalar;
-                    return Some([r[0] + tri_pos[0] * units_h, r[1] + tri_pos[1] * units_v]);
-                } else if inside_triangle(tri2, [pos[0], pos[1]]) {
-                    let b = to_barycentric(tri2, pos);
+                    return Some([r[0] + tri_pos[0] * units_h,
+                        r[1] + tri_pos[1] * units_v].into());
+                } else if inside_triangle(tri2, pos.to_array()) {
+                    let b = to_barycentric(tri2, pos.to_array());
                     // Lower right triangle.
                     let tri = [
                         [i as Scalar, (j + 1) as Scalar],
@@ -173,7 +176,8 @@ impl DeformGrid {
                     let r = self.rect;
                     let units_h = r[2] / self.cols as Scalar;
                     let units_v = r[3] / self.rows as Scalar;
-                    return Some([r[0] + tri_pos[0] * units_h, r[1] + tri_pos[1] * units_v]);
+                    return Some([r[0] + tri_pos[0] * units_h,
+                        r[1] + tri_pos[1] * units_v].into());
                 }
             }
         }
@@ -234,9 +238,10 @@ impl DeformGrid {
     }
 
     /// Adds a control point, in original coordinates.
-    pub fn add_control_point(&mut self, pos: Vec2d) {
-        self.ps.push(pos);
-        self.qs.push(pos);
+    pub fn add_control_point<T: Into<Point>>(&mut self, pos: Point) {
+        let pos: Point = pos.into();
+        self.ps.push(pos.to_array());
+        self.qs.push(pos.to_array());
         self.wis.push(0.0);
     }
 
