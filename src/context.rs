@@ -10,8 +10,8 @@ use math::{
     scale,
     Matrix2d,
     Scalar,
-    Vec2d,
 };
+use types::Size;
 use Viewport;
 
 /// Drawing 2d context.
@@ -117,9 +117,9 @@ impl Context {
 
     /// Computes the current view size.
     #[inline(always)]
-    pub fn get_view_size(&self) -> Vec2d {
+    pub fn get_view_size(&self) -> Size {
         let scale = get_scale(self.view);
-        [2.0 / scale[0], 2.0 / scale[1]]
+        [2.0 / scale[0], 2.0 / scale[1]].into()
     }
 }
 

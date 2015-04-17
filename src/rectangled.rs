@@ -3,7 +3,7 @@ use math::{
     relative_rectangle,
     Scalar,
 };
-use types::Rectangle;
+use types::Rect;
 
 /// Should be implemented by contexts that have rectangle information.
 pub trait Rectangled: Sized {
@@ -20,7 +20,7 @@ pub trait Rectangled: Sized {
     fn rel(self, x: Scalar, y: Scalar) -> Self;
 }
 
-impl Rectangled for Rectangle {
+impl Rectangled for Rect {
     #[inline(always)]
     fn margin(self, m: Scalar) -> Self {
         margin_rectangle(self, m)
