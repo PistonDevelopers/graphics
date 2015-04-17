@@ -111,11 +111,10 @@ pub fn with_round_border_line_tri_list<F>(
 {
 
     let radius = round_border_radius;
-    let (x1, y1, x2, y2) = (line[0], line[1], line[2], line[3]);
-    let (dx, dy) = (x2 - x1, y2 - y1);
-    let w = (dx * dx + dy * dy).sqrt();
-    let m = multiply(m, translate([x1, y1]));
-    let m = multiply(m, orient(dx, dy));
+    let d = line.e - line.s;
+    let w = d.len();
+    let m = multiply(m, translate(line.s.to_array()));
+    let m = multiply(m, orient(d.x, d.y));
     let n = resolution_cap * 2;
     let mut i: usize = 0;
     stream_polygon_tri_list(m, || {

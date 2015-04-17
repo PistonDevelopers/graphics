@@ -62,4 +62,9 @@ impl Point {
     pub fn to_array(self) -> Vec2d {
         [self.x, self.y]
     }
+
+    /// Computes length from origin.
+    pub fn len(&self) -> Scalar {
+        (self.x * self.x + self.y * self.y).sqrt()
+    }
 }

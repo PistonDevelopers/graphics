@@ -293,9 +293,10 @@ pub fn centroid(polygon: Polygon) -> Vec2d {
 /// with the vector between point and starting point of line.
 /// One side of the line has opposite sign of the other.
 #[inline(always)]
-pub fn line_side(line: Line, v: Vec2d) -> Scalar {
-    let (ax, ay) = (line[0], line[1]);
-    let (bx, by) = (line[2], line[3]);
+pub fn line_side<L: Into<Line>>(line: L, v: Vec2d) -> Scalar {
+    let line: Line = line.into();
+    let (ax, ay) = (line.s.x, line.s.y);
+    let (bx, by) = (line.e.x, line.e.y);
     (bx - ax) * (v[1] - ay) - (by - ay) * (v[0] - ax)
 }
 

@@ -5,10 +5,12 @@ pub use math::{ Matrix2d, Scalar, Vec2d };
 pub use self::point::Point;
 pub use self::rect::Rect;
 pub use self::size::Size;
+pub use self::line::Line;
 
 mod point;
 mod rect;
 mod size;
+mod line;
 
 /// The type used for area.
 pub type Area = Scalar;
@@ -18,9 +20,6 @@ pub type Color = [ColorComponent; 4];
 
 /// The type used for color component.
 pub type ColorComponent = f32;
-
-/// [x1, y1, x2, y2]
-pub type Line = [Scalar; 4];
 
 /// [x, y, w, h]
 pub type SourceRectangle = [i32; 4];
