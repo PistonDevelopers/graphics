@@ -1,6 +1,6 @@
-use std::ops::{ Add, Sub };
+use std::ops::{ Add, Mul, Sub };
 
-use math::{ Scalar, Vec2d };
+use math::Scalar;
 
 /// A point in the Cartesian plane.
 #[derive(Clone, Copy, Debug)]
@@ -19,11 +19,19 @@ impl Add<Scalar> for Point {
     }
 }
 
-impl<T: Into<Point>> Add<T> for Point {
-    type Output = Point;
+impl Add<f32> for Point<f32> {
+    type Output = Point<f32>;
 
-    fn add(self, v: T) -> Point {
-        let v: Point = v.into();
+    fn add(self, s: f32) -> Point<f32> {
+        Point { x: self.x + s, y: self.y + s }
+    }
+}
+
+impl<S: Add<S, Output = S>, T: Into<Point<S>>> Add<T> for Point<S> {
+    type Output = Point<S>;
+
+    fn add(self, v: T) -> Point<S> {
+        let v: Point<S> = v.into();
         Point { x: self.x + v.x, y: self.y + v.y }
     }
 }
@@ -34,8 +42,8 @@ impl From<Point<f32>> for Point {
     }
 }
 
-impl From<Vec2d> for Point {
-    fn from(v: Vec2d) -> Point {
+impl<S: Copy> From<[S; 2]> for Point<S> {
+    fn from(v: [S; 2]) -> Point<S> {
         Point { x: v[0], y: v[1] }
     }
 }
@@ -46,15 +54,15 @@ impl From<[f32; 2]> for Point {
     }
 }
 
-impl From<(Scalar, Scalar)> for Point {
-    fn from((x, y): (Scalar, Scalar)) -> Point {
+impl<S> From<(S, S)> for Point<S> {
+    fn from((x, y): (S, S)) -> Point<S> {
         Point { x: x, y: y }
     }
 }
 
 impl From<(f32, f32)> for Point {
     fn from((x, y): (f32, f32)) -> Point {
-        Point { x: x as f64, y: y as f64 }
+        Point { x: x as Scalar, y: y as Scalar }
     }
 }
 
@@ -66,23 +74,49 @@ impl Sub<Scalar> for Point {
     }
 }
 
-impl<T: Into<Point>> Sub<T> for Point {
-    type Output = Point;
+impl Sub<f32> for Point<f32> {
+    type Output = Point<f32>;
 
-    fn sub(self, v: T) -> Point {
+    fn sub(self, s: f32) -> Point<f32> {
+        Point { x: self.x - s, y: self.y - s }
+    }
+}
+
+impl<S: Sub<S, Output = S>, T: Into<Point<S>>> Sub<T> for Point<S> {
+    type Output = Point<S>;
+
+    fn sub(self, v: T) -> Point<S> {
         let v = v.into();
         Point { x: self.x - v.x, y: self.y - v.y }
     }
 }
 
-impl Point {
-    /// Convert the point to a vector.
-    pub fn to_array(self) -> Vec2d {
+impl<S: Mul<S, Output = S>, T: Into<Point<S>>> Mul<T> for Point<S> {
+    type Output = Point<S>;
+
+    fn mul(self, v: T) -> Point<S> {
+        let v = v.into();
+        Point { x: self.x * v.x, y: self.y * v.y }
+    }
+}
+
+impl<S> Point<S> {
+    /// Convert the point to an array.
+    pub fn to_array(self) -> [S; 2] {
         [self.x, self.y]
     }
+}
 
+impl Point {
     /// Computes length from origin.
     pub fn len(&self) -> Scalar {
+        (self.x * self.x + self.y * self.y).sqrt()
+    }
+}
+
+impl Point<f32> {
+    /// Computes length from origin.
+    pub fn len(&self) -> f32 {
         (self.x * self.x + self.y * self.y).sqrt()
     }
 }
