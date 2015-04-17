@@ -20,7 +20,7 @@ pub struct DeformGrid {
     /// The triangle indices.
     pub indices: Vec<usize>,
     /// The texture coordinates.
-    pub texture_coords: Vec<[f32; 2]>,
+    pub texture_coords: Vec<Point<f32>>,
     /// Initial position of control points.
     pub ps: Vec<[Scalar; 2]>,
     /// The current position of control points.
@@ -35,7 +35,7 @@ impl DeformGrid {
         let rect = rect.into();
         let (x, y, w, h) = rect.to_tuple();
         let mut vertices = Vec::new();
-        let mut texture_coords: Vec<[f32; 2]> = Vec::new();
+        let mut texture_coords: Vec<Point<f32>> = Vec::new();
         let units_h = w / cols as Scalar;
         let units_v = h / rows as Scalar;
         let nx = cols + 1;
@@ -49,7 +49,7 @@ impl DeformGrid {
                 texture_coords.push([
                     ix as f32 * units_h as f32 / w as f32,
                     iy as f32 * units_v as f32 / h as f32
-                ]);
+                ].into());
             }
         }
 
@@ -124,7 +124,7 @@ impl DeformGrid {
                 self.texture_coords.push([
                     ix as f32 * units_h as f32 / r.size.w as f32,
                     iy as f32 * units_v as f32 / r.size.h as f32
-                ]);
+                ].into());
             }
         }
     }
@@ -220,8 +220,8 @@ impl DeformGrid {
             vertices[vert_ind + 1] = ty(mat, vert.x, vert.y);
             let uv_ind = offset * uv_align;
             let uv = self.texture_coords[ind];
-            uvs[uv_ind + 0] = uv[0];
-            uvs[uv_ind + 1] = uv[1];
+            uvs[uv_ind + 0] = uv.x;
+            uvs[uv_ind + 1] = uv.y;
             offset += 1;
         }
         if offset > 0 {
