@@ -1,6 +1,6 @@
 //! Draw ellipse
 
-use types::{ Color, Radius, Rectangle };
+use types::{ Color, Radius, Rect };
 use { triangulation, DrawState, Graphics };
 use math::Matrix2d;
 
@@ -69,7 +69,7 @@ impl Ellipse {
     /// Draws the ellipse.
     pub fn draw<G>(
         &self,
-        rectangle: Rectangle,
+        rectangle: Rect,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G

@@ -7,26 +7,19 @@ use math::{ Matrix2d, Scalar };
 pub use math::margin_rectangle as margin;
 
 /// Use x, y, half-width, half-height
-pub fn centered(rect: types::Rectangle) -> types::Rectangle {
-    [rect[0] - rect[2], rect[1] - rect[3], 2.0 * rect[2], 2.0 * rect[3]]
+pub fn centered(rect: types::Rect) -> types::Rect {
+    let rect = rect.to_array();
+    [rect[0] - rect[2], rect[1] - rect[3], 2.0 * rect[2], 2.0 * rect[3]].into()
 }
 
 /// Use centered square
-pub fn centered_square(
-    x: Scalar,
-    y: Scalar,
-    radius: Scalar
-) -> types::Rectangle {
-    [x - radius, y - radius, 2.0 * radius, 2.0 * radius]
+pub fn centered_square(x: Scalar, y: Scalar, radius: Scalar) -> types::Rect {
+    [x - radius, y - radius, 2.0 * radius, 2.0 * radius].into()
 }
 
 /// Use square with x, y in upper left corner
-pub fn square(
-    x: Scalar,
-    y: Scalar,
-    size: Scalar
-) -> types::Rectangle {
-    [x, y, size, size]
+pub fn square(x: Scalar, y: Scalar, size: Scalar) -> types::Rect {
+    [x, y, size, size].into()
 }
 
 /// The shape of the rectangle
@@ -140,7 +133,7 @@ impl Rectangle {
     /// Draws the rectangle
     pub fn draw<G>(
         &self,
-        rectangle: types::Rectangle,
+        rectangle: types::Rect,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G

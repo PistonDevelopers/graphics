@@ -1,6 +1,6 @@
 //! Least square deforming of a 2D grid.
 
-use types::Rectangle;
+use types::Rect;
 use { Line, Graphics, DrawState };
 use num::Float;
 use triangulation::{ tx, ty };
@@ -31,9 +31,9 @@ pub struct DeformGrid {
 
 impl DeformGrid {
     /// Creates a new DeformGrid.
-    pub fn new(rect: Rectangle, cols: usize, rows: usize) -> DeformGrid {
-        let x = rect[0]; let y = rect[1];
-        let w = rect[2]; let h = rect[3];
+    pub fn new(rect: Rect, cols: usize, rows: usize) -> DeformGrid {
+        let x = rect.pos.x; let y = rect.pos.y;
+        let w = rect.size.w; let h = rect.size.h;
         let mut vertices = Vec::new();
         let mut texture_coords: Vec<[f32; 2]> = Vec::new();
         let units_h = w / cols as Scalar;
@@ -69,7 +69,7 @@ impl DeformGrid {
         DeformGrid {
             cols: cols,
             rows: rows,
-            rect: rect,
+            rect: rect.to_array(),
             vertices: vertices,
             indices: indices,
             texture_coords: texture_coords,

@@ -20,7 +20,8 @@ use types::{
     Line,
     Polygon,
     Ray,
-    Rectangle,
+    Rect,
+    Point,
     SourceRectangle,
     Triangle,
 };
@@ -173,7 +174,8 @@ pub fn least_separation_4(
 
 /// Shrinks a rectangle by a factor on all sides.
 #[inline(always)]
-pub fn margin_rectangle(rect: Rectangle, m: Scalar) -> Rectangle {
+pub fn margin_rectangle(rect: Rect, m: Scalar) -> Rect {
+    let rect = rect.to_array();
     let w = rect[2] - 2.0 * m;
     let h = rect[3] - 2.0 * m;
     let (x, w)
@@ -188,18 +190,20 @@ pub fn margin_rectangle(rect: Rectangle, m: Scalar) -> Rectangle {
             } else {
                 (rect[1] + m, h)
             };
-    [x, y, w, h]
+    [x, y, w, h].into()
 }
 
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
-pub fn relative_rectangle(rect: Rectangle, v: Vec2d) -> Rectangle {
-    [
-        rect[0] + v[0] * rect[2],
-        rect[1] + v[1] * rect[3],
-        rect[2],
-        rect[3]
-    ]
+pub fn relative_rectangle(rect: Rect, v: Vec2d) -> Rect {
+    let v: Point = v.into();
+    Rect {
+        pos: Point {
+            x: rect.pos.x + rect.size.w * v.x,
+            y: rect.pos.y + rect.size.h * v.y,
+        },
+        size: rect.size,
+    }
 }
 
 /// Computes a relative source rectangle using

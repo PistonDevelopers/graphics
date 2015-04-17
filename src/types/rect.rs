@@ -73,7 +73,7 @@ impl Rect {
     /// Computes a rectangle whose perimeter forms the inside edge of margin with size m for self.
     #[inline(always)]
     pub fn margin(self, m: Scalar) -> Rect {
-        math::margin_rectangle(self.to_array(), m).into()
+        math::margin_rectangle(self, m)
     }
 
     /// Compute whether or not the point is inside the rectangle.
@@ -171,6 +171,11 @@ impl<S: Copy> Rect<S> {
     /// Converts a rectangle to [x, y, w, h].
     pub fn to_array(self) -> [S; 4] {
         [self.pos.x, self.pos.y, self.size.w, self.size.h]
+    }
+
+    /// Converts a rectangle to (x, y, w, h).
+    pub fn to_tuple(self) -> (S, S, S, S) {
+        (self.pos.x, self.pos.y, self.size.w, self.size.h)
     }
 
     /// Returns the position of the top side of the rectangle.

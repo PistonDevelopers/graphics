@@ -36,8 +36,8 @@ pub type Radius = Scalar;
 /// [x, y, dir_x, dir_y]
 pub type Ray = [Scalar; 4];
 
-/// [x, y, w, h]
-pub type Rectangle = [Scalar; 4];
+/// A rectangle.
+pub type Rectangle = Rect;
 
 /// [x1, y1, x2, y2, x3, y3]
 pub type Triangle = [Vec2d; 3];
