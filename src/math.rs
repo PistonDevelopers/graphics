@@ -296,7 +296,7 @@ pub fn centroid(polygon: Polygon) -> Vec2d {
 pub fn line_side<L: Into<Line>>(line: L, v: Vec2d) -> Scalar {
     let line: Line = line.into();
     let diff = line.end - line.start;
-    diff.x * (v[1] - line.start.x) - diff.y * (v[0] - line.start.y)
+    diff.x * (v[1] - line.start.y) - diff.y * (v[0] - line.start.x)
 }
 
 /// Returns true if point is inside triangle.
