@@ -140,9 +140,9 @@ impl Line {
         use Transformed;
 
         self.draw(line, draw_state, transform, g);
-        let diff = line.e - line.s;
+        let diff = line.end - line.start;
         let arrow_head = transform
-            .trans(line.e.x, line.e.y)
+            .trans(line.end.x, line.end.y)
             .orient(diff.x, diff.y);
         self.draw([-head_size, head_size, 0.0, 0.0], draw_state, arrow_head, g);
         self.draw([-head_size, -head_size, 0.0, 0.0], draw_state, arrow_head, g);

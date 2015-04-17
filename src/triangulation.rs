@@ -111,9 +111,9 @@ pub fn with_round_border_line_tri_list<F>(
 {
 
     let radius = round_border_radius;
-    let d = line.e - line.s;
+    let d = line.end - line.start;
     let w = d.len();
-    let m = multiply(m, translate(line.s.to_array()));
+    let m = multiply(m, translate(line.start.to_array()));
     let m = multiply(m, orient(d.x, d.y));
     let n = resolution_cap * 2;
     let mut i: usize = 0;
