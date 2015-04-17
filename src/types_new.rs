@@ -13,6 +13,12 @@ pub struct Size {
     pub h: Scalar,
 }
 
+impl From<Size> for Vec2d {
+    fn from(size: Size) -> Vec2d {
+        [size.w, size.h]
+    }
+}
+
 impl From<Vec2d> for Size {
     fn from(v: Vec2d) -> Size {
         Size { w: v[0], h: v[1] }
@@ -22,13 +28,6 @@ impl From<Vec2d> for Size {
 impl From<(Scalar, Scalar)> for Size {
     fn from((w, h): (Scalar, Scalar)) -> Size {
         Size { w: w, h: h }
-    }
-}
-
-impl Size {
-    /// Convert size to a vector.
-    pub fn to_array(self) -> Vec2d {
-        [self.w, self.h]
     }
 }
 
@@ -75,6 +74,12 @@ impl<T: Into<Point>> Add<T> for Point {
     }
 }
 
+impl From<Point> for Vec2d {
+    fn from(point: Point) -> Vec2d {
+        [point.x, point.y]
+    }
+}
+
 impl From<Vec2d> for Point {
     fn from(v: Vec2d) -> Point {
         Point { x: v[0], y: v[1] }
@@ -104,13 +109,6 @@ impl<T: Into<Point>> Sub<T> for Point {
     }
 }
 
-impl Point {
-    /// Convert the point to a vector.
-    pub fn to_array(self) -> Vec2d {
-        [self.x, self.y]
-    }
-}
-
 /// A rectangle.
 #[derive(Clone, Copy, Debug)]
 pub struct Rect {
@@ -125,6 +123,12 @@ impl<P: Into<Point>, S: Into<Size>> From<(P, S)> for Rect {
     fn from((pos, size): (P, S)) -> Rect {
         let (pos, size): (Point, Size) = (pos.into(), size.into());
         Rect { pos: pos, size: size }
+    }
+}
+
+impl From<Rect> for [Scalar; 4] {
+    fn from(rect: Rect) -> [Scalar; 4] {
+        [rect.pos.x, rect.pos.y, rect.size.w, rect.size.h]
     }
 }
 
@@ -205,7 +209,7 @@ impl Rect {
     /// Computes a rectangle whose perimeter forms the inside edge of margin with size m for self.
     #[inline(always)]
     pub fn margin(self, m: Scalar) -> Rect {
-        math::margin_rectangle(self.to_array(), m).into()
+        math::margin_rectangle(self.into(), m).into()
     }
 
     /// Computes a rectangle translated (slid) in the direction of the vector a distance relative
@@ -235,11 +239,6 @@ impl Rect {
             pos: self.pos,
             size: self.size * v,
         }
-    }
-
-    /// Converts a rectangle to [x, y, w, h].
-    pub fn to_array(self) -> [Scalar; 4] {
-        [self.pos.x, self.pos.y, self.size.w, self.size.h]
     }
 
     /// Returns the position of the top side of the rectangle.
