@@ -1,8 +1,7 @@
 //! Contains types used in this library
 use std::convert::From;
 
-use Size;
-use Point;
+use types::{ Point, Size };
 
 pub use math::{ self, Matrix2d, Scalar, Vec2d };
 

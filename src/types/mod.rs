@@ -2,6 +2,14 @@
 
 pub use math::{ Matrix2d, Scalar, Vec2d };
 
+pub use self::point::Point;
+pub use self::rect::Rect;
+pub use self::size::Size;
+
+mod point;
+mod rect;
+mod size;
+
 /// The type used for area.
 pub type Area = Scalar;
 
