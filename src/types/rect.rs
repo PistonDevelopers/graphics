@@ -15,10 +15,10 @@ pub struct Rect<S = Scalar> {
     pub size: Size<S>,
 }
 
-impl<P: Into<Point>, S: Into<Size>> From<(P, S)> for Rect {
+impl<Sc, P: Into<Point<Sc>>, S: Into<Size<Sc>>> From<(P, S)> for Rect<Sc> {
     /// Creates a rectangle from the position of its top left corner and its size.
-    fn from((pos, size): (P, S)) -> Rect {
-        let (pos, size): (Point, Size) = (pos.into(), size.into());
+    fn from((pos, size): (P, S)) -> Rect<Sc> {
+        let (pos, size): (Point<Sc>, Size<Sc>) = (pos.into(), size.into());
         Rect { pos: pos, size: size }
     }
 }
