@@ -4,16 +4,28 @@ use math::{ Scalar, Vec2d };
 
 /// The size of a shape.
 #[derive(Clone, Copy, Debug)]
-pub struct Size {
+pub struct Size<S = Scalar> {
     /// The horizontal length of the shape (width).
-    pub w: Scalar,
+    pub w: S,
     /// The vertical length of the shape (height).
-    pub h: Scalar,
+    pub h: S,
+}
+
+impl From<Size<f32>> for Size {
+    fn from(size: Size<f32>) -> Size {
+        Size { w: size.w as Scalar, h: size.h as Scalar }
+    }
 }
 
 impl From<Vec2d> for Size {
     fn from(v: Vec2d) -> Size {
         Size { w: v[0], h: v[1] }
+    }
+}
+
+impl From<[f32; 2]> for Size {
+    fn from(v: [f32; 2]) -> Size {
+        Size { w: v[0] as Scalar, h: v[1] as Scalar }
     }
 }
 

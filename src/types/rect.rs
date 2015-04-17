@@ -7,11 +7,11 @@ pub use math::{ self, Matrix2d, Scalar, Vec2d };
 
 /// A rectangle.
 #[derive(Clone, Copy, Debug)]
-pub struct Rect {
+pub struct Rect<S = Scalar> {
     /// The position of the top left corner of the rectangle.
-    pub pos: Point,
+    pub pos: Point<S>,
     /// The width and height of the rectangle.
-    pub size: Size,
+    pub size: Size<S>,
 }
 
 impl<P: Into<Point>, S: Into<Size>> From<(P, S)> for Rect {
@@ -19,6 +19,15 @@ impl<P: Into<Point>, S: Into<Size>> From<(P, S)> for Rect {
     fn from((pos, size): (P, S)) -> Rect {
         let (pos, size): (Point, Size) = (pos.into(), size.into());
         Rect { pos: pos, size: size }
+    }
+}
+
+impl From<Rect<f32>> for Rect {
+    fn from(rect: Rect<f32>) -> Rect {
+        Rect {
+            pos: rect.pos.into(),
+            size: rect.size.into(),
+        }
     }
 }
 
@@ -32,11 +41,29 @@ impl From<[Scalar; 4]> for Rect {
     }
 }
 
+impl From<[f32; 4]> for Rect {
+    fn from(v: [f32; 4]) -> Rect {
+        Rect {
+            pos: Point { x: v[0] as Scalar, y: v[1] as Scalar },
+            size: Size { w: v[2] as Scalar, h: v[3] as Scalar },
+        }
+    }
+}
+
 impl From<(Scalar, Scalar, Scalar, Scalar)> for Rect {
     fn from((x, y, w, h): (Scalar, Scalar, Scalar, Scalar)) -> Rect {
         Rect {
             pos: Point { x: x, y: y },
             size: Size { w: w, h: h },
+        }
+    }
+}
+
+impl From<(f32, f32, f32, f32)> for Rect {
+    fn from((x, y, w, h): (f32, f32, f32, f32)) -> Rect {
+        Rect {
+            pos: Point { x: x as Scalar, y: y as Scalar },
+            size: Size { w: w as Scalar, h: h as Scalar },
         }
     }
 }

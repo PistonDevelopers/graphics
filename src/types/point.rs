@@ -4,11 +4,11 @@ use math::{ Scalar, Vec2d };
 
 /// A point in the Cartesian plane.
 #[derive(Clone, Copy, Debug)]
-pub struct Point {
+pub struct Point<S = Scalar> {
     /// The x coordinate.
-    pub x: Scalar,
+    pub x: S,
     /// The y coordinate.
-    pub y: Scalar,
+    pub y: S,
 }
 
 impl Add<Scalar> for Point {
@@ -28,15 +28,33 @@ impl<T: Into<Point>> Add<T> for Point {
     }
 }
 
+impl From<Point<f32>> for Point {
+    fn from(point: Point<f32>) -> Point {
+        Point { x: point.x as Scalar, y: point.y as Scalar }
+    }
+}
+
 impl From<Vec2d> for Point {
     fn from(v: Vec2d) -> Point {
         Point { x: v[0], y: v[1] }
     }
 }
 
+impl From<[f32; 2]> for Point {
+    fn from(v: [f32; 2]) -> Point {
+        Point { x: v[0] as Scalar, y: v[1] as Scalar }
+    }
+}
+
 impl From<(Scalar, Scalar)> for Point {
     fn from((x, y): (Scalar, Scalar)) -> Point {
         Point { x: x, y: y }
+    }
+}
+
+impl From<(f32, f32)> for Point {
+    fn from((x, y): (f32, f32)) -> Point {
+        Point { x: x as f64, y: y as f64 }
     }
 }
 
