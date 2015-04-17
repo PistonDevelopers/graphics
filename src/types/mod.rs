@@ -6,11 +6,13 @@ pub use self::point::Point;
 pub use self::rect::Rect;
 pub use self::size::Size;
 pub use self::line::Line;
+pub use self::triangle::Triangle;
 
 mod point;
 mod rect;
 mod size;
 mod line;
+mod triangle;
 
 /// The type used for area.
 pub type Area = Scalar;
@@ -38,9 +40,6 @@ pub type Ray = [Scalar; 4];
 
 /// A rectangle.
 pub type Rectangle = Rect;
-
-/// [x1, y1, x2, y2, x3, y3]
-pub type Triangle = [Vec2d; 3];
 
 /// The type used for width.
 pub type Width = Scalar;

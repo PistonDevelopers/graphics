@@ -308,14 +308,9 @@ pub fn line_side<L: Into<Line>>(line: L, v: Vec2d) -> Scalar {
 /// This is done by computing a `side` number for each edge.
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
-pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
-    let ax = triangle[0][0];
-    let ay = triangle[0][1];
-    let bx = triangle[1][0];
-    let by = triangle[1][1];
-    let cx = triangle[2][0];
-    let cy = triangle[2][1];
-
+pub fn inside_triangle<T: Into<Triangle>>(triangle: T, v: Vec2d) -> bool {
+    let (ax, ay, bx, by, cx, cy) = triangle.into().to_tuple();
+    
     let ab_side = line_side([ax, ay, bx, by], v);
     let bc_side = line_side([bx, by, cx, cy], v);
     let ca_side = line_side([cx, cy, ax, ay], v);
@@ -333,18 +328,9 @@ pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
 /// This is done by computing which side the third vertex is relative to
 /// the line starting from the first vertex to second vertex.
 #[inline(always)]
-pub fn triangle_face(
-    triangle: Triangle
-) -> bool {
-    let ax = triangle[0][0];
-    let ay = triangle[0][1];
-    let bx = triangle[1][0];
-    let by = triangle[1][1];
-    let cx = triangle[2][0];
-    let cy = triangle[2][1];
-
+pub fn triangle_face<T: Into<Triangle>>(triangle: T) -> bool {
+    let (ax, ay, bx, by, cx, cy) = triangle.into().to_tuple();
     let ab_side = line_side([ax, ay, bx, by], [cx, cy]);
-
     ab_side.is_sign_negative()
 }
 
@@ -368,14 +354,10 @@ mod test_triangle {
 
 /// Transforms from cartesian coordinates to barycentric.
 #[inline(always)]
-pub fn to_barycentric(triangle: Triangle, pos: Vec2d) -> Vec3d {
+pub fn to_barycentric<T: Into<Triangle>>(triangle: T, pos: Vec2d) -> Vec3d {
+    let triangle = triangle.into();
     let x = pos[0]; let y = pos[1];
-    let x1 = triangle[0][0];
-    let y1 = triangle[0][1];
-    let x2 = triangle[1][0];
-    let y2 = triangle[1][1];
-    let x3 = triangle[2][0];
-    let y3 = triangle[2][1];
+    let (x1, y1, x2, y2, x3, y3) = triangle.to_tuple();
     let lambda1 = ((y2 - y3) * (x - x3) + (x3 - x2) * (y - y3))
                 / ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
     let lambda2 = ((y3 - y1) * (x - x3) + (x1 - x3) * (y - y3))
@@ -386,13 +368,9 @@ pub fn to_barycentric(triangle: Triangle, pos: Vec2d) -> Vec3d {
 
 /// Transforms from barycentric coordinates to cartesian.
 #[inline(always)]
-pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
-    let x1 = triangle[0][0];
-    let y1 = triangle[0][1];
-    let x2 = triangle[1][0];
-    let y2 = triangle[1][1];
-    let x3 = triangle[2][0];
-    let y3 = triangle[2][1];
+pub fn from_barycentric<T: Into<Triangle>>(triangle: T, lambda: Vec3d) -> Vec2d {
+    let triangle = triangle.into();
+    let (x1, y1, x2, y2, x3, y3) = triangle.to_tuple();
     [lambda[0] * x1 + lambda[1] * x2 + lambda[2] * x3,
      lambda[0] * y1 + lambda[1] * y2 + lambda[2] * y3]
 }

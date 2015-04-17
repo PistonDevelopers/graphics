@@ -1,10 +1,10 @@
 //! Least square deforming of a 2D grid.
 
-use types::{ Point, Rect };
+use types::{ self, Point, Rect };
 use { Line, Graphics, DrawState };
 use num::Float;
 use triangulation::{ tx, ty };
-use math::{ Matrix2d, Scalar, Vec2d };
+use math::{ Matrix2d, Scalar };
 
 /// Represents a deformed grid.
 #[derive(Clone)]
@@ -16,7 +16,7 @@ pub struct DeformGrid {
     /// The grid undeformed, which is a plain rectangle.
     pub rect: Rect,
     /// The vertices, deformed.
-    pub vertices: Vec<Vec2d>,
+    pub vertices: Vec<Point>,
     /// The triangle indices.
     pub indices: Vec<usize>,
     /// The texture coordinates.
@@ -45,7 +45,7 @@ impl DeformGrid {
                 vertices.push([
                     x + ix as Scalar * units_h,
                     y + iy as Scalar * units_v
-                ]);
+                ].into());
                 texture_coords.push([
                     ix as f32 * units_h as f32 / w as f32,
                     iy as f32 * units_v as f32 / h as f32
@@ -120,7 +120,7 @@ impl DeformGrid {
                 self.vertices.push([
                     r.pos.x + ix as Scalar * units_h,
                     r.pos.y + iy as Scalar * units_v
-                ]);
+                ].into());
                 self.texture_coords.push([
                     ix as f32 * units_h as f32 / r.size.w as f32,
                     iy as f32 * units_v as f32 / r.size.h as f32
@@ -153,11 +153,11 @@ impl DeformGrid {
                 if inside_triangle(tri1, pos.to_array()) {
                     let b = to_barycentric(tri1, pos.to_array());
                     // Upper left triangle.
-                    let tri = [
+                    let tri: types::Triangle = [
                         [i as Scalar, j as Scalar],
                         [(i + 1) as Scalar, j as Scalar],
-                        [i as Scalar, (j + 1) as Scalar]
-                    ];
+                        [i as Scalar, (j + 1) as Scalar],
+                    ].into();
                     let tri_pos = from_barycentric(tri, b);
                     let r = self.rect;
                     let units_h = r.size.w / self.cols as Scalar;
@@ -167,11 +167,11 @@ impl DeformGrid {
                 } else if inside_triangle(tri2, pos.to_array()) {
                     let b = to_barycentric(tri2, pos.to_array());
                     // Lower right triangle.
-                    let tri = [
+                    let tri: types::Triangle = [
                         [i as Scalar, (j + 1) as Scalar],
                         [(i + 1) as Scalar, j as Scalar],
-                        [(i + 1) as Scalar, (j + 1) as Scalar]
-                    ];
+                        [(i + 1) as Scalar, (j + 1) as Scalar],
+                    ].into();
                     let tri_pos = from_barycentric(tri, b);
                     let r = self.rect;
                     let units_h = r.size.w / self.cols as Scalar;
@@ -216,8 +216,8 @@ impl DeformGrid {
             }
             let vert = self.vertices[ind];
             let vert_ind = offset * vertex_align;
-            vertices[vert_ind + 0] = tx(mat, vert[0], vert[1]);
-            vertices[vert_ind + 1] = ty(mat, vert[0], vert[1]);
+            vertices[vert_ind + 0] = tx(mat, vert.x, vert.y);
+            vertices[vert_ind + 1] = ty(mat, vert.x, vert.y);
             let uv_ind = offset * uv_align;
             let uv = self.texture_coords[ind];
             uvs[uv_ind + 0] = uv[0];
@@ -261,12 +261,11 @@ impl DeformGrid {
         for i in 0..nx {
             for j in 0..ny - 1 {
                 let ip = i + j * nx;
-                let x1 = grid.vertices[ip][0];
-                let y1 = grid.vertices[ip][1];
+                let p1 = grid.vertices[ip];
                 let ip = i + (j + 1) * nx;
-                let x2 = grid.vertices[ip][0];
-                let y2 = grid.vertices[ip][1];
-                line.draw([x1, y1, x2, y2], draw_state, transform, g);
+                let p2 = grid.vertices[ip];
+                line.draw(types::Line { start: p1, end: p2 }, draw_state,
+                    transform, g);
             }
         }
     }
@@ -287,12 +286,11 @@ impl DeformGrid {
         for i in 0..nx - 1 {
             for j in 0..ny {
                 let ip = i + j * nx;
-                let x1 = grid.vertices[ip][0];
-                let y1 = grid.vertices[ip][1];
+                let p1 = grid.vertices[ip];
                 let ip = (i + 1) + j * nx;
-                let x2 = grid.vertices[ip][0];
-                let y2 = grid.vertices[ip][1];
-                line.draw([x1, y1, x2, y2], draw_state, transform, g);
+                let p2 = grid.vertices[ip];
+                line.draw(types::Line { start: p1, end: p2 }, draw_state,
+                    transform, g);
             }
         }
     }
@@ -334,7 +332,7 @@ impl DeformGrid {
                         vertices[ip] = [
                             x + ix as Scalar * units_h + d[0],
                             y + iy as Scalar * units_v + d[1]
-                        ];
+                        ].into();
                     }
                 }
                 return;
@@ -382,7 +380,7 @@ impl DeformGrid {
                 let vl = square_len(vp);
                 let fl = square_len(fr);
                 let vl = if fl == 0.0 { 0.0 } else { (vl / fl).sqrt() };
-                vertices[ip] = add(mul_scalar(fr, vl), q_star);
+                vertices[ip] = add(mul_scalar(fr, vl), q_star).into();
             }
         }
     }
