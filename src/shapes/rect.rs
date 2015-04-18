@@ -1,7 +1,7 @@
 use std::convert::From;
 
 use math::{ self, Scalar };
-use { Point, Size };
+use shapes::{ Point, Size };
 
 /// A rectangle.
 #[derive(Clone, Copy, Debug)]

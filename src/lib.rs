@@ -32,11 +32,6 @@ pub use default_draw_state::default_draw_state;
 pub use clip_draw_state::clip_draw_state;
 pub use inside_draw_state::inside_draw_state;
 pub use outside_draw_state::outside_draw_state;
-
-pub use point::Point;
-pub use rect::Rect;
-pub use size::Size;
-
 pub use context::Context;
 
 /// Any triangulation method called on the back-end
@@ -54,10 +49,6 @@ mod clip_draw_state;
 mod inside_draw_state;
 mod outside_draw_state;
 
-mod point;
-mod rect;
-mod size;
-
 pub mod character;
 pub mod context;
 pub mod color;
@@ -73,6 +64,7 @@ pub mod triangulation;
 pub mod math;
 pub mod deform;
 pub mod grid;
+pub mod shapes;
 
 pub mod radians {
     //! Reexport radians helper trait from vecmath
