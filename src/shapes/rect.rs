@@ -1,115 +1,7 @@
-//! Contains types used in this library
 use std::convert::From;
-use std::ops::{ Add, Mul, Sub };
 
-pub use math::{ self, Matrix2d, Scalar, Vec2d };
-
-/// The size of a shape.
-#[derive(Clone, Copy, Debug)]
-pub struct Size {
-    /// The horizontal length of the shape (width).
-    pub w: Scalar,
-    /// The vertical length of the shape (height).
-    pub h: Scalar,
-}
-
-impl From<Vec2d> for Size {
-    fn from(v: Vec2d) -> Size {
-        Size { w: v[0], h: v[1] }
-    }
-}
-
-impl From<(Scalar, Scalar)> for Size {
-    fn from((w, h): (Scalar, Scalar)) -> Size {
-        Size { w: w, h: h }
-    }
-}
-
-impl Size {
-    /// Convert size to a vector.
-    pub fn to_array(self) -> Vec2d {
-        [self.w, self.h]
-    }
-}
-
-impl<T: Into<Size>> Mul<T> for Size {
-    type Output = Size;
-
-    fn mul(self, v: T) -> Size {
-        let v: Size = v.into();
-        Size { w: self.w * v.w, h: self.h * v.h }
-    }
-}
-
-impl Mul<Scalar> for Size {
-    type Output = Size;
-
-    fn mul(self, s: Scalar) -> Size {
-        Size { w: self.w * s, h: self.h * s }
-    }
-}
-
-/// A point in the Cartesian plane.
-#[derive(Clone, Copy, Debug)]
-pub struct Point {
-    /// The x coordinate.
-    pub x: Scalar,
-    /// The y coordinate.
-    pub y: Scalar,
-}
-
-impl Add<Scalar> for Point {
-    type Output = Point;
-
-    fn add(self, s: Scalar) -> Point {
-        Point { x: self.x + s, y: self.y + s }
-    }
-}
-
-impl<T: Into<Point>> Add<T> for Point {
-    type Output = Point;
-
-    fn add(self, v: T) -> Point {
-        let v: Point = v.into();
-        Point { x: self.x + v.x, y: self.y + v.y }
-    }
-}
-
-impl From<Vec2d> for Point {
-    fn from(v: Vec2d) -> Point {
-        Point { x: v[0], y: v[1] }
-    }
-}
-
-impl From<(Scalar, Scalar)> for Point {
-    fn from((x, y): (Scalar, Scalar)) -> Point {
-        Point { x: x, y: y }
-    }
-}
-
-impl Sub<Scalar> for Point {
-    type Output = Point;
-
-    fn sub(self, s: Scalar) -> Point {
-        Point { x: self.x - s, y: self.y - s }
-    }
-}
-
-impl<T: Into<Point>> Sub<T> for Point {
-    type Output = Point;
-
-    fn sub(self, v: T) -> Point {
-        let v = v.into();
-        Point { x: self.x - v.x, y: self.y - v.y }
-    }
-}
-
-impl Point {
-    /// Convert the point to a vector.
-    pub fn to_array(self) -> Vec2d {
-        [self.x, self.y]
-    }
-}
+use math::{ self, Scalar };
+use shapes::{ Point, Size };
 
 /// A rectangle.
 #[derive(Clone, Copy, Debug)]
@@ -125,6 +17,12 @@ impl<P: Into<Point>, S: Into<Size>> From<(P, S)> for Rect {
     fn from((pos, size): (P, S)) -> Rect {
         let (pos, size): (Point, Size) = (pos.into(), size.into());
         Rect { pos: pos, size: size }
+    }
+}
+
+impl From<Rect> for [Scalar; 4] {
+    fn from(rect: Rect) -> [Scalar; 4] {
+        [rect.pos.x, rect.pos.y, rect.size.w, rect.size.h]
     }
 }
 
@@ -205,7 +103,7 @@ impl Rect {
     /// Computes a rectangle whose perimeter forms the inside edge of margin with size m for self.
     #[inline(always)]
     pub fn margin(self, m: Scalar) -> Rect {
-        math::margin_rectangle(self.to_array(), m).into()
+        math::margin_rectangle(self.into(), m).into()
     }
 
     /// Computes a rectangle translated (slid) in the direction of the vector a distance relative
@@ -235,11 +133,6 @@ impl Rect {
             pos: self.pos,
             size: self.size * v,
         }
-    }
-
-    /// Converts a rectangle to [x, y, w, h].
-    pub fn to_array(self) -> [Scalar; 4] {
-        [self.pos.x, self.pos.y, self.size.w, self.size.h]
     }
 
     /// Returns the position of the top side of the rectangle.

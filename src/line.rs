@@ -70,15 +70,16 @@ impl Line {
     }
 
     /// Draw the line.
-    pub fn draw<G>(
+    pub fn draw<L: Into<types::Line>, G>(
         &self,
-        line: types::Line,
+        line: L,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
     {
+        let line = line.into();
         match self.shape {
             Shape::Square => {
                 g.tri_list(
@@ -126,9 +127,9 @@ impl Line {
     ///
     /// Head size is the sides of the triangle
     /// between the arrow hooks and the line
-    pub fn draw_arrow<G>(
+    pub fn draw_arrow<L: Into<types::Line>, G>(
         &self,
-        line: types::Line,
+        line: L,
         head_size: Scalar,
         draw_state: &DrawState,
         transform: Matrix2d,
@@ -138,6 +139,7 @@ impl Line {
     {
         use Transformed;
 
+        let line = line.into();
         self.draw(line, draw_state, transform, g);
         let diff = [line[2] - line[0], line[3] - line[1]];
         let arrow_head = transform

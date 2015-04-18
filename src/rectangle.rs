@@ -138,15 +138,16 @@ impl Rectangle {
     }
 
     /// Draws the rectangle
-    pub fn draw<G>(
+    pub fn draw<R: Into<types::Rectangle>, G>(
         &self,
-        rectangle: types::Rectangle,
+        rectangle: R,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G
     )
         where G: Graphics
     {
+        let rectangle = rectangle.into();
         if self.color[3] != 0.0 {
             match self.shape {
                 Shape::Square => {

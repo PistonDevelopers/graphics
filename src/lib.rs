@@ -32,7 +32,6 @@ pub use default_draw_state::default_draw_state;
 pub use clip_draw_state::clip_draw_state;
 pub use inside_draw_state::inside_draw_state;
 pub use outside_draw_state::outside_draw_state;
-
 pub use context::Context;
 
 /// Any triangulation method called on the back-end
@@ -59,23 +58,19 @@ pub mod ellipse;
 pub mod rectangle;
 pub mod image;
 pub mod types;
-pub mod types_new;
 pub mod modular_index;
 pub mod text;
 pub mod triangulation;
 pub mod math;
 pub mod deform;
 pub mod grid;
+pub mod shapes;
 
 pub mod radians {
     //! Reexport radians helper trait from vecmath
 
     pub use vecmath_lib::consts::Radians;
 }
-
-/// A rectangle property
-#[derive(Copy, Clone)]
-pub struct Rect(pub types::Rectangle);
 
 /// Clears the screen.
 pub fn clear<G>(
@@ -98,9 +93,9 @@ pub fn image<G>(
 }
 
 /// Draws ellipse.
-pub fn ellipse<G>(
+pub fn ellipse<R: Into<types::Rectangle>, G>(
     color: types::Color,
-    rect: types::Rectangle,
+    rect: R,
     transform: math::Matrix2d,
     g: &mut G
 )
@@ -110,9 +105,9 @@ pub fn ellipse<G>(
 }
 
 /// Draws rectangle.
-pub fn rectangle<G>(
+pub fn rectangle<R: Into<types::Rectangle>, G>(
     color: types::Color,
-    rect: types::Rectangle,
+    rect: R,
     transform: math::Matrix2d,
     g: &mut G
 )
