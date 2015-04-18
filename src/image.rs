@@ -50,14 +50,14 @@ impl Image {
     }
 
     /// Sets rectangle.
-    pub fn rect(mut self, value: Rectangle) -> Self {
-        self.rectangle = Some(value);
+    pub fn rect<R: Into<Rectangle>>(mut self, value: R) -> Self {
+        self.rectangle = Some(value.into());
         self
     }
 
     /// Sets optional rectangle.
-    pub fn maybe_rect(mut self, value: Option<Rectangle>) -> Self {
-        self.rectangle = value;
+    pub fn maybe_rect<R: Into<Rectangle>>(mut self, value: Option<R>) -> Self {
+        self.rectangle = value.map(|v| v.into());
         self
     }
 
