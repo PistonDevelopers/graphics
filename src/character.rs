@@ -47,4 +47,12 @@ pub trait CharacterCache {
         font_size: FontSize,
         ch: char
     ) -> &Character<<Self as CharacterCache>::Texture>;
+
+    /// Return the width for some given text.
+    fn width(&mut self, size: FontSize, text: &str) -> ::math::Scalar {
+        text.chars().fold(0, |a, ch| {
+            let character = self.character(size, ch);
+            a + character.width() as u32
+        }) as f64
+    }
 }
