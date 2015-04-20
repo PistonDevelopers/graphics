@@ -69,7 +69,7 @@ pub mod shapes;
 pub mod radians {
     //! Reexport radians helper trait from vecmath
 
-    pub use vecmath_lib::consts::Radians;
+    pub use vecmath_lib::traits::Radians;
 }
 
 /// Clears the screen.
