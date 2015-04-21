@@ -74,7 +74,7 @@ pub fn with_lerp_polygons_tri_list<F>(
 /// Streams an ellipse specified by a resolution.
 #[inline(always)]
 pub fn with_ellipse_tri_list<F>(
-    resolution: usize,
+    resolution: u32,
     m: Matrix2d,
     rect: Rectangle,
     f: F
@@ -87,7 +87,7 @@ pub fn with_ellipse_tri_list<F>(
     let (cw, ch) = (0.5 * w, 0.5 * h);
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
-    let mut i: usize = 0;
+    let mut i = 0;
     stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
@@ -100,7 +100,7 @@ pub fn with_ellipse_tri_list<F>(
 /// Streams a round border line.
 #[inline(always)]
 pub fn with_round_border_line_tri_list<F>(
-    resolution_cap: usize,
+    resolution_cap: u32,
     m: Matrix2d,
     line: Line,
     round_border_radius: Radius,
@@ -117,7 +117,7 @@ pub fn with_round_border_line_tri_list<F>(
     let m = multiply(m, translate([x1, y1]));
     let m = multiply(m, orient(dx, dy));
     let n = resolution_cap * 2;
-    let mut i: usize = 0;
+    let mut i = 0;
     stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
@@ -156,7 +156,7 @@ pub fn with_round_border_line_tri_list<F>(
 /// Streams a round rectangle.
 #[inline(always)]
 pub fn with_round_rectangle_tri_list<F>(
-    resolution_corner: usize,
+    resolution_corner: u32,
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,
@@ -169,7 +169,7 @@ pub fn with_round_rectangle_tri_list<F>(
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
     let n = resolution_corner * 4;
-    let mut i: usize = 0;
+    let mut i = 0;
     stream_polygon_tri_list(m, || {
         if i >= n { return None; }
 
@@ -295,7 +295,7 @@ pub fn stream_polygon_tri_list<E, F>(
 /// Streams an ellipse border specified by a resolution.
 #[inline(always)]
 pub fn with_ellipse_border_tri_list<F>(
-    resolution: usize,
+    resolution: u32,
     m: Matrix2d,
     rect: Rectangle,
     border_radius: Radius,
@@ -311,7 +311,7 @@ pub fn with_ellipse_border_tri_list<F>(
     let (cw2, ch2) = (cw - border_radius, ch - border_radius);
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
-    let mut i: usize = 0;
+    let mut i = 0;
     stream_quad_tri_list(m, || {
         if i > n { return None; }
 
@@ -327,7 +327,7 @@ pub fn with_ellipse_border_tri_list<F>(
 /// Streams a round rectangle border.
 #[inline(always)]
 pub fn with_round_rectangle_border_tri_list<F>(
-    resolution_corner: usize,
+    resolution_corner: u32,
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,
@@ -343,7 +343,7 @@ pub fn with_round_rectangle_border_tri_list<F>(
     let radius1 = round_radius + border_radius;
     let radius2 = round_radius - border_radius;
     let n = resolution_corner * 4;
-    let mut i: usize = 0;
+    let mut i = 0;
     stream_quad_tri_list(m, || {
         if i > n { return None; }
 
