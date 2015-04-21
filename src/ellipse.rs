@@ -23,7 +23,7 @@ pub struct Ellipse {
     pub color: Color,
     /// The ellipse border
     pub border: Option<Border>,
-    /// The resolution.
+    /// The resolution for the shape, 360 degrees.
     pub resolution: Resolution,
 }
 
