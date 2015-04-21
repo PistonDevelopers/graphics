@@ -9,6 +9,7 @@ use types::{
     Polygons,
     Radius,
     Rectangle,
+    Resolution,
 };
 use num::Float;
 use math::{
@@ -74,7 +75,7 @@ pub fn with_lerp_polygons_tri_list<F>(
 /// Streams an ellipse specified by a resolution.
 #[inline(always)]
 pub fn with_ellipse_tri_list<F>(
-    resolution: u32,
+    resolution: Resolution,
     m: Matrix2d,
     rect: Rectangle,
     f: F
@@ -100,7 +101,7 @@ pub fn with_ellipse_tri_list<F>(
 /// Streams a round border line.
 #[inline(always)]
 pub fn with_round_border_line_tri_list<F>(
-    resolution_cap: u32,
+    resolution_cap: Resolution,
     m: Matrix2d,
     line: Line,
     round_border_radius: Radius,
@@ -156,7 +157,7 @@ pub fn with_round_border_line_tri_list<F>(
 /// Streams a round rectangle.
 #[inline(always)]
 pub fn with_round_rectangle_tri_list<F>(
-    resolution_corner: u32,
+    resolution_corner: Resolution,
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,
@@ -295,7 +296,7 @@ pub fn stream_polygon_tri_list<E, F>(
 /// Streams an ellipse border specified by a resolution.
 #[inline(always)]
 pub fn with_ellipse_border_tri_list<F>(
-    resolution: u32,
+    resolution: Resolution,
     m: Matrix2d,
     rect: Rectangle,
     border_radius: Radius,
@@ -327,7 +328,7 @@ pub fn with_ellipse_border_tri_list<F>(
 /// Streams a round rectangle border.
 #[inline(always)]
 pub fn with_round_rectangle_border_tri_list<F>(
-    resolution_corner: u32,
+    resolution_corner: Resolution,
     m: Matrix2d,
     rect: Rectangle,
     round_radius: Radius,

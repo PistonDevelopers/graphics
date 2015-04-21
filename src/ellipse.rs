@@ -1,6 +1,6 @@
 //! Draw ellipse
 
-use types::{ Color, Radius, Rectangle };
+use types::{ Color, Radius, Rectangle, Resolution };
 use { triangulation, DrawState, Graphics };
 use math::Matrix2d;
 
@@ -24,7 +24,7 @@ pub struct Ellipse {
     /// The ellipse border
     pub border: Option<Border>,
     /// The resolution.
-    pub resolution: u32,
+    pub resolution: Resolution,
 }
 
 impl Ellipse {
@@ -71,7 +71,7 @@ impl Ellipse {
     }
 
     /// Sets resolution of the ellipse smoothness.
-    pub fn resolution(mut self, value: u32) -> Self {
+    pub fn resolution(mut self, value: Resolution) -> Self {
         self.resolution = value;
         self
     }
