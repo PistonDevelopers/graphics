@@ -7,7 +7,7 @@ pub trait Graphics {
     type Texture: ImageSize;
 
     /// Clears background with a color.
-    fn clear(&mut self, color: [f32; 4]);
+    fn clear_color(&mut self, color: [f32; 4]);
 
     /// Clears stencil buffer with a value.
     fn clear_stencil(&mut self, value: u8);
