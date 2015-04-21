@@ -48,20 +48,20 @@ impl Text {
             G: Graphics<Texture = <C as CharacterCache>::Texture>
     {
         let image = Image::new_colored(self.color);
-        let mut x = 0;
-        let mut y = 0;
+        let mut x = 0.0;
+        let mut y = 0.0;
         for ch in text.chars() {
             let character = cache.character(self.font_size, ch);
             image.draw(&character.texture,
                 draw_state,
                 transform.trans(
-                    x as f64 + character.left(),
-                    y as f64 - character.top()
+                    x + character.left(),
+                    y - character.top()
                 ),
                 g
             );
-            x += character.width() as i32;
-            y += character.height() as i32;
+            x += character.width();
+            y += character.height();
         }
     }
 }
