@@ -24,7 +24,7 @@ pub struct Ellipse {
     /// The ellipse border
     pub border: Option<Border>,
     /// The resolution.
-    pub resolution: usize,
+    pub resolution: u32,
 }
 
 impl Ellipse {
@@ -71,7 +71,7 @@ impl Ellipse {
     }
 
     /// Sets resolution of the ellipse smoothness.
-    pub fn resolution(mut self, value: usize) -> Self {
+    pub fn resolution(mut self, value: u32) -> Self {
         self.resolution = value;
         self
     }
