@@ -77,7 +77,7 @@ pub fn clear<G>(
 )
     where G: Graphics
 {
-    g.clear(color);
+    g.clear_color(color);
 }
 
 /// Draws image.
