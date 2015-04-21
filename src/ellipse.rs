@@ -23,6 +23,8 @@ pub struct Ellipse {
     pub color: Color,
     /// The ellipse border
     pub border: Option<Border>,
+    /// The resolution.
+    pub resolution: usize,
 }
 
 impl Ellipse {
@@ -30,7 +32,8 @@ impl Ellipse {
     pub fn new(color: Color) -> Ellipse {
         Ellipse {
             color: color,
-            border: None
+            border: None,
+            resolution: 128,
         }
     }
 
@@ -44,7 +47,8 @@ impl Ellipse {
             border: Some(Border {
                     color: color,
                     radius: radius,
-                })
+                }),
+            resolution: 128,
         }
     }
 
@@ -66,6 +70,12 @@ impl Ellipse {
         self
     }
 
+    /// Sets resolution of the ellipse smoothness.
+    pub fn resolution(mut self, value: usize) -> Self {
+        self.resolution = value;
+        self
+    }
+
     /// Draws the ellipse.
     pub fn draw<R: Into<Rectangle>, G>(
         &self,
@@ -82,7 +92,7 @@ impl Ellipse {
             &self.color,
             |f|
         triangulation::with_ellipse_tri_list(
-            128,
+            self.resolution,
             transform,
             rectangle,
             |vertices| f(vertices)
@@ -94,7 +104,7 @@ impl Ellipse {
                 &color,
                 |f|
             triangulation::with_ellipse_border_tri_list(
-                128,
+                self.resolution,
                 transform,
                 rectangle,
                 border_radius,
