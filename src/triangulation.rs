@@ -11,7 +11,6 @@ use types::{
     Rectangle,
     Resolution,
 };
-use num::Float;
 use math::{
     multiply,
     orient,

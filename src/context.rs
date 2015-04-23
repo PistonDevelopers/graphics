@@ -126,7 +126,6 @@ impl Context {
 #[cfg(test)]
 mod test {
     use super::Context;
-    use num::Float;
 
     #[test]
     fn test_context() {

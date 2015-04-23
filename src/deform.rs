@@ -2,7 +2,6 @@
 
 use types::Rectangle;
 use { Line, Graphics, DrawState };
-use num::Float;
 use triangulation::{ tx, ty };
 use math::{ Matrix2d, Scalar, Vec2d };
 

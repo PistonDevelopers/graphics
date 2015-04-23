@@ -24,7 +24,6 @@ use types::{
     SourceRectangle,
     Triangle,
 };
-use num::Float;
 use modular_index::previous;
 
 /// The type used for scalars.
@@ -395,7 +394,6 @@ pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
 
 #[cfg(test)]
 mod test_barycentric {
-    use num::Float;
     use super::*;
 
     #[test]
