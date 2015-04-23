@@ -613,14 +613,13 @@ pub fn rect_tri_list_uv<I: ImageSize>(
     image: &I, source_rect: SourceRectangle
 ) -> [f32; 12] {
     let (w, h) = image.get_size();
-    let x1 = source_rect[0] as f32
-        / w as f32;
-    let y1 = source_rect[1] as f32
-        / h as f32;
-    let x2 = source_rect[2] as f32
-        / w as f32;
-    let y2 = source_rect[3] as f32
-        / h as f32;
+    let (src_x, src_y, src_w, src_h) =
+        (source_rect[0], source_rect[1], source_rect[2], source_rect[3]);
+
+    let x1 = src_x as f32 / w as f32;
+    let y1 = src_y as f32 / h as f32;
+    let x2 = (src_w + src_x) as f32 / w as f32;
+    let y2 = (src_h + src_y) as f32 / h as f32;
     [
         x1, y1, x2, y1, x1, y2,
         x2, y1, x2, y2, x1, y2
