@@ -31,7 +31,7 @@ git = "https://github.com/gfx-rs/draw_state"
 
 [dependencies.piston-viewport]
 git = "https://github.com/PistonDevelopers/viewport"
-#version = "0.0.0"
+#version = "0.0.2"
 
 [dependencies.piston-texture]
 git = "https://github.com/PistonDevelopers/texture"
