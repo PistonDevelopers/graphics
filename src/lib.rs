@@ -62,7 +62,6 @@ pub mod triangulation;
 pub mod math;
 pub mod deform;
 pub mod grid;
-pub mod shapes;
 
 pub mod radians {
     //! Reexport radians helper trait from vecmath
