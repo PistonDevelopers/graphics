@@ -23,7 +23,7 @@ path = "./src/lib.rs"
 
 [dependencies.vecmath]
 git = "https://github.com/PistonDevelopers/vecmath"
-#version = "0.0.6"
+#version = "0.0.22"
 
 [dependencies.draw_state]
 git = "https://github.com/gfx-rs/draw_state"
@@ -43,5 +43,5 @@ git = "https://github.com/PistonDevelopers/read_color"
 
 [dependencies.interpolation]
 git = "https://github.com/PistonDevelopers/interpolation"
-#version = "0.0.4"
+#version = "0.0.5"
 
