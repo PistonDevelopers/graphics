@@ -26,8 +26,8 @@ path = "./src/lib.rs"
 version = "0.0.23"
 
 [dependencies.draw_state]
-#git = "https://github.com/gfx-rs/draw_state"
-version = "0.0.7"
+git = "https://github.com/gfx-rs/draw_state"
+#version = "0.0.7"
 
 [dependencies.piston-viewport]
 #git = "https://github.com/PistonDevelopers/viewport"
