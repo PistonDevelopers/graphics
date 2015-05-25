@@ -22,26 +22,25 @@ name = "graphics"
 path = "./src/lib.rs"
 
 [dependencies.vecmath]
-git = "https://github.com/PistonDevelopers/vecmath"
-#version = "0.0.22"
+#git = "https://github.com/PistonDevelopers/vecmath"
+version = "0.0.23"
 
 [dependencies.draw_state]
-git = "https://github.com/gfx-rs/draw_state"
-#version = "0.0.7"
+#git = "https://github.com/gfx-rs/draw_state"
+version = "0.0.7"
 
 [dependencies.piston-viewport]
-git = "https://github.com/PistonDevelopers/viewport"
-#version = "0.0.2"
+#git = "https://github.com/PistonDevelopers/viewport"
+version = "0.0.3"
 
 [dependencies.piston-texture]
-git = "https://github.com/PistonDevelopers/texture"
-#version = "0.0.1"
+#git = "https://github.com/PistonDevelopers/texture"
+version = "0.0.1"
 
 [dependencies.read_color]
-git = "https://github.com/PistonDevelopers/read_color"
-#version = "0.0.2"
+#git = "https://github.com/PistonDevelopers/read_color"
+version = "0.0.2"
 
 [dependencies.interpolation]
-git = "https://github.com/PistonDevelopers/interpolation"
-#version = "0.0.5"
-
+#git = "https://github.com/PistonDevelopers/interpolation"
+version = "0.0.6"
