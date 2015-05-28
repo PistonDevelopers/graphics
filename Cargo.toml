@@ -40,7 +40,7 @@ path = "./src/lib.rs"
 # git = "https://github.com/PistonDevelopers/read_color"
 
 [dependencies]
-draw_state = "0.0.8"
+draw_state = "0.0.*"
 interpolation = "0.0.6"
 num = "0.1"
 piston-texture = "0.0.1"
