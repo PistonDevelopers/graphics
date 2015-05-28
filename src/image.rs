@@ -1,4 +1,4 @@
-//! Draw image
+//! Draw an image
 
 use types::{ Color, Rectangle, SourceRectangle };
 use triangulation;
@@ -7,7 +7,53 @@ use ImageSize;
 use DrawState;
 use math::Matrix2d;
 
+
 /// An image
+/// 
+/// # Example
+///
+/// ```ignore
+/// extern crate piston;
+/// extern crate graphics;
+/// extern crate glutin_window;
+/// extern crate opengl_graphics;
+///
+/// use piston::window::WindowSettings;
+/// use piston::event::*;
+/// use glutin_window::GlutinWindow as Window;
+/// use opengl_graphics::{GlGraphics, OpenGL, Texture};
+/// use graphics::{Image, clear, default_draw_state};
+/// use graphics::rectangle::square;
+/// use std::path::Path;
+///
+/// fn main() {
+/// 	let opengl  = OpenGL::_3_2;
+/// 	let mut gl  = GlGraphics::new(opengl);
+/// 	let window  = Window::new(
+/// 			opengl,
+/// 			WindowSettings::new(
+/// 				"Example",
+/// 				[600, 400]
+/// 			).exit_on_esc(true));
+/// 
+/// 	//Create the image object and attach a square Rectangle object inside.
+/// 	let image   = Image::new().rect(square(0.0, 0.0, 200.0));
+/// 	//A texture to use with the image
+/// 	let texture = Texture::from_path(Path::new("Example.png")).unwrap();
+/// 	
+/// 	//Main loop
+/// 	for e in window.events() {
+/// 		if let Some(r) = e.render_args() {
+/// 			gl.draw(r.viewport(), |c, gl| {
+/// 				//Clear the screen
+/// 				clear([0.0, 0.0, 0.0, 1.0], gl);
+/// 				//Draw the image with the texture
+/// 				image.draw(&texture, default_draw_state(), c.transform, gl);
+/// 			});
+/// 		}
+/// 	}
+/// }
+/// ```
 #[derive(Copy, Clone)]
 pub struct Image {
     /// The color

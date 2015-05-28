@@ -1,6 +1,6 @@
 //! Draw rectangle
 
-use types::{ Color, Radius };
+use types::{ Color, Radius, Resolution };
 use { types, triangulation, Graphics, DrawState };
 use math::{ Matrix2d, Scalar };
 
@@ -34,8 +34,8 @@ pub fn square(
 pub enum Shape {
     /// Square corners
     Square,
-    /// Round corners
-    Round(Radius),
+    /// Round corners, with resolution per corner.
+    Round(Radius, Resolution),
     /// Bevel corners
     Bevel(Radius),
 }
@@ -77,7 +77,7 @@ impl Rectangle {
     ) -> Rectangle {
         Rectangle {
             color: color,
-            shape: Shape::Round(round_radius),
+            shape: Shape::Round(round_radius, 32),
             border: None
         }
     }
@@ -105,7 +105,7 @@ impl Rectangle {
     ) -> Rectangle {
         Rectangle {
             color: [0.0; 4],
-            shape: Shape::Round(round_radius),
+            shape: Shape::Round(round_radius, 32),
             border: Some(Border {
                     color: color,
                     radius: border_radius
@@ -161,13 +161,13 @@ impl Rectangle {
                             )),
                     );
                 }
-                Shape::Round(round_radius) => {
+                Shape::Round(round_radius, resolution) => {
                     g.tri_list(
                         draw_state,
                         &self.color,
                         |f|
                     triangulation::with_round_rectangle_tri_list(
-                        32,
+                        resolution,
                         transform,
                         rectangle,
                         round_radius,
@@ -203,13 +203,13 @@ impl Rectangle {
                         )
                     );
                 }
-                Shape::Round(round_radius) => {
+                Shape::Round(round_radius, resolution) => {
                     g.tri_list(
                         draw_state,
                         &color,
                         |f|
                     triangulation::with_round_rectangle_border_tri_list(
-                        128,
+                        resolution,
                         transform,
                         rectangle,
                         round_radius,
@@ -244,7 +244,7 @@ mod test {
     fn test_rectangle() {
         let _rectangle = Rectangle::new([1.0; 4])
             .color([0.0; 4])
-            .shape(Shape::Round(10.0))
+            .shape(Shape::Round(10.0, 32))
             .border(Border { color: [0.0; 4], radius: 4.0 });
     }
 }

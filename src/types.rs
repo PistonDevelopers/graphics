@@ -26,6 +26,9 @@ pub type Polygons<'a> = &'a [Polygon<'a>];
 /// The type used for radius.
 pub type Radius = Scalar;
 
+/// The type used for resolution.
+pub type Resolution = u32;
+
 /// [x, y, dir_x, dir_y]
 pub type Ray = [Scalar; 4];
 

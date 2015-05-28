@@ -6,7 +6,6 @@ use math::{
     abs_transform,
     identity,
     get_scale,
-    multiply,
     scale,
     Matrix2d,
     Scalar,
@@ -51,12 +50,7 @@ impl Context {
     /// and y axis pointing down.
     #[inline(always)]
     pub fn new_viewport(viewport: Viewport) -> Context {
-        let sx = viewport.draw_size[0] as f64 / viewport.window_size[0] as f64;
-        let sy = viewport.draw_size[1] as f64 / viewport.window_size[1] as f64;
-        let mat = multiply(
-                abs_transform(viewport.draw_size[0] as f64, viewport.draw_size[1] as f64),
-                scale(sx, sy)
-            );
+        let mat = viewport.abs_transform();
         Context {
             view: mat,
             transform: mat,
@@ -126,7 +120,6 @@ impl Context {
 #[cfg(test)]
 mod test {
     use super::Context;
-    use num::Float;
 
     #[test]
     fn test_context() {

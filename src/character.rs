@@ -50,9 +50,9 @@ pub trait CharacterCache {
 
     /// Return the width for some given text.
     fn width(&mut self, size: FontSize, text: &str) -> ::math::Scalar {
-        text.chars().fold(0, |a, ch| {
+        text.chars().fold(0.0, |a, ch| {
             let character = self.character(size, ch);
-            a + character.width() as u32
-        }) as f64
+            a + character.width()
+        })
     }
 }
