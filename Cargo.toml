@@ -1,7 +1,7 @@
 [package]
 
 name = "piston2d-graphics"
-version = "0.1.2"
+version = "0.1.3"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "Coeuvre <coeuvre@gmail.com>",
@@ -21,26 +21,8 @@ homepage = "https://github.com/pistondevelopers/graphics"
 name = "graphics"
 path = "./src/lib.rs"
 
-# [dependencies.piston-viewport]
-# git = "https://github.com/PistonDevelopers/viewport"
-
-# [dependencies.vecmath]
-# git = "https://github.com/PistonDevelopers/vecmath"
-
-# [dependencies.draw_state]
-# git = "https://github.com/gfx-rs/draw_state"
-
-# [dependencies.piston-texture]
-# git = "https://github.com/PistonDevelopers/texture"
-
-# [dependencies.interpolation]
-# git = "https://github.com/PistonDevelopers/interpolation"
-
-# [dependencies.read_color]
-# git = "https://github.com/PistonDevelopers/read_color"
-
 [dependencies]
-draw_state = "0.0.*"
+draw_state = "0.0.8"
 interpolation = "0.1.0"
 num = "0.1.24"
 piston-texture = "0.1.0"
