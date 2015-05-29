@@ -1,7 +1,7 @@
 [package]
 
 name = "piston2d-graphics"
-version = "0.1.3"
+version = "0.1.4"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "Coeuvre <coeuvre@gmail.com>",
@@ -22,7 +22,7 @@ name = "graphics"
 path = "./src/lib.rs"
 
 [dependencies]
-draw_state = "0.0.8"
+draw_state = "0.1.0"
 interpolation = "0.1.0"
 num = "0.1.24"
 piston-texture = "0.1.0"
