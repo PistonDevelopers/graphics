@@ -26,6 +26,7 @@ pub use line::Line;
 pub use ellipse::Ellipse;
 pub use image::Image;
 pub use polygon::Polygon;
+pub use text::Text;
 pub use default_draw_state::default_draw_state;
 pub use clip_draw_state::clip_draw_state;
 pub use inside_draw_state::inside_draw_state;
