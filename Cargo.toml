@@ -1,7 +1,7 @@
 [package]
 
 name = "piston2d-graphics"
-version = "0.3.0"
+version = "0.3.1"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "Coeuvre <coeuvre@gmail.com>",
@@ -29,4 +29,3 @@ piston-texture = "0.2.0"
 piston-viewport = "0.1.0"
 read_color = "0.1.0"
 vecmath = "0.1.0"
-
