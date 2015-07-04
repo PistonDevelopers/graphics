@@ -9,7 +9,7 @@ use math::Matrix2d;
 
 
 /// An image
-/// 
+///
 /// # Example
 ///
 /// ```ignore
@@ -35,12 +35,12 @@ use math::Matrix2d;
 /// 				"Example",
 /// 				[600, 400]
 /// 			).exit_on_esc(true));
-/// 
+///
 /// 	//Create the image object and attach a square Rectangle object inside.
 /// 	let image   = Image::new().rect(square(0.0, 0.0, 200.0));
 /// 	//A texture to use with the image
 /// 	let texture = Texture::from_path(Path::new("Example.png")).unwrap();
-/// 	
+///
 /// 	//Main loop
 /// 	for e in window.events() {
 /// 		if let Some(r) = e.render_args() {
@@ -152,6 +152,29 @@ impl Image {
             )
         );
     }
+}
+
+/// Draws many images.
+pub fn draw_many<G>(
+    rects: &[(Rectangle, SourceRectangle)],
+    color: Color,
+    texture: &<G as Graphics>::Texture,
+    draw_state: &DrawState,
+    transform: Matrix2d,
+    g: &mut G
+) where G: Graphics {
+    g.tri_list_uv(
+        draw_state,
+        &color,
+        texture,
+            |f|
+            for r in rects {
+                f(
+                &triangulation::rect_tri_list_xy(transform, r.0),
+                &triangulation::rect_tri_list_uv(texture, r.1)
+                )
+            }
+    );
 }
 
 #[cfg(test)]
