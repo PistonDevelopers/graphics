@@ -2,8 +2,11 @@
 
 use types::{ Color, ColorComponent };
 
+/// White color.
 pub const WHITE: Color = [1.0; 4];
+/// Black color.
 pub const BLACK: Color = [0.0, 0.0, 0.0, 1.0];
+/// Transparent color.
 pub const TRANSPARENT: Color = [0.0; 4];
 
 /// Returns a grey color
