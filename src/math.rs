@@ -201,6 +201,56 @@ pub fn relative_rectangle(rect: Rectangle, v: Vec2d) -> Rectangle {
     ]
 }
 
+/// Computes overlap between two rectangles.
+/// The area of the overlapping rectangle is positive.
+/// A shared edge or corner is not considered overlap.
+#[inline(always)]
+pub fn overlap_rectangle(a: Rectangle, b: Rectangle) -> Option<Rectangle> {
+    #[inline(always)]
+    fn min(a: Scalar, b: Scalar) -> Scalar { if a < b { a } else { b } }
+
+    #[inline(always)]
+    fn max(a: Scalar, b: Scalar) -> Scalar { if a > b { a } else { b } }
+
+    if a[0] < b[0] + b[2]
+    && a[1] < b[1] + b[3]
+    && b[0] < a[0] + a[2]
+    && b[1] < a[1] + a[3] {
+        let x = max(a[0], b[0]);
+        let y = max(a[1], b[1]);
+        let w = min(a[0] + a[2], b[0] + b[2]) - x;
+        let h = min(a[1] + a[3], b[1] + b[3]) - y;
+        Some([x, y, w, h])
+    } else {
+        None
+    }
+}
+
+#[cfg(test)]
+mod test_overlap {
+    use super::overlap_rectangle;
+
+    #[test]
+    fn overlap() {
+        let a = [0.0, 1.0, 100.0, 101.0];
+        let b = [51.0, 52.0, 102.0, 103.0];
+        let c = overlap_rectangle(a, b).unwrap();
+        assert_eq!(c, [51.0, 52.0, 49.0, 50.0]);
+        let d = overlap_rectangle(a, c).unwrap();
+        assert_eq!(d, c);
+        let e = overlap_rectangle(b, c).unwrap();
+        assert_eq!(e, c);
+    }
+
+    #[test]
+    fn edge() {
+        let a = [0.0, 0.0, 100.0, 100.0];
+        let b = [100.0, 0.0, 100.0, 100.0];
+        let c = overlap_rectangle(a, b);
+        assert_eq!(c, None);
+    }
+}
+
 /// Computes a relative source rectangle using
 /// the source rectangle as a tile.
 #[inline(always)]
