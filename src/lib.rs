@@ -24,6 +24,7 @@ pub use colored::Colored;
 pub use rectangle::Rectangle;
 pub use line::Line;
 pub use ellipse::Ellipse;
+pub use circle_arc::CircleArc;
 pub use image::Image;
 pub use polygon::Polygon;
 pub use text::Text;
@@ -53,6 +54,7 @@ pub mod context;
 pub mod color;
 pub mod polygon;
 pub mod line;
+pub mod circle_arc;
 pub mod ellipse;
 pub mod rectangle;
 pub mod image;
@@ -100,6 +102,21 @@ pub fn ellipse<R: Into<types::Rectangle>, G>(
     where G: Graphics
 {
     Ellipse::new(color).draw(rect, default_draw_state(), transform, g);
+}
+
+/// Draws arc
+pub fn circle_arc<R: Into<types::Rectangle>, G>(
+    color: types::Color,
+    radius: types::Radius,
+    start: types::Scalar,
+    end: types::Scalar,
+    rect: R,
+    transform: math::Matrix2d,
+    g: &mut G
+)
+    where G: Graphics
+{
+    CircleArc::new(color, radius, start, end).draw(rect, default_draw_state(), transform, g);
 }
 
 /// Draws rectangle.

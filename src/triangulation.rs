@@ -324,6 +324,49 @@ pub fn with_ellipse_border_tri_list<F>(
     }, f);
 }
 
+/// Streams an arc between the two radian boundaries.
+#[inline(always)]
+pub fn with_arc_tri_list<F>(
+    start_radians: Scalar,
+    end_radians: Scalar,
+    resolution: Resolution,
+    m: Matrix2d,
+    rect: Rectangle,
+    border_radius: Radius,
+    f: F
+)
+    where
+        F: FnMut(&[f32])
+{
+
+    let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
+    let (cw, ch) = (0.5 * w, 0.5 * h);
+    let (cw1, ch1) = (cw + border_radius, ch + border_radius);
+    let (cw2, ch2) = (cw - border_radius, ch - border_radius);
+    let (cx, cy) = (x + cw, y + ch);
+    let n = resolution;
+    let mut i = 0;
+    let (nearest_start_radians, nearest_end_radians) = if start_radians < end_radians {
+        (start_radians, start_radians + (end_radians - start_radians))
+    } else {
+        (end_radians, end_radians + (start_radians - end_radians))
+    };
+    stream_quad_tri_list(m, || {
+        if i > n { return None; }
+
+        let angle = nearest_start_radians + i as Scalar / n as Scalar * <f64 as Radians>::_360();
+        if angle > nearest_end_radians {
+            return None;
+        }
+
+        let cos = angle.cos();
+        let sin = angle.sin();
+        i += 1;
+        Some(([cx + cos * cw1, cy + sin * ch1],
+            [cx + cos * cw2, cy + sin * ch2]))
+    }, f);
+}
+
 /// Streams a round rectangle border.
 #[inline(always)]
 pub fn with_round_rectangle_border_tri_list<F>(
