@@ -1,4 +1,4 @@
-# Graphics [![Build Status](https://travis-ci.org/PistonDevelopers/graphics.svg?branch=master)](https://travis-ci.org/PistonDevelopers/graphics)
+# Graphics [![Build Status](https://travis-ci.org/PistonDevelopers/graphics.svg?branch=master)](https://travis-ci.org/PistonDevelopers/graphics) [![Crates.io](https://img.shields.io/crates/v/piston2d-graphics.svg)](https://crates.io/crates/piston2d-graphics) [![Crates.io](https://img.shields.io/crates/l/piston2d-graphics.svg)](https://github.com/PistonDevelopers/graphics/blob/master/LICENSE)
 
 A library for 2D graphics, written in Rust, that works with multiple back-ends.
 
