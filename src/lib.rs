@@ -142,3 +142,32 @@ pub fn polygon<G>(
 {
     Polygon::new(color).draw(polygon, default_draw_state(), transform, g);
 }
+
+/// Draws line.
+pub fn line<L: Into<types::Line>, G>(
+    color: types::Color,
+    radius: types::Radius,
+    line: L,
+    transform: math::Matrix2d,
+    g: &mut G
+)
+    where G: Graphics
+{
+    Line::new(color, radius).draw(line, default_draw_state(), transform, g)
+}
+
+/// Draws text.
+pub fn text<C, G>(
+    color: types::Color,
+    font_size: types::FontSize,
+    text: &str,
+    cache: &mut C,
+    transform: math::Matrix2d,
+    g: &mut G
+)
+    where
+        C: character::CharacterCache,
+        G: Graphics<Texture = <C as character::CharacterCache>::Texture>
+{
+    Text::colored(color, font_size).draw(text, cache, default_draw_state(), transform, g)
+}
