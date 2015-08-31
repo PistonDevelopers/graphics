@@ -75,7 +75,7 @@ impl Image {
     }
 
     /// Creates a new colored image
-    pub fn new_colored(color: Color) -> Image {
+    pub fn new_color(color: Color) -> Image {
         Image {
             color: Some(color),
             source_rectangle: None,

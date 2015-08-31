@@ -24,7 +24,7 @@ impl Text {
     }
 
     /// Creates a new colored text
-    pub fn colored(
+    pub fn new_color(
         color: Color,
         font_size: FontSize
     ) -> Text {
@@ -47,7 +47,7 @@ impl Text {
             C: CharacterCache,
             G: Graphics<Texture = <C as CharacterCache>::Texture>
     {
-        let image = Image::new_colored(self.color);
+        let image = Image::new_color(self.color);
         let mut x = 0.0;
         let mut y = 0.0;
         for ch in text.chars() {

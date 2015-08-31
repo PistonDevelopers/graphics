@@ -70,7 +70,7 @@ impl Context {
     /// and x axis pointing to the right
     /// and y axis pointing down.
     #[inline(always)]
-    pub fn abs(w: Scalar, h: Scalar) -> Context {
+    pub fn new_abs(w: Scalar, h: Scalar) -> Context {
         let mat = abs_transform(w, h);
         Context {
             view: mat,
