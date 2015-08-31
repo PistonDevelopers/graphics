@@ -169,5 +169,5 @@ pub fn text<C, G>(
         C: character::CharacterCache,
         G: Graphics<Texture = <C as character::CharacterCache>::Texture>
 {
-    Text::colored(color, font_size).draw(text, cache, default_draw_state(), transform, g)
+    Text::new_color(color, font_size).draw(text, cache, default_draw_state(), transform, g)
 }
