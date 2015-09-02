@@ -1,7 +1,6 @@
 //! Transformation context
 
 use draw_state::DrawState;
-use default_draw_state;
 use math::{
     abs_transform,
     identity,
@@ -33,7 +32,7 @@ impl Context {
         Context {
             view: identity(),
             transform: identity(),
-            draw_state: *default_draw_state(),
+            draw_state: Default::default(),
             viewport: None,
         }
     }
@@ -54,7 +53,7 @@ impl Context {
         Context {
             view: mat,
             transform: mat,
-            draw_state: *default_draw_state(),
+            draw_state: Default::default(),
             viewport: Some(viewport),
         }
     }
@@ -75,7 +74,7 @@ impl Context {
         Context {
             view: mat,
             transform: mat,
-            draw_state: *default_draw_state(),
+            draw_state: Default::default(),
             viewport: None,
         }
     }

@@ -22,7 +22,6 @@ name = "graphics"
 path = "./src/lib.rs"
 
 [dependencies]
-draw_state = "0.2.0"
 interpolation = "0.1.0"
 piston-texture = "0.2.1"
 piston-viewport = "0.1.0"
