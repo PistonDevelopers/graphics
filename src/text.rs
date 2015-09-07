@@ -12,6 +12,8 @@ pub struct Text {
     pub color: Color,
     /// The font size
     pub font_size: FontSize,
+    /// Whether or not the text's position should be rounded (to a signed distance field).
+    pub round: bool,
 }
 
 impl Text {
@@ -20,6 +22,7 @@ impl Text {
         Text {
             color: color::BLACK,
             font_size: font_size,
+            round: false,
         }
     }
 
@@ -31,7 +34,14 @@ impl Text {
         Text {
             color: color,
             font_size: font_size,
+            round: false,
         }
+    }
+
+    /// A builder method indicating that the Text's position should be rounded upon drawing.
+    pub fn round(mut self) -> Text {
+        self.round = true;
+        self
     }
 
     /// Draws text with a character cache
@@ -52,14 +62,13 @@ impl Text {
         let mut y = 0.0;
         for ch in text.chars() {
             let character = cache.character(self.font_size, ch);
-            image.draw(&character.texture,
-                draw_state,
-                transform.trans(
-                    x + character.left(),
-                    y - character.top()
-                ),
-                g
-            );
+            let mut ch_x = x + character.left();
+            let mut ch_y = y - character.top();
+            if self.round {
+                ch_x = ch_x.round();
+                ch_y = ch_y.round();
+            }
+            image.draw(&character.texture, draw_state, transform.trans(ch_x, ch_y), g);
             x += character.width();
             y += character.height();
         }
