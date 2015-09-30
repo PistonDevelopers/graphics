@@ -14,7 +14,7 @@ pub use vecmath_lib::row_mat2x3_transform_vec2 as transform_vec;
 
 use std::ops::{ Add, Rem };
 use vecmath_lib;
-use float::Float;
+use vecmath_lib::traits::Float;
 use types::{
     Area,
     Color,
@@ -56,7 +56,7 @@ pub fn perp<T=Scalar>(v: [T; 2]) -> [T; 2]
 pub fn abs_transform<T=Scalar>(w: T, h: T) -> Matrix2d<T>
     where T: Float
 {
-    use float::{ One, FromPrimitive, Zero };
+    use vecmath_lib::traits::{ One, FromPrimitive, Zero };
 
     let _0: T = Zero::zero();
     let _1: T = One::one();
@@ -72,7 +72,7 @@ pub fn abs_transform<T=Scalar>(w: T, h: T) -> Matrix2d<T>
 pub fn translate<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
     where T: Float
 {
-    use float::{ One, Zero };
+    use vecmath_lib::traits::{ One, Zero };
 
     let _0: T = Zero::zero();
     let _1: T = One::one();
@@ -85,7 +85,7 @@ pub fn translate<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
 pub fn rotate_radians<T=Scalar>(angle: T) -> Matrix2d<T>
     where T: Float
 {
-    use float::Zero;
+    use vecmath_lib::traits::Zero;
 
     let _0 = Zero::zero();
     let c = angle.cos();
@@ -102,7 +102,7 @@ pub fn rotate_radians<T=Scalar>(angle: T) -> Matrix2d<T>
 pub fn orient<T=Scalar>(x: T, y: T) -> Matrix2d<T>
     where T: Float
 {
-    use float::Zero;
+    use vecmath_lib::traits::Zero;
 
     let _0: T = Zero::zero();
     let len = x * x + y * y;
@@ -122,7 +122,7 @@ pub fn orient<T=Scalar>(x: T, y: T) -> Matrix2d<T>
 pub fn scale<T=Scalar>(sx: T, sy: T) -> Matrix2d<T>
     where T: Float
 {
-    use float::Zero;
+    use vecmath_lib::traits::Zero;
 
     let _0: T = Zero::zero();
     [[sx, _0, _0],
@@ -134,7 +134,7 @@ pub fn scale<T=Scalar>(sx: T, sy: T) -> Matrix2d<T>
 pub fn shear<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
     where T: Float
 {
-    use float::{ Zero, One };
+    use vecmath_lib::traits::{ Zero, One };
 
     let _0 = Zero::zero();
     let _1 = One::one();
@@ -147,7 +147,7 @@ pub fn shear<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
 pub fn identity<T=Scalar>() -> Matrix2d<T>
     where T: Float
 {
-    use float::{ Zero, One };
+    use vecmath_lib::traits::{ Zero, One };
 
     let _0: T = Zero::zero();
     let _1: T = One::one();
@@ -224,7 +224,7 @@ pub fn least_separation_4<T=Scalar>(
 pub fn margin_rectangle<T=Scalar>(rect: Rectangle<T>, m: T) -> Rectangle<T>
     where T: Float
 {
-    use float::{ Zero, FromPrimitive };
+    use vecmath_lib::traits::{ Zero, FromPrimitive };
 
     let _0: T = Zero::zero();
     let _05: T = FromPrimitive::from_f64(0.5);
@@ -365,7 +365,7 @@ mod test_modular_offset {
 pub fn area_centroid<T=Scalar>(polygon: Polygon<T>) -> (Area<T>, Vec2d<T>)
     where T: Float
 {
-    use float::{ Zero, FromPrimitive };
+    use vecmath_lib::traits::{ Zero, FromPrimitive };
 
     let _0: T = Zero::zero();
     let _05: T = FromPrimitive::from_f64(0.5);
@@ -435,7 +435,7 @@ pub fn line_side<T=Scalar>(line: Line<T>, v: Vec2d<T>) -> T
 pub fn inside_triangle<T=Scalar>(triangle: Triangle<T>, v: Vec2d<T>) -> bool
     where T: Float
 {
-    use float::Zero;
+    use vecmath_lib::traits::Zero;
 
     let _0: T = Zero::zero();
 
@@ -469,7 +469,7 @@ pub fn inside_triangle<T=Scalar>(triangle: Triangle<T>, v: Vec2d<T>) -> bool
 pub fn triangle_face<T=Scalar>(triangle: Triangle<T>) -> bool
     where T: Float
 {
-    use float::Zero;
+    use vecmath_lib::traits::Zero;
 
     let _0 = Zero::zero();
 
@@ -511,7 +511,7 @@ pub fn to_barycentric<T=Scalar>(
 ) -> Vec3d<T>
     where T: Float
 {
-    use float::One;
+    use vecmath_lib::traits::One;
 
     let _1: T = One::one();
     let x = pos[0]; let y = pos[1];
