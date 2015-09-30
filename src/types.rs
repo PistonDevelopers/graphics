@@ -3,7 +3,7 @@
 pub use math::{ Matrix2d, Scalar, Vec2d };
 
 /// The type used for area.
-pub type Area = Scalar;
+pub type Area<T=Scalar> = T;
 
 /// [red, green, blue, alpha]
 pub type Color = [ColorComponent; 4];
@@ -12,34 +12,34 @@ pub type Color = [ColorComponent; 4];
 pub type ColorComponent = f32;
 
 /// [x1, y1, x2, y2]
-pub type Line = [Scalar; 4];
+pub type Line<T=Scalar> = [T; 4];
 
 /// [x, y, w, h]
 pub type SourceRectangle = [i32; 4];
 
 /// [p0, p1, ...]
-pub type Polygon<'a> = &'a [Vec2d];
+pub type Polygon<'a, T=Scalar> = &'a [Vec2d<T>];
 
 /// A slice of polygons.
-pub type Polygons<'a> = &'a [Polygon<'a>];
+pub type Polygons<'a, T=Scalar> = &'a [Polygon<'a, T>];
 
 /// The type used for radius.
-pub type Radius = Scalar;
+pub type Radius<T=Scalar> = T;
 
 /// The type used for resolution.
 pub type Resolution = u32;
 
 /// [x, y, dir_x, dir_y]
-pub type Ray = [Scalar; 4];
+pub type Ray<T=Scalar> = [T; 4];
 
 /// [x, y, w, h]
-pub type Rectangle = [Scalar; 4];
+pub type Rectangle<T=Scalar> = [T; 4];
 
 /// [x1, y1, x2, y2, x3, y3]
-pub type Triangle = [Vec2d; 3];
+pub type Triangle<T=Scalar> = [Vec2d<T>; 3];
 
 /// The type used for width.
-pub type Width = Scalar;
+pub type Width<T=Scalar> = T;
 
 /// The type used for font size.
 pub type FontSize = u32;

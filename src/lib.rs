@@ -10,6 +10,7 @@ extern crate read_color;
 extern crate interpolation;
 extern crate draw_state as draw_state_lib;
 extern crate viewport;
+extern crate float;
 
 pub use texture::ImageSize;
 pub use draw_state_lib as draw_state;
