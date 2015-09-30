@@ -14,6 +14,7 @@ pub use vecmath_lib::row_mat2x3_transform_vec2 as transform_vec;
 
 use std::ops::{ Add, Rem };
 use vecmath_lib;
+use vecmath_lib::traits::Float;
 use types::{
     Area,
     Color,
@@ -30,17 +31,19 @@ use modular_index::previous;
 pub type Scalar = f64;
 
 /// The type used for matrices.
-pub type Matrix2d = vecmath_lib::Matrix2x3<Scalar>;
+pub type Matrix2d<T=Scalar> = vecmath_lib::Matrix2x3<T>;
 
 /// The type used for 2D vectors.
-pub type Vec2d = vecmath_lib::Vector2<Scalar>;
+pub type Vec2d<T=Scalar> = vecmath_lib::Vector2<T>;
 
 /// The type used for 3D vectors.
-pub type Vec3d = vecmath_lib::Vector3<Scalar>;
+pub type Vec3d<T=Scalar> = vecmath_lib::Vector3<T>;
 
 /// Creates a perpendicular vector.
 #[inline(always)]
-pub fn perp(v: [Scalar; 2]) -> [Scalar; 2] {
+pub fn perp<T=Scalar>(v: [T; 2]) -> [T; 2]
+    where T: Float
+{
     [-v[1], v[0]]
 }
 
@@ -50,27 +53,45 @@ pub fn perp(v: [Scalar; 2]) -> [Scalar; 2] {
 /// In absolute coordinates, the x axis points to the right,
 /// and the y axis points down on the screen.
 #[inline(always)]
-pub fn abs_transform(w: Scalar, h: Scalar) -> Matrix2d {
-    let sx = 2.0 / w;
-    let sy = -2.0 / h;
-    [[ sx, 0.0, -1.0 ],
-     [ 0.0,  sy, 1.0 ]]
+pub fn abs_transform<T=Scalar>(w: T, h: T) -> Matrix2d<T>
+    where T: Float
+{
+    use vecmath_lib::traits::{ One, FromPrimitive, Zero };
+
+    let _0: T = Zero::zero();
+    let _1: T = One::one();
+    let _2: T = FromPrimitive::from_f64(2.0);
+    let sx = _2 / w;
+    let sy = -_2 / h;
+    [[ sx, _0, -_1 ],
+     [ _0,  sy, _1 ]]
 }
 
 /// Creates a translation matrix.
 #[inline(always)]
-pub fn translate(v: Vec2d) -> Matrix2d {
-    [[1.0, 0.0, v[0]],
-     [0.0, 1.0, v[1]]]
+pub fn translate<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
+    where T: Float
+{
+    use vecmath_lib::traits::{ One, Zero };
+
+    let _0: T = Zero::zero();
+    let _1: T = One::one();
+    [[_1, _0, v[0]],
+     [_0, _1, v[1]]]
 }
 
 /// Creates a rotation matrix.
 #[inline(always)]
-pub fn rotate_radians(angle: Scalar) -> Matrix2d {
+pub fn rotate_radians<T=Scalar>(angle: T) -> Matrix2d<T>
+    where T: Float
+{
+    use vecmath_lib::traits::Zero;
+
+    let _0 = Zero::zero();
     let c = angle.cos();
     let s = angle.sin();
-    [[c, -s, 0.0],
-     [s,  c, 0.0]]
+    [[c, -s, _0],
+     [s,  c, _0]]
 }
 
 /// Orients x axis to look at point.
@@ -78,43 +99,67 @@ pub fn rotate_radians(angle: Scalar) -> Matrix2d {
 /// Leaves x axis unchanged if the
 /// point to look at is the origin.
 #[inline(always)]
-pub fn orient(x: Scalar, y: Scalar) -> Matrix2d {
+pub fn orient<T=Scalar>(x: T, y: T) -> Matrix2d<T>
+    where T: Float
+{
+    use vecmath_lib::traits::Zero;
+
+    let _0: T = Zero::zero();
     let len = x * x + y * y;
-    if len == 0.0 {
+    if len == _0 {
         return identity()
     }
 
     let len = len.sqrt();
     let c = x / len;
     let s = y / len;
-    [[c, -s, 0.0],
-     [s,  c, 0.0]]
+    [[c, -s, _0],
+     [s,  c, _0]]
 }
 
 /// Create a scale matrix.
 #[inline(always)]
-pub fn scale(sx: Scalar, sy: Scalar) -> Matrix2d {
-    [[sx, 0.0, 0.0],
-     [0.0, sy, 0.0]]
+pub fn scale<T=Scalar>(sx: T, sy: T) -> Matrix2d<T>
+    where T: Float
+{
+    use vecmath_lib::traits::Zero;
+
+    let _0: T = Zero::zero();
+    [[sx, _0, _0],
+     [_0, sy, _0]]
 }
 
 /// Create a shear matrix.
 #[inline(always)]
-pub fn shear(v: Vec2d) -> Matrix2d {
-    [[1.0, v[0], 0.0],
-     [v[1], 1.0, 0.0]]
+pub fn shear<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
+    where T: Float
+{
+    use vecmath_lib::traits::{ Zero, One };
+
+    let _0 = Zero::zero();
+    let _1 = One::one();
+    [[_1, v[0], _0],
+     [v[1], _1, _0]]
 }
 
 /// Create an identity matrix.
 #[inline(always)]
-pub fn identity() -> Matrix2d {
-    [[1.0, 0.0, 0.0],
-     [0.0, 1.0, 0.0]]
+pub fn identity<T=Scalar>() -> Matrix2d<T>
+    where T: Float
+{
+    use vecmath_lib::traits::{ Zero, One };
+
+    let _0: T = Zero::zero();
+    let _1: T = One::one();
+    [[_1, _0, _0],
+     [_0, _1, _0]]
 }
 
 /// Extract scale information from matrix.
 #[inline(always)]
-pub fn get_scale(m: Matrix2d) -> Vec2d {
+pub fn get_scale<T=Scalar>(m: Matrix2d<T>) -> Vec2d<T>
+    where T: Float
+{
     [
         (m[0][0] * m[0][0] + m[1][0] * m[1][0]).sqrt(),
         (m[0][1] * m[0][1] + m[1][1] * m[1][1]).sqrt()
@@ -124,7 +169,9 @@ pub fn get_scale(m: Matrix2d) -> Vec2d {
 /// Compute the shortest vector from point to ray.
 /// A ray stores starting point and directional vector.
 #[inline(always)]
-pub fn separation(ray: Ray, v: Vec2d) -> Vec2d {
+pub fn separation<T=Scalar>(ray: Ray<T>, v: Vec2d<T>) -> Vec2d<T>
+    where T: Float
+{
     // Get the directional vector.
     let (dir_x, dir_y) = (ray[2], ray[3]);
     // Get displacement vector from point.
@@ -144,12 +191,14 @@ pub fn separation(ray: Ray, v: Vec2d) -> Vec2d {
 /// The separation returned can be used
 /// to solve collision of rectangles.
 #[inline(always)]
-pub fn least_separation_4(
-    sep1: Vec2d,
-    sep2: Vec2d,
-    sep3: Vec2d,
-    sep4: Vec2d
-) -> Vec2d {
+pub fn least_separation_4<T=Scalar>(
+    sep1: Vec2d<T>,
+    sep2: Vec2d<T>,
+    sep3: Vec2d<T>,
+    sep4: Vec2d<T>
+) -> Vec2d<T>
+    where T: Float
+{
     let dot1 = sep1[0] * sep1[0] + sep1[1] * sep1[1];
     let dot2 = sep2[0] * sep2[0] + sep2[1] * sep2[1];
     let dot3 = sep3[0] * sep3[0] + sep3[1] * sep3[1];
@@ -172,18 +221,25 @@ pub fn least_separation_4(
 
 /// Shrinks a rectangle by a factor on all sides.
 #[inline(always)]
-pub fn margin_rectangle(rect: Rectangle, m: Scalar) -> Rectangle {
-    let w = rect[2] - 2.0 * m;
-    let h = rect[3] - 2.0 * m;
+pub fn margin_rectangle<T=Scalar>(rect: Rectangle<T>, m: T) -> Rectangle<T>
+    where T: Float
+{
+    use vecmath_lib::traits::{ Zero, FromPrimitive };
+
+    let _0: T = Zero::zero();
+    let _05: T = FromPrimitive::from_f64(0.5);
+    let _2: T = FromPrimitive::from_f64(2.0);
+    let w = rect[2] - _2 * m;
+    let h = rect[3] - _2 * m;
     let (x, w)
-        =   if w < 0.0 {
-                (rect[0] + 0.5 * rect[2], 0.0)
+        =   if w < _0 {
+                (rect[0] + _05 * rect[2], _0)
             } else {
                 (rect[0] + m, w)
             };
     let (y, h)
-        =   if h < 0.0 {
-                (rect[1] + 0.5 * rect[3], 0.0)
+        =   if h < _0 {
+                (rect[1] + _05 * rect[3], _0)
             } else {
                 (rect[1] + m, h)
             };
@@ -192,7 +248,12 @@ pub fn margin_rectangle(rect: Rectangle, m: Scalar) -> Rectangle {
 
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
-pub fn relative_rectangle(rect: Rectangle, v: Vec2d) -> Rectangle {
+pub fn relative_rectangle<T=Scalar>(
+    rect: Rectangle<T>,
+    v: Vec2d<T>
+) -> Rectangle<T>
+    where T: Float
+{
     [
         rect[0] + v[0] * rect[2],
         rect[1] + v[1] * rect[3],
@@ -205,12 +266,17 @@ pub fn relative_rectangle(rect: Rectangle, v: Vec2d) -> Rectangle {
 /// The area of the overlapping rectangle is positive.
 /// A shared edge or corner is not considered overlap.
 #[inline(always)]
-pub fn overlap_rectangle(a: Rectangle, b: Rectangle) -> Option<Rectangle> {
+pub fn overlap_rectangle<T=Scalar>(
+    a: Rectangle<T>,
+    b: Rectangle<T>
+) -> Option<Rectangle<T>>
+    where T: Float
+{
     #[inline(always)]
-    fn min(a: Scalar, b: Scalar) -> Scalar { if a < b { a } else { b } }
+    fn min<T: Float>(a: T, b: T) -> T { if a < b { a } else { b } }
 
     #[inline(always)]
-    fn max(a: Scalar, b: Scalar) -> Scalar { if a > b { a } else { b } }
+    fn max<T: Float>(a: T, b: T) -> T { if a > b { a } else { b } }
 
     if a[0] < b[0] + b[2]
     && a[1] < b[1] + b[3]
@@ -296,10 +362,17 @@ mod test_modular_offset {
 ///
 /// A simple polygon is one that does not intersect itself.
 /// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
-pub fn area_centroid(polygon: Polygon) -> (Area, Vec2d) {
+pub fn area_centroid<T=Scalar>(polygon: Polygon<T>) -> (Area<T>, Vec2d<T>)
+    where T: Float
+{
+    use vecmath_lib::traits::{ Zero, FromPrimitive };
+
+    let _0: T = Zero::zero();
+    let _05: T = FromPrimitive::from_f64(0.5);
+    let _3: T = FromPrimitive::from_f64(3.0);
     let n = polygon.len();
-    let mut sum = 0.0;
-    let (mut cx, mut cy) = (0.0, 0.0);
+    let mut sum = _0;
+    let (mut cx, mut cy) = (_0, _0);
     for i in 0..n {
         let qx = polygon[i][0];
         let qy = polygon[i][1];
@@ -307,14 +380,14 @@ pub fn area_centroid(polygon: Polygon) -> (Area, Vec2d) {
         let px = polygon[p_i][0];
         let py = polygon[p_i][1];
         let cross = px * qy - qx * py;
-        cx += (px + qx) * cross;
-        cy += (py + qy) * cross;
-        sum += cross;
+        cx = cx + (px + qx) * cross;
+        cy = cy + (py + qy) * cross;
+        sum = sum + cross;
     }
 
-    let area = 0.5 * sum;
+    let area = _05 * sum;
     // 'cx / (6.0 * area)' = 'cx / (3.0 * sum)'
-    let centroid = [cx / (3.0 * sum), cy / (3.0 * sum)];
+    let centroid = [cx / (_3 * sum), cy / (_3 * sum)];
     (area, centroid)
 }
 
@@ -322,7 +395,9 @@ pub fn area_centroid(polygon: Polygon) -> (Area, Vec2d) {
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn area(polygon: Polygon) -> Scalar {
+pub fn area<T=Scalar>(polygon: Polygon<T>) -> T
+    where T: Float
+{
     let (res, _) = area_centroid(polygon);
     res
 }
@@ -331,7 +406,9 @@ pub fn area(polygon: Polygon) -> Scalar {
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn centroid(polygon: Polygon) -> Vec2d {
+pub fn centroid<T=Scalar>(polygon: Polygon<T>) -> Vec2d<T>
+    where T: Float
+{
     let (_, res) = area_centroid(polygon);
     res
 }
@@ -342,7 +419,9 @@ pub fn centroid(polygon: Polygon) -> Vec2d {
 /// with the vector between point and starting point of line.
 /// One side of the line has opposite sign of the other.
 #[inline(always)]
-pub fn line_side(line: Line, v: Vec2d) -> Scalar {
+pub fn line_side<T=Scalar>(line: Line<T>, v: Vec2d<T>) -> T
+    where T: Float
+{
     let (ax, ay) = (line[0], line[1]);
     let (bx, by) = (line[2], line[3]);
     (bx - ax) * (v[1] - ay) - (by - ay) * (v[0] - ax)
@@ -353,7 +432,13 @@ pub fn line_side(line: Line, v: Vec2d) -> Scalar {
 /// This is done by computing a `side` number for each edge.
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
-pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
+pub fn inside_triangle<T=Scalar>(triangle: Triangle<T>, v: Vec2d<T>) -> bool
+    where T: Float
+{
+    use vecmath_lib::traits::Zero;
+
+    let _0: T = Zero::zero();
+
     let ax = triangle[0][0];
     let ay = triangle[0][1];
     let bx = triangle[1][0];
@@ -365,9 +450,9 @@ pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
     let bc_side = line_side([bx, by, cx, cy], v);
     let ca_side = line_side([cx, cy, ax, ay], v);
 
-    let ab_positive = ab_side.is_sign_positive();
-    let bc_positive = bc_side.is_sign_positive();
-    let ca_positive = ca_side.is_sign_positive();
+    let ab_positive = ab_side >= _0;
+    let bc_positive = bc_side >= _0;
+    let ca_positive = ca_side >= _0;
 
     ab_positive == bc_positive
     && bc_positive == ca_positive
@@ -377,10 +462,17 @@ pub fn inside_triangle(triangle: Triangle, v: Vec2d) -> bool {
 ///
 /// This is done by computing which side the third vertex is relative to
 /// the line starting from the first vertex to second vertex.
+///
+/// The triangle is considered clockwise if the third vertex is on the line
+/// between the two first vertices.
 #[inline(always)]
-pub fn triangle_face(
-    triangle: Triangle
-) -> bool {
+pub fn triangle_face<T=Scalar>(triangle: Triangle<T>) -> bool
+    where T: Float
+{
+    use vecmath_lib::traits::Zero;
+
+    let _0 = Zero::zero();
+
     let ax = triangle[0][0];
     let ay = triangle[0][1];
     let bx = triangle[1][0];
@@ -390,7 +482,7 @@ pub fn triangle_face(
 
     let ab_side = line_side([ax, ay, bx, by], [cx, cy]);
 
-    ab_side.is_sign_negative()
+    ab_side <= _0
 }
 
 #[cfg(test)]
@@ -413,7 +505,15 @@ mod test_triangle {
 
 /// Transforms from cartesian coordinates to barycentric.
 #[inline(always)]
-pub fn to_barycentric(triangle: Triangle, pos: Vec2d) -> Vec3d {
+pub fn to_barycentric<T=Scalar>(
+    triangle: Triangle<T>,
+    pos: Vec2d<T>
+) -> Vec3d<T>
+    where T: Float
+{
+    use vecmath_lib::traits::One;
+
+    let _1: T = One::one();
     let x = pos[0]; let y = pos[1];
     let x1 = triangle[0][0];
     let y1 = triangle[0][1];
@@ -425,13 +525,18 @@ pub fn to_barycentric(triangle: Triangle, pos: Vec2d) -> Vec3d {
                 / ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
     let lambda2 = ((y3 - y1) * (x - x3) + (x1 - x3) * (y - y3))
                 / ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
-    let lambda3 = 1.0 - lambda1 - lambda2;
+    let lambda3 = _1 - lambda1 - lambda2;
     [lambda1, lambda2, lambda3]
 }
 
 /// Transforms from barycentric coordinates to cartesian.
 #[inline(always)]
-pub fn from_barycentric(triangle: Triangle, lambda: Vec3d) -> Vec2d {
+pub fn from_barycentric<T=Scalar>(
+    triangle: Triangle<T>,
+    lambda: Vec3d<T>
+) -> Vec2d<T>
+    where T: Float
+{
     let x1 = triangle[0][0];
     let y1 = triangle[0][1];
     let x2 = triangle[1][0];
@@ -451,7 +556,7 @@ mod test_barycentric {
         let triangle = [[0.0, 0.0], [100.0, 0.0], [0.0, 50.0]];
         let old_pos = [10.0, 20.0];
         let b = to_barycentric(triangle, old_pos);
-        let new_pos = from_barycentric(triangle, b);
+        let new_pos: Vec2d = from_barycentric(triangle, b);
         let eps = 0.00001;
         assert!((new_pos[0] - old_pos[0]).abs() < eps);
         assert!((new_pos[1] - old_pos[1]).abs() < eps);

@@ -97,13 +97,15 @@ impl CircleArc {
 #[cfg(test)]
 mod test {
     use super::*;
+    use radians::Radians;
+    use types::Scalar;
 
     #[test]
     fn test_circle_arc() {
-        let _arc = CircleArc::new([1.0; 4], 4.0, 0.0, ::std::f64::consts::PI)
+        let _arc = CircleArc::new([1.0; 4], 4.0, 0.0, Radians::_180())
             .color([0.0; 4])
             .radius(4.0)
-            .start(::std::f64::consts::PI * 0.25)
-            .end(::std::f64::consts::PI * 1.25);
+            .start(<Scalar as Radians>::_180() * 0.25)
+            .end(<Scalar as Radians>::_180() * 1.25);
     }
 }
