@@ -4,7 +4,7 @@
 
 //! A library for 2D graphics that works with multiple back-ends.
 
-extern crate vecmath as vecmath_lib;
+extern crate vecmath;
 extern crate texture;
 extern crate read_color;
 extern crate interpolation;
@@ -69,7 +69,7 @@ pub mod grid;
 pub mod radians {
     //! Reexport radians helper trait from vecmath
 
-    pub use vecmath_lib::traits::Radians;
+    pub use vecmath::traits::Radians;
 }
 
 /// Clears the screen.

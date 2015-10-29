@@ -166,7 +166,7 @@ pub fn with_round_rectangle_tri_list<F>(
     where
         F: FnMut(&[f32])
 {
-    use vecmath_lib::traits::{ FromPrimitive, Trig };
+    use vecmath::traits::{ FromPrimitive, Trig };
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
@@ -387,7 +387,7 @@ pub fn with_round_rectangle_border_tri_list<F>(
     where
         F: FnMut(&[f32])
 {
-    use vecmath_lib::traits::{ FromPrimitive, Trig };
+    use vecmath::traits::{ FromPrimitive, Trig };
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
