@@ -67,8 +67,22 @@ impl CircleArc {
         self
     }
 
-    /// Draws the arc.
+    /// Draws circle arc using default method.
+    #[inline(always)]
     pub fn draw<R: Into<Rectangle>, G>(
+        &self,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G
+    )
+        where G: Graphics
+    {
+        g.circle_arc(self, rectangle, draw_state, transform);
+    }
+
+    /// Draws circle arc using triangulation.
+    pub fn draw_tri<R: Into<Rectangle>, G>(
         &self,
         rectangle: R,
         draw_state: &DrawState,

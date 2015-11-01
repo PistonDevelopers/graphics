@@ -25,8 +25,22 @@ impl Polygon {
         self
     }
 
-    /// Draws polygon
+    /// Draws polygon using the default method.
+    #[inline(always)]
     pub fn draw<G>(
+        &self,
+        polygon: types::Polygon,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G
+    )
+        where G: Graphics
+    {
+        g.polygon(self, polygon, draw_state, transform);
+    }
+
+    /// Draws polygon using triangulation.
+    pub fn draw_tri<G>(
         &self,
         polygon: types::Polygon,
         draw_state: &DrawState,
@@ -46,8 +60,24 @@ impl Polygon {
         ));
     }
 
-    /// Draws tweened polygon with linear interpolation
+    /// Draws tweened polygon with linear interpolation, using default method.
+    #[inline(always)]
     pub fn draw_tween_lerp<G>(
+        &self,
+        polygons: types::Polygons,
+        tween_factor: Scalar,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G
+    )
+        where G: Graphics
+    {
+        g.polygon_tween_lerp(self, polygons, tween_factor,
+            draw_state, transform);
+    }
+
+    /// Draws tweened polygon with linear interpolation, using triangulation.
+    pub fn draw_tween_lerp_tri<G>(
         &self,
         polygons: types::Polygons,
         tween_factor: Scalar,
