@@ -137,8 +137,22 @@ impl Rectangle {
         self
     }
 
-    /// Draws the rectangle
+    /// Draws the rectangle using default method.
+    #[inline(always)]
     pub fn draw<R: Into<types::Rectangle>, G>(
+        &self,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G
+    )
+        where G: Graphics
+    {
+        g.rectangle(self, rectangle, draw_state, transform);
+    }
+
+    /// Draws the rectangle using triangulation.
+    pub fn draw_tri<R: Into<types::Rectangle>, G>(
         &self,
         rectangle: R,
         draw_state: &DrawState,

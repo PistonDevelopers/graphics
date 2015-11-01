@@ -179,8 +179,22 @@ impl DeformGrid {
         None
     }
 
-    /// Draws deformed image.
+    /// Draws deformed image using default method.
+    #[inline(always)]
     pub fn draw_image<G>(
+        &self,
+        texture: &<G as Graphics>::Texture,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    )
+        where G: Graphics
+    {
+        g.deform_image(self, texture, draw_state, transform);
+    }
+
+    /// Draws deformed image using triangulation.
+    pub fn draw_image_tri<G>(
         &self,
         texture: &<G as Graphics>::Texture,
         draw_state: &DrawState,

@@ -76,8 +76,22 @@ impl Ellipse {
         self
     }
 
-    /// Draws the ellipse.
+    /// Draws ellipse using default method.
+    #[inline(always)]
     pub fn draw<R: Into<Rectangle>, G>(
+        &self,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G
+    )
+        where G: Graphics
+    {
+        g.ellipse(self, rectangle, draw_state, transform);
+    }
+
+    /// Draws ellipse using triangulation.
+    pub fn draw_tri<R: Into<Rectangle>, G>(
         &self,
         rectangle: R,
         draw_state: &DrawState,

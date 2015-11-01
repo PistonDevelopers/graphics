@@ -119,8 +119,22 @@ impl Image {
         self
     }
 
-    /// Draws the image.
+    /// Draws image using default method.
+    #[inline(always)]
     pub fn draw<G>(
+        &self,
+        texture: &<G as Graphics>::Texture,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G
+    )
+        where G: Graphics
+    {
+        g.image(self, texture, draw_state, transform);
+    }
+
+    /// Draws image using triangulation.
+    pub fn draw_tri<G>(
         &self,
         texture: &<G as Graphics>::Texture,
         draw_state: &DrawState,

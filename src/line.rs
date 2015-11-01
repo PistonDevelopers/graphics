@@ -69,8 +69,22 @@ impl Line {
         self
     }
 
-    /// Draw the line.
+    /// Draws line using default method.
+    #[inline(always)]
     pub fn draw<L: Into<types::Line>, G>(
+        &self,
+        line: L,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G
+    )
+        where G: Graphics
+    {
+        g.line(self, line, draw_state, transform);
+    }
+
+    /// Draws line using triangulation.
+    pub fn draw_tri<L: Into<types::Line>, G>(
         &self,
         line: L,
         draw_state: &DrawState,
