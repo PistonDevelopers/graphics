@@ -60,6 +60,21 @@ impl Grid {
             state: 0,
         }
     }
+    
+    /// Get on-screen position of a grid cell
+    pub fn cell_position(&self, cell: (u32, u32)) -> [f64; 2] {
+        [cell.0 as f64 * &self.units, cell.1 as f64 * &self.units]
+    }
+    
+    /// Get on-screen x position of a grid cell
+    pub fn x_pos(&self, cell: (u32, u32)) -> f64 {
+        self.cell_position(cell)[0]
+    }
+
+    /// Get on-screen y position of a grid cell
+    pub fn y_pos(&self, cell: (u32, u32)) -> f64 {
+        self.cell_position(cell)[1]
+    }
 }
 
 impl Iterator for GridCells {
@@ -93,5 +108,12 @@ mod tests {
         let expected: Vec<(u32, u32)> = vec![(0, 0), (1, 0), (0, 1), (1, 1)];
         let cells: Vec<(u32, u32)> = g.cells().collect();
         assert_eq!(expected, cells);
+    }
+
+    #[test]
+    fn test_cell_positions() {
+        let g: Grid = Grid {cols: 2, rows: 3, units: 2.0};
+        assert_eq!(4.0, g.x_pos((2,3)));
+        assert_eq!(6.0, g.y_pos((2,3)));
     }
 }
