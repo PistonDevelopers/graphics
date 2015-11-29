@@ -1,6 +1,6 @@
 //! A flat grid with square cells.
 
-use math::{ Matrix2d, Scalar };
+use math::{ Matrix2d, Scalar, Vec2d };
 use { DrawState, Graphics, Line };
 
 /// Represents a flat grid with square cells.
@@ -62,17 +62,17 @@ impl Grid {
     }
     
     /// Get on-screen position of a grid cell
-    pub fn cell_position(&self, cell: (u32, u32)) -> [f64; 2] {
-        [cell.0 as f64 * &self.units, cell.1 as f64 * &self.units]
+    pub fn cell_position(&self, cell: (u32, u32)) -> Vec2d {
+        [cell.0 as Scalar * &self.units, cell.1 as Scalar * &self.units]
     }
     
     /// Get on-screen x position of a grid cell
-    pub fn x_pos(&self, cell: (u32, u32)) -> f64 {
+    pub fn x_pos(&self, cell: (u32, u32)) -> Scalar {
         self.cell_position(cell)[0]
     }
 
     /// Get on-screen y position of a grid cell
-    pub fn y_pos(&self, cell: (u32, u32)) -> f64 {
+    pub fn y_pos(&self, cell: (u32, u32)) -> Scalar {
         self.cell_position(cell)[1]
     }
 }
