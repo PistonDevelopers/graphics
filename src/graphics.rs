@@ -23,6 +23,17 @@ use {
 /// ```
 pub trait Graphics: Sized {
     /// The texture type associated with the back-end.
+    ///
+    /// In generic code, this type is often unknown.
+    /// This might lead to more boilerplate code:
+    ///
+    /// ```ignore
+    /// fn draw_texture<G, T>(c: &Context, g: &mut G)
+    ///     where G: Graphcis<Texture = T>, T: ImageSize { ... }
+    /// ```
+    ///
+    /// Code written specifically for one back-end can be easier to write.
+    /// Later, when the code is done, it can be refactored into generic code.
     type Texture: ImageSize;
 
     /// Clears background with a color.
