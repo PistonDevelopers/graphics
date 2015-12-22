@@ -64,10 +64,25 @@ pub trait Graphics: Sized {
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
         where F: FnMut(&mut FnMut(&[f32]));
 
-    /// Renders list of 2d triangles.
+    /// Renders list of 2d triangles using a color and a texture.
     ///
-    /// A texture coordinate is assigned per vertex.
-    /// The texture coordinates refers to the current texture.
+    /// All vertices share the same color.
+    ///
+    /// Tip: For objects of different colors, use grayscale textures.
+    /// The texture color gets multiplied with the color.
+    ///
+    /// A texture coordinate is assigned per vertex (from [0, 0] to [1, 1]).
+    ///
+    /// The back-end calls the closure with a closure to receive vertices.
+    /// First, the back-end sets up shaders and such to prepare.
+    /// Then it calls the closure, which calls back with chunks of vertices.
+    /// The number of vertices per chunk never exceeds
+    /// `BACK_END_MAX_VERTEX_COUNT`.
+    /// Vertex positions are encoded `[x0, y0, x1, y1, ...]`.
+    /// Texture coordinates are encoded `[u0, v0, u1, v1, ...]`.
+    ///
+    /// Chunks uses separate buffer for vertex positions and texture coordinates.
+    /// Arguments are `|vertices: &[f32], texture_coords: &[f32]`.
     fn tri_list_uv<F>(
         &mut self,
         draw_state: &DrawState,
