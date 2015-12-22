@@ -51,7 +51,16 @@ pub trait Graphics: Sized {
     /// and cause artifacts.
     fn clear_stencil(&mut self, value: u8);
 
-    /// Renders list of 2d triangles.
+    /// Renders list of 2d triangles using a solid color.
+    ///
+    /// All vertices share the same color.
+    ///
+    /// The back-end calls the closure with a closure to receive vertices.
+    /// First, the back-end sets up shaders and such to prepare.
+    /// Then it calls the closure, which calls back with chunks of vertices.
+    /// The number of vertices per chunk never exceeds
+    /// `BACK_END_MAX_VERTEX_COUNT`.
+    /// Vertex positions are encoded `[x0, y0, x1, y1, ...]`.
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
         where F: FnMut(&mut FnMut(&[f32]));
 
