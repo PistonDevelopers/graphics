@@ -13,6 +13,8 @@ use {
 
 /// Implemented by all graphics back-ends.
 ///
+/// [An example back-end using raw OpenGL](https://github.com/PistonDevelopers/opengl_graphics)
+///
 /// Default trait methods can be overridden for better performance or higher
 /// quality.
 ///
