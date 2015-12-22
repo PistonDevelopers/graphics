@@ -92,6 +92,10 @@ pub trait Graphics: Sized {
     ) where F: FnMut(&mut FnMut(&[f32], &[f32]));
 
     /// Draws a rectangle.
+    ///
+    /// Can be overriden in the back-end for higher performance.
+    ///
+    /// Instead of calling this directly, use `Rectangle::draw`.
     #[inline(always)]
     fn rectangle<R: Into<types::Rectangle>>(
         &mut self,
@@ -104,6 +108,10 @@ pub trait Graphics: Sized {
     }
 
     /// Draws a polygon.
+    ///
+    /// Can be overridden in the back-end for higher performance.
+    ///
+    /// Instead of calling this directly, use `Polygon::draw`.
     #[inline(always)]
     fn polygon(
         &mut self,
@@ -116,6 +124,10 @@ pub trait Graphics: Sized {
     }
 
     /// Draws a tweened polygon using linear interpolation.
+    ///
+    /// Can be overridden in the back-end for higher performance.
+    ///
+    /// Instead of calling this directly, use `Polygon::draw_tween_lerp`.
     #[inline(always)]
     fn polygon_tween_lerp(
         &mut self,
@@ -130,6 +142,10 @@ pub trait Graphics: Sized {
     }
 
     /// Draws image.
+    ///
+    /// Can be overridden in the back-end for higher performance.
+    ///
+    /// Instead of calling this directly, use `Image::draw`.
     #[inline(always)]
     fn image(
         &mut self,
@@ -142,6 +158,10 @@ pub trait Graphics: Sized {
     }
 
     /// Draws ellipse.
+    ///
+    /// Can be overridden in the back-end for higher performance.
+    ///
+    /// Instead of calling this directly, use `Ellipse::draw`.
     #[inline(always)]
     fn ellipse<R: Into<types::Rectangle>>(
         &mut self,
@@ -154,6 +174,10 @@ pub trait Graphics: Sized {
     }
 
     /// Draws line.
+    ///
+    /// Can be overridden in the back-end for higher performance.
+    ///
+    /// Instead of calling this directly, use `Line::draw`.
     #[inline(always)]
     fn line<L: Into<types::Line>>(
         &mut self,
@@ -166,6 +190,10 @@ pub trait Graphics: Sized {
     }
 
     /// Draws circle arc.
+    ///
+    /// Can be overriden in the back-end for higher performance.
+    ///
+    /// Instead of calling this directly, use `CircleArc::draw`.
     #[inline(always)]
     fn circle_arc<R: Into<types::Rectangle>>(
         &mut self,
@@ -178,6 +206,10 @@ pub trait Graphics: Sized {
     }
 
     /// Draws deformed image.
+    ///
+    /// Can be overriden in the back-end for higher performance.
+    ///
+    /// Instead of calling this directly, use `DeformGrid::draw_image`.
     #[inline(always)]
     fn deform_image(
         &mut self,
