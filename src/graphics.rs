@@ -37,9 +37,18 @@ pub trait Graphics: Sized {
     type Texture: ImageSize;
 
     /// Clears background with a color.
+    ///
+    /// The color should replace the values in the buffer.
     fn clear_color(&mut self, color: types::Color);
 
-    /// Clears stencil buffer with a value.
+    /// Clears stencil buffer with a value, usually 0.
+    ///
+    /// A stencil buffer contains values that are not visible on the screen.
+    /// These values are used to test against the pixel to paint.
+    ///
+    /// If you are drawing a shape for clipping and forgot to clear the
+    /// stencil buffer, then the clipping shape will carry over in next frame
+    /// and cause artifacts.
     fn clear_stencil(&mut self, value: u8);
 
     /// Renders list of 2d triangles.
