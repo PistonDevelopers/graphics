@@ -15,6 +15,9 @@ use {
 ///
 /// [An example back-end using raw OpenGL](https://github.com/PistonDevelopers/opengl_graphics)
 ///
+/// By default, this design uses triangles as graphics primitives.
+/// This is supported by all GPUs and easy to implement in shader languages.
+///
 /// Default trait methods can be overridden for better performance or higher
 /// quality.
 ///
