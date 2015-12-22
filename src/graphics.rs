@@ -37,7 +37,7 @@ pub trait Graphics: Sized {
     type Texture: ImageSize;
 
     /// Clears background with a color.
-    fn clear_color(&mut self, color: [f32; 4]);
+    fn clear_color(&mut self, color: types::Color);
 
     /// Clears stencil buffer with a value.
     fn clear_stencil(&mut self, value: u8);
