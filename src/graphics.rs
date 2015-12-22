@@ -12,6 +12,15 @@ use {
 };
 
 /// Implemented by all graphics back-ends.
+///
+/// Default trait methods can be overridden for better performance or higher
+/// quality.
+///
+/// When drawing, use this trait as generic constraint:
+///
+/// ```ignore
+/// fn draw<G: Graphics>(c: &Context, g: &mut G) { ... }
+/// ```
 pub trait Graphics: Sized {
     /// The texture type associated with the back-end.
     type Texture: ImageSize;
