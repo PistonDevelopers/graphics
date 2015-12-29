@@ -1,7 +1,7 @@
 //! Draw Line
 
 use { types, triangulation, DrawState, Graphics };
-use types::{ Color, Radius, Width };
+use types::{ Color, Radius };
 use math::{ Matrix2d, Scalar };
 
 /// The shape of the line
