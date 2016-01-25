@@ -1,21 +1,21 @@
-use draw_state::state::*;
+use draw_state_lib::state::*;
 use DrawState;
 
 static INSIDE_DRAW_STATE: &'static DrawState =
     &DrawState {
-        primitive: Primitive {
+        rasterizer: Rasterizer {
             front_face: FrontFace::CounterClockwise,
             method: RasterMethod::Fill(
                 CullFace::Nothing
             ),
             offset: None,
+            samples: None
         },
         multi_sample: None,
         scissor: None,
         stencil: Some(Stencil {
                 front: StencilSide {
                     fun: Comparison::Equal,
-                    value: 1,
                     mask_read: 255,
                     mask_write: 0,
                     op_fail: StencilOp::Keep,
@@ -24,7 +24,6 @@ static INSIDE_DRAW_STATE: &'static DrawState =
                 },
                 back: StencilSide {
                     fun: Comparison::Equal,
-                    value: 1,
                     mask_read: 255,
                     mask_write: 0,
                     op_fail: StencilOp::Keep,
@@ -44,7 +43,6 @@ static INSIDE_DRAW_STATE: &'static DrawState =
                     source: Factor::One,
                     destination: Factor::One,
                 },
-                value: [0.0, 0.0, 0.0, 0.0],
             }),
         color_mask: MASK_ALL,
     };

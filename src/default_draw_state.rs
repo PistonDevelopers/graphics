@@ -3,12 +3,13 @@ use DrawState;
 
 static DEFAULT_DRAW_STATE: &'static DrawState =
     &DrawState {
-        primitive: Primitive {
+        rasterizer: Rasterizer {
             front_face: FrontFace::CounterClockwise,
             method: RasterMethod::Fill(
                 CullFace::Nothing
             ),
             offset: None,
+            samples: None
         },
         multi_sample: None,
         scissor: None,
@@ -25,7 +26,6 @@ static DEFAULT_DRAW_STATE: &'static DrawState =
                     source: Factor::One,
                     destination: Factor::One,
                 },
-                value: [0.0, 0.0, 0.0, 0.0],
             }),
         color_mask: MASK_ALL,
     };

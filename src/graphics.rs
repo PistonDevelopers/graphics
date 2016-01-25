@@ -1,4 +1,4 @@
-use draw_state::DrawState;
+use DrawState;
 use types::{ self, Matrix2d, Scalar };
 use deform::DeformGrid;
 use {

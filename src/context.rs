@@ -1,6 +1,6 @@
 //! Transformation context
 
-use draw_state::DrawState;
+use DrawState;
 use default_draw_state;
 use math::{
     abs_transform,

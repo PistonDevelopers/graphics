@@ -13,7 +13,6 @@ extern crate viewport;
 
 pub use texture::ImageSize;
 pub use draw_state_lib as draw_state;
-pub use draw_state::DrawState;
 pub use viewport::Viewport;
 
 pub use graphics::Graphics;
@@ -33,6 +32,7 @@ pub use clip_draw_state::clip_draw_state;
 pub use inside_draw_state::inside_draw_state;
 pub use outside_draw_state::outside_draw_state;
 pub use context::Context;
+pub use graphics_draw_state::DrawState;
 
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
@@ -48,6 +48,7 @@ mod default_draw_state;
 mod clip_draw_state;
 mod inside_draw_state;
 mod outside_draw_state;
+mod graphics_draw_state;
 
 pub mod character;
 pub mod context;
