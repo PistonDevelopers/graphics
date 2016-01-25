@@ -68,7 +68,7 @@ impl Text {
                 ch_x = ch_x.round();
                 ch_y = ch_y.round();
             }
-            image.draw(&character.texture, draw_state, transform.trans(ch_x, ch_y), g);
+            image.draw(character.texture, draw_state, transform.trans(ch_x, ch_y), g);
             x += character.width();
             y += character.height();
         }
