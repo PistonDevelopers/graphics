@@ -80,6 +80,7 @@ pub fn clear<G>(
     where G: Graphics
 {
     g.clear_color(color);
+    g.clear_stencil(0);
 }
 
 /// Draws image.
