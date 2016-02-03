@@ -8,11 +8,9 @@ extern crate vecmath;
 extern crate texture;
 extern crate read_color;
 extern crate interpolation;
-extern crate draw_state as draw_state_lib;
 extern crate viewport;
 
 pub use texture::ImageSize;
-pub use draw_state_lib as draw_state;
 pub use viewport::Viewport;
 
 pub use graphics::Graphics;
@@ -27,12 +25,8 @@ pub use circle_arc::CircleArc;
 pub use image::Image;
 pub use polygon::Polygon;
 pub use text::Text;
-pub use default_draw_state::default_draw_state;
-pub use clip_draw_state::clip_draw_state;
-pub use inside_draw_state::inside_draw_state;
-pub use outside_draw_state::outside_draw_state;
 pub use context::Context;
-pub use graphics_draw_state::DrawState;
+pub use draw_state::DrawState;
 
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
@@ -44,12 +38,8 @@ mod source_rectangled;
 mod rectangled;
 mod transformed;
 mod colored;
-mod default_draw_state;
-mod clip_draw_state;
-mod inside_draw_state;
-mod outside_draw_state;
-mod graphics_draw_state;
 
+pub mod draw_state;
 pub mod character;
 pub mod context;
 pub mod color;
@@ -91,7 +81,7 @@ pub fn image<G>(
 )
     where G: Graphics
 {
-    Image::new().draw(image, default_draw_state(), transform, g);
+    Image::new().draw(image, &Default::default(), transform, g);
 }
 
 /// Draws ellipse.
@@ -103,7 +93,7 @@ pub fn ellipse<R: Into<types::Rectangle>, G>(
 )
     where G: Graphics
 {
-    Ellipse::new(color).draw(rect, default_draw_state(), transform, g);
+    Ellipse::new(color).draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws arc
@@ -118,7 +108,8 @@ pub fn circle_arc<R: Into<types::Rectangle>, G>(
 )
     where G: Graphics
 {
-    CircleArc::new(color, radius, start, end).draw(rect, default_draw_state(), transform, g);
+    CircleArc::new(color, radius, start, end)
+        .draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws rectangle.
@@ -130,7 +121,7 @@ pub fn rectangle<R: Into<types::Rectangle>, G>(
 )
     where G: Graphics
 {
-    Rectangle::new(color).draw(rect, default_draw_state(), transform, g);
+    Rectangle::new(color).draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws polygon.
@@ -142,7 +133,7 @@ pub fn polygon<G>(
 )
     where G: Graphics
 {
-    Polygon::new(color).draw(polygon, default_draw_state(), transform, g);
+    Polygon::new(color).draw(polygon, &Default::default(), transform, g);
 }
 
 /// Draws line.
@@ -155,7 +146,7 @@ pub fn line<L: Into<types::Line>, G>(
 )
     where G: Graphics
 {
-    Line::new(color, radius).draw(line, default_draw_state(), transform, g)
+    Line::new(color, radius).draw(line, &Default::default(), transform, g)
 }
 
 /// Draws text.
@@ -171,5 +162,6 @@ pub fn text<C, G>(
         C: character::CharacterCache,
         G: Graphics<Texture = <C as character::CharacterCache>::Texture>
 {
-    Text::new_color(color, font_size).draw(text, cache, default_draw_state(), transform, g)
+    Text::new_color(color, font_size)
+        .draw(text, cache, &Default::default(), transform, g)
 }

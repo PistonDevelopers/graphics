@@ -41,7 +41,7 @@ pub type Vec3d<T=Scalar> = vecmath::Vector3<T>;
 
 /// Creates a perpendicular vector.
 #[inline(always)]
-pub fn perp<T=Scalar>(v: [T; 2]) -> [T; 2]
+pub fn perp<T>(v: [T; 2]) -> [T; 2]
     where T: Float
 {
     [-v[1], v[0]]
@@ -53,7 +53,7 @@ pub fn perp<T=Scalar>(v: [T; 2]) -> [T; 2]
 /// In absolute coordinates, the x axis points to the right,
 /// and the y axis points down on the screen.
 #[inline(always)]
-pub fn abs_transform<T=Scalar>(w: T, h: T) -> Matrix2d<T>
+pub fn abs_transform<T>(w: T, h: T) -> Matrix2d<T>
     where T: Float
 {
     use vecmath::traits::{ One, FromPrimitive, Zero };
@@ -69,7 +69,7 @@ pub fn abs_transform<T=Scalar>(w: T, h: T) -> Matrix2d<T>
 
 /// Creates a translation matrix.
 #[inline(always)]
-pub fn translate<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
+pub fn translate<T>(v: Vec2d<T>) -> Matrix2d<T>
     where T: Float
 {
     use vecmath::traits::{ One, Zero };
@@ -82,7 +82,7 @@ pub fn translate<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
 
 /// Creates a rotation matrix.
 #[inline(always)]
-pub fn rotate_radians<T=Scalar>(angle: T) -> Matrix2d<T>
+pub fn rotate_radians<T>(angle: T) -> Matrix2d<T>
     where T: Float
 {
     use vecmath::traits::Zero;
@@ -99,7 +99,7 @@ pub fn rotate_radians<T=Scalar>(angle: T) -> Matrix2d<T>
 /// Leaves x axis unchanged if the
 /// point to look at is the origin.
 #[inline(always)]
-pub fn orient<T=Scalar>(x: T, y: T) -> Matrix2d<T>
+pub fn orient<T>(x: T, y: T) -> Matrix2d<T>
     where T: Float
 {
     use vecmath::traits::Zero;
@@ -119,7 +119,7 @@ pub fn orient<T=Scalar>(x: T, y: T) -> Matrix2d<T>
 
 /// Create a scale matrix.
 #[inline(always)]
-pub fn scale<T=Scalar>(sx: T, sy: T) -> Matrix2d<T>
+pub fn scale<T>(sx: T, sy: T) -> Matrix2d<T>
     where T: Float
 {
     use vecmath::traits::Zero;
@@ -131,7 +131,7 @@ pub fn scale<T=Scalar>(sx: T, sy: T) -> Matrix2d<T>
 
 /// Create a shear matrix.
 #[inline(always)]
-pub fn shear<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
+pub fn shear<T>(v: Vec2d<T>) -> Matrix2d<T>
     where T: Float
 {
     use vecmath::traits::{ Zero, One };
@@ -144,7 +144,7 @@ pub fn shear<T=Scalar>(v: Vec2d<T>) -> Matrix2d<T>
 
 /// Create an identity matrix.
 #[inline(always)]
-pub fn identity<T=Scalar>() -> Matrix2d<T>
+pub fn identity<T>() -> Matrix2d<T>
     where T: Float
 {
     use vecmath::traits::{ Zero, One };
@@ -157,7 +157,7 @@ pub fn identity<T=Scalar>() -> Matrix2d<T>
 
 /// Extract scale information from matrix.
 #[inline(always)]
-pub fn get_scale<T=Scalar>(m: Matrix2d<T>) -> Vec2d<T>
+pub fn get_scale<T>(m: Matrix2d<T>) -> Vec2d<T>
     where T: Float
 {
     [
@@ -169,7 +169,7 @@ pub fn get_scale<T=Scalar>(m: Matrix2d<T>) -> Vec2d<T>
 /// Compute the shortest vector from point to ray.
 /// A ray stores starting point and directional vector.
 #[inline(always)]
-pub fn separation<T=Scalar>(ray: Ray<T>, v: Vec2d<T>) -> Vec2d<T>
+pub fn separation<T>(ray: Ray<T>, v: Vec2d<T>) -> Vec2d<T>
     where T: Float
 {
     // Get the directional vector.
@@ -191,7 +191,7 @@ pub fn separation<T=Scalar>(ray: Ray<T>, v: Vec2d<T>) -> Vec2d<T>
 /// The separation returned can be used
 /// to solve collision of rectangles.
 #[inline(always)]
-pub fn least_separation_4<T=Scalar>(
+pub fn least_separation_4<T>(
     sep1: Vec2d<T>,
     sep2: Vec2d<T>,
     sep3: Vec2d<T>,
@@ -221,7 +221,7 @@ pub fn least_separation_4<T=Scalar>(
 
 /// Shrinks a rectangle by a factor on all sides.
 #[inline(always)]
-pub fn margin_rectangle<T=Scalar>(rect: Rectangle<T>, m: T) -> Rectangle<T>
+pub fn margin_rectangle<T>(rect: Rectangle<T>, m: T) -> Rectangle<T>
     where T: Float
 {
     use vecmath::traits::{ Zero, FromPrimitive };
@@ -248,7 +248,7 @@ pub fn margin_rectangle<T=Scalar>(rect: Rectangle<T>, m: T) -> Rectangle<T>
 
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
-pub fn relative_rectangle<T=Scalar>(
+pub fn relative_rectangle<T>(
     rect: Rectangle<T>,
     v: Vec2d<T>
 ) -> Rectangle<T>
@@ -266,7 +266,7 @@ pub fn relative_rectangle<T=Scalar>(
 /// The area of the overlapping rectangle is positive.
 /// A shared edge or corner is not considered overlap.
 #[inline(always)]
-pub fn overlap_rectangle<T=Scalar>(
+pub fn overlap_rectangle<T>(
     a: Rectangle<T>,
     b: Rectangle<T>
 ) -> Option<Rectangle<T>>
@@ -362,7 +362,7 @@ mod test_modular_offset {
 ///
 /// A simple polygon is one that does not intersect itself.
 /// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
-pub fn area_centroid<T=Scalar>(polygon: Polygon<T>) -> (Area<T>, Vec2d<T>)
+pub fn area_centroid<T>(polygon: Polygon<T>) -> (Area<T>, Vec2d<T>)
     where T: Float
 {
     use vecmath::traits::{ Zero, FromPrimitive };
@@ -395,7 +395,7 @@ pub fn area_centroid<T=Scalar>(polygon: Polygon<T>) -> (Area<T>, Vec2d<T>)
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn area<T=Scalar>(polygon: Polygon<T>) -> T
+pub fn area<T>(polygon: Polygon<T>) -> T
     where T: Float
 {
     let (res, _) = area_centroid(polygon);
@@ -406,7 +406,7 @@ pub fn area<T=Scalar>(polygon: Polygon<T>) -> T
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn centroid<T=Scalar>(polygon: Polygon<T>) -> Vec2d<T>
+pub fn centroid<T>(polygon: Polygon<T>) -> Vec2d<T>
     where T: Float
 {
     let (_, res) = area_centroid(polygon);
@@ -419,7 +419,7 @@ pub fn centroid<T=Scalar>(polygon: Polygon<T>) -> Vec2d<T>
 /// with the vector between point and starting point of line.
 /// One side of the line has opposite sign of the other.
 #[inline(always)]
-pub fn line_side<T=Scalar>(line: Line<T>, v: Vec2d<T>) -> T
+pub fn line_side<T>(line: Line<T>, v: Vec2d<T>) -> T
     where T: Float
 {
     let (ax, ay) = (line[0], line[1]);
@@ -432,7 +432,7 @@ pub fn line_side<T=Scalar>(line: Line<T>, v: Vec2d<T>) -> T
 /// This is done by computing a `side` number for each edge.
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
-pub fn inside_triangle<T=Scalar>(triangle: Triangle<T>, v: Vec2d<T>) -> bool
+pub fn inside_triangle<T>(triangle: Triangle<T>, v: Vec2d<T>) -> bool
     where T: Float
 {
     use vecmath::traits::Zero;
@@ -466,7 +466,7 @@ pub fn inside_triangle<T=Scalar>(triangle: Triangle<T>, v: Vec2d<T>) -> bool
 /// The triangle is considered clockwise if the third vertex is on the line
 /// between the two first vertices.
 #[inline(always)]
-pub fn triangle_face<T=Scalar>(triangle: Triangle<T>) -> bool
+pub fn triangle_face<T>(triangle: Triangle<T>) -> bool
     where T: Float
 {
     use vecmath::traits::Zero;
@@ -505,7 +505,7 @@ mod test_triangle {
 
 /// Transforms from cartesian coordinates to barycentric.
 #[inline(always)]
-pub fn to_barycentric<T=Scalar>(
+pub fn to_barycentric<T>(
     triangle: Triangle<T>,
     pos: Vec2d<T>
 ) -> Vec3d<T>
@@ -531,7 +531,7 @@ pub fn to_barycentric<T=Scalar>(
 
 /// Transforms from barycentric coordinates to cartesian.
 #[inline(always)]
-pub fn from_barycentric<T=Scalar>(
+pub fn from_barycentric<T>(
     triangle: Triangle<T>,
     lambda: Vec3d<T>
 ) -> Vec2d<T>
