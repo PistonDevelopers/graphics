@@ -5,16 +5,16 @@ use ImageSize;
 
 /// Holds rendered character data.
 #[derive(Clone)]
-pub struct Character<T: ImageSize> {
+pub struct Character<'a, T: 'a + ImageSize> {
     /// The offset of character.
     pub offset: [Scalar; 2],
     /// The size of character, including space.
     pub size: [Scalar; 2],
     /// The texture of the character.
-    pub texture: T,
+    pub texture: &'a T,
 }
 
-impl<T: ImageSize> Character<T> {
+impl<'a, T: ImageSize> Character<'a, T> {
     /// The left offset.
     pub fn left(&self) -> Scalar {
         self.offset[0]
@@ -42,11 +42,11 @@ pub trait CharacterCache {
     type Texture: ImageSize;
 
     /// Get reference to character.
-    fn character(
-        &mut self,
+    fn character<'a>(
+        &'a mut self,
         font_size: FontSize,
         ch: char
-    ) -> &Character<<Self as CharacterCache>::Texture>;
+    ) -> Character<'a, <Self as CharacterCache>::Texture>;
 
     /// Return the width for some given text.
     fn width(&mut self, size: FontSize, text: &str) -> ::math::Scalar {
