@@ -80,29 +80,29 @@ pub enum Blend {
     /// Alpha blending (allows semi-transparent pixels).
     ///
     /// ```ignore
-    /// dest_color' = src_color * src_alpha + dest_color * (1 - src_alpha)
-    /// dest_alpha' = src_alpha + dest_alpha
+    /// new_dest_color = src_color * src_alpha + dest_color * (1 - src_alpha)
+    /// new_dest_alpha = src_alpha + dest_alpha
     /// ```
     Alpha,
     /// Additive blending.
     ///
     /// ```ignore
-    /// dest_color' = src_color + dest_color
-    /// dest_alpha' = src_alpha + dest_alpha
+    /// new_dest_color = src_color + dest_color
+    /// new_dest_alpha = src_alpha + dest_alpha
     /// ```
     Add,
     /// Multiply color components.
     ///
     /// ```ignore
-    /// dest_color' = src_color * dest_color
-    /// dest_alpha' = src_alpha * dest_alpha
+    /// new_dest_color = src_color * dest_color
+    /// new_dest_alpha = src_alpha * dest_alpha
     /// ```
     Multiply,
     /// Invert colors when rendering a white shape.
     ///
     /// ```ignore
-    /// dest_color' = ref_color - src_color
-    /// dest_alpha' = dest_alpha
+    /// new_dest_color = ref_color - src_color
+    /// new_dest_alpha = dest_alpha
     /// ```
     ///
     /// When combining two fragments, subtract the destination color from a constant color
