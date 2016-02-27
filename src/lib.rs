@@ -3,6 +3,30 @@
 #![deny(missing_copy_implementations)]
 
 //! A library for 2D graphics that works with multiple back-ends.
+//!
+//! Piston-Graphics was started in 2014 by Sven Nilsen to test
+//! back-end agnostic design for 2D in Rust.
+//! This means generic code can be reused across projects and platforms.
+//!
+//! ### Design
+//!
+//! A graphics back-end implements the `Graphics` trait.
+//!
+//! This library uses immediate design for flexibility.
+//! By default, triangles are generated from 2D shapes and passed in chunks
+//! to the back-end. This behavior can be overridden by a back-end library.
+//!
+//! The structures used for drawing 2D shapes contains settings for rendering.
+//! The separation of shapes and settings allows more reuse and flexibility.
+//! For example, to render an image, you use an `Image` object.
+//!
+//! The `math` module contains useful methods for 2D geometry.
+//!
+//! `Context` stores settings that are commonly shared when rendering.
+//! It can be copied and changed without affecting any global state.
+//!
+//! At top level, there are some shortcut methods for common operations.
+//! For example, `ellipse` is a simplified version of `Ellipse`.
 
 extern crate vecmath;
 extern crate texture;

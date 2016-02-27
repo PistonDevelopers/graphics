@@ -26,6 +26,17 @@ use {
 /// ```ignore
 /// fn draw<G: Graphics>(c: &Context, g: &mut G) { ... }
 /// ```
+///
+/// Color space is sRGB.
+///
+/// ### Notice for back-end authors
+///
+/// When sRGB is enabled for a back-end shader, the gamma must be converted
+/// to linear space when used as vertex color or uniform parameter.
+/// To convert gamma, use `color::gamma_srgb_to_linear`.
+///
+/// For more information, see
+/// https://github.com/PistonDevelopers/piston/issues/1014.
 pub trait Graphics: Sized {
     /// The texture type associated with the back-end.
     ///
@@ -44,6 +55,8 @@ pub trait Graphics: Sized {
     /// Clears background with a color.
     ///
     /// The color should replace the values in the buffer.
+    ///
+    /// Color space is sRGB.
     fn clear_color(&mut self, color: types::Color);
 
     /// Clears stencil buffer with a value, usually 0.
@@ -66,6 +79,8 @@ pub trait Graphics: Sized {
     /// The number of vertices per chunk never exceeds
     /// `BACK_END_MAX_VERTEX_COUNT`.
     /// Vertex positions are encoded `[x0, y0, x1, y1, ...]`.
+    ///
+    /// Color space is sRGB.
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
         where F: FnMut(&mut FnMut(&[f32]));
 
@@ -88,6 +103,8 @@ pub trait Graphics: Sized {
     ///
     /// Chunks uses separate buffer for vertex positions and texture coordinates.
     /// Arguments are `|vertices: &[f32], texture_coords: &[f32]`.
+    ///
+    /// Color space is sRGB.
     fn tri_list_uv<F>(
         &mut self,
         draw_state: &DrawState,
