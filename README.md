@@ -2,15 +2,13 @@
 
 A library for 2D graphics, written in Rust, that works with multiple back-ends.
 
-Maintainers: @bvssvni, @Coeuvre
+Maintainers: @bvssvni
 
 [Graphics online docs](http://docs.piston.rs/graphics/graphics/)
 
-*Notice: This is a very early stage of the project!*
-
 [How to contribute](https://github.com/PistonDevelopers/piston/blob/master/CONTRIBUTING.md)
 
-*Latest news: Text!*
+*Latest news: Color spaces are now well defined!*
 
 | Back-ends |
 |--------------------|
@@ -28,7 +26,8 @@ Rust is programming language developed by Mozilla and the Rust community. It is 
 
 ### One trait for all back-ends
 
-To write your own back-end `BackEnd` trait. The `BackEnd` trait implements default behavior for all methods, so it is up to you how much code to write. If it can not find a method, it will call the `unimplemented!` macro.  
+To write your own back-end, use the `Graphics` trait. The `Graphics` trait implements default behavior for some methods,
+which can be overridden for higher quality or better performance.
 
 ## Goals
 
@@ -51,6 +50,10 @@ To write your own back-end `BackEnd` trait. The `BackEnd` trait implements defau
 * Node tree
 * One-to-one correspondence with standards
 * Integration with platform GUI
+
+## Used by
+
+- [Conrod](https://github.com/pistondevelopers/conrod)
 
 ## Dependencies
 
