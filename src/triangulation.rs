@@ -238,6 +238,25 @@ pub fn with_round_rectangle_tri_list<F>(
 
 /// Streams a polygon into tri list.
 /// Uses buffers that fit inside L1 cache.
+///
+/// `polygon` is a function that provides the vertices that comprise the polygon. Each
+/// call to E will return a new vertex until there are none left.
+///
+/// `f` is a function that consumes the tri list constructed by the output of `polygon`,
+/// one chunk (buffer) at a time.
+///
+/// Each chunk (buffer) is a fixed size array) of the format:
+///
+/// ```
+/// //     [x0, y0, x1, y1, x2, y2, x3, y3, ... y5, ...]
+/// //      ^--------------------^  ^------------^
+/// //        3 Points of triangle   3 points of second triangle,
+/// ```
+///
+/// Together all the chunks comprise the full tri list. Each time the buffer size is 
+/// reached, that chunk is fed to `f`, then this function proceeds using a new buffer
+/// until a call to `polygon` returns `None`, indicating there are no points left in 
+/// the polygon. (in which case the last partially filled buffer is sent to `f`)
 pub fn stream_polygon_tri_list<E, F>(
     m: Matrix2d,
     mut polygon: E,
@@ -481,6 +500,29 @@ pub fn with_round_rectangle_border_tri_list<F>(
 /// Uses buffers that fit inside L1 cache.
 /// The 'quad_edge' stream returns two points
 /// defining the next edge.
+///
+/// `quad_edge` is a function that returns two vertices, which together comprise
+/// one edge of a quad
+///
+/// 
+/// `f` is a function that consumes the tri list constructed by the output of 
+/// `quad_edge`, one chunk (buffer) at a time
+///
+/// The tri list is series of buffers (fixed size array) of the format:
+///
+/// ```
+/// //     [x0, y0, x1, y1, x2, y2, x3, y3, ... y5, ...]
+/// //      ^--------------------^  ^------------^
+/// //        3 Points of triangle   3 points of second triangle,
+/// //      ^------------------------------------^          __
+/// //         Two triangles together form a single quad |\\ 2|
+/// //                                                   |1\\ |
+/// //                                                   |__\\|
+/// ```
+/// Together all the chunks comprise the full tri list. Each time the buffer size is 
+/// reached, that chunk is fed to `f`, then this function proceeds using a new buffer
+/// until a call to `quad_edge` returns `None`, indicating there are no more edges left. 
+/// (in which case the last partially filled buffer is sent to `f`)
 pub fn stream_quad_tri_list<E, F>(
     m: Matrix2d,
     mut quad_edge: E,
@@ -572,6 +614,8 @@ pub fn stream_quad_tri_list<E, F>(
 
 /// Splits polygon into convex segments.
 /// Create a buffer that fits into L1 cache with 1KB overhead.
+///
+/// See stream_polygon_tri_list docs for detailed explanation.
 pub fn with_polygon_tri_list<F>(
     m: Matrix2d,
     polygon: Polygon,
