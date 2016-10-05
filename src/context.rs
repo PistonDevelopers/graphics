@@ -5,7 +5,6 @@ use math::{
     abs_transform,
     identity,
     get_scale,
-    scale,
     Matrix2d,
     Scalar,
     Vec2d,

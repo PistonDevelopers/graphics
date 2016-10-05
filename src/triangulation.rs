@@ -166,7 +166,7 @@ pub fn with_round_rectangle_tri_list<F>(
     where
         F: FnMut(&[f32])
 {
-    use vecmath::traits::{ FromPrimitive, Trig };
+    use vecmath::traits::FromPrimitive;
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
@@ -253,9 +253,9 @@ pub fn with_round_rectangle_tri_list<F>(
 /// //        3 Points of triangle   3 points of second triangle,
 /// ```
 ///
-/// Together all the chunks comprise the full tri list. Each time the buffer size is 
+/// Together all the chunks comprise the full tri list. Each time the buffer size is
 /// reached, that chunk is fed to `f`, then this function proceeds using a new buffer
-/// until a call to `polygon` returns `None`, indicating there are no points left in 
+/// until a call to `polygon` returns `None`, indicating there are no points left in
 /// the polygon. (in which case the last partially filled buffer is sent to `f`)
 pub fn stream_polygon_tri_list<E, F>(
     m: Matrix2d,
@@ -406,7 +406,7 @@ pub fn with_round_rectangle_border_tri_list<F>(
     where
         F: FnMut(&[f32])
 {
-    use vecmath::traits::{ FromPrimitive, Trig };
+    use vecmath::traits::FromPrimitive;
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
@@ -504,8 +504,8 @@ pub fn with_round_rectangle_border_tri_list<F>(
 /// `quad_edge` is a function that returns two vertices, which together comprise
 /// one edge of a quad
 ///
-/// 
-/// `f` is a function that consumes the tri list constructed by the output of 
+///
+/// `f` is a function that consumes the tri list constructed by the output of
 /// `quad_edge`, one chunk (buffer) at a time
 ///
 /// The tri list is series of buffers (fixed size array) of the format:
@@ -519,9 +519,9 @@ pub fn with_round_rectangle_border_tri_list<F>(
 /// //                                                   |1\\ |
 /// //                                                   |__\\|
 /// ```
-/// Together all the chunks comprise the full tri list. Each time the buffer size is 
+/// Together all the chunks comprise the full tri list. Each time the buffer size is
 /// reached, that chunk is fed to `f`, then this function proceeds using a new buffer
-/// until a call to `quad_edge` returns `None`, indicating there are no more edges left. 
+/// until a call to `quad_edge` returns `None`, indicating there are no more edges left.
 /// (in which case the last partially filled buffer is sent to `f`)
 pub fn stream_quad_tri_list<E, F>(
     m: Matrix2d,
