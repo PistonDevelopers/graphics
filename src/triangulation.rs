@@ -370,14 +370,12 @@ pub fn with_arc_tri_list<F>(
     let (cw2, ch2) = (cw - border_radius, ch - border_radius);
     let (cx, cy) = (x + cw, y + ch);
     let mut i = 0;
-    let (start, end) = if start_radians < end_radians {
-        (start_radians, end_radians)
-    } else {
-        (end_radians, start_radians)
-    };
-    let max_seg_size = <Scalar as Radians>::_360() / resolution as Scalar;
 
-    let delta = end - start;
+    let twopi = <Scalar as Radians>::_360();
+    let max_seg_size = twopi / resolution as Scalar;
+
+    // Take true modulus by 2pi.
+    let delta = (((end_radians - start_radians) % twopi) + twopi) % twopi;
 
     // Taking ceiling here implies that the resolution parameter provides a
     // lower bound on the drawn resolution.
@@ -388,7 +386,7 @@ pub fn with_arc_tri_list<F>(
     stream_quad_tri_list(m, || {
         if i > n_quads { return None; }
 
-        let angle = start + (i as Scalar * seg_size);
+        let angle = start_radians + (i as Scalar * seg_size);
 
         let cos = angle.cos();
         let sin = angle.sin();
