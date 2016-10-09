@@ -369,21 +369,26 @@ pub fn with_arc_tri_list<F>(
     let (cw1, ch1) = (cw + border_radius, ch + border_radius);
     let (cw2, ch2) = (cw - border_radius, ch - border_radius);
     let (cx, cy) = (x + cw, y + ch);
-    let n = resolution;
     let mut i = 0;
-    let (nearest_start_radians, nearest_end_radians) = if start_radians < end_radians {
-        (start_radians, start_radians + (end_radians - start_radians))
+    let (start, end) = if start_radians < end_radians {
+        (start_radians, end_radians)
     } else {
-        (end_radians, end_radians + (start_radians - end_radians))
+        (end_radians, start_radians)
     };
-    stream_quad_tri_list(m, || {
-        if i > n { return None; }
+    let max_seg_size = <Scalar as Radians>::_360() / resolution as Scalar;
 
-        let angle = nearest_start_radians
-            + i as Scalar / n as Scalar * <Scalar as Radians>::_360();
-        if angle > nearest_end_radians {
-            return None;
-        }
+    let delta = end - start;
+
+    // Taking ceiling here implies that the resolution parameter provides a
+    // lower bound on the drawn resolution.
+    let n_quads = (delta / max_seg_size).ceil() as u64;
+
+    // n_quads * seg_size exactly spans the included angle.
+    let seg_size = delta / n_quads as Scalar;
+    stream_quad_tri_list(m, || {
+        if i > n_quads { return None; }
+
+        let angle = start + (i as Scalar * seg_size);
 
         let cos = angle.cos();
         let sin = angle.sin();
