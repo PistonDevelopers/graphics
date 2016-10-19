@@ -32,7 +32,7 @@ pub type Resolution = u32;
 /// [x, y, dir_x, dir_y]
 pub type Ray<T=Scalar> = [T; 4];
 
-/// [x, y, w, h]
+/// Rectangle dimensions: [x, y, w, h]
 pub type Rectangle<T=Scalar> = [T; 4];
 
 /// [x1, y1, x2, y2, x3, y3]

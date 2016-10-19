@@ -1,4 +1,17 @@
 //! Draw rectangle
+//!
+//! This module contains the definintion of a rectangle with possibly rounded
+//! corners. It contains the code to draw the rectangle and defines properties
+//! like color and shape. The rectangle dimensions and location are specified by
+//! `types::Rectangle`.
+//!
+//! To draw a square with side 10 and top left corner in (0, 0), do the
+//! following:
+//! ```
+//! let rectangle = Rectangle::new(color::BLACK);
+//! let dims = square(0.0, 0.0, 10.0);
+//! rectangle.draw(dims, &draw_state::Default::default(), transform, g);
+//! ```
 
 use types::{ Color, Radius, Resolution };
 use { types, triangulation, Graphics, DrawState };
@@ -11,7 +24,8 @@ pub fn centered(rect: types::Rectangle) -> types::Rectangle {
     [rect[0] - rect[2], rect[1] - rect[3], 2.0 * rect[2], 2.0 * rect[3]]
 }
 
-/// Use centered square
+/// Create `types::Rectangle` for a square with a center in (`x`, `y`) and side
+/// `2 * radius`.
 pub fn centered_square(
     x: Scalar,
     y: Scalar,
@@ -20,7 +34,8 @@ pub fn centered_square(
     [x - radius, y - radius, 2.0 * radius, 2.0 * radius]
 }
 
-/// Use square with x, y in upper left corner
+/// Create `types::Rectangle` for a square with a top-left corner in (`x`, `y`)
+/// and side `size`.
 pub fn square(
     x: Scalar,
     y: Scalar,
@@ -29,7 +44,7 @@ pub fn square(
     [x, y, size, size]
 }
 
-/// The shape of the rectangle
+/// The shape of the rectangle corners
 #[derive(Copy, Clone)]
 pub enum Shape {
     /// Square corners
@@ -45,7 +60,8 @@ pub enum Shape {
 pub struct Border {
     /// The color of the border
     pub color: Color,
-    /// The radius of the border
+    /// The radius of the border. The half-width of the line by which border is
+    /// drawn.
     pub radius: Radius,
 }
 
@@ -70,7 +86,7 @@ impl Rectangle {
         }
     }
 
-    /// Creates a new round rectangle.
+    /// Creates a new rectangle with rounded corners.
     pub fn new_round(
         color: Color,
         round_radius: Radius
@@ -97,7 +113,7 @@ impl Rectangle {
         }
     }
 
-    /// Creates a new round rectangle border.
+    /// Creates a new rectangle border with rounded corners.
     pub fn new_round_border(
         color: Color,
         round_radius: Radius,
@@ -119,13 +135,13 @@ impl Rectangle {
         self
     }
 
-    /// Sets shape.
+    /// Sets shape of the corners.
     pub fn shape(mut self, value: Shape) -> Self {
         self.shape = value;
         self
     }
 
-    /// Sets border.
+    /// Sets border properties.
     pub fn border(mut self, value: Border) -> Self {
         self.border = Some(value);
         self
@@ -137,7 +153,12 @@ impl Rectangle {
         self
     }
 
-    /// Draws the rectangle using default method.
+    /// Draws the rectangle using the default method.
+    ///
+    /// `rectangle` defines the rectangle's location and dimensions,
+    /// `draw_state` draw state, `draw_state::Default::default()` can be used
+    /// as a default, `transform` is the transformation matrix, `g` is the
+    /// `Graphics` implementation, that is used to actually draw the rectangle.s
     #[inline(always)]
     pub fn draw<R: Into<types::Rectangle>, G>(
         &self,
@@ -152,6 +173,9 @@ impl Rectangle {
     }
 
     /// Draws the rectangle using triangulation.
+    ///
+    /// This is the default implementation of draw() that will be used if `G`
+    /// does not redefine `Graphics::rectangle()`.
     pub fn draw_tri<R: Into<types::Rectangle>, G>(
         &self,
         rectangle: R,
