@@ -23,8 +23,12 @@ use {
 ///
 /// When drawing, use this trait as generic constraint:
 ///
-/// ```ignore
-/// fn draw<G: Graphics>(c: &Context, g: &mut G) { ... }
+/// ```
+/// use graphics::{Graphics, Context};
+///
+/// fn draw<G: Graphics>(c: &Context, g: &mut G) {
+///     //...
+/// }
 /// ```
 ///
 /// Color space is sRGB.
@@ -43,9 +47,13 @@ pub trait Graphics: Sized {
     /// In generic code, this type is often unknown.
     /// This might lead to more boilerplate code:
     ///
-    /// ```ignore
+    /// ```
+    /// use graphics::{Graphics, Context, ImageSize};
+    ///
     /// fn draw_texture<G, T>(c: &Context, g: &mut G)
-    ///     where G: Graphcis<Texture = T>, T: ImageSize { ... }
+    ///     where G: Graphics<Texture = T>, T: ImageSize {
+    ///     //...
+    /// }
     /// ```
     ///
     /// Code written specifically for one back-end can be easier to write.
