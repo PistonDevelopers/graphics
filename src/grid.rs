@@ -87,9 +87,11 @@ impl Iterator for GridCells {
         if self.state == cols * rows {
             return None
         }
+
+        // reverse of: state = x + (y * cols)
         let ret = (
             (self.state % cols) as u32,
-            (self.state / rows) as u32,
+            (self.state / cols) as u32,
         );
         self.state += 1;
 
@@ -104,10 +106,22 @@ mod tests {
 
     #[test]
     fn test_grid_iterator() {
-        let g: Grid = Grid {cols: 2, rows: 2, units: 2.0};
-        let expected: Vec<(u32, u32)> = vec![(0, 0), (1, 0), (0, 1), (1, 1)];
-        let cells: Vec<(u32, u32)> = g.cells().collect();
-        assert_eq!(expected, cells);
+        let combinations = vec![(2, 2), (2, 3), (3, 2)];
+
+        for (cols, rows) in combinations {
+            let grid = Grid { cols: cols, rows: rows, units: 2.0 };
+            println!("Testing {:?}", grid);
+
+            let mut iter = grid.cells();
+            for y in 0..rows {
+                for x in 0..cols {
+                    assert_eq!(iter.next(), Some((x, y)));
+                    println!("Got: {:?}", (x, y));
+                }
+            }
+
+            assert_eq!(iter.next(), None);
+        }
     }
 
     #[test]
