@@ -4,7 +4,7 @@ use math::{ Matrix2d, Scalar, Vec2d };
 use { DrawState, Graphics, Line };
 
 /// Represents a flat grid with square cells.
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Grid {
     /// Number of columns.
     pub cols: u32,
@@ -15,7 +15,7 @@ pub struct Grid {
 }
 
 /// Iterates through the cells of a grid as (u32, u32).
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct GridCells {
     cols: u32,
     rows: u32,
