@@ -79,28 +79,28 @@ impl DrawState {
 pub enum Blend {
     /// Alpha blending (allows semi-transparent pixels).
     ///
-    /// ```ignore
+    /// ```not_rust
     /// new_dest_color = src_color * src_alpha + dest_color * (1 - src_alpha)
     /// new_dest_alpha = src_alpha + dest_alpha
     /// ```
     Alpha,
     /// Additive blending.
     ///
-    /// ```ignore
+    /// ```not_rust
     /// new_dest_color = src_color + dest_color
     /// new_dest_alpha = src_alpha + dest_alpha
     /// ```
     Add,
     /// Multiply color components.
     ///
-    /// ```ignore
+    /// ```not_rust
     /// new_dest_color = src_color * dest_color
     /// new_dest_alpha = src_alpha * dest_alpha
     /// ```
     Multiply,
     /// Invert colors when rendering a white shape.
     ///
-    /// ```ignore
+    /// ```not_rust
     /// new_dest_color = ref_color - src_color
     /// new_dest_alpha = dest_alpha
     /// ```
