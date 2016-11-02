@@ -1,15 +1,15 @@
-use math::relative_source_rectangle;
+use math::{relative_source_rectangle, Scalar};
 use types::SourceRectangle;
 
 /// Should be implemented by contexts that
 /// have source rectangle information.
 pub trait SourceRectangled {
     /// Adds a source rectangle.
-    fn src_rect(self, x: i32, y: i32, w: i32, h: i32) -> Self;
+    fn src_rect(self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> Self;
 
     /// Moves to a relative source rectangle using
     /// the current source rectangle as tile.
-    fn src_rel(self, x: i32, y: i32) -> Self;
+    fn src_rel(self, x: Scalar, y: Scalar) -> Self;
 
     /// Flips the source rectangle horizontally.
     fn src_flip_h(self) -> Self;
@@ -23,12 +23,12 @@ pub trait SourceRectangled {
 
 impl SourceRectangled for SourceRectangle {
     #[inline(always)]
-    fn src_rect(self, x: i32, y: i32, w: i32, h: i32) -> Self {
+    fn src_rect(self, x: Scalar, y: Scalar, w: Scalar, h: Scalar) -> Self {
         [x, y, w, h]
     }
 
     #[inline(always)]
-    fn src_rel(self, x: i32, y: i32) -> Self {
+    fn src_rel(self, x: Scalar, y: Scalar) -> Self {
         relative_source_rectangle(self, x, y)
     }
 

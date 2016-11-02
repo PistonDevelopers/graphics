@@ -15,7 +15,7 @@ pub type ColorComponent = f32;
 pub type Line<T=Scalar> = [T; 4];
 
 /// [x, y, w, h]
-pub type SourceRectangle = [i32; 4];
+pub type SourceRectangle<T=Scalar> = [T; 4];
 
 /// [p0, p1, ...]
 pub type Polygon<'a, T=Scalar> = &'a [Vec2d<T>];

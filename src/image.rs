@@ -148,7 +148,7 @@ impl Image {
         let color = self.color.unwrap_or([1.0; 4]);
         let source_rectangle = self.source_rectangle.unwrap_or({
             let (w, h) = texture.get_size();
-            [0, 0, w as i32, h as i32]
+            [0.0, 0.0, w as Scalar, h as Scalar]
         });
         let rectangle = self.rectangle.unwrap_or([
             0.0,
@@ -200,6 +200,6 @@ mod test {
         let _img = Image::new()
             .color([1.0; 4])
             .rect([0.0, 0.0, 100.0, 100.0])
-            .src_rect([0, 0, 32, 32]);
+            .src_rect([0.0, 0.0, 32.0, 32.0]);
     }
 }
