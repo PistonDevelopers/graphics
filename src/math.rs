@@ -320,11 +320,13 @@ mod test_overlap {
 /// Computes a relative source rectangle using
 /// the source rectangle as a tile.
 #[inline(always)]
-pub fn relative_source_rectangle(
-    rect: SourceRectangle,
-    x: i32,
-    y: i32
-) -> SourceRectangle {
+pub fn relative_source_rectangle<T>(
+    rect: SourceRectangle<T>,
+    x: T,
+    y: T
+) -> SourceRectangle<T>
+    where T: Float
+{
     let (rx, ry, rw, rh) = (rect[0], rect[1], rect[2], rect[3]);
     let (x, y) = (rx + x * rw, ry + y * rh);
     [x, y, rw, rh]
