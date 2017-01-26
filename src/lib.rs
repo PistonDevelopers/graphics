@@ -55,7 +55,7 @@ pub use draw_state::DrawState;
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
 /// This can be used to initialize buffers that fit the chunk size.
-pub static BACK_END_MAX_VERTEX_COUNT: usize = 1024;
+pub const BACK_END_MAX_VERTEX_COUNT: usize = 1024;
 
 mod graphics;
 mod source_rectangled;
