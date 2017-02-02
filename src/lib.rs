@@ -88,9 +88,7 @@ pub mod radians {
 }
 
 /// Clears the screen.
-pub fn clear<G>(
-    color: types::Color, g: &mut G
-)
+pub fn clear<G>(color: types::Color, g: &mut G)
     where G: Graphics
 {
     g.clear_color(color);
@@ -98,76 +96,61 @@ pub fn clear<G>(
 }
 
 /// Draws image.
-pub fn image<G>(
-    image: &<G as Graphics>::Texture,
-    transform: math::Matrix2d,
-    g: &mut G
-)
+pub fn image<G>(image: &<G as Graphics>::Texture, transform: math::Matrix2d, g: &mut G)
     where G: Graphics
 {
     Image::new().draw(image, &Default::default(), transform, g);
 }
 
 /// Draws ellipse.
-pub fn ellipse<R: Into<types::Rectangle>, G>(
-    color: types::Color,
-    rect: R,
-    transform: math::Matrix2d,
-    g: &mut G
-)
+pub fn ellipse<R: Into<types::Rectangle>, G>(color: types::Color,
+                                             rect: R,
+                                             transform: math::Matrix2d,
+                                             g: &mut G)
     where G: Graphics
 {
     Ellipse::new(color).draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws arc
-pub fn circle_arc<R: Into<types::Rectangle>, G>(
-    color: types::Color,
-    radius: types::Radius,
-    start: types::Scalar,
-    end: types::Scalar,
-    rect: R,
-    transform: math::Matrix2d,
-    g: &mut G
-)
+pub fn circle_arc<R: Into<types::Rectangle>, G>(color: types::Color,
+                                                radius: types::Radius,
+                                                start: types::Scalar,
+                                                end: types::Scalar,
+                                                rect: R,
+                                                transform: math::Matrix2d,
+                                                g: &mut G)
     where G: Graphics
 {
-    CircleArc::new(color, radius, start, end)
-        .draw(rect, &Default::default(), transform, g);
+    CircleArc::new(color, radius, start, end).draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws rectangle.
-pub fn rectangle<R: Into<types::Rectangle>, G>(
-    color: types::Color,
-    rect: R,
-    transform: math::Matrix2d,
-    g: &mut G
-)
+pub fn rectangle<R: Into<types::Rectangle>, G>(color: types::Color,
+                                               rect: R,
+                                               transform: math::Matrix2d,
+                                               g: &mut G)
     where G: Graphics
 {
     Rectangle::new(color).draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws polygon.
-pub fn polygon<G>(
-    color: types::Color,
-    polygon: types::Polygon,
-    transform: math::Matrix2d,
-    g: &mut G
-)
+pub fn polygon<G>(color: types::Color,
+                  polygon: types::Polygon,
+                  transform: math::Matrix2d,
+                  g: &mut G)
     where G: Graphics
 {
     Polygon::new(color).draw(polygon, &Default::default(), transform, g);
 }
 
 /// Draws line.
-pub fn line<L: Into<types::Line>, G>(
-    color: types::Color,
-    radius: types::Radius,
-    line: L,
-    transform: math::Matrix2d,
-    g: &mut G
-)
+pub fn line<L: Into<types::Line>, G>(color: types::Color,
+                                     radius: types::Radius,
+                                     line: L,
+                                     transform: math::Matrix2d,
+                                     g: &mut G)
     where G: Graphics
 {
     Line::new(color, radius).draw(line, &Default::default(), transform, g)
@@ -186,6 +169,5 @@ pub fn text<C, G>(
         C: character::CharacterCache,
         G: Graphics<Texture = <C as character::CharacterCache>::Texture>
 {
-    Text::new_color(color, font_size)
-        .draw(text, cache, &Default::default(), transform, g)
+    Text::new_color(color, font_size).draw(text, cache, &Default::default(), transform, g)
 }

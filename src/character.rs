@@ -1,6 +1,6 @@
 //! A text character
 
-use types::{ FontSize, Scalar };
+use types::{FontSize, Scalar};
 use ImageSize;
 
 /// Holds rendered character data.
@@ -42,11 +42,10 @@ pub trait CharacterCache {
     type Texture: ImageSize;
 
     /// Get reference to character.
-    fn character<'a>(
-        &'a mut self,
-        font_size: FontSize,
-        ch: char
-    ) -> Character<'a, <Self as CharacterCache>::Texture>;
+    fn character<'a>(&'a mut self,
+                     font_size: FontSize,
+                     ch: char)
+                     -> Character<'a, <Self as CharacterCache>::Texture>;
 
     /// Return the width for some given text.
     fn width(&mut self, size: FontSize, text: &str) -> ::math::Scalar {

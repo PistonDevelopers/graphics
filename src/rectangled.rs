@@ -1,8 +1,4 @@
-use math::{
-    margin_rectangle,
-    relative_rectangle,
-    Scalar,
-};
+use math::{margin_rectangle, relative_rectangle, Scalar};
 use types::Rectangle;
 
 /// Should be implemented by contexts that have rectangle information.

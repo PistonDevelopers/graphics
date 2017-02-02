@@ -1,8 +1,8 @@
 //! Draw Line
 
-use { types, triangulation, DrawState, Graphics };
-use types::{ Color, Radius };
-use math::{ Matrix2d, Scalar };
+use {types, triangulation, DrawState, Graphics};
+use types::{Color, Radius};
+use math::{Matrix2d, Scalar};
 
 /// The shape of the line
 #[derive(Copy, Clone)]
@@ -71,68 +71,52 @@ impl Line {
 
     /// Draws line using default method.
     #[inline(always)]
-    pub fn draw<L: Into<types::Line>, G>(
-        &self,
-        line: L,
-        draw_state: &DrawState,
-        transform: Matrix2d,
-        g: &mut G
-    )
+    pub fn draw<L: Into<types::Line>, G>(&self,
+                                         line: L,
+                                         draw_state: &DrawState,
+                                         transform: Matrix2d,
+                                         g: &mut G)
         where G: Graphics
     {
         g.line(self, line, draw_state, transform);
     }
 
     /// Draws line using triangulation.
-    pub fn draw_tri<L: Into<types::Line>, G>(
-        &self,
-        line: L,
-        draw_state: &DrawState,
-        transform: Matrix2d,
-        g: &mut G
-    )
+    pub fn draw_tri<L: Into<types::Line>, G>(&self,
+                                             line: L,
+                                             draw_state: &DrawState,
+                                             transform: Matrix2d,
+                                             g: &mut G)
         where G: Graphics
     {
         let line = line.into();
         match self.shape {
             Shape::Square => {
-                g.tri_list(
-                    draw_state,
-                    &self.color,
-                    |f|
-                triangulation::with_round_border_line_tri_list(
-                    2,
-                    transform,
-                    line,
-                    self.radius,
-                    |vertices| f(vertices)
-                ));
+                g.tri_list(draw_state, &self.color, |f| {
+                    triangulation::with_round_border_line_tri_list(2,
+                                                                   transform,
+                                                                   line,
+                                                                   self.radius,
+                                                                   |vertices| f(vertices))
+                });
             }
             Shape::Round => {
-                g.tri_list(
-                    draw_state,
-                    &self.color,
-                    |f|
-                triangulation::with_round_border_line_tri_list(
-                    64,
-                    transform,
-                    line,
-                    self.radius,
-                    |vertices| f(vertices)
-                ));
+                g.tri_list(draw_state, &self.color, |f| {
+                    triangulation::with_round_border_line_tri_list(64,
+                                                                   transform,
+                                                                   line,
+                                                                   self.radius,
+                                                                   |vertices| f(vertices))
+                });
             }
             Shape::Bevel => {
-                g.tri_list(
-                    draw_state,
-                    &self.color,
-                    |f|
-                triangulation::with_round_border_line_tri_list(
-                    3,
-                    transform,
-                    line,
-                    self.radius,
-                    |vertices| f(vertices)
-                ));
+                g.tri_list(draw_state, &self.color, |f| {
+                    triangulation::with_round_border_line_tri_list(3,
+                                                                   transform,
+                                                                   line,
+                                                                   self.radius,
+                                                                   |vertices| f(vertices))
+                });
             }
         }
     }
@@ -141,14 +125,12 @@ impl Line {
     ///
     /// Head size is the sides of the triangle
     /// between the arrow hooks and the line
-    pub fn draw_arrow<L: Into<types::Line>, G>(
-        &self,
-        line: L,
-        head_size: Scalar,
-        draw_state: &DrawState,
-        transform: Matrix2d,
-        g: &mut G
-    )
+    pub fn draw_arrow<L: Into<types::Line>, G>(&self,
+                                               line: L,
+                                               head_size: Scalar,
+                                               draw_state: &DrawState,
+                                               transform: Matrix2d,
+                                               g: &mut G)
         where G: Graphics
     {
         use Transformed;
@@ -156,11 +138,13 @@ impl Line {
         let line = line.into();
         self.draw(line, draw_state, transform, g);
         let diff = [line[2] - line[0], line[3] - line[1]];
-        let arrow_head = transform
-            .trans(line[2], line[3])
+        let arrow_head = transform.trans(line[2], line[3])
             .orient(diff[0], diff[1]);
         self.draw([-head_size, head_size, 0.0, 0.0], draw_state, arrow_head, g);
-        self.draw([-head_size, -head_size, 0.0, 0.0], draw_state, arrow_head, g);
+        self.draw([-head_size, -head_size, 0.0, 0.0],
+                  draw_state,
+                  arrow_head,
+                  g);
     }
 }
 

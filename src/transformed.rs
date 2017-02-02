@@ -1,15 +1,5 @@
 use Context;
-use math::{
-    multiply,
-    shear,
-    scale,
-    orient,
-    rotate_radians,
-    translate,
-    Matrix2d,
-    Vec2d,
-    Scalar,
-};
+use math::{multiply, shear, scale, orient, rotate_radians, translate, Matrix2d, Vec2d, Scalar};
 use radians::Radians;
 
 /// Implemented by contexts that can transform.

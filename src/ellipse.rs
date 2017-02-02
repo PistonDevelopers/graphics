@@ -1,7 +1,7 @@
 //! Draw ellipse
 
-use types::{ Color, Radius, Rectangle, Resolution };
-use { triangulation, DrawState, Graphics };
+use types::{Color, Radius, Rectangle, Resolution};
+use {triangulation, DrawState, Graphics};
 use math::Matrix2d;
 
 pub use rectangle::centered;
@@ -38,16 +38,13 @@ impl Ellipse {
     }
 
     /// Creates a new ellipse border
-    pub fn new_border(
-        color: Color,
-        radius: Radius
-    ) -> Ellipse {
+    pub fn new_border(color: Color, radius: Radius) -> Ellipse {
         Ellipse {
             color: [0.0; 4],
             border: Some(Border {
-                    color: color,
-                    radius: radius,
-                }),
+                color: color,
+                radius: radius,
+            }),
             resolution: 128,
         }
     }
@@ -78,52 +75,40 @@ impl Ellipse {
 
     /// Draws ellipse using default method.
     #[inline(always)]
-    pub fn draw<R: Into<Rectangle>, G>(
-        &self,
-        rectangle: R,
-        draw_state: &DrawState,
-        transform: Matrix2d,
-        g: &mut G
-    )
+    pub fn draw<R: Into<Rectangle>, G>(&self,
+                                       rectangle: R,
+                                       draw_state: &DrawState,
+                                       transform: Matrix2d,
+                                       g: &mut G)
         where G: Graphics
     {
         g.ellipse(self, rectangle, draw_state, transform);
     }
 
     /// Draws ellipse using triangulation.
-    pub fn draw_tri<R: Into<Rectangle>, G>(
-        &self,
-        rectangle: R,
-        draw_state: &DrawState,
-        transform: Matrix2d,
-        g: &mut G
-    )
+    pub fn draw_tri<R: Into<Rectangle>, G>(&self,
+                                           rectangle: R,
+                                           draw_state: &DrawState,
+                                           transform: Matrix2d,
+                                           g: &mut G)
         where G: Graphics
     {
         let rectangle = rectangle.into();
-        g.tri_list(
-            draw_state,
-            &self.color,
-            |f|
-        triangulation::with_ellipse_tri_list(
-            self.resolution,
-            transform,
-            rectangle,
-            |vertices| f(vertices)
-        ));
+        g.tri_list(draw_state, &self.color, |f| {
+            triangulation::with_ellipse_tri_list(self.resolution,
+                                                 transform,
+                                                 rectangle,
+                                                 |vertices| f(vertices))
+        });
 
         if let Some(Border { color, radius: border_radius }) = self.border {
-            g.tri_list(
-                &draw_state,
-                &color,
-                |f|
-            triangulation::with_ellipse_border_tri_list(
-                self.resolution,
-                transform,
-                rectangle,
-                border_radius,
-                |vertices| f(vertices)
-            ));
+            g.tri_list(&draw_state, &color, |f| {
+                triangulation::with_ellipse_border_tri_list(self.resolution,
+                                                            transform,
+                                                            rectangle,
+                                                            border_radius,
+                                                            |vertices| f(vertices))
+            });
         }
     }
 }
@@ -136,6 +121,9 @@ mod test {
     fn test_ellipse() {
         let _ellipse = Ellipse::new([1.0; 4])
             .color([0.0; 4])
-            .border(Border { color: [1.0; 4], radius: 3.0 });
+            .border(Border {
+                color: [1.0; 4],
+                radius: 3.0,
+            });
     }
 }

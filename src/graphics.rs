@@ -1,15 +1,7 @@
 use DrawState;
-use types::{ self, Matrix2d, Scalar };
+use types::{self, Matrix2d, Scalar};
 use deform::DeformGrid;
-use {
-    CircleArc,
-    Ellipse,
-    Image,
-    ImageSize,
-    Line,
-    Polygon,
-    Rectangle,
-};
+use {CircleArc, Ellipse, Image, ImageSize, Line, Polygon, Rectangle};
 
 /// Implemented by all graphics back-ends.
 ///
@@ -86,11 +78,11 @@ pub trait Graphics: Sized {
     /// Then it calls the closure, which calls back with chunks of vertices.
     /// The number of vertices per chunk never exceeds
     /// `BACK_END_MAX_VERTEX_COUNT`.
-    /// Vertex positions are encoded `[x0, y0, x1, y1, ...]`.
+    /// Vertex positions are encoded `[[x0, y0], [x1, y1], ...]`.
     ///
     /// Color space is sRGB.
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
-        where F: FnMut(&mut FnMut(&[f32]));
+        where F: FnMut(&mut FnMut(&[[f32; 2]]));
 
     /// Renders list of 2d triangles using a color and a texture.
     ///
@@ -106,20 +98,19 @@ pub trait Graphics: Sized {
     /// Then it calls the closure, which calls back with chunks of vertices.
     /// The number of vertices per chunk never exceeds
     /// `BACK_END_MAX_VERTEX_COUNT`.
-    /// Vertex positions are encoded `[x0, y0, x1, y1, ...]`.
-    /// Texture coordinates are encoded `[u0, v0, u1, v1, ...]`.
+    /// Vertex positions are encoded `[[x0, y0], [x1, y1], ...]`.
+    /// Texture coordinates are encoded `[[u0, v0], [u1, v1], ...]`.
     ///
     /// Chunks uses separate buffer for vertex positions and texture coordinates.
     /// Arguments are `|vertices: &[f32], texture_coords: &[f32]`.
     ///
     /// Color space is sRGB.
-    fn tri_list_uv<F>(
-        &mut self,
-        draw_state: &DrawState,
-        color: &[f32; 4],
-        texture: &<Self as Graphics>::Texture,
-        f: F
-    ) where F: FnMut(&mut FnMut(&[f32], &[f32]));
+    fn tri_list_uv<F>(&mut self,
+                      draw_state: &DrawState,
+                      color: &[f32; 4],
+                      texture: &<Self as Graphics>::Texture,
+                      f: F)
+        where F: FnMut(&mut FnMut(&[[f32; 2]], &[[f32; 2]]));
 
     /// Draws a rectangle.
     ///
@@ -127,13 +118,11 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Rectangle::draw`.
     #[inline(always)]
-    fn rectangle<R: Into<types::Rectangle>>(
-        &mut self,
-        r: &Rectangle,
-        rectangle: R,
-        draw_state: &DrawState,
-        transform: Matrix2d
-    ) {
+    fn rectangle<R: Into<types::Rectangle>>(&mut self,
+                                            r: &Rectangle,
+                                            rectangle: R,
+                                            draw_state: &DrawState,
+                                            transform: Matrix2d) {
         r.draw_tri(rectangle, draw_state, transform, self);
     }
 
@@ -143,13 +132,11 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Polygon::draw`.
     #[inline(always)]
-    fn polygon(
-        &mut self,
-        p: &Polygon,
-        polygon: types::Polygon,
-        draw_state: &DrawState,
-        transform: Matrix2d
-    ) {
+    fn polygon(&mut self,
+               p: &Polygon,
+               polygon: types::Polygon,
+               draw_state: &DrawState,
+               transform: Matrix2d) {
         p.draw_tri(polygon, draw_state, transform, self);
     }
 
@@ -159,16 +146,13 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Polygon::draw_tween_lerp`.
     #[inline(always)]
-    fn polygon_tween_lerp(
-        &mut self,
-        p: &Polygon,
-        polygons: types::Polygons,
-        tween_factor: Scalar,
-        draw_state: &DrawState,
-        transform: Matrix2d
-    ) {
-        p.draw_tween_lerp_tri(polygons, tween_factor,
-            draw_state, transform, self);
+    fn polygon_tween_lerp(&mut self,
+                          p: &Polygon,
+                          polygons: types::Polygons,
+                          tween_factor: Scalar,
+                          draw_state: &DrawState,
+                          transform: Matrix2d) {
+        p.draw_tween_lerp_tri(polygons, tween_factor, draw_state, transform, self);
     }
 
     /// Draws image.
@@ -177,13 +161,11 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Image::draw`.
     #[inline(always)]
-    fn image(
-        &mut self,
-        image: &Image,
-        texture: &Self::Texture,
-        draw_state: &DrawState,
-        transform: Matrix2d
-    ) {
+    fn image(&mut self,
+             image: &Image,
+             texture: &Self::Texture,
+             draw_state: &DrawState,
+             transform: Matrix2d) {
         image.draw_tri(texture, draw_state, transform, self);
     }
 
@@ -193,13 +175,11 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Ellipse::draw`.
     #[inline(always)]
-    fn ellipse<R: Into<types::Rectangle>>(
-        &mut self,
-        e: &Ellipse,
-        rectangle: R,
-        draw_state: &DrawState,
-        transform: Matrix2d
-    ) {
+    fn ellipse<R: Into<types::Rectangle>>(&mut self,
+                                          e: &Ellipse,
+                                          rectangle: R,
+                                          draw_state: &DrawState,
+                                          transform: Matrix2d) {
         e.draw_tri(rectangle, draw_state, transform, self);
     }
 
@@ -209,13 +189,11 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Line::draw`.
     #[inline(always)]
-    fn line<L: Into<types::Line>>(
-        &mut self,
-        l: &Line,
-        line: L,
-        draw_state: &DrawState,
-        transform: Matrix2d
-    ) {
+    fn line<L: Into<types::Line>>(&mut self,
+                                  l: &Line,
+                                  line: L,
+                                  draw_state: &DrawState,
+                                  transform: Matrix2d) {
         l.draw_tri(line, draw_state, transform, self);
     }
 
@@ -225,13 +203,11 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `CircleArc::draw`.
     #[inline(always)]
-    fn circle_arc<R: Into<types::Rectangle>>(
-        &mut self,
-        c: &CircleArc,
-        rectangle: R,
-        draw_state: &DrawState,
-        transform: Matrix2d
-    ) {
+    fn circle_arc<R: Into<types::Rectangle>>(&mut self,
+                                             c: &CircleArc,
+                                             rectangle: R,
+                                             draw_state: &DrawState,
+                                             transform: Matrix2d) {
         c.draw_tri(rectangle, draw_state, transform, self);
     }
 
@@ -241,13 +217,11 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `DeformGrid::draw_image`.
     #[inline(always)]
-    fn deform_image(
-        &mut self,
-        d: &DeformGrid,
-        texture: &Self::Texture,
-        draw_state: &DrawState,
-        transform: Matrix2d
-    ) {
+    fn deform_image(&mut self,
+                    d: &DeformGrid,
+                    texture: &Self::Texture,
+                    draw_state: &DrawState,
+                    transform: Matrix2d) {
         d.draw_image_tri(texture, draw_state, transform, self);
     }
 }
