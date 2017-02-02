@@ -203,17 +203,17 @@ impl DeformGrid {
     )
         where G: Graphics
     {
+        use BACK_END_MAX_VERTEX_COUNT as BUFFER_SIZE;
+
         let mat = transform;
         let color = [1.0; 4];
         let a = color[3];
         if a == 0.0 { return; }
-        // TODO: Use max buffer constant?
-        let buf_len = 360;
-        let mut vertices: [[f32; 2]; 360] = [[0.0; 2]; 360];
-        let mut uvs: [[f32; 2]; 360] = [[0.0; 2]; 360];
+        let mut vertices: [[f32; 2]; BUFFER_SIZE] = [[0.0; 2]; BUFFER_SIZE];
+        let mut uvs: [[f32; 2]; BUFFER_SIZE] = [[0.0; 2]; BUFFER_SIZE];
         let mut offset = 0;
         for &ind in self.indices.iter() {
-            if offset >= buf_len {
+            if offset >= BUFFER_SIZE {
                 g.tri_list_uv(
                     &draw_state,
                     &color,

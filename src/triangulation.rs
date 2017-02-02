@@ -1,6 +1,7 @@
 //! Methods for converting shapes into triangles.
 
 use ImageSize;
+use BACK_END_MAX_VERTEX_COUNT as BUFFER_SIZE;
 use interpolation::lerp;
 use types::{
     Line,
@@ -248,8 +249,8 @@ pub fn with_round_rectangle_tri_list<F>(
 /// Each chunk (buffer) is a fixed size array) of the format:
 ///
 /// ```
-/// //     [x0, y0, x1, y1, x2, y2, x3, y3, ... y5, ...]
-/// //      ^--------------------^  ^------------^
+/// //     [[x0, y0], [x1, y1], [x2, y2], [x3, y3], ... [y4, y5], ...]
+/// //      ^--------------------------^  ^--------------------^
 /// //        3 Points of triangle   3 points of second triangle,
 /// ```
 ///
@@ -267,7 +268,7 @@ pub fn stream_polygon_tri_list<E, F>(
         F: FnMut(&[[f32; 2]])
 {
 
-    let mut vertices: [[f32; 2]; 360] = [[0.0; 2]; 360];
+    let mut vertices: [[f32; 2]; BUFFER_SIZE] = [[0.0; 2]; BUFFER_SIZE];
     // Get the first point which will be used a lot.
     let fp = match polygon() { None => return, Some(val) => val };
     let f1 = [tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1])];
@@ -502,8 +503,8 @@ pub fn with_round_rectangle_border_tri_list<F>(
 /// The tri list is series of buffers (fixed size array) of the format:
 ///
 /// ```
-/// //     [x0, y0, x1, y1, x2, y2, x3, y3, ... y5, ...]
-/// //      ^--------------------^  ^------------^
+/// //     [[x0, y0], [x1, y1], [x2, y2], [x3, y3], ... [y4, y5], ...]
+/// //      ^--------------------------^  ^--------------------^
 /// //        3 Points of triangle   3 points of second triangle,
 /// //      ^------------------------------------^          __
 /// //         Two triangles together form a single quad |\\ 2|
@@ -523,8 +524,7 @@ pub fn stream_quad_tri_list<E, F>(
         E: FnMut() -> Option<(Vec2d, Vec2d)>,
         F: FnMut(&[[f32; 2]])
 {
-    // TODO: Use max buffer constant?
-    let mut vertices: [[f32; 2]; 360] = [[0.0; 2]; 360];
+    let mut vertices: [[f32; 2]; BUFFER_SIZE] = [[0.0; 2]; BUFFER_SIZE];
     // Get the two points .
     let (fp1, fp2) = match quad_edge() {
             None => return,
