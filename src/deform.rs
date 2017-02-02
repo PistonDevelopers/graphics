@@ -207,12 +207,11 @@ impl DeformGrid {
         let color = [1.0; 4];
         let a = color[3];
         if a == 0.0 { return; }
+        // TODO: Use max buffer constant?
         let buf_len = 360;
-        let mut vertices: [f32; 720] = [0.0; 720];
-        let mut uvs: [f32; 720] = [0.0; 720];
+        let mut vertices: [[f32; 2]; 360] = [[0.0; 2]; 360];
+        let mut uvs: [[f32; 2]; 360] = [[0.0; 2]; 360];
         let mut offset = 0;
-        let vertex_align = 2;
-        let uv_align = 2;
         for &ind in self.indices.iter() {
             if offset >= buf_len {
                 g.tri_list_uv(
@@ -224,13 +223,8 @@ impl DeformGrid {
                 offset = 0;
             }
             let vert = self.vertices[ind];
-            let vert_ind = offset * vertex_align;
-            vertices[vert_ind + 0] = tx(mat, vert[0], vert[1]);
-            vertices[vert_ind + 1] = ty(mat, vert[0], vert[1]);
-            let uv_ind = offset * uv_align;
-            let uv = self.texture_coords[ind];
-            uvs[uv_ind + 0] = uv[0];
-            uvs[uv_ind + 1] = uv[1];
+            vertices[offset] = [tx(mat, vert[0], vert[1]), ty(mat, vert[0], vert[1])];
+            uvs[offset] = self.texture_coords[ind];
             offset += 1;
         }
         if offset > 0 {
@@ -239,8 +233,8 @@ impl DeformGrid {
                 &color,
                 texture,
                 |f| f(
-                    &vertices[..offset * vertex_align],
-                    &uvs[..offset * uv_align]
+                    &vertices[..offset],
+                    &uvs[..offset]
                 )
             );
         }

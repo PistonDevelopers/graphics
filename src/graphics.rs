@@ -86,11 +86,11 @@ pub trait Graphics: Sized {
     /// Then it calls the closure, which calls back with chunks of vertices.
     /// The number of vertices per chunk never exceeds
     /// `BACK_END_MAX_VERTEX_COUNT`.
-    /// Vertex positions are encoded `[x0, y0, x1, y1, ...]`.
+    /// Vertex positions are encoded `[[x0, y0], [x1, y1], ...]`.
     ///
     /// Color space is sRGB.
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
-        where F: FnMut(&mut FnMut(&[f32]));
+        where F: FnMut(&mut FnMut(&[[f32; 2]]));
 
     /// Renders list of 2d triangles using a color and a texture.
     ///
@@ -106,8 +106,8 @@ pub trait Graphics: Sized {
     /// Then it calls the closure, which calls back with chunks of vertices.
     /// The number of vertices per chunk never exceeds
     /// `BACK_END_MAX_VERTEX_COUNT`.
-    /// Vertex positions are encoded `[x0, y0, x1, y1, ...]`.
-    /// Texture coordinates are encoded `[u0, v0, u1, v1, ...]`.
+    /// Vertex positions are encoded `[[x0, y0], [x1, y1], ...]`.
+    /// Texture coordinates are encoded `[[u0, v0], [u1, v1], ...]`.
     ///
     /// Chunks uses separate buffer for vertex positions and texture coordinates.
     /// Arguments are `|vertices: &[f32], texture_coords: &[f32]`.
@@ -119,7 +119,7 @@ pub trait Graphics: Sized {
         color: &[f32; 4],
         texture: &<Self as Graphics>::Texture,
         f: F
-    ) where F: FnMut(&mut FnMut(&[f32], &[f32]));
+    ) where F: FnMut(&mut FnMut(&[[f32; 2]], &[[f32; 2]]));
 
     /// Draws a rectangle.
     ///

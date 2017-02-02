@@ -42,7 +42,7 @@ pub fn with_lerp_polygons_tri_list<F>(
     f: F
 )
     where
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
 
     let poly_len = polygons.len() as Scalar;
@@ -80,7 +80,7 @@ pub fn with_ellipse_tri_list<F>(
     f: F
 )
     where
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
@@ -107,7 +107,7 @@ pub fn with_round_border_line_tri_list<F>(
     f: F
 )
     where
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
 
     let radius = round_border_radius;
@@ -164,7 +164,7 @@ pub fn with_round_rectangle_tri_list<F>(
     f: F
 )
     where
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
     use vecmath::traits::FromPrimitive;
 
@@ -264,48 +264,36 @@ pub fn stream_polygon_tri_list<E, F>(
 )
     where
         E: FnMut() -> Option<Vec2d>,
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
 
-    let mut vertices: [f32; 720] = [0.0; 720];
+    let mut vertices: [[f32; 2]; 360] = [[0.0; 2]; 360];
     // Get the first point which will be used a lot.
     let fp = match polygon() { None => return, Some(val) => val };
-    let (fx, fy) = (tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1]));
+    let f1 = [tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1])];
     let gp = match polygon() { None => return, Some(val) => val };
-    let (gx, gy) = (tx(m, gp[0], gp[1]), ty(m, gp[0], gp[1]));
-    let mut gx = gx;
-    let mut gy = gy;
+    let mut g1 = [tx(m, gp[0], gp[1]), ty(m, gp[0], gp[1])];
     let mut i = 0;
     let vertices_per_triangle = 3;
-    let position_components_per_vertex = 2;
-    let align_vertices =
-        vertices_per_triangle
-        * position_components_per_vertex;
+    let align_vertices = vertices_per_triangle;
     'read_vertices: loop {
         let ind_out = i * align_vertices;
-        vertices[ind_out + 0] = fx;
-        vertices[ind_out + 1] = fy;
+        vertices[ind_out] = f1;
 
         // Copy vertex.
-        let ind_out = i * align_vertices + 2;
-        let p =
-            match polygon() {
+        let p = match polygon() {
                 None => break 'read_vertices,
                 Some(val) => val,
             };
-        let x = tx(m, p[0], p[1]);
-        let y = ty(m, p[0], p[1]);
+        let pos = [tx(m, p[0], p[1]), ty(m, p[0], p[1])];
 
-        vertices[ind_out + 0] = gx;
-        vertices[ind_out + 1] = gy;
-        vertices[ind_out + 2] = x;
-        vertices[ind_out + 3] = y;
-        gx = x;
-        gy = y;
+        vertices[ind_out + 1] = g1;
+        vertices[ind_out + 2] = pos;
+        g1 = pos;
 
         i += 1;
         // Buffer is full.
-        if i * align_vertices + 2 >= vertices.len() {
+        if i * align_vertices + 1 >= vertices.len() {
             // Send chunk and start over.
             f(&vertices[0..i * align_vertices]);
             i = 0;
@@ -327,7 +315,7 @@ pub fn with_ellipse_border_tri_list<F>(
     f: F
 )
     where
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
@@ -361,7 +349,7 @@ pub fn with_arc_tri_list<F>(
     f: F
 )
     where
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
 
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
@@ -407,7 +395,7 @@ pub fn with_round_rectangle_border_tri_list<F>(
     f: F
 )
     where
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
     use vecmath::traits::FromPrimitive;
 
@@ -533,33 +521,23 @@ pub fn stream_quad_tri_list<E, F>(
 )
     where
         E: FnMut() -> Option<(Vec2d, Vec2d)>,
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
-
-    let mut vertices: [f32; 720] = [0.0; 720];
+    // TODO: Use max buffer constant?
+    let mut vertices: [[f32; 2]; 360] = [[0.0; 2]; 360];
     // Get the two points .
     let (fp1, fp2) = match quad_edge() {
             None => return,
             Some((val1, val2)) => (val1, val2)
         };
     // Transform the points using the matrix.
-    let (mut fx1, mut fy1) = (
-        tx(m, fp1[0], fp1[1]),
-        ty(m, fp1[0], fp1[1])
-    );
-    let (mut fx2, mut fy2) = (
-        tx(m, fp2[0], fp2[1]),
-        ty(m, fp2[0], fp2[1])
-    );
+    let mut f1 = [tx(m, fp1[0], fp1[1]), ty(m, fp1[0], fp1[1])];
+    let mut f2 = [tx(m, fp2[0], fp2[1]), ty(m, fp2[0], fp2[1])];
     // Counts the quads.
     let mut i = 0;
     let triangles_per_quad = 2;
     let vertices_per_triangle = 3;
-    let position_components_per_vertex = 2;
-    let align_vertices =
-        triangles_per_quad
-        * vertices_per_triangle
-        * position_components_per_vertex;
+    let align_vertices = triangles_per_quad * vertices_per_triangle;
     loop {
         // Read two more points.
         let (gp1, gp2) = match quad_edge() {
@@ -567,40 +545,26 @@ pub fn stream_quad_tri_list<E, F>(
             Some((val1, val2)) => (val1, val2)
         };
         // Transform the points using the matrix.
-        let (gx1, gy1) = (
-            tx(m, gp1[0], gp1[1]),
-            ty(m, gp1[0], gp1[1])
-        );
-        let (gx2, gy2) = (
-            tx(m, gp2[0], gp2[1]),
-            ty(m, gp2[0], gp2[1])
-        );
+        let g1 = [tx(m, gp1[0], gp1[1]), ty(m, gp1[0], gp1[1])];
+        let g2 = [tx(m, gp2[0], gp2[1]), ty(m, gp2[0], gp2[1])];
         let ind_out = i * align_vertices;
 
         // First triangle.
-        vertices[ind_out + 0] = fx1;
-        vertices[ind_out + 1] = fy1;
-        vertices[ind_out + 2] = fx2;
-        vertices[ind_out + 3] = fy2;
-        vertices[ind_out + 4] = gx1;
-        vertices[ind_out + 5] = gy1;
+        vertices[ind_out + 0] = f1;
+        vertices[ind_out + 1] = f2;
+        vertices[ind_out + 2] = g1;
 
         // Second triangle.
-        vertices[ind_out + 6] = fx2;
-        vertices[ind_out + 7] = fy2;
-        vertices[ind_out + 8] = gx1;
-        vertices[ind_out + 9] = gy1;
-        vertices[ind_out + 10] = gx2;
-        vertices[ind_out + 11] = gy2;
+        vertices[ind_out + 3] = f2;
+        vertices[ind_out + 4] = g1;
+        vertices[ind_out + 5] = g2;
 
         // Next quad.
         i += 1;
 
         // Set next current edge.
-        fx1 = gx1;
-        fy1 = gy1;
-        fx2 = gx2;
-        fy2 = gy2;
+        f1 = g1;
+        f2 = g2;
 
         // Buffer is full.
         if i * align_vertices >= vertices.len() {
@@ -625,7 +589,7 @@ pub fn with_polygon_tri_list<F>(
     f: F
 )
     where
-        F: FnMut(&[f32])
+        F: FnMut(&[[f32; 2]])
 {
 
     let n = polygon.len();
@@ -646,16 +610,16 @@ pub fn with_polygon_tri_list<F>(
 pub fn rect_tri_list_xy(
     m: Matrix2d,
     rect: Rectangle
-) -> [f32; 12] {
+) -> [[f32; 2]; 6] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (x2, y2) = (x + w, y + h);
     [
-        tx(m,x,y), ty(m,x,y),
-        tx(m,x2,y), ty(m,x2,y),
-        tx(m,x,y2), ty(m,x,y2),
-        tx(m,x2,y), ty(m,x2,y),
-        tx(m,x2,y2), ty(m,x2,y2),
-        tx(m,x,y2), ty(m,x,y2)
+        [tx(m,x,y), ty(m,x,y)],
+        [tx(m,x2,y), ty(m,x2,y)],
+        [tx(m,x,y2), ty(m,x,y2)],
+        [tx(m,x2,y), ty(m,x2,y)],
+        [tx(m,x2,y2), ty(m,x2,y2)],
+        [tx(m,x,y2), ty(m,x,y2)]
     ]
 }
 
@@ -665,7 +629,7 @@ pub fn rect_border_tri_list_xy(
     m: Matrix2d,
     rect: Rectangle,
     border_radius: Radius,
-) -> [f32; 48] {
+) -> [[f32; 2]; 24] {
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (w1, h1) = (w + border_radius, h + border_radius);
     let (w2, h2) = (w - border_radius, h - border_radius);
@@ -674,37 +638,37 @@ pub fn rect_border_tri_list_xy(
     let (x12, y12) = (x + w1, y + h1);
     let (x22, y22) = (x + w2, y + h2);
     [
-        tx(m, x11, y11), ty(m, x11, y11),
-        tx(m, x12, y11), ty(m, x12, y11),
-        tx(m, x21, y21), ty(m, x21, y21),
+        [tx(m, x11, y11), ty(m, x11, y11)],
+        [tx(m, x12, y11), ty(m, x12, y11)],
+        [tx(m, x21, y21), ty(m, x21, y21)],
 
-        tx(m, x21, y21), ty(m, x21, y21),
-        tx(m, x12, y11), ty(m, x12, y11),
-        tx(m, x22, y21), ty(m, x22, y21),
+        [tx(m, x21, y21), ty(m, x21, y21)],
+        [tx(m, x12, y11), ty(m, x12, y11)],
+        [tx(m, x22, y21), ty(m, x22, y21)],
 
-        tx(m, x22, y21), ty(m, x22, y21),
-        tx(m, x12, y11), ty(m, x12, y11),
-        tx(m, x12, y12), ty(m, x12, y12),
+        [tx(m, x22, y21), ty(m, x22, y21)],
+        [tx(m, x12, y11), ty(m, x12, y11)],
+        [tx(m, x12, y12), ty(m, x12, y12)],
 
-        tx(m, x22, y21), ty(m, x22, y21),
-        tx(m, x12, y12), ty(m, x12, y12),
-        tx(m, x22, y22), ty(m, x22, y22),
+        [tx(m, x22, y21), ty(m, x22, y21)],
+        [tx(m, x12, y12), ty(m, x12, y12)],
+        [tx(m, x22, y22), ty(m, x22, y22)],
 
-        tx(m, x12, y12), ty(m, x12, y12),
-        tx(m, x22, y22), ty(m, x22, y22),
-        tx(m, x11, y12), ty(m, x11, y12),
+        [tx(m, x12, y12), ty(m, x12, y12)],
+        [tx(m, x22, y22), ty(m, x22, y22)],
+        [tx(m, x11, y12), ty(m, x11, y12)],
 
-        tx(m, x22, y22), ty(m, x22, y22),
-        tx(m, x11, y12), ty(m, x11, y12),
-        tx(m, x21, y22), ty(m, x21, y22),
+        [tx(m, x22, y22), ty(m, x22, y22)],
+        [tx(m, x11, y12), ty(m, x11, y12)],
+        [tx(m, x21, y22), ty(m, x21, y22)],
 
-        tx(m, x11, y12), ty(m, x11, y12),
-        tx(m, x21, y21), ty(m, x21, y21),
-        tx(m, x21, y22), ty(m, x21, y22),
+        [tx(m, x11, y12), ty(m, x11, y12)],
+        [tx(m, x21, y21), ty(m, x21, y21)],
+        [tx(m, x21, y22), ty(m, x21, y22)],
 
-        tx(m, x11, y12), ty(m, x11, y12),
-        tx(m, x11, y11), ty(m, x11, y11),
-        tx(m, x21, y21), ty(m, x21, y21),
+        [tx(m, x11, y12), ty(m, x11, y12)],
+        [tx(m, x11, y11), ty(m, x11, y11)],
+        [tx(m, x21, y21), ty(m, x21, y21)],
     ]
 }
 
@@ -712,7 +676,7 @@ pub fn rect_border_tri_list_xy(
 #[inline(always)]
 pub fn rect_tri_list_uv<I: ImageSize>(
     image: &I, source_rect: SourceRectangle
-) -> [f32; 12] {
+) -> [[f32; 2]; 6] {
     let (w, h) = image.get_size();
     let (src_x, src_y, src_w, src_h) =
         (source_rect[0], source_rect[1], source_rect[2], source_rect[3]);
@@ -722,7 +686,7 @@ pub fn rect_tri_list_uv<I: ImageSize>(
     let x2 = (src_w + src_x) as f32 / w as f32;
     let y2 = (src_h + src_y) as f32 / h as f32;
     [
-        x1, y1, x2, y1, x1, y2,
-        x2, y1, x2, y2, x1, y2
+        [x1, y1], [x2, y1], [x1, y2],
+        [x2, y1], [x2, y2], [x1, y2]
     ]
 }
