@@ -34,16 +34,31 @@ impl SourceRectangled for SourceRectangle {
 
     #[inline(always)]
     fn src_flip_h(self) -> Self {
-        [self[0] + self[2], self[1], -self[2], self[3]]
+        [
+            self[0] + self[2],
+            self[1],
+            -self[2],
+            self[3]
+        ]
     }
 
     #[inline(always)]
     fn src_flip_v(self) -> Self {
-        [self[0], self[1] + self[3], self[2], -self[3]]
+        [
+            self[0],
+            self[1] + self[3],
+            self[2],
+            -self[3]
+        ]
     }
 
     #[inline(always)]
     fn src_flip_hv(self) -> Self {
-        [self[0] + self[2], self[1] + self[3], -self[2], -self[3]]
+        [
+            self[0] + self[2],
+            self[1] + self[3],
+            -self[2],
+            -self[3]
+        ]
     }
 }

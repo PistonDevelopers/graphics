@@ -12,23 +12,32 @@ pub use vecmath::vec2_square_len as square_len;
 pub use vecmath::row_mat2x3_transform_pos2 as transform_pos;
 pub use vecmath::row_mat2x3_transform_vec2 as transform_vec;
 
-use std::ops::{Add, Rem};
+use std::ops::{ Add, Rem };
 use vecmath;
 use vecmath::traits::Float;
-use types::{Area, Color, Line, Polygon, Ray, Rectangle, SourceRectangle, Triangle};
+use types::{
+    Area,
+    Color,
+    Line,
+    Polygon,
+    Ray,
+    Rectangle,
+    SourceRectangle,
+    Triangle,
+};
 use modular_index::previous;
 
 /// The type used for scalars.
 pub type Scalar = f64;
 
 /// The type used for matrices.
-pub type Matrix2d<T = Scalar> = vecmath::Matrix2x3<T>;
+pub type Matrix2d<T=Scalar> = vecmath::Matrix2x3<T>;
 
 /// The type used for 2D vectors.
-pub type Vec2d<T = Scalar> = vecmath::Vector2<T>;
+pub type Vec2d<T=Scalar> = vecmath::Vector2<T>;
 
 /// The type used for 3D vectors.
-pub type Vec3d<T = Scalar> = vecmath::Vector3<T>;
+pub type Vec3d<T=Scalar> = vecmath::Vector3<T>;
 
 /// Creates a perpendicular vector.
 #[inline(always)]
@@ -47,14 +56,15 @@ pub fn perp<T>(v: [T; 2]) -> [T; 2]
 pub fn abs_transform<T>(w: T, h: T) -> Matrix2d<T>
     where T: Float
 {
-    use vecmath::traits::{One, FromPrimitive, Zero};
+    use vecmath::traits::{ One, FromPrimitive, Zero };
 
     let _0: T = Zero::zero();
     let _1: T = One::one();
     let _2: T = FromPrimitive::from_f64(2.0);
     let sx = _2 / w;
     let sy = -_2 / h;
-    [[sx, _0, -_1], [_0, sy, _1]]
+    [[ sx, _0, -_1 ],
+     [ _0,  sy, _1 ]]
 }
 
 /// Creates a translation matrix.
@@ -62,11 +72,12 @@ pub fn abs_transform<T>(w: T, h: T) -> Matrix2d<T>
 pub fn translate<T>(v: Vec2d<T>) -> Matrix2d<T>
     where T: Float
 {
-    use vecmath::traits::{One, Zero};
+    use vecmath::traits::{ One, Zero };
 
     let _0: T = Zero::zero();
     let _1: T = One::one();
-    [[_1, _0, v[0]], [_0, _1, v[1]]]
+    [[_1, _0, v[0]],
+     [_0, _1, v[1]]]
 }
 
 /// Creates a rotation matrix.
@@ -79,7 +90,8 @@ pub fn rotate_radians<T>(angle: T) -> Matrix2d<T>
     let _0 = Zero::zero();
     let c = angle.cos();
     let s = angle.sin();
-    [[c, -s, _0], [s, c, _0]]
+    [[c, -s, _0],
+     [s,  c, _0]]
 }
 
 /// Orients x axis to look at point.
@@ -95,13 +107,14 @@ pub fn orient<T>(x: T, y: T) -> Matrix2d<T>
     let _0: T = Zero::zero();
     let len = x * x + y * y;
     if len == _0 {
-        return identity();
+        return identity()
     }
 
     let len = len.sqrt();
     let c = x / len;
     let s = y / len;
-    [[c, -s, _0], [s, c, _0]]
+    [[c, -s, _0],
+     [s,  c, _0]]
 }
 
 /// Create a scale matrix.
@@ -112,7 +125,8 @@ pub fn scale<T>(sx: T, sy: T) -> Matrix2d<T>
     use vecmath::traits::Zero;
 
     let _0: T = Zero::zero();
-    [[sx, _0, _0], [_0, sy, _0]]
+    [[sx, _0, _0],
+     [_0, sy, _0]]
 }
 
 /// Create a shear matrix.
@@ -120,11 +134,12 @@ pub fn scale<T>(sx: T, sy: T) -> Matrix2d<T>
 pub fn shear<T>(v: Vec2d<T>) -> Matrix2d<T>
     where T: Float
 {
-    use vecmath::traits::{Zero, One};
+    use vecmath::traits::{ Zero, One };
 
     let _0 = Zero::zero();
     let _1 = One::one();
-    [[_1, v[0], _0], [v[1], _1, _0]]
+    [[_1, v[0], _0],
+     [v[1], _1, _0]]
 }
 
 /// Create an identity matrix.
@@ -132,11 +147,12 @@ pub fn shear<T>(v: Vec2d<T>) -> Matrix2d<T>
 pub fn identity<T>() -> Matrix2d<T>
     where T: Float
 {
-    use vecmath::traits::{Zero, One};
+    use vecmath::traits::{ Zero, One };
 
     let _0: T = Zero::zero();
     let _1: T = One::one();
-    [[_1, _0, _0], [_0, _1, _0]]
+    [[_1, _0, _0],
+     [_0, _1, _0]]
 }
 
 /// Extract scale information from matrix.
@@ -144,7 +160,10 @@ pub fn identity<T>() -> Matrix2d<T>
 pub fn get_scale<T>(m: Matrix2d<T>) -> Vec2d<T>
     where T: Float
 {
-    [(m[0][0] * m[0][0] + m[1][0] * m[1][0]).sqrt(), (m[0][1] * m[0][1] + m[1][1] * m[1][1]).sqrt()]
+    [
+        (m[0][0] * m[0][0] + m[1][0] * m[1][0]).sqrt(),
+        (m[0][1] * m[0][1] + m[1][1] * m[1][1]).sqrt()
+    ]
 }
 
 /// Compute the shortest vector from point to ray.
@@ -172,11 +191,12 @@ pub fn separation<T>(ray: Ray<T>, v: Vec2d<T>) -> Vec2d<T>
 /// The separation returned can be used
 /// to solve collision of rectangles.
 #[inline(always)]
-pub fn least_separation_4<T>(sep1: Vec2d<T>,
-                             sep2: Vec2d<T>,
-                             sep3: Vec2d<T>,
-                             sep4: Vec2d<T>)
-                             -> Vec2d<T>
+pub fn least_separation_4<T>(
+    sep1: Vec2d<T>,
+    sep2: Vec2d<T>,
+    sep3: Vec2d<T>,
+    sep4: Vec2d<T>
+) -> Vec2d<T>
     where T: Float
 {
     let dot1 = sep1[0] * sep1[0] + sep1[1] * sep1[1];
@@ -204,52 +224,64 @@ pub fn least_separation_4<T>(sep1: Vec2d<T>,
 pub fn margin_rectangle<T>(rect: Rectangle<T>, m: T) -> Rectangle<T>
     where T: Float
 {
-    use vecmath::traits::{Zero, FromPrimitive};
+    use vecmath::traits::{ Zero, FromPrimitive };
 
     let _0: T = Zero::zero();
     let _05: T = FromPrimitive::from_f64(0.5);
     let _2: T = FromPrimitive::from_f64(2.0);
     let w = rect[2] - _2 * m;
     let h = rect[3] - _2 * m;
-    let (x, w) = if w < _0 {
-        (rect[0] + _05 * rect[2], _0)
-    } else {
-        (rect[0] + m, w)
-    };
-    let (y, h) = if h < _0 {
-        (rect[1] + _05 * rect[3], _0)
-    } else {
-        (rect[1] + m, h)
-    };
+    let (x, w)
+        =   if w < _0 {
+                (rect[0] + _05 * rect[2], _0)
+            } else {
+                (rect[0] + m, w)
+            };
+    let (y, h)
+        =   if h < _0 {
+                (rect[1] + _05 * rect[3], _0)
+            } else {
+                (rect[1] + m, h)
+            };
     [x, y, w, h]
 }
 
 /// Computes a relative rectangle using the rectangle as a tile.
 #[inline(always)]
-pub fn relative_rectangle<T>(rect: Rectangle<T>, v: Vec2d<T>) -> Rectangle<T>
+pub fn relative_rectangle<T>(
+    rect: Rectangle<T>,
+    v: Vec2d<T>
+) -> Rectangle<T>
     where T: Float
 {
-    [rect[0] + v[0] * rect[2], rect[1] + v[1] * rect[3], rect[2], rect[3]]
+    [
+        rect[0] + v[0] * rect[2],
+        rect[1] + v[1] * rect[3],
+        rect[2],
+        rect[3]
+    ]
 }
 
 /// Computes overlap between two rectangles.
 /// The area of the overlapping rectangle is positive.
 /// A shared edge or corner is not considered overlap.
 #[inline(always)]
-pub fn overlap_rectangle<T>(a: Rectangle<T>, b: Rectangle<T>) -> Option<Rectangle<T>>
+pub fn overlap_rectangle<T>(
+    a: Rectangle<T>,
+    b: Rectangle<T>
+) -> Option<Rectangle<T>>
     where T: Float
 {
     #[inline(always)]
-    fn min<T: Float>(a: T, b: T) -> T {
-        if a < b { a } else { b }
-    }
+    fn min<T: Float>(a: T, b: T) -> T { if a < b { a } else { b } }
 
     #[inline(always)]
-    fn max<T: Float>(a: T, b: T) -> T {
-        if a > b { a } else { b }
-    }
+    fn max<T: Float>(a: T, b: T) -> T { if a > b { a } else { b } }
 
-    if a[0] < b[0] + b[2] && a[1] < b[1] + b[3] && b[0] < a[0] + a[2] && b[1] < a[1] + a[3] {
+    if a[0] < b[0] + b[2]
+    && a[1] < b[1] + b[3]
+    && b[0] < a[0] + a[2]
+    && b[1] < a[1] + a[3] {
         let x = max(a[0], b[0]);
         let y = max(a[1], b[1]);
         let w = min(a[0] + a[2], b[0] + b[2]) - x;
@@ -288,7 +320,11 @@ mod test_overlap {
 /// Computes a relative source rectangle using
 /// the source rectangle as a tile.
 #[inline(always)]
-pub fn relative_source_rectangle<T>(rect: SourceRectangle<T>, x: T, y: T) -> SourceRectangle<T>
+pub fn relative_source_rectangle<T>(
+    rect: SourceRectangle<T>,
+    x: T,
+    y: T
+) -> SourceRectangle<T>
     where T: Float
 {
     let (rx, ry, rw, rh) = (rect[0], rect[1], rect[2], rect[3]);
@@ -298,7 +334,11 @@ pub fn relative_source_rectangle<T>(rect: SourceRectangle<T>, x: T, y: T) -> Sou
 
 /// Computes modular offset safely for numbers.
 #[inline(always)]
-pub fn modular_offset<T: Add<Output = T> + Rem<Output = T> + Copy>(n: &T, i: &T, off: &T) -> T {
+pub fn modular_offset<T: Add<Output = T> + Rem<Output = T> + Copy>(
+    n: &T,
+    i: &T,
+    off: &T
+) -> T {
     (*i + (*off % *n + *n)) % *n
 }
 
@@ -327,7 +367,7 @@ mod test_modular_offset {
 pub fn area_centroid<T>(polygon: Polygon<T>) -> (Area<T>, Vec2d<T>)
     where T: Float
 {
-    use vecmath::traits::{Zero, FromPrimitive};
+    use vecmath::traits::{ Zero, FromPrimitive };
 
     let _0: T = Zero::zero();
     let _05: T = FromPrimitive::from_f64(0.5);
@@ -416,7 +456,8 @@ pub fn inside_triangle<T>(triangle: Triangle<T>, v: Vec2d<T>) -> bool
     let bc_positive = bc_side >= _0;
     let ca_positive = ca_side >= _0;
 
-    ab_positive == bc_positive && bc_positive == ca_positive
+    ab_positive == bc_positive
+    && bc_positive == ca_positive
 }
 
 /// Returns true if triangle is clockwise.
@@ -466,31 +507,36 @@ mod test_triangle {
 
 /// Transforms from cartesian coordinates to barycentric.
 #[inline(always)]
-pub fn to_barycentric<T>(triangle: Triangle<T>, pos: Vec2d<T>) -> Vec3d<T>
+pub fn to_barycentric<T>(
+    triangle: Triangle<T>,
+    pos: Vec2d<T>
+) -> Vec3d<T>
     where T: Float
 {
     use vecmath::traits::One;
 
     let _1: T = One::one();
-    let x = pos[0];
-    let y = pos[1];
+    let x = pos[0]; let y = pos[1];
     let x1 = triangle[0][0];
     let y1 = triangle[0][1];
     let x2 = triangle[1][0];
     let y2 = triangle[1][1];
     let x3 = triangle[2][0];
     let y3 = triangle[2][1];
-    let lambda1 = ((y2 - y3) * (x - x3) + (x3 - x2) * (y - y3)) /
-                  ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
-    let lambda2 = ((y3 - y1) * (x - x3) + (x1 - x3) * (y - y3)) /
-                  ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
+    let lambda1 = ((y2 - y3) * (x - x3) + (x3 - x2) * (y - y3))
+                / ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
+    let lambda2 = ((y3 - y1) * (x - x3) + (x1 - x3) * (y - y3))
+                / ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
     let lambda3 = _1 - lambda1 - lambda2;
     [lambda1, lambda2, lambda3]
 }
 
 /// Transforms from barycentric coordinates to cartesian.
 #[inline(always)]
-pub fn from_barycentric<T>(triangle: Triangle<T>, lambda: Vec3d<T>) -> Vec2d<T>
+pub fn from_barycentric<T>(
+    triangle: Triangle<T>,
+    lambda: Vec3d<T>
+) -> Vec2d<T>
     where T: Float
 {
     let x1 = triangle[0][0];
@@ -526,14 +572,16 @@ mod test_barycentric {
 pub fn hsv(color: Color, h_rad: f32, s: f32, v: f32) -> Color {
     let vsu = v * s * h_rad.cos();
     let vsw = v * s * h_rad.sin();
-    [(0.299 * v + 0.701 * vsu + 0.168 * vsw) * color[0] +
-     (0.587 * v - 0.587 * vsu + 0.330 * vsw) * color[1] +
-     (0.114 * v - 0.114 * vsu - 0.497 * vsw) * color[2],
-     (0.299 * v - 0.299 * vsu - 0.328 * vsw) * color[0] +
-     (0.587 * v + 0.413 * vsu + 0.035 * vsw) * color[1] +
-     (0.114 * v - 0.114 * vsu + 0.292 * vsw) * color[2],
-     (0.299 * v - 0.3 * vsu + 1.25 * vsw) * color[0] +
-     (0.587 * v - 0.588 * vsu - 1.05 * vsw) * color[1] +
-     (0.114 * v + 0.886 * vsu - 0.203 * vsw) * color[2],
-     color[3]]
+    [
+        (0.299 * v + 0.701 * vsu + 0.168 * vsw) * color[0]
+        + (0.587 * v - 0.587 * vsu + 0.330 * vsw) * color[1]
+        + (0.114 * v - 0.114 * vsu - 0.497 * vsw) * color[2],
+        (0.299 * v - 0.299 * vsu - 0.328 * vsw) * color[0]
+        + (0.587 * v + 0.413 * vsu + 0.035 * vsw) * color[1]
+        + (0.114 * v - 0.114 * vsu + 0.292 * vsw) * color[2],
+        (0.299 * v - 0.3 * vsu + 1.25 * vsw) * color[0]
+        + (0.587 * v - 0.588 * vsu - 1.05 * vsw) * color[1]
+        + (0.114 * v + 0.886 * vsu - 0.203 * vsw) * color[2],
+        color[3],
+    ]
 }

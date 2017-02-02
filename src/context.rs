@@ -1,14 +1,7 @@
 //! Transformation context
 
 use DrawState;
-use math::{
-    abs_transform,
-    identity,
-    get_scale,
-    Matrix2d,
-    Scalar,
-    Vec2d,
-};
+use math::{abs_transform, identity, get_scale, Matrix2d, Scalar, Vec2d};
 use Viewport;
 
 /// Drawing 2d context.
