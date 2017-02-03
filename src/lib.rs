@@ -55,7 +55,10 @@ pub use draw_state::DrawState;
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
 /// This can be used to initialize buffers that fit the chunk size.
-pub const BACK_END_MAX_VERTEX_COUNT: usize = 1024;
+///
+/// Must be a multiple of 3 because you need 3 vertices per triangle
+/// in a triangle list.
+pub const BACK_END_MAX_VERTEX_COUNT: usize = 1023;
 
 mod graphics;
 mod source_rectangled;
