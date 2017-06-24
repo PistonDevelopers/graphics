@@ -38,7 +38,7 @@ impl<'a, T: ImageSize> Character<'a, T> {
 
 /// Stores characters in a buffer and loads them by demand.
 pub trait CharacterCache {
-    /// The textyre type associated with the character cache.
+    /// The texture type associated with the character cache.
     type Texture: ImageSize;
 
     /// Get reference to character.
