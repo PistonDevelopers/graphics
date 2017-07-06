@@ -4,6 +4,7 @@ use types::{Color, FontSize};
 use {color, Image, Graphics, Transformed, DrawState};
 use character::CharacterCache;
 use math::Matrix2d;
+use texture::TextureSettings;
 
 /// Renders text
 #[derive(Copy, Clone)]
@@ -47,6 +48,7 @@ impl Text {
                       cache: &mut C,
                       draw_state: &DrawState,
                       transform: Matrix2d,
+                      settings: &TextureSettings, 
                       g: &mut G)
         where C: CharacterCache,
               G: Graphics<Texture = <C as CharacterCache>::Texture>
@@ -55,7 +57,7 @@ impl Text {
         let mut x = 0.0;
         let mut y = 0.0;
         for ch in text.chars() {
-            let character = cache.character(self.font_size, ch);
+            let character = cache.character(self.font_size, ch, settings);
             let mut ch_x = x + character.left();
             let mut ch_y = y - character.top();
             if self.round {
