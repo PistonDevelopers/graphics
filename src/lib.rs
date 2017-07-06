@@ -34,7 +34,7 @@ extern crate read_color;
 extern crate interpolation;
 extern crate viewport;
 
-pub use texture::ImageSize;
+pub use texture::{ImageSize, TextureSettings};
 pub use viewport::Viewport;
 
 pub use graphics::Graphics;
@@ -172,5 +172,5 @@ pub fn text<C, G>(
         C: character::CharacterCache,
         G: Graphics<Texture = <C as character::CharacterCache>::Texture>
 {
-    Text::new_color(color, font_size).draw(text, cache, &Default::default(), transform, g)
+    Text::new_color(color, font_size).draw(text, cache, &Default::default(), transform, &TextureSettings::new(), g)
 }

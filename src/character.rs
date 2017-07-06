@@ -2,6 +2,7 @@
 
 use types::{FontSize, Scalar};
 use ImageSize;
+use texture::TextureSettings;
 
 /// Holds rendered character data.
 #[derive(Clone)]
@@ -44,13 +45,14 @@ pub trait CharacterCache {
     /// Get reference to character.
     fn character<'a>(&'a mut self,
                      font_size: FontSize,
-                     ch: char)
+                     ch: char,
+                     settings: &TextureSettings)
                      -> Character<'a, <Self as CharacterCache>::Texture>;
 
     /// Return the width for some given text.
     fn width(&mut self, size: FontSize, text: &str) -> ::math::Scalar {
         text.chars().fold(0.0, |a, ch| {
-            let character = self.character(size, ch);
+            let character = self.character(size, ch, &TextureSettings::new());
             a + character.width()
         })
     }
