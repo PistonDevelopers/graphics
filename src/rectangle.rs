@@ -20,7 +20,7 @@ use math::{Matrix2d, Scalar};
 pub use math::margin_rectangle as margin;
 
 
-/// Create `types::Rectangle` by the two opposit corners.
+/// Create `types::Rectangle` by the two opposite corners.
 ///
 /// The corners are in (x0, y0) and (x1, y1).
 pub fn rectangle_by_corners(x0: Scalar, y0: Scalar, x1: Scalar, y1: Scalar) -> types::Rectangle {
