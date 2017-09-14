@@ -83,6 +83,7 @@ pub mod triangulation;
 pub mod math;
 pub mod deform;
 pub mod grid;
+pub mod glyph_cache;
 
 pub mod radians {
     //! Reexport radians helper trait from vecmath
@@ -167,7 +168,7 @@ pub fn text<C, G>(
     cache: &mut C,
     transform: math::Matrix2d,
     g: &mut G
-)
+) -> Result<(), C::Error>
     where
         C: character::CharacterCache,
         G: Graphics<Texture = <C as character::CharacterCache>::Texture>

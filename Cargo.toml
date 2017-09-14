@@ -28,3 +28,16 @@ piston-texture = "0.5.0"
 piston-viewport = "0.3.0"
 read_color = "0.1.0"
 vecmath = "0.3.0"
+
+[dependencies.rusttype]
+version = "0.2.0"
+optional = true
+
+[dependencies.fnv]
+version = "1.0.5"
+optional = true
+
+[features]
+default = []
+
+glyph_cache_rusttype = ["rusttype", "fnv"]

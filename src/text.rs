@@ -48,6 +48,7 @@ impl Text {
                       draw_state: &DrawState,
                       transform: Matrix2d,
                       g: &mut G)
+                      -> Result<(), C::Error>
         where C: CharacterCache,
               G: Graphics<Texture = <C as CharacterCache>::Texture>
     {
@@ -55,7 +56,7 @@ impl Text {
         let mut x = 0.0;
         let mut y = 0.0;
         for ch in text.chars() {
-            let character = cache.character(self.font_size, ch);
+            let character = cache.character(self.font_size, ch)?;
             let mut ch_x = x + character.left();
             let mut ch_y = y - character.top();
             if self.round {
@@ -69,5 +70,6 @@ impl Text {
             x += character.width();
             y += character.height();
         }
+        Ok(())
     }
 }
