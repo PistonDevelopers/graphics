@@ -40,18 +40,22 @@ impl<'a, T: ImageSize> Character<'a, T> {
 pub trait CharacterCache {
     /// The texture type associated with the character cache.
     type Texture: ImageSize;
+    /// The error type associated with the character cache.
+    type Error;
 
     /// Get reference to character.
     fn character<'a>(&'a mut self,
                      font_size: FontSize,
                      ch: char)
-                     -> Character<'a, <Self as CharacterCache>::Texture>;
+                     -> Result<Character<'a, Self::Texture>, Self::Error>;
 
     /// Return the width for some given text.
-    fn width(&mut self, size: FontSize, text: &str) -> ::math::Scalar {
-        text.chars().fold(0.0, |a, ch| {
-            let character = self.character(size, ch);
-            a + character.width()
-        })
+    fn width(&mut self, size: FontSize, text: &str) -> Result<::math::Scalar, Self::Error> {
+        let mut width = 0.0;
+        for ch in text.chars() {
+            let character = self.character(size, ch)?;
+            width += character.width();
+        }
+        Ok(width)
     }
 }
