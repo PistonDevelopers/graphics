@@ -6,6 +6,9 @@ pub use math::{Matrix2d, Scalar, Vec2d};
 pub type Area<T = Scalar> = T;
 
 /// [red, green, blue, alpha]
+///
+/// All values are between 0.0 and 1.0.
+/// For example, black is `[0.0, 0.0, 0.0, 1.0]` and white is `[1.0, 1.0, 1.0, 1.0]`.
 pub type Color = [ColorComponent; 4];
 
 /// The type used for color component.
