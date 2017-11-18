@@ -10,7 +10,7 @@ pub trait Transformed: Sized {
     /// Prepends transform to the current one.
     fn prepend_transform(self, transform: Matrix2d) -> Self;
 
-    /// Translate x an y in local coordinates.
+    /// Translate x and y in local coordinates.
     fn trans(self, x: Scalar, y: Scalar) -> Self;
 
     /// Rotates degrees in local coordinates.
