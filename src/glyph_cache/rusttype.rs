@@ -50,9 +50,9 @@ impl<'a, F, T> GlyphCache<'a, F, T>
         where P: AsRef<Path>
     {
         let fnv = BuildHasherDefault::<FnvHasher>::default();
-        let mut file = try!(File::open(font));
+        let mut file = File::open(font)?;
         let mut file_buffer = Vec::new();
-        try!(file.read_to_end(&mut file_buffer));
+        file.read_to_end(&mut file_buffer)?;
 
         let collection = rusttype::FontCollection::from_bytes(file_buffer);
         let font = collection.into_font().unwrap();
