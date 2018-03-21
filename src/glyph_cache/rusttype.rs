@@ -55,7 +55,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
         file.read_to_end(&mut file_buffer)?;
 
         let collection = rusttype::FontCollection::from_bytes(file_buffer);
-        let font = collection.into_font().unwrap();
+        let font = collection.unwrap().into_font().unwrap();
         Ok(GlyphCache {
             font: font,
             factory: factory,
@@ -69,8 +69,8 @@ impl<'a, F, T> GlyphCache<'a, F, T>
                       factory: F,
                       settings: TextureSettings)
                       -> Result<GlyphCache<'a, F, T>, ()> {
-        let collection = rusttype::FontCollection::from_bytes(font);
-        let font = collection.into_font().ok_or(())?;
+        let collection = rusttype::FontCollection::from_bytes(font).or(Err(()))?;
+        let font = collection.into_font().or(Err(()))?;
         Ok(Self::from_font(font, factory, settings))
     }
 
@@ -131,13 +131,13 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
             Entry::Vacant(v) => {
                 // this is only None for invalid GlyphIds,
                 // but char is converted to a Codepoint which must result in a glyph.
-                let glyph = self.font.glyph(ch).unwrap();
+                let glyph = self.font.glyph(ch);
                 let scale = rt::Scale::uniform(size as f32);
                 let mut glyph = glyph.scaled(scale);
 
                 // some fonts do not contain glyph zero as fallback, instead try U+FFFD.
                 if glyph.id() == rt::GlyphId(0) && glyph.shape().is_none() {
-                    glyph = self.font.glyph('\u{FFFD}').unwrap().scaled(scale);
+                    glyph = self.font.glyph('\u{FFFD}').scaled(scale);
                 }
 
                 let h_metrics = glyph.h_metrics();
