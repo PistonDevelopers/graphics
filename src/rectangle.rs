@@ -7,7 +7,7 @@
 //!
 //! To draw a square with side 10 and top left corner in (0, 0), do the
 //! following:
-//! ```
+//! ```ignore
 //! let rectangle = Rectangle::new(color::BLACK);
 //! let dims = square(0.0, 0.0, 10.0);
 //! rectangle.draw(dims, &draw_state::Default::default(), transform, g);
