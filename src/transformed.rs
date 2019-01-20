@@ -34,9 +34,22 @@ pub trait Transformed: Sized {
 
     /// Translate position in local coordinates.
     #[inline(always)]
-    fn trans_pos<P: Into<[Scalar; 2]>>(self, pos: P) -> Self {
+    fn trans_pos<P: Into<Vec2d>>(self, pos: P) -> Self {
         let pos = pos.into();
         self.trans(pos[0], pos[1])
+    }
+
+    /// Orients x axis to look at point locally.
+    #[inline(always)]
+    fn orient_pos<P: Into<Vec2d>>(self, pos: P) -> Self {
+        let pos = pos.into();
+        self.orient(pos[0], pos[1])
+    }
+
+    /// Scales in local coordinates.
+    fn scale_pos<P: Into<Vec2d>>(self, pos: P) -> Self {
+        let pos = pos.into();
+        self.scale(pos[0], pos[1])
     }
 
     /// Scales in both directions in local coordinates.
@@ -64,7 +77,14 @@ pub trait Transformed: Sized {
     }
 
     /// Shears in local coordinates.
-    fn shear(self, v: Vec2d) -> Self;
+    fn shear(self, x: Scalar, y: Scalar) -> Self;
+
+    /// Shears in local coordinates.
+    #[inline(always)]
+    fn shear_pos<P: Into<Vec2d>>(self, pos: P) -> Self {
+        let pos = pos.into();
+        self.shear(pos[0], pos[1])
+    }
 }
 
 impl Transformed for Matrix2d {
@@ -103,8 +123,8 @@ impl Transformed for Matrix2d {
     }
 
     #[inline(always)]
-    fn shear(self, v: Vec2d) -> Self {
-        let shear = shear(v);
+    fn shear(self, x: Scalar, y: Scalar) -> Self {
+        let shear = shear([x, y]);
         multiply(self, shear)
     }
 }
@@ -147,8 +167,8 @@ impl Transformed for Context {
     }
 
     #[inline(always)]
-    fn shear(mut self, v: Vec2d) -> Self {
-        self.transform = self.transform.shear(v);
+    fn shear(mut self, x: Scalar, y: Scalar) -> Self {
+        self.transform = self.transform.shear(x, y);
         self
     }
 }
