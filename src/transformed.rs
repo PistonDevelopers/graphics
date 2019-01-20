@@ -34,7 +34,7 @@ pub trait Transformed: Sized {
 
     /// Translate position in local coordinates.
     #[inline(always)]
-    fn trans_xy<P: Into<[Scalar; 2]>>(self, pos: P) -> Self {
+    fn trans_pos<P: Into<[Scalar; 2]>>(self, pos: P) -> Self {
         let pos = pos.into();
         self.trans(pos[0], pos[1])
     }
