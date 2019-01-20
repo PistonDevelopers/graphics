@@ -32,6 +32,13 @@ pub trait Transformed: Sized {
     /// Scales in local coordinates.
     fn scale(self, sx: Scalar, sy: Scalar) -> Self;
 
+    /// Translate position in local coordinates.
+    #[inline(always)]
+    fn trans_xy<P: Into<[Scalar; 2]>>(self, pos: P) -> Self {
+        let pos = pos.into();
+        self.trans(pos[0], pos[1])
+    }
+
     /// Scales in both directions in local coordinates.
     #[inline(always)]
     fn zoom(self, s: Scalar) -> Self {
