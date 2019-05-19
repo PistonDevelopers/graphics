@@ -53,14 +53,14 @@ impl Text {
             C: CharacterCache,
             G: Graphics<Texture = <C as CharacterCache>::Texture>,
     {
-        let mut x = 0.0;
-        let mut y = 0.0;
+        let mut w = 0.0;
+        let mut h = 0.0;
         for ch in text.chars() {
             let character = cache.character(self.font_size, ch)?;
-            x += character.width();
-            y += character.height();
+            w += character.width();
+            h += character.height();
         }
-        Ok((x as i32, y as i32))
+        Ok((w as i32, h as i32))
     }
 
     /// Draws text with a character cache
