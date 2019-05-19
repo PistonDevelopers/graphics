@@ -41,6 +41,28 @@ impl Text {
         self
     }
 
+    /// Provides a size hint that describes the size of the text to be rendered.  Provides the
+    /// width and height bounds of the text.
+    pub fn size_hint<C, G>(
+        &self,
+        text: &str,
+        cache: &mut C,
+        _: &mut G,
+    ) -> Result<(i32, i32), C::Error>
+        where
+            C: CharacterCache,
+            G: Graphics<Texture = <C as CharacterCache>::Texture>,
+    {
+        let mut x = 0.0;
+        let mut y = 0.0;
+        for ch in text.chars() {
+            let character = cache.character(self.font_size, ch)?;
+            x += character.width();
+            y += character.height();
+        }
+        Ok((x as i32, y as i32))
+    }
+
     /// Draws text with a character cache
     pub fn draw<C, G>(&self,
                       text: &str,
