@@ -28,7 +28,9 @@ pub struct TexturePacker<T> {
     pub atlas: usize,
     /// Texture atlas offsets from left to right.
     ///
-    /// These atlas offsets are from top to bottom.
+    /// When a new tile is added with same offset,
+    /// it updates the atlas offsets that it overlaps.
+    /// This means that "holes" get filled in over time.
     pub atlas_offsets: Vec<[u32; 2]>,
 }
 
