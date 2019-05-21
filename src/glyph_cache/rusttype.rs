@@ -24,8 +24,10 @@ pub struct GlyphCache<'a, F, T> {
     pub factory: F,
     /// The settings to render the font with.
     settings: TextureSettings,
-    // Maps from fontsize and character to offset, size and texture.
-    data: HashMap<(FontSize, char), ([Scalar; 2], [Scalar; 2], T), BuildHasherDefault<FnvHasher>>,
+    // Stores the glyph textures.
+    textures: Vec<T>,
+    // Maps from fontsize and character to offset, size and texture index.
+    data: HashMap<(FontSize, char), ([Scalar; 2], [Scalar; 2], usize), BuildHasherDefault<FnvHasher>>,
 }
 
 impl<'a, F, T> GlyphCache<'a, F, T>
@@ -38,6 +40,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
             font: font,
             factory: factory,
             settings: settings,
+            textures: vec![],
             data: HashMap::with_hasher(fnv),
         }
     }
@@ -60,6 +63,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
             font: font,
             factory: factory,
             settings: settings,
+            textures: vec![],
             data: HashMap::with_hasher(fnv),
         })
     }
@@ -93,11 +97,11 @@ impl<'a, F, T> GlyphCache<'a, F, T>
     /// Return `ch` for `size` if it's already cached. Don't load.
     /// See the `preload_*` functions.
     pub fn opt_character(&self, size: FontSize, ch: char) -> Option<Character<T>> {
-        self.data.get(&(size, ch)).map(|&(offset, size, ref texture)| {
+        self.data.get(&(size, ch)).map(|&(offset, size, texture)| {
             Character {
                 offset: offset,
                 size: size,
-                texture: texture,
+                texture: &self.textures[texture],
             }
         })
     }
@@ -121,11 +125,11 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
         match self.data.entry((size, ch)) {
             //returning `into_mut()' to get reference with 'a lifetime
             Entry::Occupied(v) => {
-                let &mut (offset, size, ref texture) = v.into_mut();
+                let &mut (offset, size, texture) = v.into_mut();
                 Ok(Character {
                     offset: offset,
                     size: size,
-                    texture: texture,
+                    texture: &self.textures[texture],
                 })
             }
             Entry::Vacant(v) => {
@@ -160,25 +164,27 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                     image_buffer[pos] = (255.0 * v) as u8;
                 });
 
-                let &mut (offset, size, ref texture) =
+                let texture = self.textures.len();
+                self.textures.push({
+                    if pixel_bb_width == 0 || pixel_bb_height == 0 {
+                        empty(&mut self.factory, &self.settings)?
+                    } else {
+                        from_memory_alpha(&mut self.factory,
+                                          &image_buffer,
+                                          pixel_bb_width as u32,
+                                          pixel_bb_height as u32,
+                                          &self.settings)?
+                    }
+                });
+                let &mut (offset, size, texture) =
                     v.insert(([bounding_box.min.x as Scalar - 1.0,
                                -pixel_bounding_box.min.y as Scalar + 1.0],
-                              [h_metrics.advance_width as Scalar, 0 as Scalar],
-                              {
-                                  if pixel_bb_width == 0 || pixel_bb_height == 0 {
-                                      empty(&mut self.factory, &self.settings)?
-                                  } else {
-                                      from_memory_alpha(&mut self.factory,
-                                                        &image_buffer,
-                                                        pixel_bb_width as u32,
-                                                        pixel_bb_height as u32,
-                                                        &self.settings)?
-                                  }
-                              }));
+                              [h_metrics.advance_width as Scalar, pixel_bb_height as Scalar],
+                              texture));
                 Ok(Character {
                     offset: offset,
                     size: size,
-                    texture: texture,
+                    texture: &self.textures[texture],
                 })
             }
         }
