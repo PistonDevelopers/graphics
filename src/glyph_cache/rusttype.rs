@@ -15,6 +15,7 @@ use std::fs::File;
 use ImageSize;
 use types::{FontSize, Scalar};
 use character::{Character, CharacterCache};
+use texture_packer::TexturePacker;
 
 struct Data {
     offset: [Scalar; 2],
@@ -24,6 +25,9 @@ struct Data {
     texture: usize,
 }
 
+pub const ATLAS_WIDTH: u32 = 256;
+pub const ATLAS_HEIGHT: u32 = 256;
+
 /// A struct used for caching rendered font.
 pub struct GlyphCache<'a, F, T> {
     /// The font.
@@ -32,12 +36,7 @@ pub struct GlyphCache<'a, F, T> {
     pub factory: F,
     /// The settings to render the font with.
     settings: TextureSettings,
-    // Stores the glyph textures in atlases of 256x256.
-    textures: Vec<T>,
-    // The index to the current texture atlas.
-    atlas: usize,
-    // Texture atlas offsets from left to right.
-    atlas_offsets: Vec<[u32; 2]>,
+    texture_packer: TexturePacker<T>,
     // Maps from fontsize and character to offset, texture offset, advance size and texture index.
     data: HashMap<(FontSize, char), Data, BuildHasherDefault<FnvHasher>>,
 }
@@ -54,9 +53,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
             font: font,
             factory: factory,
             settings: settings,
-            textures: vec![],
-            atlas: 0,
-            atlas_offsets: vec![],
+            texture_packer: TexturePacker::new(),
             data: HashMap::with_hasher(fnv),
         }
     }
@@ -79,9 +76,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
             font: font,
             factory: factory,
             settings: settings,
-            textures: vec![],
-            atlas: 0,
-            atlas_offsets: vec![],
+            texture_packer: TexturePacker::new(),
             data: HashMap::with_hasher(fnv),
         })
     }
@@ -130,7 +125,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
                 advance_size,
                 atlas_offset,
                 atlas_size,
-                texture: &self.textures[texture],
+                texture: &self.texture_packer.textures[texture],
             }
         })
     }
@@ -161,7 +156,7 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                     advance_size,
                     atlas_offset,
                     atlas_size,
-                    texture: &self.textures[texture],
+                    texture: &self.texture_packer.textures[texture],
                 })
             }
             Entry::Vacant(v) => {
@@ -186,8 +181,10 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                     min: rt::Point { x: 0, y: 0 },
                     max: rt::Point { x: 0, y: 0 },
                 });
-                let pixel_bb_width = pixel_bounding_box.width() + 2;
-                let pixel_bb_height = pixel_bounding_box.height() + 2;
+                let size = [
+                    (pixel_bounding_box.width() + 2) as u32,
+                    (pixel_bounding_box.height() + 2) as u32,
+                ];
 
                 let &mut Data {
                     offset,
@@ -195,34 +192,20 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                     atlas_offset,
                     atlas_size,
                     texture
-                } = match find_space(
-                    &self.textures,
-                    self.atlas,
-                    &self.atlas_offsets,
-                    [pixel_bb_width as u32, pixel_bb_height as u32]
-                ) {
+                } = match self.texture_packer.find_space(size) {
                     None => {
                         // Create a new texture atlas.
                         let mut image_buffer = Vec::<u8>::new();
-                        let w = pixel_bb_width.max(256) as u32;
-                        let h = pixel_bb_height.max(256) as u32;
+                        let w = size[0].max(ATLAS_WIDTH) as u32;
+                        let h = size[1].max(ATLAS_HEIGHT) as u32;
                         image_buffer.resize((w * h) as usize, 0);
                         glyph.draw(|x, y, v| {
                             let pos = ((x + 1) + (y + 1) * w) as usize;
                             image_buffer[pos] = (255.0 * v) as u8;
                         });
 
-                        if self.textures.len() > 0 {
-                            self.atlas += 1;
-                        }
-                        self.atlas_offsets = vec![
-                            [0, pixel_bb_height as u32],
-                            [pixel_bb_width as u32, 0],
-                        ];
-
-                        let texture = self.textures.len();
-                        self.textures.push({
-                            if pixel_bb_width == 0 || pixel_bb_height == 0 {
+                        let texture = self.texture_packer.create(size, {
+                            if size[0] == 0 || size[1] == 0 {
                                 empty(&mut self.factory, &self.settings)?
                             } else {
                                 from_memory_alpha(&mut self.factory,
@@ -236,53 +219,34 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                                      -pixel_bounding_box.min.y as Scalar + 1.0],
                             advance_size: [h_metrics.advance_width as Scalar, 0.0],
                             atlas_offset: [0.0; 2],
-                            atlas_size: [pixel_bb_width as Scalar, pixel_bb_height as Scalar],
+                            atlas_size: [size[0] as Scalar, size[1] as Scalar],
                             texture
                         })
                     }
                     Some(ind) => {
                         // Use existing texture atlas.
                         let mut image_buffer = Vec::<u8>::new();
-                        image_buffer.resize((pixel_bb_width * pixel_bb_height) as usize, 0);
+                        image_buffer.resize((size[0] * size[1]) as usize, 0);
                         glyph.draw(|x, y, v| {
-                            let pos = ((x + 1) + (y + 1) * (pixel_bb_width as u32)) as usize;
+                            let pos = ((x + 1) + (y + 1) * size[0]) as usize;
                             image_buffer[pos] = (255.0 * v) as u8;
                         });
 
-                        let texture = self.atlas;
-                        let offset = self.atlas_offsets[ind];
-
-                        // Increase y-value of atlas offsets that are matched.
-                        let mut w = 0;
-                        for i in ind..self.atlas_offsets.len() {
-                            if self.atlas_offsets[i][1] <= offset[1] {
-                                self.atlas_offsets[i][1] = offset[1] + pixel_bb_height as u32;
-                            }
-                            w = self.atlas_offsets[i][0] - offset[0];
-                            if w >= pixel_bb_height as u32 {
-                                break;
-                            }
-                        }
-                        if w == 0 {
-                            // There are no end-point atlas offset.
-                            // Add new atlas offset point.
-                            self.atlas_offsets.push([offset[0] + pixel_bb_width as u32, offset[1]]);
-                            self.atlas_offsets.sort();
-                        }
+                        let (texture, offset) = self.texture_packer.update(ind, size);
 
                         update_memory_alpha(
-                            &mut self.textures[texture],
+                            &mut self.texture_packer.textures[texture],
                             &mut self.factory,
                             &image_buffer,
                             offset,
-                            [pixel_bb_width as u32, pixel_bb_height as u32],
+                            size,
                         )?;
                         v.insert(Data {
                             offset: [bounding_box.min.x as Scalar - 1.0,
                                      -pixel_bounding_box.min.y as Scalar + 1.0],
                             advance_size: [h_metrics.advance_width as Scalar, 0.0],
                             atlas_offset: [offset[0] as Scalar, offset[1] as Scalar],
-                            atlas_size: [pixel_bb_width as Scalar, pixel_bb_height as Scalar],
+                            atlas_size: [size[0] as Scalar, size[1] as Scalar],
                             texture
                         })
                     }
@@ -292,7 +256,7 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                     advance_size,
                     atlas_offset,
                     atlas_size,
-                    texture: &self.textures[texture],
+                    texture: &self.texture_packer.textures[texture],
                 })
             }
         }
@@ -323,37 +287,4 @@ fn update_memory_alpha<F, T: UpdateTexture<F>>(
                                              -> Result<(), T::Error> {
     let buffer: Vec<u8> = ops::alpha_to_rgba8(buf, size);
     texture.update(factory, Format::Rgba8, &buffer, offset, size)
-}
-
-
-// Returns the index of atlas offset with room for a new glyph.
-fn find_space<T: ImageSize>(
-    textures: &[T],
-    atlas: usize,
-    atlas_offsets: &[[u32; 2]],
-    size: [u32; 2]
-) -> Option<usize> {
-    if textures.len() == 0 {return None};
-
-    let texture = &textures[atlas];
-    let mut min: Option<usize> = None;
-    'next: for i in 0..atlas_offsets.len() {
-        let a = atlas_offsets[i];
-        let mut nxt = [texture.get_width(), texture.get_height()];
-        // Ignore next atlas offsets that have smaller y-value,
-        // because they do not interfer.
-        for j in i+1..atlas_offsets.len() {
-            let b = atlas_offsets[j];
-            nxt[0] = b[0];
-            if b[1] > a[1] {break};
-        }
-        if nxt[0] - a[0] >= size[0] && nxt[1] - a[1] >= size[1] {
-            // There is room for the glyph.
-            if min.is_none() || atlas_offsets[min.unwrap()][1] > a[1] {
-                // Pick the space with smallest y-value.
-                min = Some(i);
-            }
-        }
-    }
-    min
 }

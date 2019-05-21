@@ -84,6 +84,7 @@ pub mod math;
 pub mod deform;
 pub mod grid;
 pub mod glyph_cache;
+pub mod texture_packer;
 
 pub mod radians {
     //! Reexport radians helper trait from vecmath
