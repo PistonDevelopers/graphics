@@ -1,7 +1,7 @@
 //! Glyph caching using the RustType library.
 
 extern crate rusttype;
-use texture::{ops, CreateTexture, Format, TextureSettings};
+use texture::{ops, CreateTexture, UpdateTexture, Format, TextureSettings};
 use std::collections::HashMap;
 
 extern crate fnv;
@@ -31,7 +31,9 @@ pub struct GlyphCache<'a, F, T> {
 }
 
 impl<'a, F, T> GlyphCache<'a, F, T>
-    where T: CreateTexture<F> + ImageSize
+    where T: CreateTexture<F> +
+          UpdateTexture<F, Error = <T as CreateTexture<F>>::Error> +
+          ImageSize
 {
     /// Constructs a GlyphCache from a Font.
     pub fn from_font(font: rusttype::Font<'a>, factory: F, settings: TextureSettings) -> Self {
@@ -79,7 +81,11 @@ impl<'a, F, T> GlyphCache<'a, F, T>
     }
 
     /// Load all characters in the `chars` iterator for `size`
-    pub fn preload_chars<I>(&mut self, size: FontSize, chars: I) -> Result<(), T::Error>
+    pub fn preload_chars<I>(
+        &mut self,
+        size: FontSize,
+        chars: I
+    ) -> Result<(), <T as CreateTexture<F>>::Error>
         where I: Iterator<Item = char>
     {
         for ch in chars {
@@ -89,7 +95,10 @@ impl<'a, F, T> GlyphCache<'a, F, T>
     }
 
     /// Load all the printable ASCII characters for `size`. Includes space.
-    pub fn preload_printable_ascii(&mut self, size: FontSize) -> Result<(), T::Error> {
+    pub fn preload_printable_ascii(
+        &mut self,
+        size: FontSize
+    ) -> Result<(), <T as CreateTexture<F>>::Error> {
         // [0x20, 0x7F) contains all printable ASCII characters ([' ', '~'])
         self.preload_chars(size, (0x20u8..0x7F).map(|ch| ch as char))
     }
@@ -108,10 +117,11 @@ impl<'a, F, T> GlyphCache<'a, F, T>
 }
 
 impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
-    where T: CreateTexture<F>
+    where T: CreateTexture<F> +
+             UpdateTexture<F, Error = <T as CreateTexture<F>>::Error>
 {
     type Texture = T;
-    type Error = T::Error;
+    type Error = <T as CreateTexture<F>>::Error;
 
     fn character<'a>(&'a mut self,
                      size: FontSize,
