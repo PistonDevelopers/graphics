@@ -54,20 +54,25 @@ impl Text {
     {
         let mut image = Image::new_color(self.color);
         let mut x = 0.0;
+        let mut y = 0.0;
         for ch in text.chars() {
             let character = cache.character(self.font_size, ch)?;
             let mut ch_x = x + character.left();
-            let mut ch_y = -character.top();
+            let mut ch_y = y - character.top();
             if self.round {
                 ch_x = ch_x.round();
                 ch_y = ch_y.round();
             }
-            image = image.src_rect([0.0, 0.0, character.width(), character.height()]);
+            image = image.src_rect([
+                character.atlas_offset[0], character.atlas_offset[1],
+                character.atlas_size[0], character.atlas_size[1]
+            ]);
             image.draw(character.texture,
                        draw_state,
                        transform.trans(ch_x, ch_y),
                        g);
-            x += character.width();
+            x += character.advance_width();
+            y += character.advance_height();
         }
         Ok(())
     }
