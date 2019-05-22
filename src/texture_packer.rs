@@ -19,7 +19,7 @@ use ImageSize;
 /// ### Design
 ///
 /// A skyline is a list of non-hole atlas offsets,
-/// used to efficiently determine the a good place to put the next tile.
+/// used to efficiently determine a good place to put the next tile.
 ///
 /// In this texture packer,
 /// only a single skyline is kept track of,
