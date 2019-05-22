@@ -25,8 +25,8 @@ struct Data {
     texture: usize,
 }
 
-pub const ATLAS_WIDTH: u32 = 256;
-pub const ATLAS_HEIGHT: u32 = 256;
+/// The minimum atlas size.
+pub const ATLAS_SIZE: [u32; 2] = [256; 2];
 
 /// A struct used for caching rendered font.
 pub struct GlyphCache<'a, F, T> {
@@ -196,8 +196,8 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                     None => {
                         // Create a new texture atlas.
                         let mut image_buffer = Vec::<u8>::new();
-                        let w = size[0].max(ATLAS_WIDTH) as u32;
-                        let h = size[1].max(ATLAS_HEIGHT) as u32;
+                        let w = size[0].max(ATLAS_SIZE[0]) as u32;
+                        let h = size[1].max(ATLAS_SIZE[1]) as u32;
                         image_buffer.resize((w * h) as usize, 0);
                         glyph.draw(|x, y, v| {
                             let pos = ((x + 1) + (y + 1) * w) as usize;

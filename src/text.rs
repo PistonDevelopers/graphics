@@ -53,6 +53,7 @@ impl Text {
               G: Graphics<Texture = <C as CharacterCache>::Texture>
     {
         let mut image = Image::new_color(self.color);
+
         let mut x = 0.0;
         let mut y = 0.0;
         for ch in text.chars() {
@@ -74,6 +75,7 @@ impl Text {
             x += character.advance_width();
             y += character.advance_height();
         }
+
         Ok(())
     }
 }
