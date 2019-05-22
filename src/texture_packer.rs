@@ -101,7 +101,7 @@ impl<T: ImageSize> TexturePacker<T> {
         (texture, offset)
     }
 
-    /// Returns the index of atlas offset with room for a new glyph.
+    /// Returns the index of atlas offset in skyline with room for a new tile.
     ///
     /// Returns `None` if no room was found in the current texture atlas.
     pub fn find_space(
