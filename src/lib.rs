@@ -107,6 +107,17 @@ pub fn image<G>(image: &<G as Graphics>::Texture, transform: math::Matrix2d, g: 
     Image::new().draw(image, &Default::default(), transform, g);
 }
 
+/// Draws ellipse by corners.
+pub fn ellipse_from_to<P: Into<types::Vec2d>, G>(color: types::Color,
+                                        from: P,
+                                        to: P,
+                                        transform: math::Matrix2d,
+                                        g: &mut G)
+    where G: Graphics
+{
+    Ellipse::new(color).draw_from_to(from, to, &Default::default(), transform, g);
+}
+
 /// Draws ellipse.
 pub fn ellipse<R: Into<types::Rectangle>, G>(color: types::Color,
                                              rect: R,
