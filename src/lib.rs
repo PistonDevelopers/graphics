@@ -131,6 +131,17 @@ pub fn circle_arc<R: Into<types::Rectangle>, G>(color: types::Color,
 }
 
 /// Draws rectangle.
+pub fn rectangle_from_to<P: Into<types::Vec2d>, G>(color: types::Color,
+                                               from: P,
+                                               to: P,
+                                               transform: math::Matrix2d,
+                                               g: &mut G)
+    where G: Graphics
+{
+    Rectangle::new(color).draw_from_to(from, to, &Default::default(), transform, g);
+}
+
+/// Draws rectangle.
 pub fn rectangle<R: Into<types::Rectangle>, G>(color: types::Color,
                                                rect: R,
                                                transform: math::Matrix2d,
