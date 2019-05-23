@@ -73,6 +73,26 @@ impl Ellipse {
         self
     }
 
+    /// Draws ellipse by corners using default method.
+    #[inline(always)]
+    pub fn draw_from_to<P: Into<crate::types::Vec2d>, G>(&self,
+                                       from: P,
+                                       to: P,
+                                       draw_state: &DrawState,
+                                       transform: Matrix2d,
+                                       g: &mut G)
+        where G: Graphics
+    {
+        use rectangle::rectangle_by_corners;
+
+        let from = from.into();
+        let to = to.into();
+        g.ellipse(self,
+                  rectangle_by_corners(from[0], from[1], to[0], to[1]),
+                  draw_state,
+                  transform);
+    }
+
     /// Draws ellipse using default method.
     #[inline(always)]
     pub fn draw<R: Into<Rectangle>, G>(&self,
