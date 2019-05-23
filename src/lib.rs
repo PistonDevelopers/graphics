@@ -150,6 +150,18 @@ pub fn polygon<G>(color: types::Color,
     Polygon::new(color).draw(polygon, &Default::default(), transform, g);
 }
 
+/// Draws line between points.
+pub fn line_from_to<P: Into<types::Vec2d>, G>(color: types::Color,
+                                     radius: types::Radius,
+                                     from: P,
+                                     to: P,
+                                     transform: math::Matrix2d,
+                                     g: &mut G)
+    where G: Graphics
+{
+    Line::new(color, radius).draw_from_to(from, to, &Default::default(), transform, g)
+}
+
 /// Draws line.
 pub fn line<L: Into<types::Line>, G>(color: types::Color,
                                      radius: types::Radius,
