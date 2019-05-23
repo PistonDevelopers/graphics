@@ -16,6 +16,7 @@ readme = "README.md"
 repository = "https://github.com/pistondevelopers/graphics.git"
 homepage = "https://github.com/pistondevelopers/graphics"
 categories = ["rendering::graphics-api"]
+exclude = ["scripts"]
 
 [lib]
 

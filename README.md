@@ -43,7 +43,7 @@ which can be overridden for higher quality or better performance.
 ## Non-Goals
 
 * Image formats
-* Backward compability (expect lot of breaking)
+* Backward compatibility (expect lot of breaking)
 * Platform or back-end specific code
 * 3D
 * Physics
@@ -58,4 +58,3 @@ which can be overridden for higher quality or better performance.
 ## Dependencies
 
 ![dependencies](./Cargo.png)
-
