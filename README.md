@@ -4,19 +4,15 @@ A library for 2D graphics, written in Rust, that works with multiple back-ends.
 
 Maintainers: @bvssvni
 
-[Graphics online docs](http://docs.piston.rs/graphics/graphics/)
+[Documentation](https://docs.rs/piston2d-graphics)
 
 [How to contribute](https://github.com/PistonDevelopers/piston/blob/master/CONTRIBUTING.md)
-
-*Latest news: Color spaces are now well defined!*
 
 | Back-ends |
 |--------------------|
 | [opengl_graphics](https://github.com/pistondevelopers/opengl_graphics) |
 | [gfx_graphics](https://github.com/pistondevelopers/gfx_graphics) |
 | [glium_graphics](https://github.com/pistondevelopers/glium_graphics) |
-
-Experimental algorithms are developed in a separate repository: [Graphics-Lab](https://github.com/pistondevelopers/graphics-lab)  
 
 ## Motivation
 
