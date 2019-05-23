@@ -1,7 +1,7 @@
 //! Glyph caching using the RustType library.
 
 extern crate rusttype;
-use texture::{ops, CreateTexture, Format, TextureSettings};
+use texture::{ops, CreateTexture, UpdateTexture, Format, TextureSettings};
 use std::collections::HashMap;
 
 extern crate fnv;
@@ -15,6 +15,18 @@ use std::fs::File;
 use ImageSize;
 use types::{FontSize, Scalar};
 use character::{Character, CharacterCache};
+use texture_packer::TexturePacker;
+
+struct Data {
+    offset: [Scalar; 2],
+    advance_size: [Scalar; 2],
+    atlas_offset: [Scalar; 2],
+    atlas_size: [Scalar; 2],
+    texture: usize,
+}
+
+/// The minimum atlas size.
+pub const ATLAS_SIZE: [u32; 2] = [256; 2];
 
 /// A struct used for caching rendered font.
 pub struct GlyphCache<'a, F, T> {
@@ -24,12 +36,15 @@ pub struct GlyphCache<'a, F, T> {
     pub factory: F,
     /// The settings to render the font with.
     settings: TextureSettings,
-    // Maps from fontsize and character to offset, size and texture.
-    data: HashMap<(FontSize, char), ([Scalar; 2], [Scalar; 2], T), BuildHasherDefault<FnvHasher>>,
+    texture_packer: TexturePacker<T>,
+    // Maps from fontsize and character to offset, texture offset, advance size and texture index.
+    data: HashMap<(FontSize, char), Data, BuildHasherDefault<FnvHasher>>,
 }
 
 impl<'a, F, T> GlyphCache<'a, F, T>
-    where T: CreateTexture<F> + ImageSize
+    where T: CreateTexture<F> +
+          UpdateTexture<F, Error = <T as CreateTexture<F>>::Error> +
+          ImageSize
 {
     /// Constructs a GlyphCache from a Font.
     pub fn from_font(font: rusttype::Font<'a>, factory: F, settings: TextureSettings) -> Self {
@@ -38,6 +53,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
             font: font,
             factory: factory,
             settings: settings,
+            texture_packer: TexturePacker::new(),
             data: HashMap::with_hasher(fnv),
         }
     }
@@ -60,6 +76,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
             font: font,
             factory: factory,
             settings: settings,
+            texture_packer: TexturePacker::new(),
             data: HashMap::with_hasher(fnv),
         })
     }
@@ -75,7 +92,11 @@ impl<'a, F, T> GlyphCache<'a, F, T>
     }
 
     /// Load all characters in the `chars` iterator for `size`
-    pub fn preload_chars<I>(&mut self, size: FontSize, chars: I) -> Result<(), T::Error>
+    pub fn preload_chars<I>(
+        &mut self,
+        size: FontSize,
+        chars: I
+    ) -> Result<(), <T as CreateTexture<F>>::Error>
         where I: Iterator<Item = char>
     {
         for ch in chars {
@@ -85,7 +106,10 @@ impl<'a, F, T> GlyphCache<'a, F, T>
     }
 
     /// Load all the printable ASCII characters for `size`. Includes space.
-    pub fn preload_printable_ascii(&mut self, size: FontSize) -> Result<(), T::Error> {
+    pub fn preload_printable_ascii(
+        &mut self,
+        size: FontSize
+    ) -> Result<(), <T as CreateTexture<F>>::Error> {
         // [0x20, 0x7F) contains all printable ASCII characters ([' ', '~'])
         self.preload_chars(size, (0x20u8..0x7F).map(|ch| ch as char))
     }
@@ -93,21 +117,26 @@ impl<'a, F, T> GlyphCache<'a, F, T>
     /// Return `ch` for `size` if it's already cached. Don't load.
     /// See the `preload_*` functions.
     pub fn opt_character(&self, size: FontSize, ch: char) -> Option<Character<T>> {
-        self.data.get(&(size, ch)).map(|&(offset, size, ref texture)| {
+        self.data.get(&(size, ch)).map(|&Data {
+            offset, advance_size, atlas_offset, atlas_size, texture
+        }| {
             Character {
-                offset: offset,
-                size: size,
-                texture: texture,
+                offset,
+                advance_size,
+                atlas_offset,
+                atlas_size,
+                texture: &self.texture_packer.textures[texture],
             }
         })
     }
 }
 
 impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
-    where T: CreateTexture<F>
+    where T: CreateTexture<F> +
+             UpdateTexture<F, Error = <T as CreateTexture<F>>::Error>
 {
     type Texture = T;
-    type Error = T::Error;
+    type Error = <T as CreateTexture<F>>::Error;
 
     fn character<'a>(&'a mut self,
                      size: FontSize,
@@ -121,11 +150,13 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
         match self.data.entry((size, ch)) {
             //returning `into_mut()' to get reference with 'a lifetime
             Entry::Occupied(v) => {
-                let &mut (offset, size, ref texture) = v.into_mut();
+                let &mut Data {offset, advance_size, atlas_offset, atlas_size, texture} = v.into_mut();
                 Ok(Character {
-                    offset: offset,
-                    size: size,
-                    texture: texture,
+                    offset,
+                    advance_size,
+                    atlas_offset,
+                    atlas_size,
+                    texture: &self.texture_packer.textures[texture],
                 })
             }
             Entry::Vacant(v) => {
@@ -150,35 +181,82 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                     min: rt::Point { x: 0, y: 0 },
                     max: rt::Point { x: 0, y: 0 },
                 });
-                let pixel_bb_width = pixel_bounding_box.width() + 2;
-                let pixel_bb_height = pixel_bounding_box.height() + 2;
+                let size = [
+                    (pixel_bounding_box.width() + 2) as u32,
+                    (pixel_bounding_box.height() + 2) as u32,
+                ];
 
-                let mut image_buffer = Vec::<u8>::new();
-                image_buffer.resize((pixel_bb_width * pixel_bb_height) as usize, 0);
-                glyph.draw(|x, y, v| {
-                    let pos = ((x + 1) + (y + 1) * (pixel_bb_width as u32)) as usize;
-                    image_buffer[pos] = (255.0 * v) as u8;
-                });
+                let &mut Data {
+                    offset,
+                    advance_size,
+                    atlas_offset,
+                    atlas_size,
+                    texture
+                } = match self.texture_packer.find_space(size) {
+                    None => {
+                        // Create a new texture atlas.
+                        let mut image_buffer = Vec::<u8>::new();
+                        let w = size[0].max(ATLAS_SIZE[0]) as u32;
+                        let h = size[1].max(ATLAS_SIZE[1]) as u32;
+                        image_buffer.resize((w * h) as usize, 0);
+                        glyph.draw(|x, y, v| {
+                            let pos = ((x + 1) + (y + 1) * w) as usize;
+                            image_buffer[pos] = (255.0 * v) as u8;
+                        });
 
-                let &mut (offset, size, ref texture) =
-                    v.insert(([bounding_box.min.x as Scalar - 1.0,
-                               -pixel_bounding_box.min.y as Scalar + 1.0],
-                              [h_metrics.advance_width as Scalar, 0 as Scalar],
-                              {
-                                  if pixel_bb_width == 0 || pixel_bb_height == 0 {
-                                      empty(&mut self.factory, &self.settings)?
-                                  } else {
-                                      from_memory_alpha(&mut self.factory,
-                                                        &image_buffer,
-                                                        pixel_bb_width as u32,
-                                                        pixel_bb_height as u32,
-                                                        &self.settings)?
-                                  }
-                              }));
+                        let texture = self.texture_packer.create(size, {
+                            if size[0] == 0 || size[1] == 0 {
+                                empty(&mut self.factory, &self.settings)?
+                            } else {
+                                from_memory_alpha(&mut self.factory,
+                                                  &image_buffer,
+                                                  [w, h],
+                                                  &self.settings)?
+                            }
+                        });
+                        v.insert(Data {
+                            offset: [bounding_box.min.x as Scalar - 1.0,
+                                     -pixel_bounding_box.min.y as Scalar + 1.0],
+                            advance_size: [h_metrics.advance_width as Scalar, 0.0],
+                            atlas_offset: [0.0; 2],
+                            atlas_size: [size[0] as Scalar, size[1] as Scalar],
+                            texture
+                        })
+                    }
+                    Some(ind) => {
+                        // Use existing texture atlas.
+                        let mut image_buffer = Vec::<u8>::new();
+                        image_buffer.resize((size[0] * size[1]) as usize, 0);
+                        glyph.draw(|x, y, v| {
+                            let pos = ((x + 1) + (y + 1) * size[0]) as usize;
+                            image_buffer[pos] = (255.0 * v) as u8;
+                        });
+
+                        let (texture, offset) = self.texture_packer.update(ind, size);
+
+                        update_memory_alpha(
+                            &mut self.texture_packer.textures[texture],
+                            &mut self.factory,
+                            &image_buffer,
+                            offset,
+                            size,
+                        )?;
+                        v.insert(Data {
+                            offset: [bounding_box.min.x as Scalar - 1.0,
+                                     -pixel_bounding_box.min.y as Scalar + 1.0],
+                            advance_size: [h_metrics.advance_width as Scalar, 0.0],
+                            atlas_offset: [offset[0] as Scalar, offset[1] as Scalar],
+                            atlas_size: [size[0] as Scalar, size[1] as Scalar],
+                            texture
+                        })
+                    }
+                };
                 Ok(Character {
-                    offset: offset,
-                    size: size,
-                    texture: texture,
+                    offset,
+                    advance_size,
+                    atlas_offset,
+                    atlas_size,
+                    texture: &self.texture_packer.textures[texture],
                 })
             }
         }
@@ -193,11 +271,20 @@ fn empty<F, T: CreateTexture<F>>(factory: &mut F,
 
 fn from_memory_alpha<F, T: CreateTexture<F>>(factory: &mut F,
                                              buf: &[u8],
-                                             width: u32,
-                                             height: u32,
+                                             size: [u32; 2],
                                              settings: &TextureSettings)
                                              -> Result<T, T::Error> {
-    let size = [width, height];
     let buffer: Vec<u8> = ops::alpha_to_rgba8(buf, size);
     CreateTexture::create(factory, Format::Rgba8, &buffer, size, settings)
+}
+
+fn update_memory_alpha<F, T: UpdateTexture<F>>(
+                                            texture: &mut T,
+                                            factory: &mut F,
+                                             buf: &[u8],
+                                             offset: [u32; 2],
+                                             size: [u32; 2])
+                                             -> Result<(), T::Error> {
+    let buffer: Vec<u8> = ops::alpha_to_rgba8(buf, size);
+    texture.update(factory, Format::Rgba8, &buffer, offset, size)
 }

@@ -8,8 +8,12 @@ use ImageSize;
 pub struct Character<'a, T: 'a + ImageSize> {
     /// The offset of character.
     pub offset: [Scalar; 2],
-    /// The size of character, including space.
-    pub size: [Scalar; 2],
+    /// The advance size of character, including space.
+    pub advance_size: [Scalar; 2],
+    /// The offset of character within texture atlas.
+    pub atlas_offset: [Scalar; 2],
+    /// The size of character within texture atlas.
+    pub atlas_size: [Scalar; 2],
     /// The texture of the character.
     pub texture: &'a T,
 }
@@ -26,13 +30,13 @@ impl<'a, T: ImageSize> Character<'a, T> {
     }
 
     /// Gets width of character, including space to the next one.
-    pub fn width(&self) -> Scalar {
-        self.size[0]
+    pub fn advance_width(&self) -> Scalar {
+        self.advance_size[0]
     }
 
     /// Sets height of character, including space to the next one.
-    pub fn height(&self) -> Scalar {
-        self.size[1]
+    pub fn advance_height(&self) -> Scalar {
+        self.advance_size[1]
     }
 }
 
@@ -54,7 +58,7 @@ pub trait CharacterCache {
         let mut width = 0.0;
         for ch in text.chars() {
             let character = self.character(size, ch)?;
-            width += character.width();
+            width += character.advance_width();
         }
         Ok(width)
     }

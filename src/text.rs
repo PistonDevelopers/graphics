@@ -52,7 +52,8 @@ impl Text {
         where C: CharacterCache,
               G: Graphics<Texture = <C as CharacterCache>::Texture>
     {
-        let image = Image::new_color(self.color);
+        let mut image = Image::new_color(self.color);
+
         let mut x = 0.0;
         let mut y = 0.0;
         for ch in text.chars() {
@@ -63,13 +64,18 @@ impl Text {
                 ch_x = ch_x.round();
                 ch_y = ch_y.round();
             }
+            image = image.src_rect([
+                character.atlas_offset[0], character.atlas_offset[1],
+                character.atlas_size[0], character.atlas_size[1]
+            ]);
             image.draw(character.texture,
                        draw_state,
                        transform.trans(ch_x, ch_y),
                        g);
-            x += character.width();
-            y += character.height();
+            x += character.advance_width();
+            y += character.advance_height();
         }
+
         Ok(())
     }
 }
