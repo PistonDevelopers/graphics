@@ -1,6 +1,5 @@
 use DrawState;
 use types::{self, Matrix2d, Scalar};
-use deform::DeformGrid;
 use {CircleArc, Ellipse, Image, ImageSize, Line, Polygon, Rectangle};
 
 /// Implemented by all graphics back-ends.
@@ -209,19 +208,5 @@ pub trait Graphics: Sized {
                                              draw_state: &DrawState,
                                              transform: Matrix2d) {
         c.draw_tri(rectangle, draw_state, transform, self);
-    }
-
-    /// Draws deformed image.
-    ///
-    /// Can be overriden in the back-end for higher performance.
-    ///
-    /// Instead of calling this directly, use `DeformGrid::draw_image`.
-    #[inline(always)]
-    fn deform_image(&mut self,
-                    d: &DeformGrid,
-                    texture: &Self::Texture,
-                    draw_state: &DrawState,
-                    transform: Matrix2d) {
-        d.draw_image_tri(texture, draw_state, transform, self);
     }
 }

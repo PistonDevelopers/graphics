@@ -81,7 +81,6 @@ pub mod modular_index;
 pub mod text;
 pub mod triangulation;
 pub mod math;
-pub mod deform;
 pub mod grid;
 pub mod glyph_cache;
 pub mod texture_packer;
