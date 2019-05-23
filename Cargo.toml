@@ -28,7 +28,7 @@ interpolation = "0.2.0"
 piston-texture = "0.6.0"
 piston-viewport = "0.5.0"
 read_color = "1.0.0"
-vecmath = "0.3.0"
+vecmath = "1.0.0"
 
 [dependencies.rusttype]
 version = "0.7.0"
