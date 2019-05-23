@@ -69,6 +69,21 @@ impl Line {
         self
     }
 
+    /// Draws line using default method between points.
+    #[inline(always)]
+    pub fn draw_from_to<P: Into<types::Vec2d>, G>(&self,
+                                         from: P,
+                                         to: P,
+                                         draw_state: &DrawState,
+                                         transform: Matrix2d,
+                                         g: &mut G)
+        where G: Graphics
+    {
+        let from: types::Vec2d = from.into();
+        let to: types::Vec2d = to.into();
+        g.line(self, [from[0], from[1], to[0], to[1]], draw_state, transform);
+    }
+
     /// Draws line using default method.
     #[inline(always)]
     pub fn draw<L: Into<types::Line>, G>(&self,
