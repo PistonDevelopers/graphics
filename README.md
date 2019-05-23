@@ -34,7 +34,6 @@ which can be overridden for higher quality or better performance.
 * Text
 * Clipping
 * To have a feature complete library for 2D graphics in general
-* Reasonable defaults with resolution detection whenever possible
 
 ## Non-Goals
 
@@ -46,6 +45,7 @@ which can be overridden for higher quality or better performance.
 * Node tree
 * One-to-one correspondence with standards
 * Integration with platform GUI
+* Resolution detection
 
 ## Used by
 
