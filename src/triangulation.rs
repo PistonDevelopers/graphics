@@ -41,18 +41,7 @@ pub fn with_lerp_polygons_tri_list<F>(m: Matrix2d, polygons: Polygons, tween_fac
     // Get factor between frames.
     let tw = tw - frame as Scalar;
     let n = polygons[0].len();
-    let mut i: usize = 0;
-    stream_polygon_tri_list(m,
-                            || {
-        if i >= n {
-            return None;
-        }
-
-        let j = i;
-        i += 1;
-        Some(lerp(&p0[j], &p1[j], &tw))
-    },
-                            f);
+    stream_polygon_tri_list(m, (0..n).map(|j| lerp(&p0[j], &p1[j], &tw)), f);
 }
 
 /// Streams an ellipse specified by a resolution.
@@ -60,23 +49,15 @@ pub fn with_lerp_polygons_tri_list<F>(m: Matrix2d, polygons: Polygons, tween_fac
 pub fn with_ellipse_tri_list<F>(resolution: Resolution, m: Matrix2d, rect: Rectangle, f: F)
     where F: FnMut(&[[f32; 2]])
 {
-
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let (cw, ch) = (0.5 * w, 0.5 * h);
     let (cx, cy) = (x + cw, y + ch);
     let n = resolution;
-    let mut i = 0;
     stream_polygon_tri_list(m,
-                            || {
-        if i >= n {
-            return None;
-        }
-
-        let angle = i as Scalar / n as Scalar * <Scalar as Radians>::_360();
-        i += 1;
-        Some([cx + angle.cos() * cw, cy + angle.sin() * ch])
-    },
-                            f);
+        (0..n).map(|i| {
+            let angle = i as Scalar / n as Scalar * <Scalar as Radians>::_360();
+            [cx + angle.cos() * cw, cy + angle.sin() * ch]
+        }), f);
 }
 
 /// Streams a round border line.
@@ -96,44 +77,36 @@ pub fn with_round_border_line_tri_list<F>(resolution_cap: Resolution,
     let m = multiply(m, translate([x1, y1]));
     let m = multiply(m, orient(dx, dy));
     let n = resolution_cap * 2;
-    let mut i = 0;
     stream_polygon_tri_list(m,
-                            || {
-        if i >= n {
-            return None;
-        }
-
-        let j = i;
-        i += 1;
-        // Detect the half circle from index.
-        // There is one half circle at each end of the line.
-        // Together they form a full circle if
-        // the length of the line is zero.
-        match j {
-            j if j >= resolution_cap => {
-                // Compute the angle to match start and end
-                // point of half circle.
-                // This requires an angle offset since
-                // the other end of line is the first half circle.
-                let angle = (j - resolution_cap) as Scalar / (resolution_cap - 1) as Scalar *
-                            <Scalar as Radians>::_180() +
-                            <Scalar as Radians>::_180();
-                // Rotate 90 degrees since the line is horizontal.
-                let angle = angle + <Scalar as Radians>::_90();
-                Some([w + angle.cos() * radius, angle.sin() * radius])
+        (0..n).map(|j| {
+            // Detect the half circle from index.
+            // There is one half circle at each end of the line.
+            // Together they form a full circle if
+            // the length of the line is zero.
+            match j {
+                j if j >= resolution_cap => {
+                    // Compute the angle to match start and end
+                    // point of half circle.
+                    // This requires an angle offset since
+                    // the other end of line is the first half circle.
+                    let angle = (j - resolution_cap) as Scalar / (resolution_cap - 1) as Scalar *
+                                <Scalar as Radians>::_180() +
+                                <Scalar as Radians>::_180();
+                    // Rotate 90 degrees since the line is horizontal.
+                    let angle = angle + <Scalar as Radians>::_90();
+                    [w + angle.cos() * radius, angle.sin() * radius]
+                }
+                j => {
+                    // Compute the angle to match start and end
+                    // point of half circle.
+                    let angle = j as Scalar / (resolution_cap - 1) as Scalar *
+                                <Scalar as Radians>::_180();
+                    // Rotate 90 degrees since the line is horizontal.
+                    let angle = angle + <Scalar as Radians>::_90();
+                    [angle.cos() * radius, angle.sin() * radius]
+                }
             }
-            j => {
-                // Compute the angle to match start and end
-                // point of half circle.
-                let angle = j as Scalar / (resolution_cap - 1) as Scalar *
-                            <Scalar as Radians>::_180();
-                // Rotate 90 degrees since the line is horizontal.
-                let angle = angle + <Scalar as Radians>::_90();
-                Some([angle.cos() * radius, angle.sin() * radius])
-            }
-        }
-    },
-                            f);
+        }), f);
 }
 
 /// Streams a round rectangle.
@@ -150,69 +123,61 @@ pub fn with_round_rectangle_tri_list<F>(resolution_corner: Resolution,
     let (x, y, w, h) = (rect[0], rect[1], rect[2], rect[3]);
     let radius = round_radius;
     let n = resolution_corner * 4;
-    let mut i = 0;
     stream_polygon_tri_list(m,
-                            || {
-        if i >= n {
-            return None;
-        }
-
-        let j = i;
-        i += 1;
-        // Detect quarter circle from index.
-        // There is one quarter circle at each corner.
-        // Together they form a full circle if
-        // each side of rectangle is 2 times the radius.
-        match j {
-            j if j >= resolution_corner * 3 => {
-                // Compute the angle to match start and end
-                // point of quarter circle.
-                // This requires an angle offset since this
-                // is the last quarter.
-                let angle: Scalar =
-                    (j - resolution_corner * 3) as Scalar / (resolution_corner - 1) as Scalar *
-                    <Scalar as Radians>::_90() +
-                    <Scalar as FromPrimitive>::from_f64(3.0) * <Scalar as Radians>::_90();
-                // Set center of the circle to the last corner.
-                let (cx, cy) = (x + w - radius, y + radius);
-                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
+        (0..n).map(|j| {
+            // Detect quarter circle from index.
+            // There is one quarter circle at each corner.
+            // Together they form a full circle if
+            // each side of rectangle is 2 times the radius.
+            match j {
+                j if j >= resolution_corner * 3 => {
+                    // Compute the angle to match start and end
+                    // point of quarter circle.
+                    // This requires an angle offset since this
+                    // is the last quarter.
+                    let angle: Scalar =
+                        (j - resolution_corner * 3) as Scalar / (resolution_corner - 1) as Scalar *
+                        <Scalar as Radians>::_90() +
+                        <Scalar as FromPrimitive>::from_f64(3.0) * <Scalar as Radians>::_90();
+                    // Set center of the circle to the last corner.
+                    let (cx, cy) = (x + w - radius, y + radius);
+                    [cx + angle.cos() * radius, cy + angle.sin() * radius]
+                }
+                j if j >= resolution_corner * 2 => {
+                    // Compute the angle to match start and end
+                    // point of quarter circle.
+                    // This requires an angle offset since
+                    // this is the second last quarter.
+                    let angle =
+                        (j - resolution_corner * 2) as Scalar / (resolution_corner - 1) as Scalar *
+                        <Scalar as Radians>::_90() + <Scalar as Radians>::_180();
+                    // Set center of the circle to the second last corner.
+                    let (cx, cy) = (x + radius, y + radius);
+                    [cx + angle.cos() * radius, cy + angle.sin() * radius]
+                }
+                j if j >= resolution_corner * 1 => {
+                    // Compute the angle to match start and end
+                    // point of quarter circle.
+                    // This requires an angle offset since
+                    // this is the second quarter.
+                    let angle = (j - resolution_corner) as Scalar / (resolution_corner - 1) as Scalar *
+                                <Scalar as Radians>::_90() +
+                                <Scalar as Radians>::_90();
+                    // Set center of the circle to the second corner.
+                    let (cx, cy) = (x + radius, y + h - radius);
+                    [cx + angle.cos() * radius, cy + angle.sin() * radius]
+                }
+                j => {
+                    // Compute the angle to match start and end
+                    // point of quarter circle.
+                    let angle = j as Scalar / (resolution_corner - 1) as Scalar *
+                                <Scalar as Radians>::_90();
+                    // Set center of the circle to the first corner.
+                    let (cx, cy) = (x + w - radius, y + h - radius);
+                    [cx + angle.cos() * radius, cy + angle.sin() * radius]
+                }
             }
-            j if j >= resolution_corner * 2 => {
-                // Compute the angle to match start and end
-                // point of quarter circle.
-                // This requires an angle offset since
-                // this is the second last quarter.
-                let angle =
-                    (j - resolution_corner * 2) as Scalar / (resolution_corner - 1) as Scalar *
-                    <Scalar as Radians>::_90() + <Scalar as Radians>::_180();
-                // Set center of the circle to the second last corner.
-                let (cx, cy) = (x + radius, y + radius);
-                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
-            }
-            j if j >= resolution_corner * 1 => {
-                // Compute the angle to match start and end
-                // point of quarter circle.
-                // This requires an angle offset since
-                // this is the second quarter.
-                let angle = (j - resolution_corner) as Scalar / (resolution_corner - 1) as Scalar *
-                            <Scalar as Radians>::_90() +
-                            <Scalar as Radians>::_90();
-                // Set center of the circle to the second corner.
-                let (cx, cy) = (x + radius, y + h - radius);
-                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
-            }
-            j => {
-                // Compute the angle to match start and end
-                // point of quarter circle.
-                let angle = j as Scalar / (resolution_corner - 1) as Scalar *
-                            <Scalar as Radians>::_90();
-                // Set center of the circle to the first corner.
-                let (cx, cy) = (x + w - radius, y + h - radius);
-                Some([cx + angle.cos() * radius, cy + angle.sin() * radius])
-            }
-        }
-    },
-                            f);
+        }), f);
 }
 
 /// Streams a polygon into tri list.
@@ -237,18 +202,18 @@ pub fn with_round_rectangle_tri_list<F>(resolution_corner: Resolution,
 /// until a call to `polygon` returns `None`, indicating there are no points left in
 /// the polygon. (in which case the last partially filled buffer is sent to `f`)
 pub fn stream_polygon_tri_list<E, F>(m: Matrix2d, mut polygon: E, mut f: F)
-    where E: FnMut() -> Option<Vec2d>,
+    where E: Iterator<Item = Vec2d>,
           F: FnMut(&[[f32; 2]])
 {
 
     let mut vertices: [[f32; 2]; BUFFER_SIZE] = [[0.0; 2]; BUFFER_SIZE];
     // Get the first point which will be used a lot.
-    let fp = match polygon() {
+    let fp = match polygon.next() {
         None => return,
         Some(val) => val,
     };
     let f1 = [tx(m, fp[0], fp[1]), ty(m, fp[0], fp[1])];
-    let gp = match polygon() {
+    let gp = match polygon.next() {
         None => return,
         Some(val) => val,
     };
@@ -261,7 +226,7 @@ pub fn stream_polygon_tri_list<E, F>(m: Matrix2d, mut polygon: E, mut f: F)
         vertices[ind_out] = f1;
 
         // Copy vertex.
-        let p = match polygon() {
+        let p = match polygon.next() {
             None => break 'read_vertices,
             Some(val) => val,
         };
@@ -556,20 +521,7 @@ pub fn stream_quad_tri_list<E, F>(m: Matrix2d, mut quad_edge: E, mut f: F)
 pub fn with_polygon_tri_list<F>(m: Matrix2d, polygon: Polygon, f: F)
     where F: FnMut(&[[f32; 2]])
 {
-
-    let n = polygon.len();
-    let mut i = 0;
-    stream_polygon_tri_list(m,
-                            || {
-        if i >= n {
-            return None;
-        }
-
-        let j = i;
-        i += 1;
-        Some(polygon[j])
-    },
-                            f);
+    stream_polygon_tri_list(m, (0..polygon.len()).map(|i| polygon[i]), f);
 }
 
 /// Creates triangle list vertices from rectangle.
