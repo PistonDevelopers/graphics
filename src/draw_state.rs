@@ -91,13 +91,13 @@ pub enum Blend {
     /// new_dest_alpha = src_alpha + dest_alpha
     /// ```
     Add,
-    /// Screen blending.
+    /// Additive blending with alpha channel.
     ///
     /// ```not_rust
     /// new_dest_color = src_color * src_alpha + dest_color
-    /// new_dest_alpha = src_alpha + dest_alpha
+    /// new_dest_alpha = dest_alpha
     /// ```
-    Screen,
+    Lighter,
     /// Multiply color components.
     ///
     /// ```not_rust
