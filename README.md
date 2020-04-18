@@ -6,7 +6,7 @@ Maintainers: @bvssvni
 
 [Documentation](https://docs.rs/piston2d-graphics)
 
-[Examples](https://github.com/pistondevelopers/piston-examples)
+[Getting Started](https://github.com/PistonDevelopers/Piston-Tutorials/tree/master/getting-started)
 
 [How to contribute](https://github.com/PistonDevelopers/piston/blob/master/CONTRIBUTING.md)
 
