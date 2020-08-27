@@ -30,10 +30,22 @@ impl DrawState {
 
     /// Draws to stencil buffer with value 255.
     /// This can be used for clipping.
+    ///
+    /// For nested clipping, clear the stencil buffer and use `DrawState::new_increment`.
     pub fn new_clip() -> DrawState {
         DrawState {
             blend: Some(Blend::Alpha),
             stencil: Some(Stencil::Clip(255)),
+            scissor: None,
+        }
+    }
+
+    /// Increases stencil buffer.
+    /// This can be used for nested clipping.
+    pub fn new_increment() -> DrawState {
+        DrawState {
+            blend: Some(Blend::Alpha),
+            stencil: Some(Stencil::Increment),
             scissor: None,
         }
     }
@@ -129,4 +141,6 @@ pub enum Stencil {
     Inside(u8),
     /// Draw pixels that does not have stencil value.
     Outside(u8),
+    /// Increment stencil buffer.
+    Increment,
 }
