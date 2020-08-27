@@ -112,7 +112,7 @@ impl<T: ImageSize> TexturePacker<T> {
 
         let texture = &self.textures[self.atlas];
         let mut min: Option<(usize, u32)> = None;
-        'next: for i in 0..self.skyline.len() {
+        for i in 0..self.skyline.len() {
             let a = self.skyline[i];
             let mut nxt = [texture.get_width(), texture.get_height()];
             // Ignore next atlas offsets that have smaller y-value,
