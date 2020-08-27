@@ -81,7 +81,7 @@ pub trait Graphics: Sized {
     ///
     /// Color space is sRGB.
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
-        where F: FnMut(&mut FnMut(&[[f32; 2]]));
+        where F: FnMut(&mut dyn FnMut(&[[f32; 2]]));
 
     /// Renders list of 2d triangles using a color and a texture.
     ///
@@ -109,7 +109,7 @@ pub trait Graphics: Sized {
                       color: &[f32; 4],
                       texture: &<Self as Graphics>::Texture,
                       f: F)
-        where F: FnMut(&mut FnMut(&[[f32; 2]], &[[f32; 2]]));
+        where F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 2]]));
 
     /// Draws a rectangle.
     ///
