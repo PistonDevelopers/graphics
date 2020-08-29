@@ -139,12 +139,63 @@ pub fn identity<T>() -> Matrix2d<T>
     [[_1, _0, _0], [_0, _1, _0]]
 }
 
+/// Extract translation information from matrix.
+#[inline(always)]
+pub fn get_translation<T>(m: Matrix2d<T>) -> Vec2d<T>
+    where T: Float
+{
+    [m[0][2], m[1][2]]
+}
+
+/// Extract rotation information from matrix.
+#[inline(always)]
+pub fn get_rotation_radians<T>(m: Matrix2d<T>) -> T
+    where T: Float
+{
+    m[1][0].atan2(m[1][1])
+}
+
 /// Extract scale information from matrix.
 #[inline(always)]
 pub fn get_scale<T>(m: Matrix2d<T>) -> Vec2d<T>
     where T: Float
 {
     [(m[0][0] * m[0][0] + m[1][0] * m[1][0]).sqrt(), (m[0][1] * m[0][1] + m[1][1] * m[1][1]).sqrt()]
+}
+
+#[cfg(test)]
+mod test_extract {
+    use super::*;
+
+    #[test]
+    fn test_get_translation() {
+        let v = [2.0, 3.4];
+        let m = translate(v);
+
+        let extracted = get_translation(m);
+
+        assert!(v == extracted);
+    }
+
+    #[test]
+    fn test_get_scale() {
+        let v = [2.0, 3.4];
+        let m = scale(v[0], v[1]);
+
+        let extracted = get_scale(m);
+
+        assert!(v == extracted);
+    }
+
+    #[test]
+    fn test_get_rotation_radians() {
+        let angle = 1.6;
+        let m = rotate_radians(angle);
+
+        let extracted = get_rotation_radians(m);
+
+        assert!(angle == extracted);
+    }
 }
 
 /// Compute the shortest vector from point to ray.
