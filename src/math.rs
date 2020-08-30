@@ -163,6 +163,14 @@ pub fn get_scale<T>(m: Matrix2d<T>) -> Vec2d<T>
     [(m[0][0] * m[0][0] + m[1][0] * m[1][0]).sqrt(), (m[0][1] * m[0][1] + m[1][1] * m[1][1]).sqrt()]
 }
 
+/// Extract shear information from matrix.
+#[inline(always)]
+pub fn get_shear<T>(m: Matrix2d<T>) -> Vec2d<T>
+    where T: Float
+{
+    [m[0][1], m[1][0]]
+}
+
 #[cfg(test)]
 mod test_extract {
     use super::*;
@@ -183,6 +191,16 @@ mod test_extract {
         let m = scale(v[0], v[1]);
 
         let extracted = get_scale(m);
+
+        assert!(v == extracted);
+    }
+
+    #[test]
+    fn test_get_shear() {
+        let v = [2.0, 3.4];
+        let m = shear(v);
+
+        let extracted = get_shear(m);
 
         assert!(v == extracted);
     }
