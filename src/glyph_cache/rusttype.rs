@@ -25,6 +25,16 @@ struct Data {
     texture: usize,
 }
 
+struct EmptyOutlineBuilder;
+
+impl rusttype::OutlineBuilder for EmptyOutlineBuilder {
+    fn move_to(&mut self, _x: f32, _y: f32){}
+    fn line_to(&mut self, _x: f32, _y: f32){}
+    fn quad_to(&mut self, _x1: f32, _y1: f32, _x: f32, _y: f32){}
+    fn curve_to(&mut self, _x1: f32, _y1: f32, _x2: f32, _y2: f32, _x: f32, _y: f32){}
+    fn close(&mut self){}
+}
+
 /// The minimum atlas size.
 pub const ATLAS_SIZE: [u32; 2] = [256; 2];
 
@@ -68,8 +78,8 @@ impl<'a, F, T> GlyphCache<'a, F, T>
         let mut file_buffer = Vec::new();
         file.read_to_end(&mut file_buffer)?;
 
-        let collection = rusttype::FontCollection::from_bytes(file_buffer);
-        let font = collection.unwrap().into_font().unwrap();
+        let font = rusttype::Font::try_from_vec(file_buffer)
+            .ok_or(std::io::Error::new(std::io::ErrorKind::Other, "invalid font"))?;
         Ok(GlyphCache {
             font: font,
             factory: factory,
@@ -84,8 +94,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
                       factory: F,
                       settings: TextureSettings)
                       -> Result<GlyphCache<'a, F, T>, ()> {
-        let collection = rusttype::FontCollection::from_bytes(font).or(Err(()))?;
-        let font = collection.into_font().or(Err(()))?;
+        let font = rusttype::Font::try_from_bytes(font).ok_or(())?;
         Ok(Self::from_font(font, factory, settings))
     }
 
@@ -164,7 +173,7 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                 let mut glyph = glyph.scaled(scale);
 
                 // some fonts do not contain glyph zero as fallback, instead try U+FFFD.
-                if glyph.id() == rt::GlyphId(0) && glyph.shape().is_none() {
+                if glyph.id() == rt::GlyphId(0) && !glyph.build_outline(&mut EmptyOutlineBuilder) {
                     glyph = self.font.glyph('\u{FFFD}').scaled(scale);
                 }
 
