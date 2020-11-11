@@ -52,6 +52,7 @@ pub use polygon::Polygon;
 pub use text::Text;
 pub use context::Context;
 pub use draw_state::DrawState;
+pub use radians::Radians;
 
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
