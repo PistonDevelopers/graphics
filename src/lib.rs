@@ -38,6 +38,7 @@ pub use texture::ImageSize;
 pub use viewport::Viewport;
 
 pub use graphics::Graphics;
+pub use character::{Character, CharacterCache};
 pub use source_rectangled::SourceRectangled;
 pub use rectangled::Rectangled;
 pub use transformed::Transformed;
