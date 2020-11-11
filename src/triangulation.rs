@@ -304,8 +304,13 @@ pub fn with_arc_tri_list<F>(start_radians: Scalar,
     let twopi = <Scalar as Radians>::_360();
     let max_seg_size = twopi / resolution as Scalar;
 
-    // Take true modulus by 2pi.
-    let delta = (((end_radians - start_radians) % twopi) + twopi) % twopi;
+    let (start_radians, delta) = if (end_radians - start_radians).abs() >= twopi {
+        // Remove overlap.
+        (0.0, twopi)
+    } else {
+        // Take true modulus by 2pi.
+        (start_radians, (((end_radians - start_radians) % twopi) + twopi) % twopi)
+    };
 
     // Taking ceiling here implies that the resolution parameter provides a
     // lower bound on the drawn resolution.
