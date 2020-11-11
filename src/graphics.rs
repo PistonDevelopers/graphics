@@ -83,6 +83,12 @@ pub trait Graphics: Sized {
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
         where F: FnMut(&mut dyn FnMut(&[[f32; 2]]));
 
+    /// Same as `tri_list`, but with individual vertex colors.
+    ///
+    /// Argument are `|vertices: &[[f32; 2], colors: &[[f32; 4]]]|`.
+    fn tri_list_c<F>(&mut self, draw_state: &DrawState, f: F)
+        where F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 4]]));
+
     /// Renders list of 2d triangles using a color and a texture.
     ///
     /// All vertices share the same color.
@@ -101,7 +107,7 @@ pub trait Graphics: Sized {
     /// Texture coordinates are encoded `[[u0, v0], [u1, v1], ...]`.
     ///
     /// Chunks uses separate buffer for vertex positions and texture coordinates.
-    /// Arguments are `|vertices: &[f32], texture_coords: &[f32]`.
+    /// Arguments are `|vertices: &[[f32; 2]], texture_coords: &[[f32; 2]]|`.
     ///
     /// Color space is sRGB.
     fn tri_list_uv<F>(&mut self,
@@ -110,6 +116,15 @@ pub trait Graphics: Sized {
                       texture: &<Self as Graphics>::Texture,
                       f: F)
         where F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 2]]));
+
+    /// Same as `tri_list_uv`, but with individual vertex colors.
+    ///
+    /// Argument are `|vertices: &[[f32; 2], texture_coors: &[[f32; 2]], colors: &[[f32; 4]]]|`.
+    fn tri_list_uv_c<F>(&mut self,
+                      draw_state: &DrawState,
+                      texture: &<Self as Graphics>::Texture,
+                      f: F)
+        where F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 2]], &[[f32; 4]]));
 
     /// Draws a rectangle.
     ///
