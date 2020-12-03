@@ -10,9 +10,9 @@ pub struct Context {
     /// Viewport information.
     pub viewport: Option<Viewport>,
     /// View transformation.
-    pub view: Matrix2d,
+    pub view: [[f64; 3]; 2],
     /// Current transformation.
-    pub transform: Matrix2d,
+    pub transform: [[f64; 3]; 2],
     /// Current draw state settings.
     pub draw_state: DrawState,
 }
