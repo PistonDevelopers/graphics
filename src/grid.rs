@@ -1,7 +1,9 @@
 //! A flat grid with square cells.
 
-use math::{Matrix2d, Scalar, Vec2d};
-use {DrawState, Graphics, Line};
+use crate::{
+    math::{Matrix2d, Scalar, Vec2d},
+    DrawState, Graphics, Line,
+};
 
 /// Represents a flat grid with square cells.
 #[derive(Debug, Copy, Clone)]
@@ -25,7 +27,8 @@ pub struct GridCells {
 impl Grid {
     /// Draws the grid.
     pub fn draw<G>(&self, line: &Line, draw_state: &DrawState, transform: Matrix2d, g: &mut G)
-        where G: Graphics
+    where
+        G: Graphics,
     {
         let &Grid { cols, rows, units } = self;
         for x in 0..cols + 1 {
@@ -55,7 +58,10 @@ impl Grid {
 
     /// Get on-screen position of a grid cell
     pub fn cell_position(&self, cell: (u32, u32)) -> Vec2d {
-        [cell.0 as Scalar * &self.units, cell.1 as Scalar * &self.units]
+        [
+            cell.0 as Scalar * &self.units,
+            cell.1 as Scalar * &self.units,
+        ]
     }
 
     /// Get on-screen x position of a grid cell
@@ -98,8 +104,8 @@ mod tests {
 
         for (cols, rows) in combinations {
             let grid = Grid {
-                cols: cols,
-                rows: rows,
+                cols,
+                rows,
                 units: 2.0,
             };
             println!("Testing {:?}", grid);

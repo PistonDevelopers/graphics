@@ -1,6 +1,8 @@
-use Context;
-use math::{multiply, shear, scale, orient, rotate_radians, translate, Matrix2d, Vec2d, Scalar};
-use radians::Radians;
+use crate::{
+    math::{multiply, orient, rotate_radians, scale, shear, translate, Matrix2d, Scalar, Vec2d},
+    radians::Radians,
+    Context,
+};
 
 /// Implemented by contexts that can transform.
 pub trait Transformed: Sized {

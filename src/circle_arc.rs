@@ -1,9 +1,11 @@
 //! Draw an arc
 
-use {triangulation, DrawState, Graphics};
-use math::Matrix2d;
-
-use types::{Color, Radius, Rectangle, Resolution, Scalar};
+use crate::{
+    math::Matrix2d,
+    triangulation,
+    types::{Color, Radius, Rectangle, Resolution, Scalar},
+    DrawState, Graphics,
+};
 
 /// A curved line
 #[derive(Copy, Clone)]
@@ -28,10 +30,10 @@ impl CircleArc {
     /// Creates a new arc
     pub fn new(color: Color, radius: Radius, start: Scalar, end: Scalar) -> CircleArc {
         CircleArc {
-            color: color,
-            radius: radius,
-            start: start,
-            end: end,
+            color,
+            radius,
+            start,
+            end,
             resolution: 128,
         }
     }
@@ -68,33 +70,39 @@ impl CircleArc {
 
     /// Draws circle arc using default method.
     #[inline(always)]
-    pub fn draw<R: Into<Rectangle>, G>(&self,
-                                       rectangle: R,
-                                       draw_state: &DrawState,
-                                       transform: Matrix2d,
-                                       g: &mut G)
-        where G: Graphics
+    pub fn draw<R: Into<Rectangle>, G>(
+        &self,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    ) where
+        G: Graphics,
     {
         g.circle_arc(self, rectangle, draw_state, transform);
     }
 
     /// Draws circle arc using triangulation.
-    pub fn draw_tri<R: Into<Rectangle>, G>(&self,
-                                           rectangle: R,
-                                           draw_state: &DrawState,
-                                           transform: Matrix2d,
-                                           g: &mut G)
-        where G: Graphics
+    pub fn draw_tri<R: Into<Rectangle>, G>(
+        &self,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    ) where
+        G: Graphics,
     {
         let rectangle = rectangle.into();
-        g.tri_list(&draw_state, &self.color, |f| {
-            triangulation::with_arc_tri_list(self.start,
-                                             self.end,
-                                             self.resolution,
-                                             transform,
-                                             rectangle,
-                                             self.radius,
-                                             |vertices| f(vertices))
+        g.tri_list(draw_state, &self.color, |f| {
+            triangulation::with_arc_tri_list(
+                self.start,
+                self.end,
+                self.resolution,
+                transform,
+                rectangle,
+                self.radius,
+                |vertices| f(vertices),
+            )
         });
     }
 }
@@ -102,8 +110,7 @@ impl CircleArc {
 #[cfg(test)]
 mod test {
     use super::*;
-    use radians::Radians;
-    use types::Scalar;
+    use crate::{radians::Radians, types::Scalar};
 
     #[test]
     fn test_circle_arc() {

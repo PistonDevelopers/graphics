@@ -1,7 +1,10 @@
 //! A text character
 
-use types::{FontSize, Scalar};
-use ImageSize;
+use crate::{
+    math,
+    types::{FontSize, Scalar},
+    ImageSize,
+};
 
 /// Holds rendered character data.
 #[derive(Clone)]
@@ -48,13 +51,14 @@ pub trait CharacterCache {
     type Error;
 
     /// Get reference to character.
-    fn character<'a>(&'a mut self,
-                     font_size: FontSize,
-                     ch: char)
-                     -> Result<Character<'a, Self::Texture>, Self::Error>;
+    fn character(
+        &mut self,
+        font_size: FontSize,
+        ch: char,
+    ) -> Result<Character<Self::Texture>, Self::Error>;
 
     /// Return the width for some given text.
-    fn width(&mut self, size: FontSize, text: &str) -> Result<::math::Scalar, Self::Error> {
+    fn width(&mut self, size: FontSize, text: &str) -> Result<math::Scalar, Self::Error> {
         let mut width = 0.0;
         for ch in text.chars() {
             let character = self.character(size, ch)?;

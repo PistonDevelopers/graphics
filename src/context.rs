@@ -1,8 +1,9 @@
 //! Transformation context
 
-use DrawState;
-use math::{abs_transform, identity, get_scale, Matrix2d, Scalar, Vec2d};
-use Viewport;
+use crate::{
+    math::{abs_transform, get_scale, identity, Matrix2d, Scalar, Vec2d},
+    DrawState, Viewport,
+};
 
 /// Drawing 2d context.
 #[derive(Copy, Clone)]
@@ -114,7 +115,7 @@ mod test {
 
     #[test]
     fn test_context() {
-        use Transformed;
+        use crate::Transformed;
 
         let c = Context::new();
         {
@@ -137,7 +138,7 @@ mod test {
 
     #[test]
     fn test_scale() {
-        use Transformed;
+        use crate::Transformed;
 
         let c = Context::new();
         let c = c.scale(2.0, 3.0);

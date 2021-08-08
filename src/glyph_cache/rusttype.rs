@@ -1,21 +1,20 @@
 //! Glyph caching using the RustType library.
 
 extern crate rusttype;
-use texture::{ops, CreateTexture, UpdateTexture, Format, TextureSettings};
 use std::collections::HashMap;
 
+use texture::{ops, CreateTexture, Format, TextureSettings, UpdateTexture};
+
 extern crate fnv;
+use std::{fs::File, hash::BuildHasherDefault, io::Read, path::Path};
+
 use self::fnv::FnvHasher;
-use std::hash::BuildHasherDefault;
-
-use std::path::Path;
-use std::io::Read;
-use std::fs::File;
-
-use ImageSize;
-use types::{FontSize, Scalar};
-use character::{Character, CharacterCache};
-use texture_packer::TexturePacker;
+use crate::{
+    character::{Character, CharacterCache},
+    texture_packer::TexturePacker,
+    types::{FontSize, Scalar},
+    ImageSize,
+};
 
 struct Data {
     offset: [Scalar; 2],
@@ -28,11 +27,11 @@ struct Data {
 struct EmptyOutlineBuilder;
 
 impl rusttype::OutlineBuilder for EmptyOutlineBuilder {
-    fn move_to(&mut self, _x: f32, _y: f32){}
-    fn line_to(&mut self, _x: f32, _y: f32){}
-    fn quad_to(&mut self, _x1: f32, _y1: f32, _x: f32, _y: f32){}
-    fn curve_to(&mut self, _x1: f32, _y1: f32, _x2: f32, _y2: f32, _x: f32, _y: f32){}
-    fn close(&mut self){}
+    fn move_to(&mut self, _x: f32, _y: f32) {}
+    fn line_to(&mut self, _x: f32, _y: f32) {}
+    fn quad_to(&mut self, _x1: f32, _y1: f32, _x: f32, _y: f32) {}
+    fn curve_to(&mut self, _x1: f32, _y1: f32, _x2: f32, _y2: f32, _x: f32, _y: f32) {}
+    fn close(&mut self) {}
 }
 
 /// The minimum atlas size.
@@ -52,59 +51,62 @@ pub struct GlyphCache<'a, F, T> {
 }
 
 impl<'a, F, T> GlyphCache<'a, F, T>
-    where T: CreateTexture<F> + UpdateTexture<F> + ImageSize
+where
+    T: CreateTexture<F> + UpdateTexture<F> + ImageSize,
 {
     /// Constructs a GlyphCache from a Font.
     pub fn from_font(font: rusttype::Font<'a>, factory: F, settings: TextureSettings) -> Self {
         let fnv = BuildHasherDefault::<FnvHasher>::default();
         GlyphCache {
-            font: font,
-            factory: factory,
-            settings: settings,
+            font,
+            factory,
+            settings,
             texture_packer: TexturePacker::new(),
             data: HashMap::with_hasher(fnv),
         }
     }
 
     /// Constructor for a GlyphCache.
-    pub fn new<P>(font: P,
-                  factory: F,
-                  settings: TextureSettings)
-                  -> ::std::io::Result<GlyphCache<'static, F, T>>
-        where P: AsRef<Path>
+    pub fn new<P>(
+        font: P,
+        factory: F,
+        settings: TextureSettings,
+    ) -> ::std::io::Result<GlyphCache<'static, F, T>>
+    where
+        P: AsRef<Path>,
     {
         let fnv = BuildHasherDefault::<FnvHasher>::default();
         let mut file = File::open(font)?;
         let mut file_buffer = Vec::new();
         file.read_to_end(&mut file_buffer)?;
 
-        let font = rusttype::Font::try_from_vec(file_buffer)
-            .ok_or(std::io::Error::new(std::io::ErrorKind::Other, "invalid font"))?;
+        let font = rusttype::Font::try_from_vec(file_buffer).ok_or(std::io::Error::new(
+            std::io::ErrorKind::Other,
+            "invalid font",
+        ))?;
         Ok(GlyphCache {
-            font: font,
-            factory: factory,
-            settings: settings,
+            font,
+            factory,
+            settings,
             texture_packer: TexturePacker::new(),
             data: HashMap::with_hasher(fnv),
         })
     }
 
     /// Creates a GlyphCache for a font stored in memory.
-    pub fn from_bytes(font: &'a [u8],
-                      factory: F,
-                      settings: TextureSettings)
-                      -> Result<GlyphCache<'a, F, T>, ()> {
+    pub fn from_bytes(
+        font: &'a [u8],
+        factory: F,
+        settings: TextureSettings,
+    ) -> Result<GlyphCache<'a, F, T>, ()> {
         let font = rusttype::Font::try_from_bytes(font).ok_or(())?;
         Ok(Self::from_font(font, factory, settings))
     }
 
     /// Load all characters in the `chars` iterator for `size`
-    pub fn preload_chars<I>(
-        &mut self,
-        size: FontSize,
-        chars: I
-    ) -> Result<(), T::Error>
-        where I: Iterator<Item = char>
+    pub fn preload_chars<I>(&mut self, size: FontSize, chars: I) -> Result<(), T::Error>
+    where
+        I: Iterator<Item = char>,
     {
         for ch in chars {
             self.character(size, ch)?;
@@ -113,10 +115,7 @@ impl<'a, F, T> GlyphCache<'a, F, T>
     }
 
     /// Load all the printable ASCII characters for `size`. Includes space.
-    pub fn preload_printable_ascii(
-        &mut self,
-        size: FontSize
-    ) -> Result<(), T::Error> {
+    pub fn preload_printable_ascii(&mut self, size: FontSize) -> Result<(), T::Error> {
         // [0x20, 0x7F) contains all printable ASCII characters ([' ', '~'])
         self.preload_chars(size, (0x20u8..0x7F).map(|ch| ch as char))
     }
@@ -124,31 +123,36 @@ impl<'a, F, T> GlyphCache<'a, F, T>
     /// Return `ch` for `size` if it's already cached. Don't load.
     /// See the `preload_*` functions.
     pub fn opt_character(&self, size: FontSize, ch: char) -> Option<Character<T>> {
-        self.data.get(&(size, ch)).map(|&Data {
-            offset, advance_size, atlas_offset, atlas_size, texture
-        }| {
-            Character {
-                offset,
-                advance_size,
-                atlas_offset,
-                atlas_size,
-                texture: &self.texture_packer.textures[texture],
-            }
-        })
+        self.data.get(&(size, ch)).map(
+            |&Data {
+                 offset,
+                 advance_size,
+                 atlas_offset,
+                 atlas_size,
+                 texture,
+             }| {
+                Character {
+                    offset,
+                    advance_size,
+                    atlas_offset,
+                    atlas_size,
+                    texture: &self.texture_packer.textures[texture],
+                }
+            },
+        )
     }
 }
 
 impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
-    where T: CreateTexture<F> + UpdateTexture<F>
+where
+    T: CreateTexture<F> + UpdateTexture<F>,
 {
     type Texture = T;
     type Error = T::Error;
 
-    fn character<'a>(&'a mut self,
-                     size: FontSize,
-                     ch: char)
-                     -> Result<Character<'a, T>, Self::Error> {
+    fn character(&mut self, size: FontSize, ch: char) -> Result<Character<T>, Self::Error> {
         use std::collections::hash_map::Entry;
+
         use self::rusttype as rt;
 
         let size = ((size as f32) * 1.333).round() as u32; // convert points to pixels
@@ -156,7 +160,13 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
         match self.data.entry((size, ch)) {
             //returning `into_mut()' to get reference with 'a lifetime
             Entry::Occupied(v) => {
-                let &mut Data {offset, advance_size, atlas_offset, atlas_size, texture} = v.into_mut();
+                let &mut Data {
+                    offset,
+                    advance_size,
+                    atlas_offset,
+                    atlas_size,
+                    texture,
+                } = v.into_mut();
                 Ok(Character {
                     offset,
                     advance_size,
@@ -197,7 +207,7 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                     advance_size,
                     atlas_offset,
                     atlas_size,
-                    texture
+                    texture,
                 } = match self.texture_packer.find_space(size) {
                     None => {
                         // Create a new texture atlas.
@@ -214,19 +224,23 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                             if size[0] == 0 || size[1] == 0 {
                                 empty(&mut self.factory, &self.settings)?
                             } else {
-                                from_memory_alpha(&mut self.factory,
-                                                  &image_buffer,
-                                                  [w, h],
-                                                  &self.settings)?
+                                from_memory_alpha(
+                                    &mut self.factory,
+                                    &image_buffer,
+                                    [w, h],
+                                    &self.settings,
+                                )?
                             }
                         });
                         v.insert(Data {
-                            offset: [bounding_box.min.x as Scalar - 1.0,
-                                     -pixel_bounding_box.min.y as Scalar + 1.0],
+                            offset: [
+                                bounding_box.min.x as Scalar - 1.0,
+                                -pixel_bounding_box.min.y as Scalar + 1.0,
+                            ],
                             advance_size: [h_metrics.advance_width as Scalar, 0.0],
                             atlas_offset: [0.0; 2],
                             atlas_size: [size[0] as Scalar, size[1] as Scalar],
-                            texture
+                            texture,
                         })
                     }
                     Some(ind) => {
@@ -248,12 +262,14 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
                             size,
                         )?;
                         v.insert(Data {
-                            offset: [bounding_box.min.x as Scalar - 1.0,
-                                     -pixel_bounding_box.min.y as Scalar + 1.0],
+                            offset: [
+                                bounding_box.min.x as Scalar - 1.0,
+                                -pixel_bounding_box.min.y as Scalar + 1.0,
+                            ],
                             advance_size: [h_metrics.advance_width as Scalar, 0.0],
                             atlas_offset: [offset[0] as Scalar, offset[1] as Scalar],
                             atlas_size: [size[0] as Scalar, size[1] as Scalar],
-                            texture
+                            texture,
                         })
                     }
                 };
@@ -269,28 +285,30 @@ impl<'b, F, T: ImageSize> CharacterCache for GlyphCache<'b, F, T>
     }
 }
 
-fn empty<F, T: CreateTexture<F>>(factory: &mut F,
-                                 settings: &TextureSettings)
-                                 -> Result<T, T::Error> {
+fn empty<F, T: CreateTexture<F>>(
+    factory: &mut F,
+    settings: &TextureSettings,
+) -> Result<T, T::Error> {
     CreateTexture::create(factory, Format::Rgba8, &[0u8; 4], [1, 1], settings)
 }
 
-fn from_memory_alpha<F, T: CreateTexture<F>>(factory: &mut F,
-                                             buf: &[u8],
-                                             size: [u32; 2],
-                                             settings: &TextureSettings)
-                                             -> Result<T, T::Error> {
+fn from_memory_alpha<F, T: CreateTexture<F>>(
+    factory: &mut F,
+    buf: &[u8],
+    size: [u32; 2],
+    settings: &TextureSettings,
+) -> Result<T, T::Error> {
     let buffer: Vec<u8> = ops::alpha_to_rgba8(buf, size);
     CreateTexture::create(factory, Format::Rgba8, &buffer, size, settings)
 }
 
 fn update_memory_alpha<F, T: UpdateTexture<F>>(
-                                            texture: &mut T,
-                                            factory: &mut F,
-                                             buf: &[u8],
-                                             offset: [u32; 2],
-                                             size: [u32; 2])
-                                             -> Result<(), T::Error> {
+    texture: &mut T,
+    factory: &mut F,
+    buf: &[u8],
+    offset: [u32; 2],
+    size: [u32; 2],
+) -> Result<(), T::Error> {
     let buffer: Vec<u8> = ops::alpha_to_rgba8(buf, size);
     texture.update(factory, Format::Rgba8, &buffer, offset, size)
 }
