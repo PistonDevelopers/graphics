@@ -369,7 +369,7 @@ mod test_modular_offset {
 ///
 /// A simple polygon is one that does not intersect itself.
 /// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
-pub fn area_centroid<T>(polygon: Polygon<T>) -> (Area<T>, Vec2d<T>)
+pub fn area_centroid<T>(polygon: Polygon<'_, T>) -> (Area<T>, Vec2d<T>)
 where
     T: Float,
 {
@@ -403,7 +403,7 @@ where
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn area<T>(polygon: Polygon<T>) -> T
+pub fn area<T>(polygon: Polygon<'_, T>) -> T
 where
     T: Float,
 {
@@ -415,7 +415,7 @@ where
 ///
 /// A simple polygon is one that does not intersect itself.
 #[inline(always)]
-pub fn centroid<T>(polygon: Polygon<T>) -> Vec2d<T>
+pub fn centroid<T>(polygon: Polygon<'_, T>) -> Vec2d<T>
 where
     T: Float,
 {

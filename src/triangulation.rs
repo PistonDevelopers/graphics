@@ -1,7 +1,7 @@
 //! Methods for converting shapes into triangles.
+use interpolation::lerp;
 
 use crate::{
-    interpolation::lerp,
     math::{multiply, orient, translate, Matrix2d, Scalar, Vec2d},
     radians::Radians,
     types::{Line, Polygon, Polygons, Radius, Rectangle, Resolution, SourceRectangle},
@@ -22,8 +22,12 @@ pub fn ty(m: Matrix2d, x: Scalar, y: Scalar) -> f32 {
 
 /// Streams tweened polygons using linear interpolation.
 #[inline(always)]
-pub fn with_lerp_polygons_tri_list<F>(m: Matrix2d, polygons: Polygons, tween_factor: Scalar, f: F)
-where
+pub fn with_lerp_polygons_tri_list<F>(
+    m: Matrix2d,
+    polygons: Polygons<'_>,
+    tween_factor: Scalar,
+    f: F,
+) where
     F: FnMut(&[[f32; 2]]),
 {
     let poly_len = polygons.len() as Scalar;
@@ -569,7 +573,7 @@ where
 /// Create a buffer that fits into L1 cache with 1KB overhead.
 ///
 /// See stream_polygon_tri_list docs for detailed explanation.
-pub fn with_polygon_tri_list<F>(m: Matrix2d, polygon: Polygon, f: F)
+pub fn with_polygon_tri_list<F>(m: Matrix2d, polygon: Polygon<'_>, f: F)
 where
     F: FnMut(&[[f32; 2]]),
 {

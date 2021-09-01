@@ -30,7 +30,7 @@ impl Polygon {
     #[inline(always)]
     pub fn draw<G>(
         &self,
-        polygon: types::Polygon,
+        polygon: types::Polygon<'_>,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G,
@@ -43,7 +43,7 @@ impl Polygon {
     /// Draws polygon using triangulation.
     pub fn draw_tri<G>(
         &self,
-        polygon: types::Polygon,
+        polygon: types::Polygon<'_>,
         draw_state: &DrawState,
         transform: Matrix2d,
         g: &mut G,
@@ -59,7 +59,7 @@ impl Polygon {
     #[inline(always)]
     pub fn draw_tween_lerp<G>(
         &self,
-        polygons: types::Polygons,
+        polygons: types::Polygons<'_>,
         tween_factor: Scalar,
         draw_state: &DrawState,
         transform: Matrix2d,
@@ -73,7 +73,7 @@ impl Polygon {
     /// Draws tweened polygon with linear interpolation, using triangulation.
     pub fn draw_tween_lerp_tri<G>(
         &self,
-        polygons: types::Polygons,
+        polygons: types::Polygons<'_>,
         tween_factor: Scalar,
         draw_state: &DrawState,
         transform: Matrix2d,

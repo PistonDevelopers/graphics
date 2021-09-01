@@ -161,7 +161,7 @@ pub trait Graphics: Sized {
     fn polygon(
         &mut self,
         p: &Polygon,
-        polygon: types::Polygon,
+        polygon: types::Polygon<'_>,
         draw_state: &DrawState,
         transform: Matrix2d,
     ) {
@@ -177,7 +177,7 @@ pub trait Graphics: Sized {
     fn polygon_tween_lerp(
         &mut self,
         p: &Polygon,
-        polygons: types::Polygons,
+        polygons: types::Polygons<'_>,
         tween_factor: Scalar,
         draw_state: &DrawState,
         transform: Matrix2d,

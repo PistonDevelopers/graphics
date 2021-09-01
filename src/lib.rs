@@ -1,6 +1,13 @@
 #![crate_name = "graphics"]
-#![deny(missing_docs)]
-#![deny(missing_copy_implementations)]
+#![deny(
+    rust_2018_compatibility,
+    rust_2018_idioms,
+    unused,
+    nonstandard_style,
+    future_incompatible,
+    missing_docs,
+    missing_copy_implementations
+)]
 
 //! A library for 2D graphics that works with multiple back-ends.
 //!
@@ -27,12 +34,6 @@
 //!
 //! At top level, there are some shortcut methods for common operations.
 //! For example, `ellipse` is a simplified version of `Ellipse`.
-
-extern crate interpolation;
-extern crate read_color;
-extern crate texture;
-extern crate vecmath;
-extern crate viewport;
 
 pub use character::{Character, CharacterCache};
 pub use circle_arc::CircleArc;
@@ -177,7 +178,7 @@ pub fn rectangle<R: Into<types::Rectangle>, G>(
 /// Draws polygon.
 pub fn polygon<G>(
     color: types::Color,
-    polygon: types::Polygon,
+    polygon: types::Polygon<'_>,
     transform: math::Matrix2d,
     g: &mut G,
 ) where
