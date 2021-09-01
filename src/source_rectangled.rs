@@ -1,5 +1,7 @@
-use math::{relative_source_rectangle, Scalar};
-use types::SourceRectangle;
+use crate::{
+    math::{relative_source_rectangle, Scalar},
+    types::SourceRectangle,
+};
 
 /// Should be implemented by contexts that
 /// have source rectangle information.

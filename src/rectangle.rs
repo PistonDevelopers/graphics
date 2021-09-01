@@ -13,12 +13,13 @@
 //! rectangle.draw(dims, &draw_state::Default::default(), transform, g);
 //! ```
 
-use types::{Color, Radius, Resolution};
-use {types, triangulation, Graphics, DrawState};
-use math::{Matrix2d, Scalar};
-
-pub use math::margin_rectangle as margin;
-
+pub use crate::math::margin_rectangle as margin;
+use crate::{
+    math::{Matrix2d, Scalar},
+    triangulation, types,
+    types::{Color, Radius, Resolution},
+    DrawState, Graphics,
+};
 
 /// Create `types::Rectangle` by the two opposite corners.
 ///
@@ -41,7 +42,12 @@ pub fn rectangle_by_corners(x0: Scalar, y0: Scalar, x1: Scalar, y1: Scalar) -> t
 
 /// Use x, y, half-width, half-height
 pub fn centered(rect: types::Rectangle) -> types::Rectangle {
-    [rect[0] - rect[2], rect[1] - rect[3], 2.0 * rect[2], 2.0 * rect[3]]
+    [
+        rect[0] - rect[2],
+        rect[1] - rect[3],
+        2.0 * rect[2],
+        2.0 * rect[3],
+    ]
 }
 
 /// Create `types::Rectangle` for a square with a center in (`x`, `y`) and side
@@ -92,7 +98,7 @@ impl Rectangle {
     /// Creates a new rectangle.
     pub fn new(color: Color) -> Rectangle {
         Rectangle {
-            color: color,
+            color,
             shape: Shape::Square,
             border: None,
         }
@@ -101,7 +107,7 @@ impl Rectangle {
     /// Creates a new rectangle with rounded corners.
     pub fn new_round(color: Color, round_radius: Radius) -> Rectangle {
         Rectangle {
-            color: color,
+            color,
             shape: Shape::Round(round_radius, 32),
             border: None,
         }
@@ -112,23 +118,21 @@ impl Rectangle {
         Rectangle {
             color: [0.0; 4],
             shape: Shape::Square,
-            border: Some(Border {
-                color: color,
-                radius: radius,
-            }),
+            border: Some(Border { color, radius }),
         }
     }
 
     /// Creates a new rectangle border with rounded corners.
-    pub fn new_round_border(color: Color,
-                            round_radius: Radius,
-                            border_radius: Radius)
-                            -> Rectangle {
+    pub fn new_round_border(
+        color: Color,
+        round_radius: Radius,
+        border_radius: Radius,
+    ) -> Rectangle {
         Rectangle {
             color: [0.0; 4],
             shape: Shape::Round(round_radius, 32),
             border: Some(Border {
-                color: color,
+                color,
                 radius: border_radius,
             }),
         }
@@ -160,17 +164,24 @@ impl Rectangle {
 
     /// Draws the rectangle by corners using the default method.
     #[inline(always)]
-    pub fn draw_from_to<P: Into<types::Vec2d>, G>(&self,
-                                              from: P,
-                                              to: P,
-                                              draw_state: &DrawState,
-                                              transform: Matrix2d,
-                                              g: &mut G)
-        where G: Graphics
+    pub fn draw_from_to<P: Into<types::Vec2d>, G>(
+        &self,
+        from: P,
+        to: P,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    ) where
+        G: Graphics,
     {
         let from = from.into();
         let to = to.into();
-        g.rectangle(self, rectangle_by_corners(from[0], from[1], to[0], to[1]), draw_state, transform);
+        g.rectangle(
+            self,
+            rectangle_by_corners(from[0], from[1], to[0], to[1]),
+            draw_state,
+            transform,
+        );
     }
 
     /// Draws the rectangle using the default method.
@@ -180,12 +191,14 @@ impl Rectangle {
     /// as a default, `transform` is the transformation matrix, `g` is the
     /// `Graphics` implementation, that is used to actually draw the rectangle.s
     #[inline(always)]
-    pub fn draw<R: Into<types::Rectangle>, G>(&self,
-                                              rectangle: R,
-                                              draw_state: &DrawState,
-                                              transform: Matrix2d,
-                                              g: &mut G)
-        where G: Graphics
+    pub fn draw<R: Into<types::Rectangle>, G>(
+        &self,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    ) where
+        G: Graphics,
     {
         g.rectangle(self, rectangle, draw_state, transform);
     }
@@ -194,72 +207,88 @@ impl Rectangle {
     ///
     /// This is the default implementation of draw() that will be used if `G`
     /// does not redefine `Graphics::rectangle()`.
-    pub fn draw_tri<R: Into<types::Rectangle>, G>(&self,
-                                                  rectangle: R,
-                                                  draw_state: &DrawState,
-                                                  transform: Matrix2d,
-                                                  g: &mut G)
-        where G: Graphics
+    pub fn draw_tri<R: Into<types::Rectangle>, G>(
+        &self,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    ) where
+        G: Graphics,
     {
         let rectangle = rectangle.into();
         if self.color[3] != 0.0 {
             match self.shape {
                 Shape::Square => {
-                    g.tri_list(draw_state,
-                               &self.color,
-                               |f| f(&triangulation::rect_tri_list_xy(transform, rectangle)));
+                    g.tri_list(draw_state, &self.color, |f| {
+                        f(&triangulation::rect_tri_list_xy(transform, rectangle))
+                    });
                 }
                 Shape::Round(round_radius, resolution) => {
                     g.tri_list(draw_state, &self.color, |f| {
-                        triangulation::with_round_rectangle_tri_list(resolution,
-                                                                     transform,
-                                                                     rectangle,
-                                                                     round_radius,
-                                                                     |vertices| f(vertices))
+                        triangulation::with_round_rectangle_tri_list(
+                            resolution,
+                            transform,
+                            rectangle,
+                            round_radius,
+                            |vertices| f(vertices),
+                        )
                     });
                 }
                 Shape::Bevel(bevel_radius) => {
                     g.tri_list(draw_state, &self.color, |f| {
-                        triangulation::with_round_rectangle_tri_list(2,
-                                                                     transform,
-                                                                     rectangle,
-                                                                     bevel_radius,
-                                                                     |vertices| f(vertices))
+                        triangulation::with_round_rectangle_tri_list(
+                            2,
+                            transform,
+                            rectangle,
+                            bevel_radius,
+                            |vertices| f(vertices),
+                        )
                     });
                 }
             }
         }
 
-        if let Some(Border { color, radius: border_radius }) = self.border {
+        if let Some(Border {
+            color,
+            radius: border_radius,
+        }) = self.border
+        {
             if color[3] == 0.0 {
                 return;
             }
             match self.shape {
                 Shape::Square => {
                     g.tri_list(draw_state, &color, |f| {
-                        f(&triangulation::rect_border_tri_list_xy(transform,
-                                                                  rectangle,
-                                                                  border_radius))
+                        f(&triangulation::rect_border_tri_list_xy(
+                            transform,
+                            rectangle,
+                            border_radius,
+                        ))
                     });
                 }
                 Shape::Round(round_radius, resolution) => {
                     g.tri_list(draw_state, &color, |f| {
-                        triangulation::with_round_rectangle_border_tri_list(resolution,
-                                                                            transform,
-                                                                            rectangle,
-                                                                            round_radius,
-                                                                            border_radius,
-                                                                            |vertices| f(vertices))
+                        triangulation::with_round_rectangle_border_tri_list(
+                            resolution,
+                            transform,
+                            rectangle,
+                            round_radius,
+                            border_radius,
+                            |vertices| f(vertices),
+                        )
                     });
                 }
                 Shape::Bevel(bevel_radius) => {
                     g.tri_list(draw_state, &color, |f| {
-                        triangulation::with_round_rectangle_border_tri_list(2,
-                                                                            transform,
-                                                                            rectangle,
-                                                                            bevel_radius,
-                                                                            border_radius,
-                                                                            |vertices| f(vertices))
+                        triangulation::with_round_rectangle_border_tri_list(
+                            2,
+                            transform,
+                            rectangle,
+                            bevel_radius,
+                            border_radius,
+                            |vertices| f(vertices),
+                        )
                     });
                 }
             }
@@ -284,9 +313,13 @@ mod test {
 
     #[test]
     fn test_rectangle_by_corners() {
-        assert_eq!(rectangle_by_corners(1.0, -1.0, 2.0, 3.0),
-                   [1.0, -1.0, 1.0, 4.0]);
-        assert_eq!(rectangle_by_corners(2.0, 3.0, 1.0, -1.0),
-                   [1.0, -1.0, 1.0, 4.0]);
+        assert_eq!(
+            rectangle_by_corners(1.0, -1.0, 2.0, 3.0),
+            [1.0, -1.0, 1.0, 4.0]
+        );
+        assert_eq!(
+            rectangle_by_corners(2.0, 3.0, 1.0, -1.0),
+            [1.0, -1.0, 1.0, 4.0]
+        );
     }
 }

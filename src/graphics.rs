@@ -1,6 +1,7 @@
-use DrawState;
-use types::{self, Matrix2d, Scalar};
-use {CircleArc, Ellipse, Image, ImageSize, Line, Polygon, Rectangle};
+use crate::{
+    types::{self, Matrix2d, Scalar},
+    CircleArc, DrawState, Ellipse, Image, ImageSize, Line, Polygon, Rectangle,
+};
 
 /// Implemented by all graphics back-ends.
 ///
@@ -15,7 +16,7 @@ use {CircleArc, Ellipse, Image, ImageSize, Line, Polygon, Rectangle};
 /// When drawing, use this trait as generic constraint:
 ///
 /// ```
-/// use graphics::{Graphics, Context};
+/// use graphics::{Context, Graphics};
 ///
 /// fn draw<G: Graphics>(c: &Context, g: &mut G) {
 ///     //...
@@ -39,10 +40,13 @@ pub trait Graphics: Sized {
     /// This might lead to more boilerplate code:
     ///
     /// ```
-    /// use graphics::{Graphics, Context, ImageSize};
+    /// use graphics::{Context, Graphics, ImageSize};
     ///
     /// fn draw_texture<G, T>(c: &Context, g: &mut G)
-    ///     where G: Graphics<Texture = T>, T: ImageSize {
+    /// where
+    ///     G: Graphics<Texture = T>,
+    ///     T: ImageSize,
+    /// {
     ///     //...
     /// }
     /// ```
@@ -81,13 +85,15 @@ pub trait Graphics: Sized {
     ///
     /// Color space is sRGB.
     fn tri_list<F>(&mut self, draw_state: &DrawState, color: &[f32; 4], f: F)
-        where F: FnMut(&mut dyn FnMut(&[[f32; 2]]));
+    where
+        F: FnMut(&mut dyn FnMut(&[[f32; 2]]));
 
     /// Same as `tri_list`, but with individual vertex colors.
     ///
     /// Argument are `|vertices: &[[f32; 2], colors: &[[f32; 4]]]|`.
     fn tri_list_c<F>(&mut self, draw_state: &DrawState, f: F)
-        where F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 4]]));
+    where
+        F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 4]]));
 
     /// Renders list of 2d triangles using a color and a texture.
     ///
@@ -110,21 +116,25 @@ pub trait Graphics: Sized {
     /// Arguments are `|vertices: &[[f32; 2]], texture_coords: &[[f32; 2]]|`.
     ///
     /// Color space is sRGB.
-    fn tri_list_uv<F>(&mut self,
-                      draw_state: &DrawState,
-                      color: &[f32; 4],
-                      texture: &<Self as Graphics>::Texture,
-                      f: F)
-        where F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 2]]));
+    fn tri_list_uv<F>(
+        &mut self,
+        draw_state: &DrawState,
+        color: &[f32; 4],
+        texture: &<Self as Graphics>::Texture,
+        f: F,
+    ) where
+        F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 2]]));
 
     /// Same as `tri_list_uv`, but with individual vertex colors.
     ///
     /// Argument are `|vertices: &[[f32; 2], texture_coors: &[[f32; 2]], colors: &[[f32; 4]]]|`.
-    fn tri_list_uv_c<F>(&mut self,
-                      draw_state: &DrawState,
-                      texture: &<Self as Graphics>::Texture,
-                      f: F)
-        where F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 2]], &[[f32; 4]]));
+    fn tri_list_uv_c<F>(
+        &mut self,
+        draw_state: &DrawState,
+        texture: &<Self as Graphics>::Texture,
+        f: F,
+    ) where
+        F: FnMut(&mut dyn FnMut(&[[f32; 2]], &[[f32; 2]], &[[f32; 4]]));
 
     /// Draws a rectangle.
     ///
@@ -132,11 +142,13 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Rectangle::draw`.
     #[inline(always)]
-    fn rectangle<R: Into<types::Rectangle>>(&mut self,
-                                            r: &Rectangle,
-                                            rectangle: R,
-                                            draw_state: &DrawState,
-                                            transform: Matrix2d) {
+    fn rectangle<R: Into<types::Rectangle>>(
+        &mut self,
+        r: &Rectangle,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+    ) {
         r.draw_tri(rectangle, draw_state, transform, self);
     }
 
@@ -146,11 +158,13 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Polygon::draw`.
     #[inline(always)]
-    fn polygon(&mut self,
-               p: &Polygon,
-               polygon: types::Polygon,
-               draw_state: &DrawState,
-               transform: Matrix2d) {
+    fn polygon(
+        &mut self,
+        p: &Polygon,
+        polygon: types::Polygon,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+    ) {
         p.draw_tri(polygon, draw_state, transform, self);
     }
 
@@ -160,12 +174,14 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Polygon::draw_tween_lerp`.
     #[inline(always)]
-    fn polygon_tween_lerp(&mut self,
-                          p: &Polygon,
-                          polygons: types::Polygons,
-                          tween_factor: Scalar,
-                          draw_state: &DrawState,
-                          transform: Matrix2d) {
+    fn polygon_tween_lerp(
+        &mut self,
+        p: &Polygon,
+        polygons: types::Polygons,
+        tween_factor: Scalar,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+    ) {
         p.draw_tween_lerp_tri(polygons, tween_factor, draw_state, transform, self);
     }
 
@@ -175,11 +191,13 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Image::draw`.
     #[inline(always)]
-    fn image(&mut self,
-             image: &Image,
-             texture: &Self::Texture,
-             draw_state: &DrawState,
-             transform: Matrix2d) {
+    fn image(
+        &mut self,
+        image: &Image,
+        texture: &Self::Texture,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+    ) {
         image.draw_tri(texture, draw_state, transform, self);
     }
 
@@ -189,11 +207,13 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Ellipse::draw`.
     #[inline(always)]
-    fn ellipse<R: Into<types::Rectangle>>(&mut self,
-                                          e: &Ellipse,
-                                          rectangle: R,
-                                          draw_state: &DrawState,
-                                          transform: Matrix2d) {
+    fn ellipse<R: Into<types::Rectangle>>(
+        &mut self,
+        e: &Ellipse,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+    ) {
         e.draw_tri(rectangle, draw_state, transform, self);
     }
 
@@ -203,11 +223,13 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `Line::draw`.
     #[inline(always)]
-    fn line<L: Into<types::Line>>(&mut self,
-                                  l: &Line,
-                                  line: L,
-                                  draw_state: &DrawState,
-                                  transform: Matrix2d) {
+    fn line<L: Into<types::Line>>(
+        &mut self,
+        l: &Line,
+        line: L,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+    ) {
         l.draw_tri(line, draw_state, transform, self);
     }
 
@@ -217,11 +239,13 @@ pub trait Graphics: Sized {
     ///
     /// Instead of calling this directly, use `CircleArc::draw`.
     #[inline(always)]
-    fn circle_arc<R: Into<types::Rectangle>>(&mut self,
-                                             c: &CircleArc,
-                                             rectangle: R,
-                                             draw_state: &DrawState,
-                                             transform: Matrix2d) {
+    fn circle_arc<R: Into<types::Rectangle>>(
+        &mut self,
+        c: &CircleArc,
+        rectangle: R,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+    ) {
         c.draw_tri(rectangle, draw_state, transform, self);
     }
 }

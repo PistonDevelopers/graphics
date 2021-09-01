@@ -1,6 +1,6 @@
 //! Texture packing.
 
-use ImageSize;
+use crate::ImageSize;
 
 /// A texture packer using a skyline heuristic.
 ///
@@ -58,13 +58,10 @@ impl<T: ImageSize> TexturePacker<T> {
     /// The new texture atlas is made the current one.
     pub fn create(&mut self, size: [u32; 2], texture: T) -> usize {
         let id = self.textures.len();
-        if self.textures.len() > 0 {
+        if !self.textures.is_empty() {
             self.atlas += 1;
         }
-        self.skyline = vec![
-            [0, size[1]],
-            [size[0], 0],
-        ];
+        self.skyline = vec![[0, size[1]], [size[0], 0]];
         self.textures.push(texture);
         id
     }
@@ -104,11 +101,10 @@ impl<T: ImageSize> TexturePacker<T> {
     /// Returns the index of atlas offset in skyline with room for a new tile.
     ///
     /// Returns `None` if no room was found in the current texture atlas.
-    pub fn find_space(
-        &self,
-        size: [u32; 2]
-    ) -> Option<usize> {
-        if self.textures.len() == 0 {return None};
+    pub fn find_space(&self, size: [u32; 2]) -> Option<usize> {
+        if self.textures.is_empty() {
+            return None;
+        };
 
         let texture = &self.textures[self.atlas];
         let mut min: Option<(usize, u32)> = None;
@@ -117,16 +113,18 @@ impl<T: ImageSize> TexturePacker<T> {
             let mut nxt = [texture.get_width(), texture.get_height()];
             // Ignore next atlas offsets that have smaller y-value,
             // because they do not interfer.
-            for j in i+1..self.skyline.len() {
+            for j in i + 1..self.skyline.len() {
                 let b = self.skyline[j];
                 nxt[0] = b[0];
-                if b[1] > a[1] {break};
+                if b[1] > a[1] {
+                    break;
+                };
             }
             if nxt[0] - a[0] >= size[0] && nxt[1] - a[1] >= size[1] {
                 // There is room for the glyph.
-                if min.is_none() ||
-                    min.unwrap().1 > nxt[0] - a[0] ||
-                    self.skyline[min.unwrap().0][1] > a[1]
+                if min.is_none()
+                    || min.unwrap().1 > nxt[0] - a[0]
+                    || self.skyline[min.unwrap().0][1] > a[1]
                 {
                     // Pick the space with smallest y-value.
                     min = Some((i, nxt[0] - a[0]));

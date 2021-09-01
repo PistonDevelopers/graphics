@@ -1,12 +1,11 @@
 //! Draw an image
 
-use types::{Color, Rectangle, SourceRectangle};
-use triangulation;
-use Graphics;
-use ImageSize;
-use DrawState;
-use math::Matrix2d;
-
+use crate::{
+    math::Matrix2d,
+    triangulation,
+    types::{Color, Rectangle, SourceRectangle},
+    DrawState, Graphics, ImageSize,
+};
 
 /// An image
 ///
@@ -27,22 +26,22 @@ use math::Matrix2d;
 /// use std::path::Path;
 ///
 /// fn main() {
-/// 	let opengl  = OpenGL::_3_2;
-/// 	let mut gl  = GlGraphics::new(opengl);
-/// 	let window  = Window::new(
+///     let opengl  = OpenGL::_3_2;
+///     let mut gl  = GlGraphics::new(opengl);
+///     let window  = Window::new(
 /// 			opengl,
 /// 			WindowSettings::new(
 /// 				"Example",
 /// 				[600, 400]
 /// 			).exit_on_esc(true));
 ///
-/// 	//Create the image object and attach a square Rectangle object inside.
-/// 	let image   = Image::new().rect(square(0.0, 0.0, 200.0));
-/// 	//A texture to use with the image
-/// 	let texture = Texture::from_path(Path::new("Example.png")).unwrap();
+///     // Create the image object and attach a square Rectangle object inside.
+///     let image   = Image::new().rect(square(0.0, 0.0, 200.0));
+///     // A texture to use with the image
+///     let texture = Texture::from_path(Path::new("Example.png")).unwrap();
 ///
-/// 	//Main loop
-/// 	for e in window.events() {
+///     // Main loop
+///     for e in window.events() {
 /// 		if let Some(r) = e.render_args() {
 /// 			gl.draw(r.viewport(), |c, gl| {
 /// 				//Clear the screen
@@ -121,52 +120,68 @@ impl Image {
 
     /// Draws image using default method.
     #[inline(always)]
-    pub fn draw<G>(&self,
-                   texture: &<G as Graphics>::Texture,
-                   draw_state: &DrawState,
-                   transform: Matrix2d,
-                   g: &mut G)
-        where G: Graphics
+    pub fn draw<G>(
+        &self,
+        texture: &<G as Graphics>::Texture,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    ) where
+        G: Graphics,
     {
         g.image(self, texture, draw_state, transform);
     }
 
     /// Draws image using triangulation.
-    pub fn draw_tri<G>(&self,
-                       texture: &<G as Graphics>::Texture,
-                       draw_state: &DrawState,
-                       transform: Matrix2d,
-                       g: &mut G)
-        where G: Graphics
+    pub fn draw_tri<G>(
+        &self,
+        texture: &<G as Graphics>::Texture,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    ) where
+        G: Graphics,
     {
-        use math::Scalar;
+        use crate::math::Scalar;
 
         let color = self.color.unwrap_or([1.0; 4]);
         let source_rectangle = self.source_rectangle.unwrap_or({
             let (w, h) = texture.get_size();
             [0.0, 0.0, w as Scalar, h as Scalar]
         });
-        let rectangle = self.rectangle
-            .unwrap_or([0.0, 0.0, source_rectangle[2] as Scalar, source_rectangle[3] as Scalar]);
+        let rectangle = self.rectangle.unwrap_or([
+            0.0,
+            0.0,
+            source_rectangle[2] as Scalar,
+            source_rectangle[3] as Scalar,
+        ]);
         g.tri_list_uv(draw_state, &color, texture, |f| {
-            f(&triangulation::rect_tri_list_xy(transform, rectangle),
-              &triangulation::rect_tri_list_uv(texture, source_rectangle))
+            f(
+                &triangulation::rect_tri_list_xy(transform, rectangle),
+                &triangulation::rect_tri_list_uv(texture, source_rectangle),
+            )
         });
     }
 }
 
 /// Draws many images.
-pub fn draw_many<G>(rects: &[(Rectangle, SourceRectangle)],
-                    color: Color,
-                    texture: &<G as Graphics>::Texture,
-                    draw_state: &DrawState,
-                    transform: Matrix2d,
-                    g: &mut G)
-    where G: Graphics
+pub fn draw_many<G>(
+    rects: &[(Rectangle, SourceRectangle)],
+    color: Color,
+    texture: &<G as Graphics>::Texture,
+    draw_state: &DrawState,
+    transform: Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
-    g.tri_list_uv(draw_state, &color, texture, |f| for r in rects {
-        f(&triangulation::rect_tri_list_xy(transform, r.0),
-          &triangulation::rect_tri_list_uv(texture, r.1))
+    g.tri_list_uv(draw_state, &color, texture, |f| {
+        for r in rects {
+            f(
+                &triangulation::rect_tri_list_xy(transform, r.0),
+                &triangulation::rect_tri_list_uv(texture, r.1),
+            )
+        }
     });
 }
 

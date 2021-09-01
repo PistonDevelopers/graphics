@@ -28,31 +28,30 @@
 //! At top level, there are some shortcut methods for common operations.
 //! For example, `ellipse` is a simplified version of `Ellipse`.
 
-extern crate vecmath;
-extern crate texture;
-extern crate read_color;
 extern crate interpolation;
+extern crate read_color;
+extern crate texture;
+extern crate vecmath;
 extern crate viewport;
 
-pub use texture::ImageSize;
-pub use viewport::Viewport;
-
-pub use graphics::Graphics;
 pub use character::{Character, CharacterCache};
-pub use source_rectangled::SourceRectangled;
-pub use rectangled::Rectangled;
-pub use transformed::Transformed;
-pub use colored::Colored;
-pub use rectangle::Rectangle;
-pub use line::Line;
-pub use ellipse::Ellipse;
 pub use circle_arc::CircleArc;
-pub use image::Image;
-pub use polygon::Polygon;
-pub use text::Text;
+pub use colored::Colored;
 pub use context::Context;
 pub use draw_state::DrawState;
+pub use ellipse::Ellipse;
+pub use graphics::Graphics;
+pub use image::Image;
+pub use line::Line;
+pub use polygon::Polygon;
 pub use radians::Radians;
+pub use rectangle::Rectangle;
+pub use rectangled::Rectangled;
+pub use source_rectangled::SourceRectangled;
+pub use text::Text;
+pub use texture::ImageSize;
+pub use transformed::Transformed;
+pub use viewport::Viewport;
 
 /// Any triangulation method called on the back-end
 /// never exceeds this number of vertices.
@@ -62,30 +61,30 @@ pub use radians::Radians;
 /// in a triangle list.
 pub const BACK_END_MAX_VERTEX_COUNT: usize = 1023;
 
-mod graphics;
-mod source_rectangled;
-mod rectangled;
-mod transformed;
 mod colored;
+mod graphics;
+mod rectangled;
+mod source_rectangled;
+mod transformed;
 
-pub mod draw_state;
 pub mod character;
-pub mod context;
-pub mod color;
-pub mod polygon;
-pub mod line;
 pub mod circle_arc;
+pub mod color;
+pub mod context;
+pub mod draw_state;
 pub mod ellipse;
-pub mod rectangle;
-pub mod image;
-pub mod types;
-pub mod modular_index;
-pub mod text;
-pub mod triangulation;
-pub mod math;
-pub mod grid;
 pub mod glyph_cache;
+pub mod grid;
+pub mod image;
+pub mod line;
+pub mod math;
+pub mod modular_index;
+pub mod polygon;
+pub mod rectangle;
+pub mod text;
 pub mod texture_packer;
+pub mod triangulation;
+pub mod types;
 
 pub mod radians {
     //! Reexport radians helper trait from vecmath
@@ -95,7 +94,8 @@ pub mod radians {
 
 /// Clears the screen.
 pub fn clear<G>(color: types::Color, g: &mut G)
-    where G: Graphics
+where
+    G: Graphics,
 {
     g.clear_color(color);
     g.clear_stencil(0);
@@ -103,95 +103,112 @@ pub fn clear<G>(color: types::Color, g: &mut G)
 
 /// Draws image.
 pub fn image<G>(image: &<G as Graphics>::Texture, transform: math::Matrix2d, g: &mut G)
-    where G: Graphics
+where
+    G: Graphics,
 {
     Image::new().draw(image, &Default::default(), transform, g);
 }
 
 /// Draws ellipse by corners.
-pub fn ellipse_from_to<P: Into<types::Vec2d>, G>(color: types::Color,
-                                        from: P,
-                                        to: P,
-                                        transform: math::Matrix2d,
-                                        g: &mut G)
-    where G: Graphics
+pub fn ellipse_from_to<P: Into<types::Vec2d>, G>(
+    color: types::Color,
+    from: P,
+    to: P,
+    transform: math::Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
     Ellipse::new(color).draw_from_to(from, to, &Default::default(), transform, g);
 }
 
 /// Draws ellipse.
-pub fn ellipse<R: Into<types::Rectangle>, G>(color: types::Color,
-                                             rect: R,
-                                             transform: math::Matrix2d,
-                                             g: &mut G)
-    where G: Graphics
+pub fn ellipse<R: Into<types::Rectangle>, G>(
+    color: types::Color,
+    rect: R,
+    transform: math::Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
     Ellipse::new(color).draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws arc
-pub fn circle_arc<R: Into<types::Rectangle>, G>(color: types::Color,
-                                                radius: types::Radius,
-                                                start: types::Scalar,
-                                                end: types::Scalar,
-                                                rect: R,
-                                                transform: math::Matrix2d,
-                                                g: &mut G)
-    where G: Graphics
+pub fn circle_arc<R: Into<types::Rectangle>, G>(
+    color: types::Color,
+    radius: types::Radius,
+    start: types::Scalar,
+    end: types::Scalar,
+    rect: R,
+    transform: math::Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
     CircleArc::new(color, radius, start, end).draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws rectangle.
-pub fn rectangle_from_to<P: Into<types::Vec2d>, G>(color: types::Color,
-                                               from: P,
-                                               to: P,
-                                               transform: math::Matrix2d,
-                                               g: &mut G)
-    where G: Graphics
+pub fn rectangle_from_to<P: Into<types::Vec2d>, G>(
+    color: types::Color,
+    from: P,
+    to: P,
+    transform: math::Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
     Rectangle::new(color).draw_from_to(from, to, &Default::default(), transform, g);
 }
 
 /// Draws rectangle.
-pub fn rectangle<R: Into<types::Rectangle>, G>(color: types::Color,
-                                               rect: R,
-                                               transform: math::Matrix2d,
-                                               g: &mut G)
-    where G: Graphics
+pub fn rectangle<R: Into<types::Rectangle>, G>(
+    color: types::Color,
+    rect: R,
+    transform: math::Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
     Rectangle::new(color).draw(rect, &Default::default(), transform, g);
 }
 
 /// Draws polygon.
-pub fn polygon<G>(color: types::Color,
-                  polygon: types::Polygon,
-                  transform: math::Matrix2d,
-                  g: &mut G)
-    where G: Graphics
+pub fn polygon<G>(
+    color: types::Color,
+    polygon: types::Polygon,
+    transform: math::Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
     Polygon::new(color).draw(polygon, &Default::default(), transform, g);
 }
 
 /// Draws line between points.
-pub fn line_from_to<P: Into<types::Vec2d>, G>(color: types::Color,
-                                     radius: types::Radius,
-                                     from: P,
-                                     to: P,
-                                     transform: math::Matrix2d,
-                                     g: &mut G)
-    where G: Graphics
+pub fn line_from_to<P: Into<types::Vec2d>, G>(
+    color: types::Color,
+    radius: types::Radius,
+    from: P,
+    to: P,
+    transform: math::Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
     Line::new(color, radius).draw_from_to(from, to, &Default::default(), transform, g)
 }
 
 /// Draws line.
-pub fn line<L: Into<types::Line>, G>(color: types::Color,
-                                     radius: types::Radius,
-                                     line: L,
-                                     transform: math::Matrix2d,
-                                     g: &mut G)
-    where G: Graphics
+pub fn line<L: Into<types::Line>, G>(
+    color: types::Color,
+    radius: types::Radius,
+    line: L,
+    transform: math::Matrix2d,
+    g: &mut G,
+) where
+    G: Graphics,
 {
     Line::new(color, radius).draw(line, &Default::default(), transform, g)
 }
@@ -203,11 +220,11 @@ pub fn text<C, G>(
     text: &str,
     cache: &mut C,
     transform: math::Matrix2d,
-    g: &mut G
+    g: &mut G,
 ) -> Result<(), C::Error>
-    where
-        C: character::CharacterCache,
-        G: Graphics<Texture = <C as character::CharacterCache>::Texture>
+where
+    C: character::CharacterCache,
+    G: Graphics<Texture = <C as character::CharacterCache>::Texture>,
 {
     Text::new_color(color, font_size).draw(text, cache, &Default::default(), transform, g)
 }

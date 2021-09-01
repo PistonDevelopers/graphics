@@ -1,5 +1,7 @@
-use math::{margin_rectangle, relative_rectangle, Scalar};
-use types::Rectangle;
+use crate::{
+    math::{margin_rectangle, relative_rectangle, Scalar},
+    types::Rectangle,
+};
 
 /// Should be implemented by contexts that have rectangle information.
 pub trait Rectangled: Sized {
