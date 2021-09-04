@@ -1,12 +1,10 @@
 //! Glyph caching using the RustType library.
 
-extern crate rusttype;
-use std::collections::HashMap;
+use std::{collections::HashMap, fs::File, hash::BuildHasherDefault, io::Read, path::Path};
 
+use fnv;
+use rusttype;
 use texture::{ops, CreateTexture, Format, TextureSettings, UpdateTexture};
-
-extern crate fnv;
-use std::{fs::File, hash::BuildHasherDefault, io::Read, path::Path};
 
 use self::fnv::FnvHasher;
 use crate::{
@@ -122,7 +120,7 @@ where
 
     /// Return `ch` for `size` if it's already cached. Don't load.
     /// See the `preload_*` functions.
-    pub fn opt_character(&self, size: FontSize, ch: char) -> Option<Character<T>> {
+    pub fn opt_character(&self, size: FontSize, ch: char) -> Option<Character<'_, T>> {
         self.data.get(&(size, ch)).map(
             |&Data {
                  offset,
@@ -150,7 +148,7 @@ where
     type Texture = T;
     type Error = T::Error;
 
-    fn character(&mut self, size: FontSize, ch: char) -> Result<Character<T>, Self::Error> {
+    fn character(&mut self, size: FontSize, ch: char) -> Result<Character<'_, T>, Self::Error> {
         use std::collections::hash_map::Entry;
 
         use self::rusttype as rt;

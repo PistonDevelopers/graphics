@@ -8,7 +8,7 @@ use crate::{
 
 /// Holds rendered character data.
 #[derive(Clone)]
-pub struct Character<'a, T: 'a + ImageSize> {
+pub struct Character<'a, T: ImageSize> {
     /// The offset of character.
     pub offset: [Scalar; 2],
     /// The advance size of character, including space.
@@ -55,7 +55,7 @@ pub trait CharacterCache {
         &mut self,
         font_size: FontSize,
         ch: char,
-    ) -> Result<Character<Self::Texture>, Self::Error>;
+    ) -> Result<Character<'_, Self::Texture>, Self::Error>;
 
     /// Return the width for some given text.
     fn width(&mut self, size: FontSize, text: &str) -> Result<math::Scalar, Self::Error> {
