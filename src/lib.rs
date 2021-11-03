@@ -41,7 +41,7 @@ pub use colored::Colored;
 pub use context::Context;
 pub use draw_state::DrawState;
 pub use ellipse::Ellipse;
-pub use graphics::Graphics;
+pub use crate::graphics::Graphics;
 pub use image::Image;
 pub use line::Line;
 pub use polygon::Polygon;
