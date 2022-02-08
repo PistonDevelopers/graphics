@@ -20,6 +20,7 @@ struct Data {
     atlas_offset: [Scalar; 2],
     atlas_size: [Scalar; 2],
     texture: usize,
+    is_invalid: bool
 }
 
 struct EmptyOutlineBuilder;
@@ -128,6 +129,7 @@ where
                  atlas_offset,
                  atlas_size,
                  texture,
+                 is_invalid,
              }| {
                 Character {
                     offset,
@@ -135,6 +137,7 @@ where
                     atlas_offset,
                     atlas_size,
                     texture: &self.texture_packer.textures[texture],
+                    is_invalid,
                 }
             },
         )
@@ -164,6 +167,7 @@ where
                     atlas_offset,
                     atlas_size,
                     texture,
+                    is_invalid,
                 } = v.into_mut();
                 Ok(Character {
                     offset,
@@ -171,6 +175,7 @@ where
                     atlas_offset,
                     atlas_size,
                     texture: &self.texture_packer.textures[texture],
+                    is_invalid,
                 })
             }
             Entry::Vacant(v) => {
@@ -200,12 +205,15 @@ where
                     (pixel_bounding_box.height() + 2) as u32,
                 ];
 
+                let is_invalid = glyph.id() == rt::GlyphId(0);
+
                 let &mut Data {
                     offset,
                     advance_size,
                     atlas_offset,
                     atlas_size,
                     texture,
+                    is_invalid,
                 } = match self.texture_packer.find_space(size) {
                     None => {
                         // Create a new texture atlas.
@@ -239,6 +247,7 @@ where
                             atlas_offset: [0.0; 2],
                             atlas_size: [size[0] as Scalar, size[1] as Scalar],
                             texture,
+                            is_invalid,
                         })
                     }
                     Some(ind) => {
@@ -268,6 +277,7 @@ where
                             atlas_offset: [offset[0] as Scalar, offset[1] as Scalar],
                             atlas_size: [size[0] as Scalar, size[1] as Scalar],
                             texture,
+                            is_invalid
                         })
                     }
                 };
@@ -277,6 +287,7 @@ where
                     atlas_offset,
                     atlas_size,
                     texture: &self.texture_packer.textures[texture],
+                    is_invalid
                 })
             }
         }

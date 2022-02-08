@@ -19,6 +19,8 @@ pub struct Character<'a, T: ImageSize> {
     pub atlas_size: [Scalar; 2],
     /// The texture of the character.
     pub texture: &'a T,
+    /// if this is an "invalid character" character
+    pub is_invalid: bool
 }
 
 impl<'a, T: ImageSize> Character<'a, T> {
