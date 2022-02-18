@@ -40,7 +40,22 @@ pub fn rectangle_by_corners(x0: Scalar, y0: Scalar, x1: Scalar, y1: Scalar) -> t
     [xmin, ymin, w, h]
 }
 
-/// Use x, y, half-width, half-height
+/// Create a centered rectangle.
+///
+/// `rect` is interpreted as `[x, y, half_width, half_height]`
+///
+/// Note that passing an existing `types::Rectangle` in here will not produce a rectangle of the
+/// same
+/// dimensions
+///
+/// # Example
+/// ```
+/// use graphics::rectangle::centered;
+///
+/// // We create a rectangle centered on [0.0, 0.0] with width 2.0 and height 6.0
+/// let centered_rect = centered([0.0, 0.0, 1.0, 3.0]);
+/// assert_eq!(centered_rect, [-1.0, -3.0, 2.0, 6.0]);
+/// ```
 pub fn centered(rect: types::Rectangle) -> types::Rectangle {
     [
         rect[0] - rect[2],
