@@ -5,39 +5,41 @@ use crate::types::{Color, ColorComponent};
 /// Black color.
 pub const BLACK: Color = [0.0, 0.0, 0.0, 1.0];
 /// Blue color.
-pub const BLUE: Color = [0.0, 0.0, 255.0, 1.0];
+pub const BLUE: Color = [0.0, 0.0, 1.0, 1.0];
 /// Cyan color.
-pub const CYAN: Color = [0.0, 255.0, 255.0, 1.0];
+pub const CYAN: Color = [0.0, 1.0, 1.0, 1.0];
 /// Gray color.
-pub const GRAY: Color = [128.0, 128.0, 128.0, 1.0];
+pub const GRAY: Color = [0.5, 0.5, 0.5, 1.0];
 /// Green color.
-pub const GREEN: Color = [0.0, 128.0, 0.0, 1.0];
+pub const GREEN: Color = [0.0, 0.5, 0.0, 1.0];
 /// Lime color.
-pub const LIME: Color = [0.0, 255.0, 0.0, 1.0];
+pub const LIME: Color = [0.0, 1.0, 0.0, 1.0];
 /// Magenta color.
-pub const MAGENTA: Color = [255.0, 0.0, 255.0, 1.0];
+pub const MAGENTA: Color = [1.0, 0.0, 1.0, 1.0];
 /// Maroon color.
-pub const MAROON: Color = [128.0, 0.0, 0.0, 1.0];
+pub const MAROON: Color = [0.5, 0.0, 0.0, 1.0];
 /// Navy color.
-pub const NAVY: Color = [0.0, 0.0, 128.0, 1.0];
+pub const NAVY: Color = [0.0, 0.0, 0.5, 1.0];
 /// Olive color.
-pub const OLIVE: Color = [128.0, 128.0, 0.0, 1.0];
+pub const OLIVE: Color = [0.5, 0.5, 0.0, 1.0];
 /// Purple color.
-pub const PURPLE: Color = [128.0, 0.0, 128.0, 1.0];
+pub const PURPLE: Color = [0.5, 0.0, 0.5, 1.0];
 /// Red color.
-pub const RED: Color = [255.0, 0.0, 0.0, 1.0];
+pub const RED: Color = [1.0, 0.0, 0.0, 1.0];
 /// Silver color.
-pub const SILVER: Color = [192.0, 192.0, 192.0, 1.0];
+pub const SILVER: Color = [0.75, 0.75, 0.75, 1.0];
 /// Teal color.
-pub const TEAL: Color = [0.0, 128.0, 128.0, 1.0];
+pub const TEAL: Color = [0.0, 0.5, 0.5, 1.0];
 /// White color.
-pub const WHITE: Color = [255.0, 255.0, 255.0, 1.0];
+pub const WHITE: Color = [1.0, 1.0, 1.0, 1.0];
 /// Yellow color.
-pub const YELLOW: Color = [255.0, 255.0, 0.0, 1.0];
+pub const YELLOW: Color = [1.0, 1.0, 0.0, 1.0];
 /// Transparent color.
 pub const TRANSPARENT: Color = [0.0; 4];
 
 /// Returns a grey color
+/// # Arguments
+/// * `f` - The brightness of the color. 0.0 is black, 1.0 is white
 pub fn grey(f: ColorComponent) -> Color {
     [f, f, f, 1.0]
 }
