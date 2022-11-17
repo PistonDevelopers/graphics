@@ -3,7 +3,7 @@
 use crate::{
     math::{Matrix2d, Scalar},
     triangulation, types,
-    types::{Color, Radius},
+    types::{Color, Radius, Resolution},
     DrawState, Graphics,
 };
 
@@ -14,8 +14,8 @@ pub enum Shape {
     Square,
     /// Round edges
     Round,
-    /// Round edges with specified resolution.
-    RoundWithResolution(u32),
+    /// Round edges with specified resolution
+    RoundWithResolution(Resolution),
     /// Bevel edges
     Bevel,
 }
