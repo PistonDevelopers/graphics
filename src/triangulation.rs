@@ -258,7 +258,7 @@ where
 
         i += 1;
         // Buffer is full.
-        if i * align_vertices + 1 >= vertices.len() {
+        if (i + 1) * align_vertices > BUFFER_SIZE {
             // Send chunk and start over.
             f(&vertices[0..i * align_vertices]);
             i = 0;
@@ -557,7 +557,7 @@ where
         f2 = g2;
 
         // Buffer is full.
-        if i * align_vertices >= vertices.len() {
+        if (i + 1) * align_vertices > BUFFER_SIZE {
             // Send chunk and start over.
             f(&vertices[0..i * align_vertices]);
             i = 0;
