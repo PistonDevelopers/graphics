@@ -14,8 +14,24 @@ pub enum Shape {
     Square,
     /// Round edges
     Round,
+    /// Round edges with specified resolution.
+    RoundWithResolution(u32),
     /// Bevel edges
     Bevel,
+}
+
+impl Shape {
+    /// Gets the round resolution of the shape.
+    fn resolution(&self) -> u32 {
+        use Shape::*;
+
+        match self {
+            Square => 2,
+            Bevel => 3,
+            Round => 64,
+            RoundWithResolution(n) => *n,
+        }
+    }
 }
 
 /// A colored line with a default border radius
@@ -119,41 +135,15 @@ impl Line {
         G: Graphics,
     {
         let line = line.into();
-        match self.shape {
-            Shape::Square => {
-                g.tri_list(draw_state, &self.color, |f| {
-                    triangulation::with_round_border_line_tri_list(
-                        2,
-                        transform,
-                        line,
-                        self.radius,
-                        |vertices| f(vertices),
-                    )
-                });
-            }
-            Shape::Round => {
-                g.tri_list(draw_state, &self.color, |f| {
-                    triangulation::with_round_border_line_tri_list(
-                        64,
-                        transform,
-                        line,
-                        self.radius,
-                        |vertices| f(vertices),
-                    )
-                });
-            }
-            Shape::Bevel => {
-                g.tri_list(draw_state, &self.color, |f| {
-                    triangulation::with_round_border_line_tri_list(
-                        3,
-                        transform,
-                        line,
-                        self.radius,
-                        |vertices| f(vertices),
-                    )
-                });
-            }
-        }
+        g.tri_list(draw_state, &self.color, |f| {
+            triangulation::with_round_border_line_tri_list(
+                self.shape.resolution(),
+                transform,
+                line,
+                self.radius,
+                |vertices| f(vertices),
+            )
+        });
     }
 
     /// Draws an arrow
