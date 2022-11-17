@@ -4,6 +4,7 @@ use crate::{
     character::CharacterCache,
     color,
     math::Matrix2d,
+    math::Vec2d,
     types::{Color, FontSize},
     DrawState, Graphics, Image, Transformed,
 };
@@ -42,6 +43,23 @@ impl Text {
     pub fn round(mut self) -> Text {
         self.round = true;
         self
+    }
+
+    /// Draws text at position with a character cache
+    pub fn draw_pos<C, G>(
+        &self,
+        text: &str,
+        pos: Vec2d,
+        cache: &mut C,
+        draw_state: &DrawState,
+        transform: Matrix2d,
+        g: &mut G,
+    ) -> Result<(), C::Error>
+    where
+        C: CharacterCache,
+        G: Graphics<Texture = <C as CharacterCache>::Texture>,
+    {
+        self.draw(text, cache, draw_state, transform.trans_pos(pos), g)
     }
 
     /// Draws text with a character cache
