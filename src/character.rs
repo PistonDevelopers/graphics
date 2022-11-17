@@ -50,7 +50,7 @@ pub trait CharacterCache {
     /// The texture type associated with the character cache.
     type Texture: ImageSize;
     /// The error type associated with the character cache.
-    type Error;
+    type Error: core::fmt::Debug;
 
     /// Get reference to character.
     fn character(
