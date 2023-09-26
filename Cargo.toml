@@ -1,6 +1,6 @@
 [package]
 name = "piston2d-graphics"
-version = "0.43.0"
+version = "0.44.0"
 edition = "2018"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
@@ -23,7 +23,7 @@ name = "graphics"
 path = "./src/lib.rs"
 
 [dependencies]
-interpolation = "0.2.0"
+interpolation = "0.3.0"
 piston-texture = "0.9.0"
 piston-viewport = "1.0.0"
 read_color = "1.0.0"
