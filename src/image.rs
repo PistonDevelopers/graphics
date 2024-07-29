@@ -164,6 +164,12 @@ impl Image {
     }
 }
 
+impl  Default for Image {
+    fn default() -> Self {
+        Image::new()
+    }
+}
+
 /// Draws many images.
 pub fn draw_many<G>(
     rects: &[(Rectangle, SourceRectangle)],
