@@ -41,6 +41,7 @@ where
 /// Computes absolute transform from width and height of viewport.
 /// In absolute coordinates, the x axis points to the right,
 /// and the y axis points down on the screen.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn abs_transform<T>(w: T, h: T) -> Matrix2d<T>
 where
@@ -57,6 +58,7 @@ where
 }
 
 /// Creates a translation matrix.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn translate<T>(v: Vec2d<T>) -> Matrix2d<T>
 where
@@ -70,6 +72,7 @@ where
 }
 
 /// Creates a rotation matrix.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn rotate_radians<T>(angle: T) -> Matrix2d<T>
 where
@@ -87,6 +90,7 @@ where
 ///
 /// Leaves x axis unchanged if the
 /// point to look at is the origin.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn orient<T>(x: T, y: T) -> Matrix2d<T>
 where
@@ -107,6 +111,7 @@ where
 }
 
 /// Create a scale matrix.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn scale<T>(sx: T, sy: T) -> Matrix2d<T>
 where
@@ -119,6 +124,7 @@ where
 }
 
 /// Create a shear matrix.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn shear<T>(v: Vec2d<T>) -> Matrix2d<T>
 where
@@ -132,6 +138,7 @@ where
 }
 
 /// Create an identity matrix.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn identity<T>() -> Matrix2d<T>
 where
@@ -228,6 +235,7 @@ where
 }
 
 /// Shrinks a rectangle by a factor on all sides.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn margin_rectangle<T>(rect: Rectangle<T>, m: T) -> Rectangle<T>
 where
@@ -369,6 +377,7 @@ mod test_modular_offset {
 ///
 /// A simple polygon is one that does not intersect itself.
 /// Source: http://en.wikipedia.org/wiki/Polygon_area#Simple_polygons
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 pub fn area_centroid<T>(polygon: Polygon<'_, T>) -> (Area<T>, Vec2d<T>)
 where
     T: Float,
@@ -443,6 +452,7 @@ where
 /// This is done by computing a `side` number for each edge.
 /// If the number is inside if it is on the same side for all edges.
 /// Might break for very small triangles.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 pub fn inside_triangle<T>(triangle: Triangle<T>, v: Vec2d<T>) -> bool
 where
     T: Float,
@@ -476,6 +486,7 @@ where
 ///
 /// The triangle is considered clockwise if the third vertex is on the line
 /// between the two first vertices.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn triangle_face<T>(triangle: Triangle<T>) -> bool
 where
@@ -516,6 +527,7 @@ mod test_triangle {
 }
 
 /// Transforms from cartesian coordinates to barycentric.
+#[allow(clippy::just_underscores_and_digits)] // Naming convention.
 #[inline(always)]
 pub fn to_barycentric<T>(triangle: Triangle<T>, pos: Vec2d<T>) -> Vec3d<T>
 where
