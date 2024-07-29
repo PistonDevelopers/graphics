@@ -134,3 +134,9 @@ impl<T: ImageSize> TexturePacker<T> {
         min.map(|n| n.0)
     }
 }
+
+impl<T: ImageSize> Default for TexturePacker<T> {
+    fn default() -> TexturePacker<T> {
+        TexturePacker::new()
+    }
+}
