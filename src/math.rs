@@ -210,27 +210,21 @@ where
             } else {
                 sep3
             }
+        } else if dot1 < dot4 {
+            sep1
         } else {
-            if dot1 < dot4 {
-                sep1
-            } else {
-                sep4
-            }
+            sep4
         }
+    } else if dot3 < dot4 {
+        if dot2 < dot3 {
+            sep2
+        } else {
+            sep3
+        }
+    } else if dot2 < dot4 {
+        sep2
     } else {
-        if dot3 < dot4 {
-            if dot2 < dot3 {
-                sep2
-            } else {
-                sep3
-            }
-        } else {
-            if dot2 < dot4 {
-                sep2
-            } else {
-                sep4
-            }
-        }
+        sep4
     }
 }
 
