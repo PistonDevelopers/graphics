@@ -59,8 +59,8 @@ impl Grid {
     /// Get on-screen position of a grid cell
     pub fn cell_position(&self, cell: (u32, u32)) -> Vec2d {
         [
-            cell.0 as Scalar * &self.units,
-            cell.1 as Scalar * &self.units,
+            cell.0 as Scalar * self.units,
+            cell.1 as Scalar * self.units,
         ]
     }
 
@@ -90,7 +90,7 @@ impl Iterator for GridCells {
         let ret = ((self.state % cols) as u32, (self.state / cols) as u32);
         self.state += 1;
 
-        return Some(ret);
+        Some(ret)
     }
 }
 
