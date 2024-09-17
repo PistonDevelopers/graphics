@@ -29,11 +29,11 @@ use crate::{
 ///     let opengl  = OpenGL::_3_2;
 ///     let mut gl  = GlGraphics::new(opengl);
 ///     let window  = Window::new(
-/// 			opengl,
-/// 			WindowSettings::new(
-/// 				"Example",
-/// 				[600, 400]
-/// 			).exit_on_esc(true));
+///             opengl,
+///             WindowSettings::new(
+///                 "Example",
+///                 [600, 400]
+///             ).exit_on_esc(true));
 ///
 ///     // Create the image object and attach a square Rectangle object inside.
 ///     let image   = Image::new().rect(square(0.0, 0.0, 200.0));
@@ -42,15 +42,15 @@ use crate::{
 ///
 ///     // Main loop
 ///     for e in window.events() {
-/// 		if let Some(r) = e.render_args() {
-/// 			gl.draw(r.viewport(), |c, gl| {
-/// 				//Clear the screen
-/// 				clear([0.0, 0.0, 0.0, 1.0], gl);
-/// 				//Draw the image with the texture
-/// 				image.draw(&texture, default_draw_state(), c.transform, gl);
-/// 			});
-/// 		}
-/// 	}
+///         if let Some(r) = e.render_args() {
+///             gl.draw(r.viewport(), |c, gl| {
+///                 //Clear the screen
+///                 clear([0.0, 0.0, 0.0, 1.0], gl);
+///                 //Draw the image with the texture
+///                 image.draw(&texture, default_draw_state(), c.transform, gl);
+///             });
+///         }
+///     }
 /// }
 /// ```
 #[derive(Copy, Clone)]
@@ -161,6 +161,12 @@ impl Image {
                 &triangulation::rect_tri_list_uv(texture, source_rectangle),
             )
         });
+    }
+}
+
+impl  Default for Image {
+    fn default() -> Self {
+        Image::new()
     }
 }
 

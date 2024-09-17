@@ -109,6 +109,12 @@ impl Context {
     }
 }
 
+impl Default for Context {
+    fn default() -> Context {
+        Context::new()
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::Context;

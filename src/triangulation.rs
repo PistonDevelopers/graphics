@@ -123,6 +123,7 @@ pub fn with_round_border_line_tri_list<F>(
 }
 
 /// Streams a round rectangle.
+#[allow(clippy::identity_op)] // Identity operations are used for readibility.
 #[inline(always)]
 pub fn with_round_rectangle_tri_list<F>(
     resolution_corner: Resolution,
@@ -370,6 +371,7 @@ pub fn with_arc_tri_list<F>(
 }
 
 /// Streams a round rectangle border.
+#[allow(clippy::identity_op)] // Identity operations are used for readibility.
 #[inline(always)]
 pub fn with_round_rectangle_border_tri_list<F>(
     resolution_corner: Resolution,
@@ -509,6 +511,7 @@ pub fn with_round_rectangle_border_tri_list<F>(
 /// reached, that chunk is fed to `f`, then this function proceeds using a new buffer
 /// until a call to `quad_edge` returns `None`, indicating there are no more edges left.
 /// (in which case the last partially filled buffer is sent to `f`)
+#[allow(clippy::identity_op)] // Identity operations are used for readibility.
 pub fn stream_quad_tri_list<E, F>(m: Matrix2d, mut quad_edge: E, mut f: F)
 where
     E: FnMut() -> Option<(Vec2d, Vec2d)>,
